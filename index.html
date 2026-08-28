@@ -261,8 +261,6 @@ border:5px solid rgba(255,255,255,.08);box-shadow:inset 0 0 0 2px rgba(255,255,2
 const F7 = ["Álex","Benja","César","Datxu","Dídac","Ernest","Escri","Germán","Guillem","Josete","Jota","Julio","Luís","Marc","Nacho","Nelo","Pau","Rafeta","Raul","Rico","Rosana","Rubén","Toni","Xavi","Duro","Golpezas","Kulturicide","Jorgito","Manel","Oskar","Rafa","Santi","Jorge","Erika","Héctor"].sort((a,b)=>a.localeCompare(b,'es'));
 const FS = ["Pau","Álex","Ángel","Benja","Datxu","Dídac","Guillem","Héctor","Luís","Rafeta","Raul","Rico","Will","Xavi","Cristian","Emilio","Jorge Somnis","Jorge B","Miquel","Néstor","Rafa","Rares","Rubenigue","Sami"].sort((a,b)=>a.localeCompare(b,'es'));
 
-const scores7 = {};
-const scoresFS = {};
 let game=null, selected=[], teams={red:[],black:[]}, pendingSwap=null, reserves=[], lastPool=[];
 
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
@@ -347,9 +345,7 @@ function updateCount(){
 }
 function score(name){
  const reserve=reserves.find(r=>r.name===name);
- if(reserve) return ({alto:8,medio:5,bajo:3}[reserve.level]);
- if(game==='f7') return 6;
-
+ if(reserve) return ({alto:8,medio:6,bajo:4}[reserve.level]);
  return 6;
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
