@@ -89,31 +89,53 @@ button,input,select{font:inherit}.app{width:min(1100px,100%);margin:auto;padding
 <div id="adminModal" class="admin-modal"><div class="admin-card"><div id="adminContent"></div></div></div>
 <div id="toast" class="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const F7=["Álex","Benja","César","Datxu","Dídac","Ernest","Escri","Germán","Guillem","Josete","Jota","Julio","Luís","Marc","Nacho","Nelo","Pau","Rafeta","Raul","Rico","Rosana","Rubén","Toni","Xavi","Duro","Golpezas","Kulturicide","Jorgito","Manel","Oskar","Rafa","Santi","Jorge","Erika","Héctor"].sort((a,b)=>a.localeCompare(b,'es'));
 const FS=["Pau","Álex","Ángel","Benja","Datxu","Dídac","Guillem","Héctor","Luís","Rafeta","Raul","Rico","Will","Xavi","Cristian","Emilio","Jorge Somnis","Jorge","Miquel","Néstor","Rafa","Rares","Rubenigue","Sami"].sort((a,b)=>a.localeCompare(b,'es'));
 let game=null,selected=[],teams={red:[],black:[]},pendingSwap=null,reserves=[],resultReturn='season',editingMatchId=null,currentSeasonMode='f7';
 
-const KEY="patxanguilles_26_27";
-let db=JSON.parse(localStorage.getItem(KEY)||'{"players":{},"matches":[]}');
-// Repara históricos antiguos: si hay goleadores registrados, el marcador se sincroniza con sus goles.
-(db.matches||[]).forEach(m=>{
-  m.goals=Array.isArray(m.goals)?m.goals:[];
-  m.assists=Array.isArray(m.assists)?m.assists:[];
-  if(m.goals.length){
-    const rg=m.goals.filter(e=>e.team==='red').reduce((n,e)=>n+(Number(e.count)||1),0);
-    const bg=m.goals.filter(e=>e.team==='black').reduce((n,e)=>n+(Number(e.count)||1),0);
-    m.redScore=rg; m.blackScore=bg;
-  }
-});
-[...new Set([...F7,...FS])].forEach(n=>{if(!db.players[n])db.players[n]=defaultPlayer(n)});
-saveDB();
+const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
+const sbPublic=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+const sbAuth=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+let db={players:{},matches:[]};
+let playerIdByName={};
 let adminLogged=false;
-const LOCAL_ADMIN_PASSWORD='CAMBIAR_ESTO';
 function defaultPlayer(name){return {name,fullName:name,age:"",photo:"",leg:"",palmares:"",position:"",number:""}}
-function saveDB(){localStorage.setItem(KEY,JSON.stringify(db))}
+function saveDB(){}
 function allPlayers(){return Object.keys(db.players).sort((a,b)=>a.localeCompare(b,'es'))}
-function ensurePlayers(list){list.forEach(n=>{if(!db.players[n])db.players[n]=defaultPlayer(n)});saveDB()}
+function ensurePlayers(list){list.forEach(n=>{if(!db.players[n])db.players[n]=defaultPlayer(n)})}
+function mapPlayerRow(p){return{name:p.nickname,fullName:p.full_name||p.nickname,age:p.age??"",photo:p.photo_url||"",leg:p.leg||"",palmares:"",position:p.position||"",number:"",football7:!!p.football7,football5:!!p.football5}}
+async function loadSupabaseData(){
+  const [playersRes,matchesRes,lineupsRes,eventsRes]=await Promise.all([
+    sbPublic.from('players').select('*').order('nickname'),
+    sbPublic.from('matches').select('*').order('match_date',{ascending:false}),
+    sbPublic.from('match_players').select('*'),
+    sbPublic.from('match_events').select('*')
+  ]);
+  const firstError=playersRes.error||matchesRes.error||lineupsRes.error||eventsRes.error;
+  if(firstError){console.error(firstError);toast('No se pudieron cargar los datos de Supabase');return false}
+  db={players:{},matches:[]};playerIdByName={};const nameById={};
+  (playersRes.data||[]).forEach(p=>{db.players[p.nickname]=mapPlayerRow(p);playerIdByName[p.nickname]=p.id;nameById[String(p.id)]=p.nickname});
+  [...new Set([...F7,...FS])].forEach(n=>{if(!db.players[n])db.players[n]=defaultPlayer(n)});
+  const lineupsByMatch={};
+  (lineupsRes.data||[]).forEach(mp=>{const k=String(mp.match_id);if(!lineupsByMatch[k])lineupsByMatch[k]={red:[],black:[]};const name=nameById[String(mp.player_id)];if(name&&(mp.team==='red'||mp.team==='black'))lineupsByMatch[k][mp.team].push(name)});
+  const eventsByMatch={};
+  (eventsRes.data||[]).forEach(ev=>{const k=String(ev.match_id);if(!eventsByMatch[k])eventsByMatch[k]={goals:[],assists:[]};const name=nameById[String(ev.player_id)];if(!name)return;const item={team:ev.team,player:name,count:Number(ev.quantity)||1};if(ev.event_type==='goal')eventsByMatch[k].goals.push(item);if(ev.event_type==='assist')eventsByMatch[k].assists.push(item)});
+  db.matches=(matchesRes.data||[]).map(m=>{const k=String(m.id),lu=lineupsByMatch[k]||{red:[],black:[]},ev=eventsByMatch[k]||{goals:[],assists:[]};return{id:m.id,mode:m.competition==='football5'?'fs':'f7',date:m.match_date,red:lu.red,black:lu.black,redScore:Number(m.red_score)||0,blackScore:Number(m.black_score)||0,goals:ev.goals,assists:ev.assists}});
+  return true;
+}
+async function ensurePlayersInSupabase(names){
+  const missing=[...new Set(names)].filter(n=>!playerIdByName[n]);if(!missing.length)return;
+  const rows=missing.map(n=>({nickname:n,football7:currentSeasonMode==='f7',football5:currentSeasonMode==='fs'}));
+  const {data,error}=await sbAuth.from('players').insert(rows).select();if(error)throw error;
+  (data||[]).forEach(p=>{db.players[p.nickname]=mapPlayerRow(p);playerIdByName[p.nickname]=p.id});
+}
+async function verifyAdminSession(){
+  const {data:{session}}=await sbAuth.auth.getSession();if(!session){adminLogged=false;return false}
+  const {data,error}=await sbAuth.from('profiles').select('role').eq('id',session.user.id).single();adminLogged=!error&&data?.role==='admin';return adminLogged;
+}
 
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
 function openCreateGame(){show('createMode')}
@@ -156,7 +178,7 @@ function openProfile(name){ensurePlayers([name]);const p=db.players[name],s=stat
 function closeProfile(){document.getElementById('profileModal').classList.remove('open')}
 function initials(n){return n.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
 
-function openMatch(id){const m=db.matches.find(x=>x.id===id);if(!m)return;syncMatchScoreFromGoals(m);document.getElementById('matchContent').innerHTML=`<div class="profile-body"><div class="kicker">CALENDARIO · ${formatDate(m.date)} · ${(m.mode||'f7')==='f7'?'FÚTBOL 7':'FÚTBOL 5'}</div><h2>Rojos ${m.redScore} — ${m.blackScore} Negros</h2><div class="final-pitch" style="margin-top:18px"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div class="final-shirt-grid">${m.red.map(p=>shirtHTML(p,'red')).join('')}</div></div><div class="final-team"><h3>Negros</h3><div class="final-shirt-grid">${m.black.map(p=>shirtHTML(p,'black')).join('')}</div></div></div></div>${m.goals?.length?`<div class="panel" style="margin-top:14px"><h3>Goles</h3>${eventSummary(m.goals)}</div>`:''}${m.assists?.length?`<div class="panel" style="margin-top:14px"><h3>Asistencias</h3>${eventSummary(m.assists)}</div>`:''}</div>`;document.getElementById('matchModal').classList.add('open')}
+function openMatch(id){const m=db.matches.find(x=>String(x.id)===String(id));if(!m)return;syncMatchScoreFromGoals(m);document.getElementById('matchContent').innerHTML=`<div class="profile-body"><div class="kicker">CALENDARIO · ${formatDate(m.date)} · ${(m.mode||'f7')==='f7'?'FÚTBOL 7':'FÚTBOL 5'}</div><h2>Rojos ${m.redScore} — ${m.blackScore} Negros</h2><div class="final-pitch" style="margin-top:18px"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div class="final-shirt-grid">${m.red.map(p=>shirtHTML(p,'red')).join('')}</div></div><div class="final-team"><h3>Negros</h3><div class="final-shirt-grid">${m.black.map(p=>shirtHTML(p,'black')).join('')}</div></div></div></div>${m.goals?.length?`<div class="panel" style="margin-top:14px"><h3>Goles</h3>${eventSummary(m.goals)}</div>`:''}${m.assists?.length?`<div class="panel" style="margin-top:14px"><h3>Asistencias</h3>${eventSummary(m.assists)}</div>`:''}</div>`;document.getElementById('matchModal').classList.add('open')}
 function shirtHTML(p,c){return`<div class="big-shirt" onclick="openProfile('${escapeJs(p)}')"><span class="shirt-shape ${c}"></span><span>${escapeHtml(p)}</span></div>`}
 function eventSummary(a){return a.map(e=>`<div class="leader"><span class="player-link" onclick="openProfile('${escapeJs(e.player)}')">${escapeHtml(e.player)}</span><span class="count">${e.team==='red'?'Rojo':'Negro'}</span><span class="val">${e.count}</span></div>`).join('')}
 function closeMatch(){document.getElementById('matchModal').classList.remove('open')}
@@ -186,80 +208,70 @@ function addEventRow(container,type,event=null){const box=document.getElementByI
 function refreshEventPlayer(teamSelect,type){const row=teamSelect.parentElement;row.querySelector('.event-player').innerHTML=eventOptions(teamSelect.value)||'<option value="">—</option>'}
 function readEvents(container){return [...document.querySelectorAll('#'+container+' .event-row')].map(r=>({team:r.querySelector('.event-team').value,player:r.querySelector('.event-player').value,count:Number(r.querySelector('input').value)||1})).filter(e=>e.player)}
 function syncMatchScoreFromGoals(m){if(!m)return;const goals=Array.isArray(m.goals)?m.goals:[];if(goals.length){m.redScore=goals.filter(e=>e.team==='red').reduce((n,e)=>n+(Number(e.count)||1),0);m.blackScore=goals.filter(e=>e.team==='black').reduce((n,e)=>n+(Number(e.count)||1),0)}}
-function saveResult(){
+async function saveResult(){
   const red=checkedPlayers('redChecks'),black=checkedPlayers('blackChecks'),date=document.getElementById('matchDate').value;
   const redScore=Number(document.getElementById('redScore').value)||0,blackScore=Number(document.getElementById('blackScore').value)||0;
   const goals=readEvents('goalEvents'),assists=readEvents('assistEvents');
   if(!date||!red.length||!black.length){toast('Faltan fecha o alineaciones');return}
   const redGoals=goals.filter(e=>e.team==='red').reduce((n,e)=>n+e.count,0),blackGoals=goals.filter(e=>e.team==='black').reduce((n,e)=>n+e.count,0);
-  if(goals.length && (redGoals!==redScore||blackGoals!==blackScore)){toast(`Los goles no coinciden con el resultado: Rojos ${redGoals}, Negros ${blackGoals}`);return}
+  if(goals.length&&(redGoals!==redScore||blackGoals!==blackScore)){toast(`Los goles no coinciden con el resultado: Rojos ${redGoals}, Negros ${blackGoals}`);return}
   if(goals.some(e=>(e.team==='red'&&!red.includes(e.player))||(e.team==='black'&&!black.includes(e.player)))){toast('Hay un goleador que no está en su alineación');return}
   if(assists.some(e=>(e.team==='red'&&!red.includes(e.player))||(e.team==='black'&&!black.includes(e.player)))){toast('Hay un asistente que no está en su alineación');return}
-  ensurePlayers([...red,...black]);
-  const m={id:editingMatchId||((crypto.randomUUID?crypto.randomUUID():String(Date.now()))),mode:currentSeasonMode,date,red,black,redScore,blackScore,goals,assists};
-  if(editingMatchId){const idx=db.matches.findIndex(x=>x.id===editingMatchId);if(idx>=0)db.matches[idx]=m;else db.matches.push(m)}else db.matches.push(m);
-  editingMatchId=null;saveDB();toast('Resultado guardado en la temporada');
-  setTimeout(()=>{if(resultReturn==='results')show('results');else{show('season');seasonTab('calendar',document.querySelectorAll('.nav-btn')[1])}},350)
+  if(!(await verifyAdminSession())){toast('Debes entrar como administrador para guardar resultados');openAdminLogin();return}
+  try{
+    await ensurePlayersInSupabase([...red,...black]);
+    const competition=currentSeasonMode==='f7'?'football7':'football5';let matchId=editingMatchId;
+    if(matchId){
+      const {error}=await sbAuth.from('matches').update({competition,match_date:date,red_score:redScore,black_score:blackScore}).eq('id',matchId);if(error)throw error;
+      const a=await sbAuth.from('match_players').delete().eq('match_id',matchId);if(a.error)throw a.error;
+      const b=await sbAuth.from('match_events').delete().eq('match_id',matchId);if(b.error)throw b.error;
+    }else{
+      const {data,error}=await sbAuth.from('matches').insert({competition,match_date:date,red_score:redScore,black_score:blackScore}).select('id').single();if(error)throw error;matchId=data.id;
+    }
+    const lineupRows=[...red.map(n=>({match_id:matchId,player_id:playerIdByName[n],team:'red'})),...black.map(n=>({match_id:matchId,player_id:playerIdByName[n],team:'black'}))];
+    if(lineupRows.length){const {error}=await sbAuth.from('match_players').insert(lineupRows);if(error)throw error}
+    const eventRows=[...goals.map(e=>({match_id:matchId,player_id:playerIdByName[e.player],team:e.team,event_type:'goal',quantity:e.count})),...assists.map(e=>({match_id:matchId,player_id:playerIdByName[e.player],team:e.team,event_type:'assist',quantity:e.count}))];
+    if(eventRows.length){const {error}=await sbAuth.from('match_events').insert(eventRows);if(error)throw error}
+    editingMatchId=null;await loadSupabaseData();toast('Resultado guardado en Supabase');
+    setTimeout(()=>{if(resultReturn==='results')show('results');else{show('season');seasonTab('calendar',document.querySelectorAll('.nav-btn')[1])}},350);
+  }catch(err){console.error(err);toast('Error al guardar: '+(err?.message||'revisa Supabase'))}
 }
 
-function openAdminLogin(){
-  if(adminLogged){renderAdminPanel();return}
-  document.getElementById('adminContent').innerHTML=`<div class="admin-login"><div class="kicker">ZONA RESTRINGIDA</div><h2>Administrador</h2><p class="subtitle">Introduce la contraseña de administración.</p><input id="adminPassword" type="password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')loginAdmin()"><div id="adminError" class="admin-error"></div><div class="controls"><button class="primary" onclick="loginAdmin()">Entrar</button><button class="secondary" onclick="closeAdmin()">Cancelar</button></div><div class="admin-note">Modo local: esta contraseña está en el código del HTML y NO es una medida de seguridad real. Para una administración segura en una web pública hay que usar autenticación en servidor.</div></div>`;
-  document.getElementById('adminModal').classList.add('open');setTimeout(()=>document.getElementById('adminPassword')?.focus(),50)
+async function openAdminLogin(){
+  if(adminLogged||await verifyAdminSession()){renderAdminPanel();document.getElementById('adminModal').classList.add('open');return}
+  document.getElementById('adminContent').innerHTML=`<div class="admin-login"><div class="kicker">ZONA RESTRINGIDA</div><h2>Administrador</h2><p class="subtitle">Entra con el usuario administrador que creaste en Supabase.</p><input id="adminEmail" type="email" autocomplete="username" placeholder="Email"><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')loginAdmin()"><div id="adminError" class="admin-error"></div><div class="controls"><button class="primary" onclick="loginAdmin()">Entrar</button><button class="secondary" onclick="closeAdmin()">Cancelar</button></div><div class="admin-note">El acceso se valida con Supabase Auth. La contraseña ya no está guardada dentro del HTML.</div></div>`;
+  document.getElementById('adminModal').classList.add('open');setTimeout(()=>document.getElementById('adminEmail')?.focus(),50)
 }
-function loginAdmin(){const value=document.getElementById('adminPassword')?.value||'';if(value===LOCAL_ADMIN_PASSWORD){adminLogged=true;renderAdminPanel()}else document.getElementById('adminError').textContent='Contraseña incorrecta'}
+async function loginAdmin(){
+  const email=document.getElementById('adminEmail')?.value.trim()||'',password=document.getElementById('adminPassword')?.value||'',errorBox=document.getElementById('adminError');
+  if(!email||!password){errorBox.textContent='Introduce email y contraseña';return}errorBox.textContent='Entrando…';
+  const {error}=await sbAuth.auth.signInWithPassword({email,password});if(error){errorBox.textContent='No se pudo iniciar sesión: '+error.message;return}
+  if(!(await verifyAdminSession())){await sbAuth.auth.signOut();errorBox.textContent='Este usuario no tiene rol de administrador.';return}
+  renderAdminPanel()
+}
 function renderAdminPanel(){
-  const matches=(db.matches||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const content=document.getElementById('adminContent');
-  content.innerHTML=`<div class="topbar"><div><div class="kicker">ADMINISTRACIÓN</div><h2>Gestión de resultados</h2><div class="subtitle">Editar o eliminar partidos guardados en este navegador.</div></div><button class="secondary" type="button" id="adminCloseBtn">Cerrar</button></div><div class="admin-actions"><button class="secondary" type="button" id="adminLogoutBtn">Cerrar sesión</button><button class="danger" type="button" id="adminClearBtn">Eliminar todos los partidos</button></div><div class="admin-list">${matches.length?matches.map(m=>`<div class="admin-match" data-match-id="${escapeHtml(String(m.id))}"><span class="match-date">${formatDate(m.date)}</span><span><b>${m.mode==='f7'?'Fútbol 7':'Fútbol 5'}</b><br>Rojos ${m.redScore} — ${m.blackScore} Negros</span><span class="admin-actions"><button class="secondary admin-edit-btn" type="button">Editar</button><button class="danger admin-delete-btn" type="button">Eliminar</button></span></div>`).join(''):'<div class="empty">No hay partidos registrados.</div>'}</div>`;
-
-  document.getElementById('adminCloseBtn').onclick=closeAdmin;
-  document.getElementById('adminLogoutBtn').onclick=adminLogout;
-  document.getElementById('adminClearBtn').onclick=clearAllMatches;
-  content.querySelectorAll('.admin-delete-btn').forEach(btn=>{
-    btn.onclick=function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      const row=this.closest('.admin-match');
-      if(row) deleteMatch(row.getAttribute('data-match-id'));
-    };
-  });
-  content.querySelectorAll('.admin-edit-btn').forEach(btn=>{
-    btn.onclick=function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      const row=this.closest('.admin-match');
-      if(row) editMatch(row.getAttribute('data-match-id'));
-    };
-  });
+  const matches=(db.matches||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)),content=document.getElementById('adminContent');
+  content.innerHTML=`<div class="topbar"><div><div class="kicker">ADMINISTRACIÓN</div><h2>Gestión de resultados</h2><div class="subtitle">Los cambios se guardan para todos en Supabase.</div></div><button class="secondary" type="button" id="adminCloseBtn">Cerrar</button></div><div class="admin-actions"><button class="secondary" type="button" id="adminLogoutBtn">Cerrar sesión</button><button class="danger" type="button" id="adminClearBtn">Eliminar todos los partidos</button></div><div class="admin-list">${matches.length?matches.map(m=>`<div class="admin-match" data-match-id="${escapeHtml(String(m.id))}"><span class="match-date">${formatDate(m.date)}</span><span><b>${m.mode==='f7'?'Fútbol 7':'Fútbol 5'}</b><br>Rojos ${m.redScore} — ${m.blackScore} Negros</span><span class="admin-actions"><button class="secondary admin-edit-btn" type="button">Editar</button><button class="danger admin-delete-btn" type="button">Eliminar</button></span></div>`).join(''):'<div class="empty">No hay partidos registrados.</div>'}</div>`;
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminCloseBtn').onclick=closeAdmin;document.getElementById('adminLogoutBtn').onclick=adminLogout;document.getElementById('adminClearBtn').onclick=clearAllMatches;
+  content.querySelectorAll('.admin-delete-btn').forEach(btn=>{btn.onclick=function(e){e.preventDefault();e.stopPropagation();const row=this.closest('.admin-match');if(row)deleteMatch(row.getAttribute('data-match-id'))}});
+  content.querySelectorAll('.admin-edit-btn').forEach(btn=>{btn.onclick=function(e){e.preventDefault();e.stopPropagation();const row=this.closest('.admin-match');if(row)editMatch(row.getAttribute('data-match-id'))}})
 }
-function editMatch(id){const m=db.matches.find(x=>x.id===id);if(!m)return;currentSeasonMode=m.mode||'f7';adminLogged=false;closeAdmin();openResultForm(m.red,m.black,m)}
-function deleteMatch(id){
-  const index=db.matches.findIndex(m=>String(m.id)===String(id));
-  if(index===-1){
-    alert('No se ha encontrado el partido.');
-    return;
-  }
-  const partido=db.matches[index];
+function editMatch(id){const m=db.matches.find(x=>String(x.id)===String(id));if(!m)return;currentSeasonMode=m.mode||'f7';closeAdmin();openResultForm(m.red,m.black,m)}
+async function deleteMatch(id){
+  const partido=db.matches.find(m=>String(m.id)===String(id));if(!partido){alert('No se ha encontrado el partido.');return}
   const texto=`${partido.mode==='f7'?'Fútbol 7':'Fútbol 5'} — Rojos ${partido.redScore} - ${partido.blackScore} Negros — ${formatDate(partido.date)}`;
-  if(!confirm(`¿Eliminar este partido?\n\n${texto}`)) return;
-  db.matches.splice(index,1);
-  saveDB();
-  renderAdminPanel();
-  toast('Partido eliminado correctamente');
+  if(!confirm(`¿Eliminar este partido?\n\n${texto}`))return;if(!(await verifyAdminSession())){toast('La sesión de administrador ha caducado');return}
+  const {error}=await sbAuth.from('matches').delete().eq('id',id);if(error){console.error(error);toast('No se pudo eliminar el partido');return}
+  await loadSupabaseData();renderAdminPanel();toast('Partido eliminado correctamente')
 }
-function clearAllMatches(){
-  if(!db.matches || db.matches.length===0){
-    alert('No hay partidos guardados.');
-    return;
-  }
-  if(!confirm(`¿Eliminar los ${db.matches.length} partidos guardados?\n\nEsta acción no se puede deshacer.`)) return;
-  db.matches.length=0;
-  saveDB();
-  renderAdminPanel();
-  toast('Todos los partidos han sido eliminados');
+async function clearAllMatches(){
+  if(!db.matches?.length){alert('No hay partidos guardados.');return}if(!confirm(`¿Eliminar los ${db.matches.length} partidos guardados?\n\nEsta acción no se puede deshacer.`))return;
+  if(!(await verifyAdminSession())){toast('La sesión de administrador ha caducado');return}
+  const {error}=await sbAuth.from('matches').delete().gt('id',0);if(error){console.error(error);toast('No se pudieron eliminar los partidos');return}
+  await loadSupabaseData();renderAdminPanel();toast('Todos los partidos han sido eliminados')
 }
-function adminLogout(){adminLogged=false;closeAdmin()}
+async function adminLogout(){await sbAuth.auth.signOut();adminLogged=false;closeAdmin();toast('Sesión cerrada')}
 function closeAdmin(){document.getElementById('adminModal').classList.remove('open')}
 
 function cancelResultForm(){if(resultReturn==='results')show('results');else openSeason()}
@@ -268,6 +280,9 @@ function formatDate(s){if(!s)return'—';return new Intl.DateTimeFormat('es-ES',
 function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1800)}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function escapeJs(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+
+async function initApp(){await loadSupabaseData();await verifyAdminSession()}
+initApp();
 
 /* Música: un único audio vive fuera de las pantallas, así no se reinicia al navegar.
    Los navegadores bloquean el autoplay con sonido hasta que exista interacción del usuario. */
