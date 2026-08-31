@@ -220,6 +220,23 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 .sortable-th .sort-arrow{font-size:.78em;opacity:.85}
 .sort-help{font-size:12px;color:#87919d;margin-top:9px}
 
+
+.match-extra-tools{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.09)}
+.match-extra-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.match-photo-field{display:block;margin-top:12px}
+.match-photo-current{margin-top:10px;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:12px}
+.match-photo-current img{display:block;width:min(100%,360px);height:auto;border-radius:10px}
+.chronicle-editor{display:none;margin-top:12px;padding:14px;border:1px solid rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.025)}
+.chronicle-editor.open{display:block}
+.chronicle-editor label{display:block;font-weight:700;margin-bottom:12px}
+.chronicle-editor input,.chronicle-editor textarea{width:100%;margin-top:6px}
+.chronicle-editor textarea{min-height:170px;resize:vertical;line-height:1.5}
+.match-chronicle-view{margin-top:22px;padding:18px;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.match-chronicle-view h3{margin:0 0 10px;font-size:clamp(22px,5vw,34px);line-height:1.08}
+.match-chronicle-view .chronicle-copy{white-space:pre-wrap;line-height:1.65;color:#e7ebef}
+.match-photo-view{margin-top:20px}
+.match-photo-view img{display:block;width:100%;height:auto;max-height:720px;object-fit:contain;border-radius:16px}
+
 </style>
 </head>
 <body>
@@ -278,6 +295,21 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 </div>
 <div class="result-teams" style="margin-top:16px"><div class="lineup-box"><h4><span class="redtxt">ROJOS</span> · Alineación</h4><input class="player-search" type="search" placeholder="Buscar jugador…" oninput="filterPlayerChecks('redChecks',this.value)"><div id="redChecks" class="checks"></div></div><div class="lineup-box"><h4><span class="blacktxt">NEGROS</span> · Alineación</h4><input class="player-search" type="search" placeholder="Buscar jugador…" oninput="filterPlayerChecks('blackChecks',this.value)"><div id="blackChecks" class="checks"></div></div></div>
 <div class="form-grid" style="margin-top:16px"><div class="field"><label>Goleadores</label><div id="goalEvents" class="event-list"></div><button class="secondary" style="margin-top:8px" onclick="addEventRow('goalEvents','goal')">＋ Añadir goleador</button></div><div class="field"><label>Asistencias</label><div id="assistEvents" class="event-list"></div><button class="secondary" style="margin-top:8px" onclick="addEventRow('assistEvents','assist')">＋ Añadir asistencia</button></div></div>
+<div class="match-extra-tools">
+  <div class="match-extra-actions">
+    <label class="secondary" style="display:inline-flex;align-items:center;cursor:pointer">📷 Subir foto<input id="matchPhoto" type="file" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewMatchPhoto(this)"></label>
+    <button id="chronicleToggleBtn" type="button" class="secondary" onclick="toggleMatchChronicle()">✍️ Crear crónica del partido</button>
+  </div>
+  <div id="matchPhotoCurrent" class="match-photo-current" style="display:none"></div>
+  <div id="chronicleEditor" class="chronicle-editor">
+    <label>Titular:
+      <input id="chronicleTitle" type="text" maxlength="140" placeholder="Ej. Remontada rojinegra bajo los focos">
+    </label>
+    <label>Crónica:
+      <textarea id="chronicleText" maxlength="12000" placeholder="Escribe aquí la crónica del partido…"></textarea>
+    </label>
+  </div>
+</div>
 <div class="controls"><button class="primary" onclick="saveResult()">Guardar resultado</button><button class="secondary" onclick="cancelResultForm()">Cancelar</button></div>
 </div></section>
 </div>
@@ -344,7 +376,7 @@ async function loadSupabaseData(){
   (lineupsRes.data||[]).forEach(mp=>{const k=String(mp.match_id);if(!lineupsByMatch[k])lineupsByMatch[k]={red:[],black:[]};const name=nameById[String(mp.player_id)];if(name&&(mp.team==='red'||mp.team==='black'))lineupsByMatch[k][mp.team].push(name)});
   const eventsByMatch={};
   (eventsRes.data||[]).forEach(ev=>{const k=String(ev.match_id);if(!eventsByMatch[k])eventsByMatch[k]={goals:[],assists:[]};const name=nameById[String(ev.player_id)];if(!name)return;const item={team:ev.team,player:name,count:Number(ev.quantity)||1};if(ev.event_type==='goal')eventsByMatch[k].goals.push(item);if(ev.event_type==='assist')eventsByMatch[k].assists.push(item)});
-  db.matches=(matchesRes.data||[]).map(m=>{const k=String(m.id),lu=lineupsByMatch[k]||{red:[],black:[]},ev=eventsByMatch[k]||{goals:[],assists:[]};return{id:m.id,mode:m.competition==='football5'?'fs':'f7',date:m.match_date,red:lu.red,black:lu.black,redScore:Number(m.red_score)||0,blackScore:Number(m.black_score)||0,goals:ev.goals,assists:ev.assists,status:m.status||'final'}});
+  db.matches=(matchesRes.data||[]).map(m=>{const k=String(m.id),lu=lineupsByMatch[k]||{red:[],black:[]},ev=eventsByMatch[k]||{goals:[],assists:[]};return{id:m.id,mode:m.competition==='football5'?'fs':'f7',date:m.match_date,red:lu.red,black:lu.black,redScore:Number(m.red_score)||0,blackScore:Number(m.black_score)||0,goals:ev.goals,assists:ev.assists,status:m.status||'final',photoUrl:m.photo_url||'',chronicleTitle:m.chronicle_title||'',chronicleText:m.chronicle_text||''}});
   return true;
 }
 async function ensurePlayersInSupabase(names){
@@ -805,6 +837,8 @@ function openMatch(id){
       <div class="final-team"><h3>Negros</h3><div class="final-shirt-grid">${m.black.map(p=>shirtHTML(p,'black',blackGoals,blackAssists)).join('')}</div></div>
     </div></div>
     ${live?'<div class="empty" style="margin-top:12px">Alineación guardada · resultado pendiente</div>':`<div class="match-events-grid">${teamEvents(redGoals,redAssists,'red')}${teamEvents(blackGoals,blackAssists,'black')}</div>`}
+    ${(m.chronicleTitle||m.chronicleText)?`<section class="match-chronicle-view">${m.chronicleTitle?`<div class="kicker">CRÓNICA DEL PARTIDO</div><h3>${escapeHtml(m.chronicleTitle)}</h3>`:'<div class="kicker">CRÓNICA DEL PARTIDO</div>'}${m.chronicleText?`<div class="chronicle-copy">${escapeHtml(m.chronicleText)}</div>`:''}</section>`:''}
+    ${m.photoUrl?`<div class="match-photo-view"><img src="${escapeHtml(m.photoUrl)}" alt="Foto del partido" crossorigin="anonymous"></div>`:''}
   </div>
   <div class="profile-body" style="padding-top:0">
     <div class="share-result-actions">
@@ -867,10 +901,35 @@ function openResultForm(red=null,black=null,match=null){
   renderChecks('blackChecks',presetBlack,'black');
   document.getElementById('goalEvents').innerHTML='';
   document.getElementById('assistEvents').innerHTML='';
+  document.getElementById('matchPhoto').value='';
+  document.getElementById('chronicleTitle').value=match?.chronicleTitle||'';
+  document.getElementById('chronicleText').value=match?.chronicleText||'';
+  const chronicleEditor=document.getElementById('chronicleEditor');
+  const chronicleBtn=document.getElementById('chronicleToggleBtn');
+  const hasChronicle=!!(match?.chronicleTitle||match?.chronicleText);
+  chronicleEditor.classList.toggle('open',hasChronicle);
+  if(chronicleBtn)chronicleBtn.textContent=hasChronicle?'✍️ Editar crónica del partido':'✍️ Crear crónica del partido';
+  const currentPhoto=document.getElementById('matchPhotoCurrent');
+  if(match?.photoUrl){
+    currentPhoto.style.display='block';
+    currentPhoto.innerHTML=`<div class="kicker" style="margin-bottom:8px">Foto actual del partido</div><img src="${escapeHtml(match.photoUrl)}" alt="Foto actual del partido"><small style="display:block;margin-top:8px;color:#87919d">Si subes otra foto, sustituirá esta.</small>`;
+  }else{
+    currentPhoto.style.display='none';currentPhoto.innerHTML='';
+  }
   const saveBtn=document.querySelector('#resultForm .controls .primary');if(saveBtn)saveBtn.textContent=match?.status==='in_progress'?'Confirmar resultado':'Guardar resultado';
   (match?.goals||[]).forEach(e=>addEventRow('goalEvents','goal',e));
   (match?.assists||[]).forEach(e=>addEventRow('assistEvents','assist',e));
   show('resultForm');
+}
+function toggleMatchChronicle(){
+  const box=document.getElementById('chronicleEditor'),btn=document.getElementById('chronicleToggleBtn');
+  const willOpen=!box.classList.contains('open');box.classList.toggle('open',willOpen);
+  if(btn)btn.textContent=willOpen?'✍️ Ocultar crónica':'✍️ Crear crónica del partido';
+}
+function previewMatchPhoto(input){
+  const file=input?.files?.[0],box=document.getElementById('matchPhotoCurrent');if(!file||!box)return;
+  if(file.size>8*1024*1024){toast('La foto no puede superar 8 MB');input.value='';return}
+  const url=URL.createObjectURL(file);box.style.display='block';box.innerHTML=`<div class="kicker" style="margin-bottom:8px">Nueva foto seleccionada</div><img src="${url}" alt="Nueva foto del partido"><small style="display:block;margin-top:8px;color:#87919d">${escapeHtml(file.name)}</small>`;
 }
 function renderChecks(id,list,color){const box=document.getElementById(id);const pool=(currentSeasonMode==='f7'?F7:FS);const merged=[...new Set([...pool,...list])];box.innerHTML=merged.map(p=>`<label class="check"><input type="checkbox" value="${escapeHtml(p)}" ${list.includes(p)?'checked':''}> ${escapeHtml(p)}</label>`).join('')}
 function filterPlayerChecks(id,query){const q=String(query||'').trim().toLocaleLowerCase('es');document.querySelectorAll('#'+id+' .check').forEach(el=>{const name=(el.querySelector('input')?.value||'').toLocaleLowerCase('es');el.style.display=!q||name.includes(q)?'flex':'none'})}
@@ -884,6 +943,11 @@ async function saveResult(){
   const red=checkedPlayers('redChecks'),black=checkedPlayers('blackChecks'),date=document.getElementById('matchDate').value;
   const redScore=Number(document.getElementById('redScore').value)||0,blackScore=Number(document.getElementById('blackScore').value)||0;
   const goals=readEvents('goalEvents'),assists=readEvents('assistEvents');
+  const chronicleTitle=document.getElementById('chronicleTitle')?.value.trim()||'';
+  const chronicleText=document.getElementById('chronicleText')?.value.trim()||'';
+  const matchPhotoFile=document.getElementById('matchPhoto')?.files?.[0]||null;
+  if(matchPhotoFile&&matchPhotoFile.size>8*1024*1024){toast('La foto no puede superar 8 MB');return}
+  if(matchPhotoFile&&!['image/jpeg','image/png','image/webp'].includes(matchPhotoFile.type)){toast('La foto debe ser JPG, PNG o WebP');return}
   if(!date||!red.length||!black.length){toast('Faltan fecha o alineaciones');return}
   const redGoals=goals.filter(e=>e.team==='red').reduce((n,e)=>n+e.count,0),blackGoals=goals.filter(e=>e.team==='black').reduce((n,e)=>n+e.count,0);
   if(goals.length&&(redGoals!==redScore||blackGoals!==blackScore)){toast(`Los goles no coinciden con el resultado: Rojos ${redGoals}, Negros ${blackGoals}`);return}
@@ -893,6 +957,7 @@ async function saveResult(){
   const existing=editingMatchId?db.matches.find(m=>String(m.id)===String(editingMatchId)):null;
   const isPending=existing?.status==='in_progress';
   if(!isPending&&!(await verifyAdminSession())){toast('Debes entrar como administrador para guardar resultados');openAdminLogin();return}
+  if(matchPhotoFile&&isPending&&!(await verifyAdminSession())){toast('Para subir una foto debes entrar como administrador');openAdminLogin();return}
 
   const client=isPending?sbPublic:sbAuth;
   try{
@@ -905,7 +970,7 @@ async function saveResult(){
       const a=await client.from('match_players').delete().eq('match_id',matchId);if(a.error)throw a.error;
       const b=await client.from('match_events').delete().eq('match_id',matchId);if(b.error)throw b.error;
     }else{
-      const {data,error}=await client.from('matches').insert({competition,match_date:date,red_score:redScore,black_score:blackScore,status:'final'}).select('id').single();if(error)throw error;matchId=data.id;
+      const {data,error}=await client.from('matches').insert({competition,match_date:date,red_score:redScore,black_score:blackScore,status:'final',chronicle_title:chronicleTitle||null,chronicle_text:chronicleText||null}).select('id').single();if(error)throw error;matchId=data.id;
     }
 
     const lineupRows=[...red.map(n=>({match_id:matchId,player_id:playerIdByName[n],team:'red'})),...black.map(n=>({match_id:matchId,player_id:playerIdByName[n],team:'black'}))];
@@ -913,8 +978,20 @@ async function saveResult(){
     const eventRows=[...goals.map(e=>({match_id:matchId,player_id:playerIdByName[e.player],team:e.team,event_type:'goal',quantity:e.count})),...assists.map(e=>({match_id:matchId,player_id:playerIdByName[e.player],team:e.team,event_type:'assist',quantity:e.count}))];
     if(eventRows.length){const {error}=await client.from('match_events').insert(eventRows);if(error)throw error}
 
+    let photoUrl=existing?.photoUrl||'';
+    if(matchPhotoFile){
+      const ext=(matchPhotoFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+      const path=`matches/${matchId}/${Date.now()}.${ext}`;
+      const upload=await sbAuth.storage.from('player-photos').upload(path,matchPhotoFile,{upsert:true,contentType:matchPhotoFile.type});
+      if(upload.error)throw upload.error;
+      photoUrl=sbAuth.storage.from('player-photos').getPublicUrl(path).data.publicUrl;
+    }
+
     if(editingMatchId){
-      const {error}=await client.from('matches').update({competition,match_date:date,red_score:redScore,black_score:blackScore,status:'final'}).eq('id',matchId);
+      const {error}=await client.from('matches').update({competition,match_date:date,red_score:redScore,black_score:blackScore,status:'final',chronicle_title:chronicleTitle||null,chronicle_text:chronicleText||null,photo_url:photoUrl||null}).eq('id',matchId);
+      if(error)throw error;
+    }else if(photoUrl){
+      const {error}=await sbAuth.from('matches').update({photo_url:photoUrl}).eq('id',matchId);
       if(error)throw error;
     }
 
