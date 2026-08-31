@@ -191,6 +191,13 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
   .fifa-card:has(.uploaded-card-image){width:min(88vw,380px);height:min(78vh,570px)}
 }
 
+
+/* Fecha de nacimiento */
+.profile-edit-form input[type=date]{color-scheme:dark}
+@media(max-width:700px){
+  .profile-info{grid-template-columns:1fr 1fr}
+}
+
 </style>
 </head>
 <body>
@@ -199,8 +206,8 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 
 <section id="home" class="screen active">
 <div class="card hero">
-<div class="football">⚽</div><div class="kicker home-kicker">PATXANGUILLES ANTIFEIXISTES</div>
-<h1>PATXANGUILLES<br>26/27</h1><span class="title-mark"></span>
+<div class="football">⚽</div>
+<h1>PATXANGUILLES<br>ANTIFEIXISTES</h1><span class="title-mark"></span>
 
 <div class="home-options">
 <button class="mode redline" onclick="openCreateGame()"><div class="icon">⚽</div><strong>Crear partido</strong><span>Fútbol 7, fútbol sala y generación de equipos.</span></button>
@@ -254,7 +261,7 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 
 <div id="celebration" class="celebration" style="display:none"><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="final-actions"><button class="primary" onclick="copyFinalAndToast()">Copiar alineación</button><button class="secondary" onclick="openResultForm(teams.red,teams.black)">Añadir resultado</button><button class="secondary" onclick="closeCelebration()">Volver</button><button class="secondary" onclick="closeCelebration();show('home')">Home</button></div></div></div>
 
-<div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div><div class="profile-close"><button class="secondary" onclick="closeProfile()">Cerrar</button></div></div></div>
+<div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div></div></div>
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
 <div class="admin-corner"><button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button></div>
 <div class="music-controls" title="Música"><button id="musicToggle" type="button" onclick="toggleMusic()" aria-label="Pausar o reproducir música">⏸</button><span style="font-size:11px;color:#c8ced5">♫</span><input id="musicVolume" type="range" min="0" max="100" value="35" oninput="setMusicVolume(this.value)" aria-label="Volumen de música"><span id="musicVolumeLabel" class="music-volume-label">35%</span></div>
@@ -280,7 +287,7 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-const F7=["Álex","Benja","César","Datxu","Dídac","Ernest","Escri","Germán","Guillem","Josete","Jota","Julio","Luís","Marc","Nacho","Nelo","Pau","Rafeta","Raul","Rico","Rosana","Rubén","Toni","Xavi","Duro","Golpezas","Kulturicide","Jorgito","Manel","Oskar","Rafa","Santi","Jorge","Erika","Héctor"].sort((a,b)=>a.localeCompare(b,'es'));
+const F7=["Álex","Benja","César","Datxu","Dídac","Ernest","Escri","Germán","Guillem","Josete","Jota","Julio","Luís","Marc","Nacho","Nelo","Pau","Rafeta","Raul","Rico","Rosana","Rubén","Toni","Xavi","Duro","Gabal","Kulturicide","Jorgito","Manel","Oskar","Rafa","Santi","Jorge","Erika","Héctor"].sort((a,b)=>a.localeCompare(b,'es'));
 const FS=["Pau","Álex","Ángel","Benja","Datxu","Dídac","Guillem","Héctor","Luís","Rafeta","Raul","Rico","Will","Xavi","Cristian","Emilio","Jorge Somnis","Jorge","Miquel","Néstor","Rafa","Rares","Rubenigue","Sami"].sort((a,b)=>a.localeCompare(b,'es'));
 let game=null,selected=[],teams={red:[],black:[]},pendingSwap=null,reserves=[],resultReturn='season',editingMatchId=null,currentSeasonMode='f7';
 
@@ -291,11 +298,11 @@ const sbAuth=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,
 let db={players:{},matches:[]};
 let playerIdByName={};
 let adminLogged=false;
-function defaultPlayer(name){return {name,fullName:name,age:"",photo:"",leg:"",palmares:"",position:"",number:""}}
+function defaultPlayer(name){return {name,fullName:name,birthDate:"",age:"",photo:"",leg:"",palmares:"",position:"",number:""}}
 function saveDB(){}
 function allPlayers(){return Object.keys(db.players).sort((a,b)=>a.localeCompare(b,'es'))}
 function ensurePlayers(list){list.forEach(n=>{if(!db.players[n])db.players[n]=defaultPlayer(n)})}
-function mapPlayerRow(p){return{name:p.nickname,fullName:p.full_name||p.nickname,age:p.age??"",photo:p.photo_url||"",card:p.card_url||"",leg:p.leg||"",palmares:"",position:p.position||"",number:"",football7:!!p.football7,football5:!!p.football5}}
+function mapPlayerRow(p){return{name:p.nickname,fullName:p.full_name||p.nickname,birthDate:p.birth_date||"",age:calculateAge(p.birth_date),photo:p.photo_url||"",card:p.card_url||"",leg:p.leg||"",palmares:"",position:p.position||"",number:"",football7:!!p.football7,football5:!!p.football5}}
 async function loadSupabaseData(){
   const [playersRes,matchesRes,lineupsRes,eventsRes]=await Promise.all([
     sbPublic.from('players').select('*').order('nickname'),
@@ -448,6 +455,22 @@ function matchRow(m){
 }
 function renderLeaders(c,type){const title=type==='goals'?'Máximos goleadores':'Máximos asistentes',key=type==='goals'?'goals':'assists',arr=stats().sort((a,b)=>b[key]-a[key]||a.name.localeCompare(b.name,'es'));c.innerHTML=`<div class="panel"><h3>${title}</h3><div class="leaders">${arr.slice(0,20).map((s,i)=>`<div class="leader"><span class="num">${i+1}</span><span class="player-link" onclick="openProfile('${escapeJs(s.name)}')">${escapeHtml(s.name)}</span><span class="val">${s[key]}</span></div>`).join('')}</div></div>`}
 
+
+function calculateAge(dateString){
+  if(!dateString)return "";
+  const birth=new Date(dateString+'T00:00:00');
+  if(Number.isNaN(birth.getTime()))return "";
+  const today=new Date();
+  let age=today.getFullYear()-birth.getFullYear();
+  const m=today.getMonth()-birth.getMonth();
+  if(m<0||(m===0&&today.getDate()<birth.getDate()))age--;
+  return age>=0?age:""
+}
+function formatBirthDate(dateString){
+  if(!dateString)return '—';
+  return new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date(dateString+'T00:00:00'))
+}
+
 function openProfile(name){
   ensurePlayers([name]);
   const p=db.players[name],s=stats().find(x=>x.name===name)||{played:0,wins:0,goals:0,assists:0,winPct:0};
@@ -471,7 +494,7 @@ function openProfile(name){
       <div class="profile-info">
         <div class="info-item"><small>Apodo</small>${escapeHtml(p.name||name)}</div>
         <div class="info-item"><small>Nombre completo</small>${escapeHtml(p.fullName||name)}</div>
-        <div class="info-item"><small>Edad</small>${p.age?escapeHtml(p.age)+' años':'—'}</div>
+        <div class="info-item"><small>Fecha de nacimiento</small>${formatBirthDate(p.birthDate)}</div><div class="info-item"><small>Edad</small>${p.birthDate?calculateAge(p.birthDate)+' años':'—'}</div>
         <div class="info-item"><small>Pierna</small>${escapeHtml(p.leg||'—')}</div>
         <div class="info-item"><small>Posición</small>${escapeHtml(p.position||'—')}</div>
       </div>
@@ -488,8 +511,16 @@ function openProfile(name){
 async function openPlayerEditor(name){
   if(!(await verifyAdminSession())){toast('Debes entrar como administrador');return}
   const p=db.players[name]||defaultPlayer(name);
-  document.getElementById('profileContent').innerHTML=`<div class="profile-body"><div class="kicker">EDITAR JUGADOR</div><h2 style="margin-bottom:18px">${escapeHtml(name)}</h2><div class="profile-edit-form"><label>Apodo<input value="${escapeHtml(name)}" disabled></label><label>Nombre completo<input id="editFullName" value="${escapeHtml(p.fullName||name)}"></label><label>Edad<input id="editAge" type="number" min="0" max="99" value="${escapeHtml(p.age||'')}"></label><label>Pierna<select id="editLeg"><option value="">—</option><option ${p.leg==='Derecha'?'selected':''}>Derecha</option><option ${p.leg==='Izquierda'?'selected':''}>Izquierda</option><option ${p.leg==='Ambas'?'selected':''}>Ambas</option></select></label><label>Posición<input id="editPosition" value="${escapeHtml(p.position||'')}" placeholder="Portero, defensa, medio…"></label><label>Competiciones<div style="display:flex;gap:12px;padding:10px 0"><span><input id="editF7" type="checkbox" ${p.football7?'checked':''}> Fútbol 7</span><span><input id="editF5" type="checkbox" ${p.football5?'checked':''}> Fútbol Sala</span></div></label><label class="full">Foto de perfil<input id="editPhoto" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">JPG, PNG o WebP. Se subirá al guardar.</small></label>${p.photo?`<div class="full"><img class="photo-preview" src="${escapeHtml(p.photo)}" alt="Foto actual"></div>`:''}</div><div class="controls"><button class="primary" onclick="savePlayerProfile('${escapeJs(name)}')">Guardar cambios</button><button class="secondary" onclick="openProfile('${escapeJs(name)}')">Cancelar</button></div></div>`
+  document.getElementById('profileContent').innerHTML=`<div class="profile-body"><div class="kicker">EDITAR JUGADOR</div><h2 style="margin-bottom:18px">${escapeHtml(name)}</h2><div class="profile-edit-form"><label>Apodo<input value="${escapeHtml(name)}" disabled></label><label>Nombre completo<input id="editFullName" value="${escapeHtml(p.fullName||name)}"></label><label>Fecha de nacimiento<input id="editBirthDate" type="date" value="${escapeHtml(p.birthDate||'')}" onchange="updateCalculatedAge()"></label><label>Edad calculada<input id="editCalculatedAge" value="${p.birthDate?calculateAge(p.birthDate)+' años':'—'}" disabled></label><label>Pierna<select id="editLeg"><option value="">—</option><option ${p.leg==='Derecha'?'selected':''}>Derecha</option><option ${p.leg==='Izquierda'?'selected':''}>Izquierda</option><option ${p.leg==='Ambas'?'selected':''}>Ambas</option></select></label><label>Posición<input id="editPosition" value="${escapeHtml(p.position||'')}" placeholder="Portero, defensa, medio…"></label><label>Competiciones<div style="display:flex;gap:12px;padding:10px 0"><span><input id="editF7" type="checkbox" ${p.football7?'checked':''}> Fútbol 7</span><span><input id="editF5" type="checkbox" ${p.football5?'checked':''}> Fútbol Sala</span></div></label><label class="full">Foto de perfil<input id="editPhoto" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">JPG, PNG o WebP. Se subirá al guardar.</small></label>${p.photo?`<div class="full"><img class="photo-preview" src="${escapeHtml(p.photo)}" alt="Foto actual"></div>`:''}</div><div class="controls"><button class="primary" onclick="savePlayerProfile('${escapeJs(name)}')">Guardar cambios</button><button class="secondary" onclick="openProfile('${escapeJs(name)}')">Cancelar</button></div></div>`
 }
+
+function updateCalculatedAge(){
+  const date=document.getElementById('editBirthDate')?.value||'';
+  const age=calculateAge(date);
+  const field=document.getElementById('editCalculatedAge');
+  if(field)field.value=date&&age!==''?age+' años':'—'
+}
+
 async function savePlayerProfile(name){
   if(!(await verifyAdminSession())){toast('La sesión de administrador ha caducado');return}
   const id=playerIdByName[name];if(!id){toast('No se encontró el jugador');return}
@@ -504,7 +535,7 @@ async function savePlayerProfile(name){
       if(up.error)throw new Error('No se pudo subir la foto. Revisa el bucket player-photos. '+up.error.message);
       photoUrl=sbAuth.storage.from('player-photos').getPublicUrl(path).data.publicUrl;
     }
-    const payload={full_name:document.getElementById('editFullName').value.trim()||name,age:document.getElementById('editAge').value?Number(document.getElementById('editAge').value):null,leg:document.getElementById('editLeg').value||null,position:document.getElementById('editPosition').value.trim()||null,football7:document.getElementById('editF7').checked,football5:document.getElementById('editF5').checked,photo_url:photoUrl||null};
+    const birthDate=document.getElementById('editBirthDate').value||null;const payload={full_name:document.getElementById('editFullName').value.trim()||name,birth_date:birthDate,age:birthDate?calculateAge(birthDate):null,leg:document.getElementById('editLeg').value||null,position:document.getElementById('editPosition').value.trim()||null,football7:document.getElementById('editF7').checked,football5:document.getElementById('editF5').checked,photo_url:photoUrl||null};
     const {error}=await sbAuth.from('players').update(payload).eq('id',id);if(error)throw error;
     await loadSupabaseData();openProfile(name);toast('Perfil actualizado')
   }catch(err){console.error(err);toast(err?.message||'No se pudo actualizar el jugador')}
