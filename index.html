@@ -245,6 +245,19 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
   .home-options .mode:nth-child(3){width:100%}
 }
 
+
+/* Acciones de foto/crónica alineadas con la fecha en Crear resultado */
+.result-top-row{display:grid;grid-template-columns:minmax(180px,1fr) auto;gap:18px;align-items:end;margin-bottom:4px}
+.result-date-field{max-width:360px}
+.result-top-actions{justify-content:flex-end;align-items:center;margin:0}
+.result-top-actions .secondary{white-space:nowrap;margin:0}
+.match-extra-tools{margin-top:12px;padding-top:0;border-top:0}
+@media(max-width:760px){
+  .result-top-row{grid-template-columns:1fr;gap:12px}
+  .result-date-field{max-width:none}
+  .result-top-actions{justify-content:flex-start}
+}
+
 </style>
 </head>
 <body>
@@ -297,17 +310,19 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 
 <section id="resultForm" class="screen results"><div class="card result-form-card">
 <div class="topbar"><div><button class="back" onclick="cancelResultForm()">← Volver</button><h2>Añadir resultado</h2><div class="subtitle">Guarda el partido en el histórico de la temporada.</div></div></div>
+<div class="result-top-row">
+  <div class="field result-date-field"><label>Fecha</label><input id="matchDate" type="date"></div>
+  <div class="match-extra-actions result-top-actions">
+    <label class="secondary" style="display:inline-flex;align-items:center;cursor:pointer">📷 Subir foto<input id="matchPhoto" type="file" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewMatchPhoto(this)"></label>
+    <button id="chronicleToggleBtn" type="button" class="secondary" onclick="toggleMatchChronicle()">✍️ Crear crónica del partido</button>
+  </div>
+</div>
 <div class="form-grid">
-<div class="field"><label>Fecha</label><input id="matchDate" type="date"></div>
 <div class="field full"><h3 class="result-heading">Resultado</h3><div class="score-fields"><div class="score-field red"><label for="redScore">Rojos</label><input id="redScore" type="number" min="0" value="0"></div><div class="score-field black"><label for="blackScore">Negros</label><input id="blackScore" type="number" min="0" value="0"></div></div></div>
 </div>
 <div class="result-teams" style="margin-top:16px"><div class="lineup-box"><h4><span class="redtxt">ROJOS</span> · Alineación</h4><input class="player-search" type="search" placeholder="Buscar jugador…" oninput="filterPlayerChecks('redChecks',this.value)"><div id="redChecks" class="checks"></div></div><div class="lineup-box"><h4><span class="blacktxt">NEGROS</span> · Alineación</h4><input class="player-search" type="search" placeholder="Buscar jugador…" oninput="filterPlayerChecks('blackChecks',this.value)"><div id="blackChecks" class="checks"></div></div></div>
 <div class="form-grid" style="margin-top:16px"><div class="field"><label>Goleadores</label><div id="goalEvents" class="event-list"></div><button class="secondary" style="margin-top:8px" onclick="addEventRow('goalEvents','goal')">＋ Añadir goleador</button></div><div class="field"><label>Asistencias</label><div id="assistEvents" class="event-list"></div><button class="secondary" style="margin-top:8px" onclick="addEventRow('assistEvents','assist')">＋ Añadir asistencia</button></div></div>
 <div class="match-extra-tools">
-  <div class="match-extra-actions">
-    <label class="secondary" style="display:inline-flex;align-items:center;cursor:pointer">📷 Subir foto<input id="matchPhoto" type="file" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewMatchPhoto(this)"></label>
-    <button id="chronicleToggleBtn" type="button" class="secondary" onclick="toggleMatchChronicle()">✍️ Crear crónica del partido</button>
-  </div>
   <div id="matchPhotoCurrent" class="match-photo-current" style="display:none"></div>
   <div id="chronicleEditor" class="chronicle-editor">
     <label>Titular:
@@ -475,7 +490,7 @@ function copyFinalAndToast(){const text=`Rojos\n\n${teams.red.join('\n')}\n\nNeg
 
 async function ensurePlayersPublic(names){
   const missing=[...new Set(names)].filter(n=>!playerIdByName[n]);if(!missing.length)return;
-  const rows=missing.map(n=>({nickname:n,football7:game==='f7',football5:game==='fs'}));
+  const publicMode=currentSeasonMode||game;const rows=missing.map(n=>({nickname:n,football7:publicMode==='f7',football5:publicMode==='fs'}));
   const {data,error}=await sbPublic.from('players').insert(rows).select();if(error)throw error;
   (data||[]).forEach(p=>{db.players[p.nickname]=mapPlayerRow(p);playerIdByName[p.nickname]=p.id})
 }
@@ -964,12 +979,9 @@ async function saveResult(){
 
   const existing=editingMatchId?db.matches.find(m=>String(m.id)===String(editingMatchId)):null;
   const isPending=existing?.status==='in_progress';
-  if(!isPending&&!(await verifyAdminSession())){toast('Debes entrar como administrador para guardar resultados');openAdminLogin();return}
-  if(matchPhotoFile&&isPending&&!(await verifyAdminSession())){toast('Para subir una foto debes entrar como administrador');openAdminLogin();return}
-
-  const client=isPending?sbPublic:sbAuth;
+  const client=sbPublic;
   try{
-    if(isPending)await ensurePlayersPublic([...red,...black]);else await ensurePlayersInSupabase([...red,...black]);
+    await ensurePlayersPublic([...red,...black]);
     const competition=currentSeasonMode==='f7'?'football7':'football5';let matchId=editingMatchId;
 
     if(matchId){
@@ -990,16 +1002,16 @@ async function saveResult(){
     if(matchPhotoFile){
       const ext=(matchPhotoFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
       const path=`matches/${matchId}/${Date.now()}.${ext}`;
-      const upload=await sbAuth.storage.from('player-photos').upload(path,matchPhotoFile,{upsert:true,contentType:matchPhotoFile.type});
+      const upload=await sbPublic.storage.from('player-photos').upload(path,matchPhotoFile,{upsert:false,contentType:matchPhotoFile.type});
       if(upload.error)throw upload.error;
-      photoUrl=sbAuth.storage.from('player-photos').getPublicUrl(path).data.publicUrl;
+      photoUrl=sbPublic.storage.from('player-photos').getPublicUrl(path).data.publicUrl;
     }
 
     if(editingMatchId){
       const {error}=await client.from('matches').update({competition,match_date:date,red_score:redScore,black_score:blackScore,status:'final',chronicle_title:chronicleTitle||null,chronicle_text:chronicleText||null,photo_url:photoUrl||null}).eq('id',matchId);
       if(error)throw error;
     }else if(photoUrl){
-      const {error}=await sbAuth.from('matches').update({photo_url:photoUrl}).eq('id',matchId);
+      const {error}=await sbPublic.from('matches').update({photo_url:photoUrl}).eq('id',matchId);
       if(error)throw error;
     }
 
@@ -1032,14 +1044,22 @@ function editMatch(id){const m=db.matches.find(x=>String(x.id)===String(id));if(
 async function deleteMatch(id){
   const partido=db.matches.find(m=>String(m.id)===String(id));if(!partido){alert('No se ha encontrado el partido.');return}
   const texto=`${partido.mode==='f7'?'Fútbol 7':'Fútbol Sala'} — Rojos ${partido.redScore} - ${partido.blackScore} Negros — ${formatDate(partido.date)}`;
-  if(!confirm(`¿Eliminar este partido?\n\n${texto}`))return;if(!(await verifyAdminSession())){toast('La sesión de administrador ha caducado');return}
-  const {error}=await sbAuth.from('matches').delete().eq('id',id);if(error){console.error(error);toast('No se pudo eliminar el partido');return}
-  await loadSupabaseData();renderAdminPanel();toast('Partido eliminado correctamente')
+  if(!confirm(`¿Eliminar este partido?\n\n${texto}`))return;
+  const ok=await verifyAdminSession();
+  if(!ok){toast('La sesión de administrador ha caducado');return}
+  toast('Eliminando partido…');
+  const {data,error}=await sbAuth.rpc('admin_delete_match_v2',{p_match_id:String(id)});
+  if(error){console.error('admin_delete_match_v2',error);alert('No se pudo eliminar el partido:\n\n'+(error.message||'Error de Supabase'));return}
+  if(data!==true){alert('Supabase no confirmó el borrado del partido.');return}
+  await loadSupabaseData();
+  renderAdminPanel();
+  toast('Partido eliminado correctamente')
 }
 async function clearAllMatches(){
   if(!db.matches?.length){alert('No hay partidos guardados.');return}if(!confirm(`¿Eliminar los ${db.matches.length} partidos guardados?\n\nEsta acción no se puede deshacer.`))return;
   if(!(await verifyAdminSession())){toast('La sesión de administrador ha caducado');return}
-  const {error}=await sbAuth.from('matches').delete().gt('id',0);if(error){console.error(error);toast('No se pudieron eliminar los partidos');return}
+  const {error}=await sbAuth.rpc('admin_delete_all_matches');
+  if(error){console.error(error);toast('No se pudieron eliminar los partidos: '+(error.message||'error de Supabase'));return}
   await loadSupabaseData();renderAdminPanel();toast('Todos los partidos han sido eliminados')
 }
 async function adminLogout(){await sbAuth.auth.signOut();adminLogged=false;updateSeasonAdminTabs();closeAdmin();toast('Sesión cerrada')}
