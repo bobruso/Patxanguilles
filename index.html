@@ -404,6 +404,53 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
   .home-image-card .home-card-image img{min-height:148px}
 }
 
+
+/* Mejora de integración de las imágenes de portada */
+.home-options .mode.home-image-card{
+  grid-template-columns:44% 56%;
+  min-height:176px;
+  border-radius:18px;
+}
+.home-image-card .home-card-copy{
+  position:relative;
+  z-index:2;
+  padding:21px 18px;
+}
+.home-image-card .home-card-image{
+  position:relative;
+  border-left:0;
+  overflow:hidden;
+}
+.home-image-card .home-card-image:before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:34px;
+  z-index:2;
+  pointer-events:none;
+  background:linear-gradient(90deg,rgba(12,16,18,.78),rgba(12,16,18,0));
+}
+.home-options .mode.redline.home-image-card .home-card-image:before{
+  background:linear-gradient(90deg,rgba(120,8,16,.76),rgba(120,8,16,0));
+}
+.home-image-card .home-card-image img{
+  min-height:176px;
+  object-fit:cover;
+  object-position:center center;
+}
+.home-image-card[onclick*="openCreateGame"] .home-card-image img{object-position:58% center}
+.home-image-card[onclick*="openSeason"] .home-card-image img{object-position:52% center}
+.home-image-card[onclick*="resultMode"] .home-card-image img{object-position:50% 52%}
+@media(max-width:680px){
+  .home-options .mode.home-image-card{
+    grid-template-columns:48% 52%;
+    min-height:150px;
+  }
+  .home-image-card .home-card-copy{padding:16px 14px}
+  .home-image-card .home-card-image img{min-height:150px}
+  .home-image-card .home-card-image:before{width:24px}
+}
+
 </style>
 </head>
 <body>
@@ -1048,7 +1095,7 @@ async function saveGeneratedCard(name,generationId){
 }
 async function openPlayerEditor(name){
   const p=db.players[name]||defaultPlayer(name);
-  document.getElementById('profileContent').innerHTML=`<div class="profile-body"><div class="kicker">EDITAR JUGADOR</div><h2 style="margin-bottom:18px">${escapeHtml(name)}</h2><div class="profile-edit-form"><label>Apodo<input value="${escapeHtml(name)}" disabled></label><label>Nombre completo<input id="editFullName" value="${escapeHtml(p.fullName||name)}"></label><label>Fecha de nacimiento<input id="editBirthDate" type="date" value="${escapeHtml(p.birthDate||'')}" onchange="updateCalculatedAge()"></label><label>Edad calculada<input id="editCalculatedAge" value="${p.birthDate?calculateAge(p.birthDate)+' años':'—'}" disabled></label><label>Pierna<select id="editLeg"><option value="">—</option><option ${p.leg==='Derecha'?'selected':''}>Derecha</option><option ${p.leg==='Izquierda'?'selected':''}>Izquierda</option><option ${p.leg==='Ambas'?'selected':''}>Ambas</option></select></label><label>Posición<input id="editPosition" value="${escapeHtml(p.position||'')}" placeholder="Portero, defensa, medio…"></label><label>Competiciones<div style="display:flex;gap:12px;padding:10px 0"><span><input id="editF7" type="checkbox" ${p.football7?'checked':''}> Fútbol 7</span><span><input id="editF5" type="checkbox" ${p.football5?'checked':''}> Fútbol Sala</span></div></label><label class="full">Foto de perfil<input id="editPhoto" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">JPG, PNG o WebP. Se subirá al guardar.</small></label>${p.photo?`<div class="full"><img class="photo-preview" src="${escapeHtml(p.photo)}" alt="Foto actual"></div>`:''}${adminLogged?`<label class="full">Cambiar carta<input id="editPlayerCard" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">Solo administrador · JPG, PNG o WebP · máximo 8 MB. Si eliges una imagen, sustituirá la carta actual al guardar.</small></label>${p.card?`<div class="full card-current-preview"><div class="kicker" style="margin-bottom:8px">Carta actual</div><img src="${escapeHtml(p.card)}" alt="Carta actual de ${escapeHtml(name)}"></div>`:''}`:''}</div><div class="controls"><button class="primary" onclick="savePlayerProfile('${escapeJs(name)}')">Guardar cambios</button><button class="secondary" onclick="openProfile('${escapeJs(name)}')">Cancelar</button></div></div>`
+  document.getElementById('profileContent').innerHTML=`<div class="profile-body"><div class="kicker">EDITAR JUGADOR</div><h2 style="margin-bottom:18px">${escapeHtml(name)}</h2><div class="profile-edit-form"><label>Apodo<input id="editNickname" value="${escapeHtml(name)}" maxlength="50" placeholder="Apodo"></label><label>Nombre completo<input id="editFullName" value="${escapeHtml(p.fullName||name)}"></label><label>Fecha de nacimiento<input id="editBirthDate" type="date" value="${escapeHtml(p.birthDate||'')}" onchange="updateCalculatedAge()"></label><label>Edad calculada<input id="editCalculatedAge" value="${p.birthDate?calculateAge(p.birthDate)+' años':'—'}" disabled></label><label>Pierna<select id="editLeg"><option value="">—</option><option ${p.leg==='Derecha'?'selected':''}>Derecha</option><option ${p.leg==='Izquierda'?'selected':''}>Izquierda</option><option ${p.leg==='Ambas'?'selected':''}>Ambas</option></select></label><label>Posición<input id="editPosition" value="${escapeHtml(p.position||'')}" placeholder="Portero, defensa, medio…"></label><label>Competiciones<div style="display:flex;gap:12px;padding:10px 0"><span><input id="editF7" type="checkbox" ${p.football7?'checked':''}> Fútbol 7</span><span><input id="editF5" type="checkbox" ${p.football5?'checked':''}> Fútbol Sala</span></div></label><label class="full">Foto de perfil<input id="editPhoto" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">JPG, PNG o WebP. Se subirá al guardar.</small></label>${p.photo?`<div class="full"><img class="photo-preview" src="${escapeHtml(p.photo)}" alt="Foto actual"></div>`:''}${adminLogged?`<label class="full">Cambiar carta<input id="editPlayerCard" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">Solo administrador · JPG, PNG o WebP · máximo 8 MB. Si eliges una imagen, sustituirá la carta actual al guardar.</small></label>${p.card?`<div class="full card-current-preview"><div class="kicker" style="margin-bottom:8px">Carta actual</div><img src="${escapeHtml(p.card)}" alt="Carta actual de ${escapeHtml(name)}"></div>`:''}`:''}</div><div class="controls"><button class="primary" onclick="savePlayerProfile('${escapeJs(name)}')">Guardar cambios</button><button class="secondary" onclick="openProfile('${escapeJs(name)}')">Cancelar</button></div></div>`
 }
 
 function updateCalculatedAge(){
@@ -1069,6 +1116,7 @@ async function savePlayerProfile(name){
     const fd=new FormData();
     const birthDate=document.getElementById('editBirthDate').value||'';
     fd.append('player_id',String(id));
+    fd.append('nickname',document.getElementById('editNickname').value.trim()||name);
     fd.append('full_name',document.getElementById('editFullName').value.trim()||name);
     fd.append('birth_date',birthDate);
     fd.append('leg',document.getElementById('editLeg').value||'');
