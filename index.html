@@ -623,10 +623,68 @@ body:before{
   }
 }
 
+
+/* v42 · reproductor con playlist aleatoria */
+.music-controls{
+  max-width:min(560px,calc(100vw - 20px));
+}
+.music-now-playing{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  max-width:285px;
+  line-height:1.05;
+}
+.music-now-label{
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.12em;
+  color:#858f9b;
+  margin-bottom:3px;
+}
+.music-track-title{
+  font-size:11px;
+  font-weight:850;
+  color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.music-track-artist{
+  font-size:9px;
+  color:#aab2bd;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+@media(max-width:700px){
+  .music-controls{
+    max-width:calc(100vw - 16px);
+    left:8px;
+    bottom:8px;
+    gap:6px;
+  }
+  .music-now-playing{
+    width:min(155px,38vw);
+    max-width:155px;
+  }
+  .music-now-label{font-size:7px}
+  .music-track-title{font-size:9px}
+  .music-track-artist{font-size:8px}
+  .music-controls input[type=range]{width:42px}
+  .music-volume-label{font-size:8px;min-width:22px}
+}
+@media(max-width:390px){
+  .music-now-playing{
+    width:min(125px,34vw);
+  }
+}
+
 </style>
 </head>
 <body>
-<audio id="bgMusic" loop preload="auto"></audio>
+<audio id="bgMusic" preload="auto"></audio>
 <div class="app">
 
 <section id="home" class="screen active">
@@ -716,7 +774,16 @@ body:before{
 <div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div></div></div>
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
 <div class="admin-corner"><button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button></div>
-<div class="music-controls" title="Música"><button id="musicToggle" type="button" onclick="toggleMusic()" aria-label="Pausar o reproducir música">⏸</button><span style="font-size:11px;color:#c8ced5">♫</span><input id="musicVolume" type="range" min="0" max="100" value="20" oninput="setMusicVolume(this.value)" aria-label="Volumen de música"><span id="musicVolumeLabel" class="music-volume-label">20%</span></div>
+<div class="music-controls" title="Música">
+  <button id="musicToggle" type="button" onclick="toggleMusic()" aria-label="Pausar o reproducir música">⏸</button>
+  <div class="music-now-playing" aria-live="polite">
+    <span class="music-now-label">AHORA SONANDO</span>
+    <span id="musicTrackTitle" class="music-track-title">—</span>
+    <span id="musicTrackArtist" class="music-track-artist"></span>
+  </div>
+  <input id="musicVolume" type="range" min="0" max="100" value="20" oninput="setMusicVolume(this.value)" aria-label="Volumen de música">
+  <span id="musicVolumeLabel" class="music-volume-label">20%</span>
+</div>
 <div id="adminModal" class="admin-modal"><div class="admin-card"><div id="adminContent"></div></div></div>
 
 <div id="photoViewer" class="photo-viewer" onclick="if(event.target===this)closePhotoViewer()">
@@ -1729,13 +1796,83 @@ document.addEventListener('keydown',e=>{
 /* Música: un único audio vive fuera de las pantallas, así no se reinicia al navegar.
    Los navegadores bloquean el autoplay con sonido hasta que exista interacción del usuario. */
 const music=document.getElementById('bgMusic');
-music.src='patxanguilles.mp3';music.volume=.20;
+const musicPlaylist=[
+  {file:'patxanguilles.mp3',title:'Himno de la Champions League',artist:'UEFA Champions League'},
+  {file:'Anuncio Canal Me gusta el futbol.m4a',title:'Me gusta el fútbol',artist:'Canal+'},
+  {file:'Jerry Goldsmith The Dream From Total Recall OST.m4a',title:'The Dream (Total Recall OST)',artist:'Jerry Goldsmith'},
+  {file:'Maradona Andres Calamaro.m4a',title:'Maradona',artist:'Andrés Calamaro'},
+  {file:'Fatboy Slim Rockafeller Skank Official Video.m4a',title:'The Rockafeller Skank',artist:'Fatboy Slim'},
+  {file:'Stop the Rock.m4a',title:'Stop the Rock',artist:'Apollo 440'},
+  {file:'Jerk it out The caesars.m4a',title:'Jerk It Out',artist:'Caesars'},
+  {file:'Bloc Party Helicopter Official Music Video.m4a',title:'Helicopter',artist:'Bloc Party'},
+  {file:'Kasabian Club Foot Official Audio.m4a',title:'Club Foot',artist:'Kasabian'},
+  {file:'KNAAN Wavin Flag Coca Cola Celebration Mix.m4a',title:"Wavin' Flag (Coca-Cola Celebration Mix)",artist:"K'NAAN"},
+  {file:'Blur Song 2 Official Music Video.m4a',title:'Song 2',artist:'Blur'},
+  {file:'Gerry The Pacemakers Youll Never Walk Alone Official Video.m4a',title:"You'll Never Walk Alone",artist:'Gerry and the Pacemakers'}
+];
+music.volume=.20;
 let musicStarted=false;
-function updateMusicButton(){const b=document.getElementById('musicToggle');if(b)b.textContent=music.paused?'▶':'⏸'}
-function startMusic(e){if(e?.target?.closest?.('.music-controls'))return;if(musicStarted)return;musicStarted=true;music.play().then(updateMusicButton).catch(()=>{musicStarted=false;updateMusicButton()})}
-function toggleMusic(){musicStarted=true;if(music.paused)music.play().catch(()=>{});else music.pause();setTimeout(updateMusicButton,0)}
-function setMusicVolume(v){const n=Math.max(0,Math.min(100,Number(v)||0));music.volume=n/100;const l=document.getElementById('musicVolumeLabel');if(l)l.textContent=n+'%';if(n===0&&!music.paused)updateMusicButton()}
-music.addEventListener('play',updateMusicButton);music.addEventListener('pause',updateMusicButton);
+let currentTrackIndex=-1;
+
+function updateNowPlaying(){
+  const track=musicPlaylist[currentTrackIndex];
+  const title=document.getElementById('musicTrackTitle');
+  const artist=document.getElementById('musicTrackArtist');
+  if(title)title.textContent=track?.title||'—';
+  if(artist)artist.textContent=track?.artist||'';
+}
+function chooseRandomTrack(avoidCurrent=true){
+  if(!musicPlaylist.length)return -1;
+  if(musicPlaylist.length===1)return 0;
+  let next;
+  do{next=Math.floor(Math.random()*musicPlaylist.length)}
+  while(avoidCurrent&&next===currentTrackIndex);
+  return next;
+}
+function loadTrack(index){
+  if(index<0||index>=musicPlaylist.length)return;
+  currentTrackIndex=index;
+  music.src=musicPlaylist[index].file;
+  updateNowPlaying();
+}
+function playRandomTrack(){
+  loadTrack(chooseRandomTrack(true));
+  if(musicStarted)music.play().catch(()=>{});
+}
+function updateMusicButton(){
+  const b=document.getElementById('musicToggle');
+  if(b)b.textContent=music.paused?'▶':'⏸';
+}
+function startMusic(e){
+  if(e?.target?.closest?.('.music-controls'))return;
+  if(musicStarted)return;
+  musicStarted=true;
+  music.play().then(updateMusicButton).catch(()=>{musicStarted=false;updateMusicButton()});
+}
+function toggleMusic(){
+  musicStarted=true;
+  if(music.paused)music.play().catch(()=>{});
+  else music.pause();
+  setTimeout(updateMusicButton,0);
+}
+function setMusicVolume(v){
+  const n=Math.max(0,Math.min(100,Number(v)||0));
+  music.volume=n/100;
+  const l=document.getElementById('musicVolumeLabel');
+  if(l)l.textContent=n+'%';
+  if(n===0&&!music.paused)updateMusicButton();
+}
+music.addEventListener('play',updateMusicButton);
+music.addEventListener('pause',updateMusicButton);
+music.addEventListener('ended',()=>{
+  loadTrack(chooseRandomTrack(true));
+  if(musicStarted)music.play().catch(()=>{});
+});
+
+/* Elegimos una canción distinta al azar en cada carga de la web.
+   El navegador empezará a reproducirla tras la primera interacción del usuario,
+   para respetar las restricciones de autoplay de móvil/Chrome. */
+loadTrack(chooseRandomTrack(false));
 document.addEventListener('click',startMusic,{once:true});
 updateMusicButton();
 </script>
