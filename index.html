@@ -2793,6 +2793,81 @@ body:has(#coachLobby.active):before{
   -webkit-backdrop-filter:blur(6px) !important;
 }
 
+
+/* v77 · Screenshot de alineaciones vertical y sin nombres/camisetas cortados */
+.final-pitch.screenshot-vertical{
+  position:fixed !important;
+  left:-10000px !important;
+  top:0 !important;
+  width:620px !important;
+  max-width:none !important;
+  height:auto !important;
+  box-sizing:border-box !important;
+  padding:24px 22px !important;
+  overflow:visible !important;
+  border-radius:22px !important;
+}
+.final-pitch.screenshot-vertical .final-teams{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:18px !important;
+  width:100% !important;
+}
+.final-pitch.screenshot-vertical .final-team{
+  width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+  padding:18px 16px !important;
+  overflow:visible !important;
+}
+.final-pitch.screenshot-vertical .final-team h3{
+  margin:0 0 14px !important;
+  font-size:22px !important;
+  line-height:1.1 !important;
+}
+.final-pitch.screenshot-vertical .final-shirt-grid{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  justify-content:center !important;
+  align-items:flex-start !important;
+  gap:14px 10px !important;
+  width:100% !important;
+}
+.final-pitch.screenshot-vertical .final-shirt-grid .big-shirt{
+  flex:0 0 calc(25% - 10px) !important;
+  width:calc(25% - 10px) !important;
+  min-width:0 !important;
+  max-width:none !important;
+  min-height:112px !important;
+  box-sizing:border-box !important;
+  padding:10px 6px !important;
+  gap:7px !important;
+  overflow:visible !important;
+  transform:none !important;
+  font-size:15px !important;
+  line-height:1.15 !important;
+}
+.final-pitch.screenshot-vertical .final-shirt-grid .big-shirt:nth-child(n+5){
+  transform:none !important;
+}
+.final-pitch.screenshot-vertical .final-shirt-grid .big-shirt > span:last-child{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-height:34px !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+  text-align:center !important;
+}
+.final-pitch.screenshot-vertical .shirt-shape{
+  flex:0 0 auto !important;
+  width:50px !important;
+  height:56px !important;
+}
+
 </style>
 </head>
 <body>
@@ -2808,7 +2883,7 @@ body:has(#coachLobby.active):before{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v76 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v77 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -2998,8 +3073,21 @@ body:has(#coachLobby.active):before{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v76</span>
+    <span class="history-version">VERSIÓN v77</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">37</div>
+      <div class="history-section-content">
+        <h2>Screenshot de alineaciones · formato vertical</h2>
+        <ul>
+          <li>La captura de la alineación se genera ahora en formato vertical, con Rojos arriba y Negros abajo.</li>
+          <li>Cada equipo mantiene la distribución 4+3, independientemente del tamaño u orientación de la pantalla del móvil.</li>
+          <li>La captura utiliza una composición independiente de 620px de ancho para evitar que las camisetas y los nombres se compriman o se corten.</li>
+          <li>Los nombres pueden ocupar más de una línea dentro de la captura en lugar de truncarse.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">36</div>
       <div class="history-section-content">
@@ -4772,13 +4860,38 @@ async function copyFinalAndToast(){
 async function copyLineupScreenshot(){
   const area=document.getElementById('finalPitchCapture');
   if(!area){toast('No se encontró el campo');return}
+  let captureArea=null;
   try{
-    const canvas=await html2canvas(area,{backgroundColor:'#174f34',scale:2,useCORS:true,logging:false});
+    // El screenshot usa una copia independiente del diseño visible:
+    // siempre vertical, un equipo arriba y otro abajo, conservando 4+3.
+    captureArea=area.cloneNode(true);
+    captureArea.removeAttribute('id');
+    captureArea.classList.add('screenshot-vertical');
+    captureArea.setAttribute('aria-hidden','true');
+    document.body.appendChild(captureArea);
+
+    // Espera un frame para que el navegador aplique completamente el CSS
+    // antes de renderizar la captura.
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+
+    const canvas=await html2canvas(captureArea,{
+      backgroundColor:'#174f34',
+      scale:2,
+      useCORS:true,
+      logging:false,
+      width:captureArea.scrollWidth,
+      height:captureArea.scrollHeight,
+      windowWidth:700
+    });
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
     if(!blob)throw new Error('No se pudo generar la imagen');
+
+    captureArea.remove();
+    captureArea=null;
+
     if(navigator.clipboard&&window.ClipboardItem&&window.isSecureContext){
       await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-      toast('Screenshot copiado al portapapeles');
+      toast('Screenshot vertical copiado al portapapeles');
       return;
     }
     const url=URL.createObjectURL(blob),a=document.createElement('a');
@@ -4786,6 +4899,7 @@ async function copyLineupScreenshot(){
     setTimeout(()=>URL.revokeObjectURL(url),1000);
     toast('El navegador no permite copiar imágenes; se ha descargado el screenshot');
   }catch(err){
+    if(captureArea?.isConnected)captureArea.remove();
     console.error(err);
     toast('No se pudo copiar el screenshot. Prueba desde Chrome o Safari actualizado');
   }
