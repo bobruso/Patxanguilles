@@ -420,7 +420,12 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
   position:relative;
   border-left:0;
   overflow:hidden;
+  margin:0;
+  align-self:stretch;
 }
+/* Evita que la regla genérica .mode span añada una franja superior a los contenedores */
+.home-image-card > .home-card-copy,
+.home-image-card > .home-card-image{margin-top:0;}
 .home-image-card .home-card-image:before{
   content:"";
   position:absolute;
@@ -463,14 +468,14 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 <h1>PATXANGUILLES<br>ANTIFEIXISTES</h1><span class="title-mark"></span>
 
 <div class="home-options">
-<button class="mode redline home-image-card" onclick="openCreateGame()"><span class="home-card-copy"><span class="icon">⚽</span><strong>Crear partido</strong><span>Generación de equipos automágica</span></span><span class="home-card-image"><img src="crear alineacion.jpg" alt=""></span></button>
+<button class="mode redline home-image-card" onclick="openCreateGame()"><span class="home-card-copy"><span class="icon">⚽</span><strong>Crear equipos</strong><span>Generación de equipos automágica</span></span><span class="home-card-image"><img src="crear alineacion.jpg" alt=""></span></button>
 <button class="mode greenline home-image-card" onclick="openSeason()"><span class="home-card-copy"><span class="icon">🏆</span><strong>Temporada 26/27</strong><span>Clasificación, calendario y jugadores</span></span><span class="home-card-image"><img src="temporada.jpg" alt=""></span></button>
 <button class="mode greenline home-image-card" onclick="show('resultMode')"><span class="home-card-copy"><span class="icon">📝</span><strong>Apuntar resultado</strong><span>Partido ya jugado</span></span><span class="home-card-image"><img src="apuntar resultado.jpg" alt=""></span></button>
 </div>
 </div></section>
 
 <section id="createMode" class="screen"><div class="card">
-<div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Crear partido</h2><div class="subtitle">Elige la modalidad para generar las alineaciones.</div></div></div>
+<div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Crear equipos</h2><div class="subtitle">Elige la modalidad para generar las alineaciones.</div></div></div>
 <div class="home-options"><button class="mode redline" onclick="startGame('f7')"><div class="icon">⚽</div><strong>Fútbol 7</strong><span>14 jugadores.</span></button><button class="mode greenline" onclick="startGame('fs')"><div class="icon">🥅</div><strong>Fútbol Sala</strong><span>10 jugadores.</span></button></div>
 </div></section>
 
