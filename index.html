@@ -639,12 +639,12 @@ body:before{
 </div></section>
 
 <section id="createMode" class="screen"><div class="card">
-<div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Crear equipos</h2><div class="subtitle">Elige la modalidad para generar las alineaciones.</div></div></div>
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2>Crear equipos</h2><div class="subtitle">Elige la modalidad para generar las alineaciones.</div></div></div>
 <div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="startGame('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>14 jugadores.</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="startGame('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>10 jugadores.</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
 <section id="selection" class="screen"><div class="card">
-<div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2 id="selectionTitle">Fútbol 7</h2><div class="subtitle">Selecciona los que juegan hoy.</div></div><div class="count"><b id="selectedCount">0</b> / <span id="neededCount">14</span></div></div>
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="selectionTitle">Fútbol 7</h2><div class="subtitle">Selecciona los que juegan hoy.</div></div><div class="count"><b id="selectedCount">0</b> / <span id="neededCount">14</span></div></div>
 <div class="players" id="players"></div>
 <div class="reserve-area"><div class="reserve-toggle" onclick="toggleReserves()"><span>＋ Añadir reservas</span><span id="reserveArrow">▾</span></div><div id="reserveConfig" class="reserve-config"><div class="reserve-config-top"><label for="reserveQty">Cantidad de reservas</label><select id="reserveQty" onchange="buildReserveFields()"><option value="0">0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div><div id="reserveFields" class="reserve-fields"></div><div class="reserve-tag">Las reservas se incorporan como jugadores elegibles.</div></div></div>
 <div class="footerbar"><span class="count">Los jugadores seleccionados se iluminarán.</span><button id="makeTeams" class="primary" disabled onclick="makeTeams()">Hacer equipos</button></div>
@@ -654,7 +654,7 @@ body:before{
 
 <section id="results" class="screen results"><div class="card">
 <div class="topbar lineup-topbar">
-  <div><button class="back" onclick="show('selection')">← Cambiar jugadores</button><h2>¿Qué te parece este partido?</h2><div class="subtitle" id="resultSubtitle"></div></div>
+  <div><button class="back" onclick="history.length>1?history.back():show('selection')">← Cambiar jugadores</button><h2>¿Qué te parece este partido?</h2><div class="subtitle" id="resultSubtitle"></div></div>
   <div class="lineup-top-actions"><button class="secondary" onclick="newLineup()">Probar otra alineación</button><button class="secondary" onclick="show('home')">Home</button></div>
 </div>
 <div class="pitch formation-pitch"><div class="teams formation-teams"><div class="team formation-team"><h3><span class="badge red"></span> Rojo</h3><div id="redSquad" class="squad formation-squad"></div></div><div class="team formation-team"><h3><span class="badge black"></span> Negro</h3><div id="blackSquad" class="squad formation-squad"></div></div></div></div>
@@ -667,17 +667,17 @@ body:before{
 </div></section>
 
 <section id="resultMode" class="screen"><div class="card">
-<div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Apuntar resultado</h2><div class="subtitle">Selecciona la modalidad del partido.</div></div></div>
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2>Apuntar resultado</h2><div class="subtitle">Selecciona la modalidad del partido.</div></div></div>
 <div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="openResultMode('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>Apuntar partido de Fútbol 7</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="openResultMode('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>Apuntar partido de Fútbol Sala</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
 <section id="seasonMode" class="screen"><div class="card">
-<div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Temporada 26/27</h2><div class="subtitle">Selecciona la competición.</div></div></div>
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2>Temporada 26/27</h2><div class="subtitle">Selecciona la competición.</div></div></div>
 <div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="openSeason('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>Clasificación y calendario.</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="openSeason('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>Clasificación y calendario.</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
 <section id="season" class="screen results"><div class="card">
-<div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><button class="primary" onclick="openResultForm()">＋ Añadir resultado</button></div>
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><button class="primary" onclick="openResultForm()">＋ Añadir resultado</button></div>
 <div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
 <div id="seasonContent"></div>
 </div></section>
@@ -787,7 +787,77 @@ async function verifyAdminSession(){
   const {data,error}=await sbAuth.from('profiles').select('role').eq('id',session.user.id).single();adminLogged=!error&&data?.role==='admin';updateSeasonAdminTabs?.();return adminLogged;
 }
 
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+/* Navegación SPA integrada con el historial del navegador.
+   Las pantallas reales generan una entrada en History; "loading" es transitoria
+   y no aparece al pulsar Atrás. */
+const historyRoutes={
+  home:'home',
+  createMode:'crear-alineaciones',
+  selection:'seleccionar-jugadores',
+  results:'alineaciones',
+  resultMode:'apuntar-resultado',
+  resultForm:'resultado',
+  seasonMode:'temporada',
+  season:'temporada-detalle'
+};
+const transientScreens=new Set(['loading']);
+let handlingPopState=false;
+
+function screenHistoryState(id){
+  return{
+    screen:id,
+    game:game||null,
+    currentSeasonMode:currentSeasonMode||null,
+    resultReturn:resultReturn||null
+  };
+}
+function routeForScreen(id){return historyRoutes[id]||id}
+function show(id,opts={}){
+  const target=document.getElementById(id);
+  if(!target)return;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  target.classList.add('active');
+  window.scrollTo(0,0);
+
+  if(opts.fromHistory||handlingPopState||transientScreens.has(id))return;
+
+  const current=history.state?.screen;
+  const url='#'+routeForScreen(id);
+  if(opts.replace||!current){
+    history.replaceState(screenHistoryState(id),'',url);
+  }else if(current!==id){
+    history.pushState(screenHistoryState(id),'',url);
+  }else{
+    history.replaceState(screenHistoryState(id),'',url);
+  }
+}
+function restoreHistoryState(state){
+  if(!state?.screen||!document.getElementById(state.screen)){
+    show('home',{fromHistory:true});
+    return;
+  }
+  if(state.game)game=state.game;
+  if(state.currentSeasonMode)currentSeasonMode=state.currentSeasonMode;
+  if(state.resultReturn)resultReturn=state.resultReturn;
+
+  /* Cerrar capas que no pertenecen a la pantalla recuperada. */
+  document.getElementById('celebration').style.display='none';
+  document.getElementById('profileModal')?.classList.remove('open');
+  document.getElementById('matchModal')?.classList.remove('open');
+  document.getElementById('adminModal')?.classList.remove('open');
+
+  show(state.screen,{fromHistory:true});
+}
+window.addEventListener('popstate',event=>{
+  handlingPopState=true;
+  restoreHistoryState(event.state);
+  handlingPopState=false;
+});
+
+/* La primera carga queda registrada como Home. A partir de aquí, cada
+   apartado que abra el usuario se añade al historial del navegador. */
+history.replaceState(screenHistoryState('home'),'','#home');
+
 function openCreateGame(){show('createMode')}
 function startGame(type){game=type;selected=[];reserves=[];pendingSwap=null;const list=type==='f7'?F7:FS,needed=type==='f7'?14:10;document.getElementById('selectionTitle').textContent=type==='f7'?'Fútbol 7':'Fútbol Sala';document.getElementById('neededCount').textContent=needed;document.getElementById('reserveQty').value='0';document.getElementById('reserveConfig').classList.remove('open');document.getElementById('reserveFields').innerHTML='';renderPlayerList(list,needed);updateCount();show('selection')}
 function renderPlayerList(list,needed){const box=document.getElementById('players');box.innerHTML='';[...list,...reserves.map(r=>r.name)].forEach(name=>{const b=document.createElement('button');b.className='player';b.textContent=name;b.onclick=()=>togglePlayer(name,b,needed);box.appendChild(b)})}
