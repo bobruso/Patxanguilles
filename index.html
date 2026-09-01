@@ -703,6 +703,1688 @@ body.bg-player-selection:before{
   }
 }
 
+
+/* v44 · selector algoritmo / modo entrenador */
+.coach-method-options{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.coach-method-card{
+  min-height:220px;
+  text-align:left;
+  padding:28px;
+}
+.coach-method-card .icon{font-size:44px;margin-bottom:12px}
+.coach-method-card strong{font-size:22px;line-height:1.12}
+.coach-method-card > span:last-child{font-size:14px;line-height:1.35;margin-top:10px}
+
+.coach-lobby-card{max-width:900px;margin:auto}
+.coach-lobby-panel{padding:24px 0 6px}
+.coach-lobby-hero{
+  max-width:650px;
+  margin:0 auto;
+  padding:34px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  background:rgba(0,0,0,.28);
+  text-align:center;
+}
+.coach-lobby-icon{font-size:58px}
+.coach-lobby-hero h3{font-size:28px;margin:12px 0 8px}
+.coach-lobby-hero p{color:#c8ced5;line-height:1.55;max-width:520px;margin:0 auto 24px}
+.coach-big-btn{min-height:52px;padding:14px 24px;font-weight:900}
+
+body.bg-coach-room{
+  background-image:url('background-home.jpg');
+  background-position:center center;
+  background-size:cover;
+}
+.coach-room-card{
+  max-width:1400px;
+  margin:0 auto;
+  min-height:76vh;
+  background:rgba(7,10,9,.74);
+}
+.coach-room-header{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:16px;
+  align-items:center;
+  padding-bottom:18px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.coach-room-title{text-align:center;display:flex;flex-direction:column;gap:3px}
+.coach-room-title span{font-size:11px;color:#9aa4ae;text-transform:uppercase;letter-spacing:.12em}
+.coach-room-title strong{font-size:20px}
+.coach-room-code{text-align:right;color:#9aa4ae;font-size:12px}
+.coach-room-code b{color:#fff;font-size:16px;letter-spacing:.12em}
+
+.coach-waiting{
+  max-width:680px;
+  margin:70px auto 20px;
+  text-align:center;
+}
+.coach-status-dot{
+  width:18px;height:18px;border-radius:50%;
+  margin:0 auto 18px;background:#d8b64b;
+  box-shadow:0 0 0 0 rgba(216,182,75,.55);
+  animation:coachPulse 1.5s infinite;
+}
+@keyframes coachPulse{70%{box-shadow:0 0 0 16px rgba(216,182,75,0)}100%{box-shadow:0 0 0 0 rgba(216,182,75,0)}}
+.coach-waiting h3{font-size:28px;margin:0 0 8px}
+.coach-waiting p{color:#aeb6bf;margin-bottom:22px}
+.coach-share-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin:0 auto 22px}
+.coach-share-row input{
+  min-width:0;background:#090b0c;border:1px solid #343a40;color:#dfe5eb;border-radius:10px;padding:12px;
+}
+
+.coach-coin-overlay{
+  min-height:520px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  perspective:900px;
+}
+.ref-coin{
+  width:130px;height:130px;position:relative;
+  transform-style:preserve-3d;
+  margin-bottom:28px;
+}
+.coin-face{
+  position:absolute;inset:0;border-radius:50%;
+  display:grid;place-items:center;
+  font-size:48px;font-weight:1000;
+  backface-visibility:hidden;
+  border:8px solid #d6b24a;
+  box-shadow:0 12px 30px rgba(0,0,0,.45),inset 0 0 0 3px rgba(255,255,255,.16);
+}
+.coin-red{background:#9e1111;color:#fff}
+.coin-black{background:#111;color:#fff;transform:rotateY(180deg)}
+.ref-coin.tossing{animation:coinToss 2.1s cubic-bezier(.2,.8,.2,1)}
+.ref-coin.land-red{transform:rotateY(0deg) rotateX(8deg)}
+.ref-coin.land-black{transform:rotateY(180deg) rotateX(8deg)}
+@keyframes coinToss{
+  0%{transform:translateY(0) rotateY(0) rotateX(0) scale(1)}
+  45%{transform:translateY(-150px) rotateY(900deg) rotateX(360deg) scale(1.08)}
+  100%{transform:translateY(0) rotateY(1800deg) rotateX(720deg) scale(1)}
+}
+
+.coach-draft{
+  display:grid;
+  grid-template-columns:minmax(180px,240px) minmax(0,1fr) minmax(180px,240px);
+  gap:18px;
+  margin-top:22px;
+}
+.coach-side,.coach-table{
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  background:rgba(0,0,0,.28);
+}
+.coach-side{padding:16px}
+.coach-side-red{border-top:3px solid #d91f26}
+.coach-side-black{border-top:3px solid #70757b}
+.coach-side-label{font-size:12px;font-weight:900;letter-spacing:.06em;margin-bottom:14px}
+.coach-picked-list{display:flex;flex-direction:column;gap:8px}
+.coach-picked-token{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 10px;border-radius:10px;
+  background:rgba(255,255,255,.07);
+  font-weight:800;font-size:13px;
+}
+.coach-picked-token span{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.12);font-size:10px;color:#bac2ca;
+}
+.coach-table{
+  min-height:540px;padding:20px;
+  background:
+    linear-gradient(rgba(15,17,16,.60),rgba(15,17,16,.60)),
+    radial-gradient(circle at center,#30443a 0,#142019 70%);
+}
+.coach-turn-banner{
+  text-align:center;border-radius:12px;padding:12px;font-weight:1000;letter-spacing:.05em;margin-bottom:18px;
+  background:#202427;color:#dfe4e8;
+}
+.coach-turn-banner.my-turn.red{background:#8d1116}
+.coach-turn-banner.my-turn.black{background:#111}
+.coach-turn-banner.waiting-turn{background:#3a3230;color:#e6d5b5}
+.coach-turn-banner.finished{background:#23412b}
+.coach-board-title{text-align:center;font-size:10px;color:#9da7a0;letter-spacing:.18em;font-weight:900;margin-bottom:14px}
+.coach-tokens{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-content:flex-start;
+  min-height:330px;
+}
+.coach-token{
+  appearance:none;border:2px solid #ad9c71;
+  background:radial-gradient(circle at 35% 25%,#f0dfb6,#b69b62);
+  color:#17130d;border-radius:50%;
+  width:92px;height:92px;padding:8px;
+  font-size:12px;font-weight:1000;line-height:1.05;
+  box-shadow:0 7px 12px rgba(0,0,0,.35),inset 0 0 0 3px rgba(255,255,255,.25);
+  cursor:pointer;transition:.16s transform,.16s box-shadow;
+}
+.coach-token:hover{transform:translateY(-3px)}
+.coach-token.selected{
+  transform:translateY(-6px) scale(1.08);
+  box-shadow:0 0 0 4px #fff,0 10px 22px rgba(0,0,0,.55);
+}
+.coach-pick-btn{display:block;margin:18px auto 6px;min-width:220px}
+.coach-selected-hint{text-align:center;font-size:11px;color:#9ca4aa}
+.coach-finished{text-align:center;margin-top:18px;padding:20px;border-radius:16px;background:rgba(26,79,39,.28);border:1px solid rgba(82,164,98,.35)}
+.coach-finished h3{margin:0 0 5px;font-size:24px}
+.coach-finished p{color:#b8c1ba}
+
+@media(max-width:800px){
+  .coach-method-options{grid-template-columns:1fr}
+  .coach-method-card{min-height:160px;padding:20px}
+  .coach-room-header{grid-template-columns:auto 1fr}
+  .coach-room-code{grid-column:1/-1;text-align:center}
+  .coach-draft{
+    grid-template-columns:1fr 1fr;
+  }
+  .coach-table{
+    grid-column:1/-1;
+    grid-row:1;
+    min-height:440px;
+  }
+  .coach-side{min-height:160px}
+  .coach-token{width:72px;height:72px;font-size:10px}
+  .coach-share-row{grid-template-columns:1fr}
+  .coach-waiting{margin-top:36px}
+  .coach-coin-overlay{min-height:430px}
+}
+
+
+/* v45 · selección previa + identidad + tablero cenital */
+.coach-draft-intro{
+  display:flex;align-items:center;gap:16px;
+  margin:0 0 18px;padding:16px 18px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:16px;background:rgba(0,0,0,.26);
+}
+.coach-draft-intro-icon{font-size:34px}
+.coach-draft-intro strong{display:block;font-size:18px;margin-bottom:4px}
+.coach-draft-intro span{display:block;color:#b9c1c8;font-size:13px;line-height:1.4}
+.coach-setup-footer{margin-top:18px}
+#coachSetupPlayers .player{min-height:58px}
+
+.coach-identity-card{
+  max-width:700px;margin:8vh auto 0;text-align:center;
+  padding:54px 34px;background:rgba(7,10,9,.83);
+}
+.coach-identity-badge{
+  width:130px;height:130px;border-radius:50%;
+  display:grid;place-items:center;margin:0 auto 24px;
+  font-size:24px;font-weight:1000;letter-spacing:.08em;
+  border:6px solid rgba(255,255,255,.9);
+  box-shadow:0 0 0 10px rgba(255,255,255,.08),0 22px 50px rgba(0,0,0,.45);
+}
+.coach-identity-badge.red{background:#a70f17;color:#fff}
+.coach-identity-badge.black{background:#0c0c0d;color:#fff}
+.coach-identity-kicker{font-size:10px;letter-spacing:.18em;color:#9aa3aa;font-weight:900}
+.coach-identity-card h2{font-size:34px;margin:10px 0 10px}
+.coach-identity-card p{max-width:520px;margin:0 auto 26px;color:#c6cdd2;font-size:16px;line-height:1.5}
+
+.coach-opponent-alert{
+  position:fixed;inset:0;z-index:9998;
+  place-items:center;background:rgba(0,0,0,.72);
+  backdrop-filter:blur(5px);
+}
+.coach-opponent-alert-card{
+  width:min(520px,90vw);padding:34px;border-radius:24px;
+  background:#111;border:2px solid #d5b54a;text-align:center;
+  box-shadow:0 0 0 8px rgba(213,181,74,.08),0 25px 80px rgba(0,0,0,.65);
+  animation:coachArrived .55s cubic-bezier(.2,.9,.2,1);
+}
+.coach-opponent-alert-icon{font-size:54px;margin-bottom:12px}
+.coach-opponent-alert-card strong{display:block;font-size:25px;margin-bottom:8px}
+.coach-opponent-alert-card span{display:block;color:#c8cdd1;margin-bottom:22px}
+@keyframes coachArrived{0%{transform:scale(.75);opacity:0}70%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+.coach-opponent-alert.pulse-again .coach-opponent-alert-card{animation:coachAlertPulse 1s ease-in-out}
+@keyframes coachAlertPulse{50%{transform:scale(1.035)}}
+
+/* El tablero ocupa toda la zona central y usa la imagen aportada */
+.coach-draft-board{
+  position:relative;
+  display:block !important;
+  min-height:690px;
+  margin-top:20px;
+  border-radius:22px;
+  overflow:hidden;
+  background:
+    linear-gradient(rgba(0,0,0,.20),rgba(0,0,0,.20)),
+    url('background-modo-entrenador.png') center center/cover no-repeat;
+  border:1px solid rgba(255,255,255,.13);
+}
+.coach-draft-board .coach-turn-banner{
+  position:absolute;z-index:8;top:18px;left:50%;transform:translateX(-50%);
+  width:min(520px,70%);margin:0;
+  box-shadow:0 8px 25px rgba(0,0,0,.4);
+}
+.coach-field-zone{
+  position:absolute;top:100px;bottom:46px;width:34%;
+  padding:12px;z-index:3;
+  border-radius:18px;
+}
+.coach-field-red{left:12%}
+.coach-field-black{right:12%}
+.coach-field-zone .coach-side-label{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 10px;border-radius:999px;background:rgba(0,0,0,.62);
+  backdrop-filter:blur(3px);
+}
+.coach-picked-on-field{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.coach-picked-token{
+  min-height:48px;
+  justify-content:center;
+  background:rgba(12,12,12,.78);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 5px 14px rgba(0,0,0,.28);
+}
+.coach-picked-token.red-pick{border-color:rgba(220,45,54,.65)}
+.coach-picked-token.black-pick{border-color:rgba(255,255,255,.24)}
+
+.coach-waiting-zone{
+  position:absolute;z-index:6;
+  left:50%;top:102px;bottom:48px;
+  width:24%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px 8px;
+}
+.coach-board-title{
+  color:#fff;background:rgba(0,0,0,.66);
+  padding:7px 10px;border-radius:999px;
+  margin-bottom:10px;white-space:nowrap;
+}
+.coach-tokens-center{
+  display:flex;flex-wrap:wrap;justify-content:center;align-content:center;
+  gap:8px;min-height:0;flex:1;
+}
+.coach-token-wrap{position:relative;display:inline-flex;align-items:center}
+.coach-token{
+  width:76px;height:76px;font-size:10px;
+  border-width:2px;
+}
+.coach-token:disabled{opacity:.72;cursor:not-allowed}
+.coach-token-wrap.selected{
+  z-index:20;
+}
+.coach-token-wrap.selected .coach-token{
+  transform:scale(1.08);
+}
+.coach-inline-pick{
+  position:absolute;
+  left:calc(100% + 6px);top:50%;transform:translateY(-50%);
+  border:0;border-radius:9px;padding:9px 11px;
+  background:#fff;color:#111;font-size:10px;font-weight:1000;
+  box-shadow:0 5px 16px rgba(0,0,0,.45);
+  cursor:pointer;white-space:nowrap;
+}
+.coach-selected-hint{
+  background:rgba(0,0,0,.62);padding:6px 9px;border-radius:8px;color:#fff;
+}
+
+@media(max-width:800px){
+  .coach-identity-card{margin-top:3vh;padding:38px 20px}
+  .coach-identity-card h2{font-size:27px}
+  .coach-identity-badge{width:105px;height:105px}
+
+  .coach-draft-board{
+    min-height:720px;
+    background-position:center center;
+  }
+  .coach-draft-board .coach-turn-banner{
+    top:12px;width:88%;font-size:11px;
+  }
+  .coach-field-zone{top:88px;bottom:30px;width:38%;padding:6px}
+  .coach-field-red{left:4%}
+  .coach-field-black{right:4%}
+  .coach-waiting-zone{top:90px;bottom:30px;width:28%}
+  .coach-picked-on-field{grid-template-columns:1fr;gap:6px}
+  .coach-picked-token{min-height:40px;font-size:10px;padding:6px}
+  .coach-picked-token span{display:none}
+  .coach-token{width:58px;height:58px;font-size:8px;padding:4px}
+  .coach-tokens-center{gap:5px;align-content:center}
+  .coach-inline-pick{
+    left:50%;top:calc(100% + 4px);transform:translateX(-50%);
+    padding:7px 9px;
+  }
+  .coach-board-title{font-size:8px;padding:6px 8px}
+  .coach-side-label{font-size:9px}
+}
+
+
+/* v46 · importar convocatoria de WhatsApp */
+.coach-whatsapp-import{
+  margin:0 0 22px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  background:rgba(10,13,12,.56);
+}
+.coach-whatsapp-head{
+  display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+  margin-bottom:12px;
+}
+.coach-whatsapp-head strong{display:block;font-size:17px;margin-bottom:4px}
+.coach-whatsapp-head span{display:block;font-size:12px;color:#aeb7be;line-height:1.4}
+#coachCallupText{
+  width:100%;resize:vertical;min-height:145px;
+  padding:14px;border-radius:12px;
+  border:1px solid #394139;
+  background:#080b09;color:#f1f3f2;
+  font:500 13px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  box-sizing:border-box;
+}
+#coachCallupText:focus{
+  outline:none;border-color:#8ea48f;
+  box-shadow:0 0 0 3px rgba(142,164,143,.12);
+}
+.coach-whatsapp-actions{
+  display:flex;gap:8px;justify-content:flex-end;margin-top:10px;
+}
+.coach-callup-review{
+  margin-top:16px;padding:15px;
+  border-radius:14px;background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.09);
+}
+.coach-callup-review-head{
+  display:flex;justify-content:space-between;gap:16px;align-items:center;
+  margin-bottom:12px;
+}
+.coach-callup-review-head strong{display:block;font-size:17px}
+.coach-callup-review-head span{display:block;color:#aeb7be;font-size:12px;margin-top:3px}
+.coach-callup-warning{
+  margin:10px 0 12px;padding:11px 12px;
+  border-radius:10px;
+  background:rgba(181,115,27,.16);
+  border:1px solid rgba(224,165,75,.34);
+  color:#f3d6a5;font-size:12px;line-height:1.5;
+}
+.coach-callup-detected{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+}
+.coach-callup-name{
+  display:flex;align-items:center;gap:7px;
+  min-width:0;padding:8px 10px;border-radius:9px;
+  background:rgba(255,255,255,.055);
+  font-size:12px;
+}
+.coach-callup-name b{color:#78838d;min-width:20px}
+.coach-callup-name > span:nth-child(2){
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-weight:800;flex:1;
+}
+.callup-tag{
+  flex:0 0 auto;font-size:9px;font-weight:900;
+  padding:4px 6px;border-radius:999px;
+}
+.callup-tag.ok{background:rgba(45,144,70,.18);color:#8eda9d}
+.callup-tag.guest{background:rgba(62,119,176,.18);color:#9cc8ed}
+.callup-tag.uncertain{background:rgba(187,122,31,.18);color:#f0c47e}
+.coach-manual-label{margin:4px 0 10px}
+.coach-manual-label strong{display:block;font-size:14px}
+.coach-manual-label span{display:block;font-size:11px;color:#929ca4;margin-top:2px}
+#coachSetupPlayers .coach-guest-player{
+  border-style:dashed;
+  border-color:#6fa2cc;
+}
+#coachSetupPlayers .coach-guest-player small{
+  display:block;margin-top:3px;
+  font-size:8px;letter-spacing:.08em;text-transform:uppercase;
+  color:#8fc0e6;
+}
+
+@media(max-width:700px){
+  .coach-callup-review-head{
+    align-items:stretch;
+    flex-direction:column;
+  }
+  .coach-callup-detected{grid-template-columns:1fr}
+  .coach-whatsapp-actions{justify-content:stretch}
+  .coach-whatsapp-actions button{flex:1}
+}
+
+
+/* v47 · ajustes visuales del tablero del Modo Entrenador */
+
+/* Quitamos el rótulo "JUGADORES ESPERANDO" */
+.coach-waiting-zone .coach-board-title{
+  display:none !important;
+}
+
+/* Equipos fichados más cerca de los bordes exteriores de la pizarra */
+.coach-field-zone{
+  width:31%;
+}
+.coach-field-red{
+  left:7%;
+}
+.coach-field-black{
+  right:7%;
+}
+
+/* Etiquetas de equipo pegadas a los bordes del campo.
+   Especialmente EQUIPO NEGRO, que antes quedaba demasiado centrado. */
+.coach-field-red .coach-side-label{
+  position:absolute;
+  left:0;
+  top:0;
+}
+.coach-field-black .coach-side-label{
+  position:absolute;
+  right:0;
+  top:0;
+}
+.coach-picked-on-field{
+  margin-top:48px;
+}
+
+/* Zona central algo más estrecha para separar claramente
+   jugadores disponibles y jugadores ya fichados */
+.coach-waiting-zone{
+  width:22%;
+  top:105px;
+  bottom:45px;
+}
+
+/* Fichas con silueta de camiseta en lugar de círculos */
+.coach-token{
+  position:relative;
+  width:94px;
+  height:82px;
+  border:0;
+  border-radius:0;
+  background:linear-gradient(145deg,#ead9ad 0%,#c5a66a 72%,#a98a52 100%);
+  color:#17130d;
+  clip-path:polygon(
+    20% 8%,
+    35% 0%,
+    43% 9%,
+    57% 9%,
+    65% 0%,
+    80% 8%,
+    100% 27%,
+    85% 44%,
+    75% 36%,
+    75% 100%,
+    25% 100%,
+    25% 36%,
+    15% 44%,
+    0% 27%
+  );
+  padding:24px 14px 10px;
+  font-size:12px;
+  line-height:1.05;
+  font-weight:1000;
+  text-align:center;
+  overflow:hidden;
+  filter:drop-shadow(0 7px 6px rgba(0,0,0,.38));
+  box-shadow:none;
+}
+.coach-token:hover{
+  transform:translateY(-3px) scale(1.03);
+}
+.coach-token.selected{
+  transform:translateY(-4px) scale(1.10);
+  box-shadow:none;
+  filter:
+    drop-shadow(0 0 3px rgba(255,255,255,1))
+    drop-shadow(0 9px 8px rgba(0,0,0,.48));
+}
+
+/* El aviso de turno del otro entrenador se coloca arriba a la derecha
+   para que nunca quede debajo de las camisetas disponibles. */
+.coach-selected-hint{
+  position:absolute;
+  z-index:12;
+  right:18px;
+  top:76px;
+  max-width:240px;
+  margin:0;
+  padding:9px 12px;
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 7px 18px rgba(0,0,0,.35);
+  pointer-events:none;
+}
+.coach-waiting-zone .coach-selected-hint{
+  position:fixed;
+  right:max(18px,calc((100vw - min(1400px,100vw - 32px))/2 + 28px));
+  top:auto;
+  bottom:78px;
+}
+
+/* Botón FICHAR pegado a la camiseta elegida */
+.coach-inline-pick{
+  left:calc(100% + 7px);
+  z-index:30;
+}
+
+@media(max-width:800px){
+  .coach-field-zone{
+    width:35%;
+  }
+  .coach-field-red{
+    left:2%;
+  }
+  .coach-field-black{
+    right:2%;
+  }
+  .coach-field-red .coach-side-label{
+    left:0;
+  }
+  .coach-field-black .coach-side-label{
+    right:0;
+  }
+  .coach-waiting-zone{
+    width:24%;
+    top:90px;
+  }
+  .coach-token{
+    width:68px;
+    height:61px;
+    padding:18px 8px 7px;
+    font-size:9px;
+  }
+  .coach-waiting-zone .coach-selected-hint{
+    position:absolute;
+    right:-250%;
+    top:auto;
+    bottom:0;
+    width:155px;
+    max-width:155px;
+    font-size:9px;
+  }
+  .coach-inline-pick{
+    left:50%;
+    top:calc(100% + 3px);
+    transform:translateX(-50%);
+  }
+}
+
+
+/* v48 · convocatoria simplificada */
+.coach-whatsapp-head{
+  margin-bottom:10px;
+}
+.coach-callup-modify-row{
+  display:flex;
+  justify-content:center;
+  margin-top:11px;
+}
+.coach-modify-callup-btn{
+  appearance:none;
+  border:0;
+  background:transparent;
+  color:#9da7af;
+  font-size:10px;
+  font-weight:750;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+  padding:5px 8px;
+}
+.coach-modify-callup-btn:hover{
+  color:#fff;
+}
+
+
+/* Historial de versión */
+.home-version-link{
+  margin:18px auto 0;
+  text-align:center;
+  font-size:10px;
+  letter-spacing:.04em;
+}
+.home-version-link a{
+  color:rgba(220,225,222,.48);
+  text-decoration:none;
+  border-bottom:1px solid rgba(220,225,222,.18);
+  padding-bottom:2px;
+  transition:color .18s ease,border-color .18s ease;
+}
+.home-version-link a:hover{
+  color:rgba(255,255,255,.88);
+  border-color:rgba(255,255,255,.55);
+}
+@media(max-width:700px){
+  .home-version-link{margin-top:14px;font-size:9px}
+}
+
+
+/* v50 · historial integrado + tablero entrenador */
+
+/* Historial dentro del index */
+.history-card{
+  width:min(980px,calc(100% - 28px));
+  margin:24px auto;
+  padding:0;
+  overflow:hidden;
+}
+.history-topbar{
+  padding:18px 22px 0;
+}
+.history-wrap{
+  width:min(900px,calc(100% - 38px));
+  margin:0 auto;
+  padding:34px 0 70px;
+}
+.history-header{
+  border-bottom:1px solid rgba(255,255,255,.1);
+  padding-bottom:28px;
+  margin-bottom:12px;
+}
+.history-kicker{
+  font-size:10px;font-weight:900;letter-spacing:.2em;
+  color:#89928c;text-transform:uppercase;
+}
+.history-header h1{
+  font-size:clamp(34px,6vw,64px);
+  line-height:.95;margin:12px 0 14px;letter-spacing:-.045em;
+}
+.history-header p{
+  margin:0;color:#9fa8a2;max-width:650px;line-height:1.55;
+}
+.history-version{
+  display:inline-block;margin-top:18px;padding:7px 10px;
+  border:1px solid rgba(255,255,255,.13);border-radius:999px;
+  font-size:10px;font-weight:900;letter-spacing:.08em;color:#d4d9d6;
+}
+.history-change-section{
+  display:grid;grid-template-columns:54px 1fr;gap:18px;
+  padding:30px 0;border-bottom:1px solid rgba(255,255,255,.075);
+}
+.history-section-number{
+  font:900 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  color:#626b65;padding-top:7px;
+}
+.history-change-section h2{
+  margin:0 0 13px;font-size:20px;letter-spacing:-.02em;
+}
+.history-change-section ul{
+  margin:0;padding-left:19px;color:#b9c1bc;
+}
+.history-change-section li{
+  padding:4px 0;line-height:1.48;
+}
+.history-footer{
+  padding-top:28px;color:#68716b;font-size:10px;text-align:center;
+}
+
+/* Tablero: zona central más ancha pero camisetas bastante más pequeñas.
+   14 jugadores pueden repartirse en varias columnas sin salirse verticalmente. */
+.coach-waiting-zone{
+  width:34% !important;
+  top:88px !important;
+  bottom:34px !important;
+  padding:8px 5px !important;
+  justify-content:center;
+}
+.coach-tokens-center{
+  width:100%;
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  align-content:center;
+  justify-items:center;
+  gap:8px 5px !important;
+  overflow:visible !important;
+}
+.coach-tokens-center .coach-token-wrap{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  min-width:0;
+}
+.coach-tokens-center .coach-token{
+  width:72px !important;
+  height:62px !important;
+  padding:18px 8px 7px !important;
+  font-size:10px !important;
+  line-height:1 !important;
+  flex:0 0 auto;
+}
+
+/* El texto auxiliar de selección desaparece por completo. */
+#coachSelectedHint{
+  display:none !important;
+}
+
+/* Jugadores fichados: una única columna, pegada al borde exterior. */
+.coach-picked-on-field{
+  display:flex !important;
+  flex-direction:column !important;
+  flex-wrap:nowrap !important;
+  grid-template-columns:1fr !important;
+  gap:7px !important;
+  width:118px !important;
+  max-width:118px !important;
+  margin-top:48px !important;
+}
+.coach-field-red .coach-picked-on-field{
+  margin-left:0 !important;
+  margin-right:auto !important;
+}
+.coach-field-black .coach-picked-on-field{
+  margin-left:auto !important;
+  margin-right:0 !important;
+}
+.coach-picked-on-field .coach-picked-token{
+  width:100% !important;
+  max-width:118px !important;
+  margin:0 !important;
+}
+
+/* Más separación real entre los fichados laterales y los disponibles centrales. */
+.coach-field-red{
+  left:3% !important;
+  width:25% !important;
+}
+.coach-field-black{
+  right:3% !important;
+  width:25% !important;
+}
+
+@media(max-width:800px){
+  .history-wrap{width:calc(100% - 24px);padding-top:26px}
+  .history-change-section{
+    grid-template-columns:32px 1fr;gap:8px;padding:23px 0;
+  }
+  .history-change-section h2{font-size:18px}
+  .history-change-section li{font-size:13px}
+
+  .coach-waiting-zone{
+    width:38% !important;
+    top:78px !important;
+    bottom:28px !important;
+  }
+  .coach-tokens-center{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:6px 3px !important;
+  }
+  .coach-tokens-center .coach-token{
+    width:56px !important;
+    height:49px !important;
+    padding:14px 5px 5px !important;
+    font-size:8px !important;
+  }
+  .coach-picked-on-field{
+    width:82px !important;
+    max-width:82px !important;
+    gap:5px !important;
+  }
+  .coach-picked-on-field .coach-picked-token{
+    max-width:82px !important;
+    font-size:9px !important;
+  }
+  .coach-field-red{
+    left:1% !important;
+    width:23% !important;
+  }
+  .coach-field-black{
+    right:1% !important;
+    width:23% !important;
+  }
+}
+
+
+/* v51 · Home centrada, versión visible y turnos más claros */
+
+/* Aseguramos que la tarjeta principal de Home y sus tres accesos queden centrados. */
+#home{
+  flex-direction:column;
+  align-items:center;
+}
+#home.active{
+  display:flex;
+}
+#home .hero{
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+#home .home-options{
+  width:100%;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  justify-content:center;
+}
+#home .home-options .mode{
+  min-width:0;
+}
+
+/* Versión centrada justo debajo de los tres botones, dentro de la Home. */
+#home .home-version-link{
+  width:100%;
+  margin:18px auto 0 !important;
+  text-align:center !important;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+#home .home-version-link a{
+  display:inline-block;
+  color:rgba(238,242,239,.62);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.035em;
+  text-decoration:none;
+  border-bottom:1px solid rgba(238,242,239,.26);
+  padding:3px 2px;
+}
+#home .home-version-link a:hover{
+  color:#fff;
+  border-color:rgba(255,255,255,.72);
+}
+
+/* Estado secundario de turno */
+.coach-turn-status{
+  position:absolute;
+  z-index:22;
+  top:58px;
+  left:50%;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:74%;
+  padding:6px 11px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-align:center;
+  pointer-events:none;
+}
+.coach-turn-status.waiting-status{
+  background:rgba(4,6,5,.84);
+  border:1px solid rgba(255,255,255,.13);
+  color:rgba(238,242,239,.82);
+}
+.coach-turn-status.my-turn-status{
+  background:rgba(228,196,111,.92);
+  border:1px solid rgba(255,255,255,.38);
+  color:#17130d;
+  box-shadow:0 0 0 3px rgba(228,196,111,.12),0 7px 18px rgba(0,0,0,.28);
+}
+
+/* Cuando no es tu turno oscurecemos ligeramente la pizarra,
+   pero mantenemos el banner y el mensaje de turno totalmente visibles. */
+.coach-draft-board.other-turn:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:10;
+  background:rgba(0,0,0,.24);
+  pointer-events:none;
+}
+.coach-draft-board.other-turn .coach-turn-banner,
+.coach-draft-board.other-turn .coach-turn-status{
+  z-index:24;
+}
+
+/* También hacemos el banner TU TURNO algo más potente visualmente. */
+.coach-turn-banner.my-turn{
+  transform:translateX(-50%) scale(1.06);
+  box-shadow:0 0 0 4px rgba(255,255,255,.10),0 9px 28px rgba(0,0,0,.42);
+}
+
+@media(max-width:900px){
+  #home{
+    width:100% !important;
+    left:auto !important;
+    transform:none !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+  #home .hero{
+    width:100%;
+  }
+}
+@media(max-width:700px){
+  .coach-turn-status{
+    top:56px;
+    max-width:86%;
+    font-size:8px;
+    padding:5px 8px;
+  }
+}
+
+
+/* v52 · cierre del draft centrado en la pizarra */
+#coachDraft{
+  position:relative;
+}
+#coachDraft #coachFinished{
+  position:absolute;
+  z-index:40;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(420px,74%);
+  margin:0 !important;
+  padding:22px 24px !important;
+  border-radius:18px;
+  background:rgba(7,12,9,.94);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 18px 55px rgba(0,0,0,.58);
+  backdrop-filter:blur(8px);
+}
+#coachDraft #coachFinished h3{
+  margin:0 0 6px;
+  font-size:26px;
+}
+#coachDraft #coachFinished p{
+  margin:0 0 16px;
+  color:#c6cec8;
+}
+#coachDraft #coachFinished .coach-big-btn{
+  margin:0 auto;
+}
+
+/* Cuando el draft termina, oscurecemos suavemente el tablero detrás del mensaje. */
+#coachDraft:has(#coachFinished[style*="display: block"])::before,
+#coachDraft:has(#coachFinished[style*="display:block"])::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:35;
+  background:rgba(0,0,0,.30);
+  pointer-events:none;
+}
+
+/* #alineaciones: ajustar la pantalla al alto disponible en escritorio para evitar scroll vertical. */
+@media(min-width:761px){
+  body:has(#results.active){
+    overflow-y:hidden;
+  }
+  #results.active{
+    min-height:calc(100dvh - 40px);
+    height:calc(100dvh - 40px);
+    padding-top:0 !important;
+    align-items:center;
+  }
+  #results.active > .card{
+    padding:20px 24px;
+    max-height:calc(100dvh - 52px);
+    overflow:hidden;
+  }
+  #results .lineup-topbar{
+    margin-bottom:10px;
+  }
+  #results .lineup-topbar h2{
+    margin-top:7px;
+    margin-bottom:2px;
+  }
+  #results .formation-pitch{
+    padding:12px 14px;
+  }
+  #results .formation-team{
+    padding:10px 12px;
+  }
+  #results .formation-team h3{
+    margin:0 0 5px;
+  }
+  #results .formation-squad.formation-seven{
+    height:clamp(350px,calc(100dvh - 330px),455px);
+  }
+  #results .controls.lineup-controls{
+    margin-top:10px;
+    gap:8px;
+  }
+  #results .controls.lineup-controls button{
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+}
+
+/* En pantallas de escritorio bajas comprimimos un poco más. */
+@media(min-width:761px) and (max-height:820px){
+  #results.active > .card{
+    padding:15px 20px;
+  }
+  #results .formation-squad.formation-seven{
+    height:clamp(310px,calc(100dvh - 300px),410px);
+  }
+  #results .formation-shirt{
+    width:39px;
+    height:47px;
+  }
+  #results .formation-name{
+    font-size:11px;
+  }
+}
+
+/* Móvil: el cierre también permanece centrado dentro del campo. */
+@media(max-width:760px){
+  #coachDraft #coachFinished{
+    width:min(88%,360px);
+    padding:18px !important;
+  }
+  #coachDraft #coachFinished h3{font-size:22px}
+}
+
+
+/* v53 · versión al pie real de la Home */
+#home{
+  position:relative;
+  min-height:calc(100dvh - 56px);
+  padding-bottom:48px;
+}
+#home .home-version-link{
+  position:absolute !important;
+  left:50% !important;
+  bottom:10px !important;
+  transform:translateX(-50%) !important;
+  width:auto !important;
+  margin:0 !important;
+  display:block !important;
+  text-align:center !important;
+  white-space:nowrap;
+  z-index:8;
+}
+#home .home-version-link a{
+  display:inline-block;
+  color:rgba(238,242,239,.48);
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:.035em;
+  text-decoration:none;
+  border-bottom:1px solid rgba(238,242,239,.18);
+  padding:3px 2px;
+}
+#home .home-version-link a:hover{
+  color:rgba(255,255,255,.88);
+  border-color:rgba(255,255,255,.50);
+}
+@media(max-width:700px){
+  #home{
+    min-height:calc(100dvh - 28px);
+    padding-bottom:42px;
+  }
+  #home .home-version-link{
+    bottom:4px !important;
+  }
+  #home .home-version-link a{
+    font-size:9px;
+  }
+}
+
+
+/* v54 · corrección crítica de navegación
+   Home solo puede mostrarse cuando tiene la clase active. */
+#home.screen:not(.active){
+  display:none !important;
+}
+#home.screen.active{
+  display:flex !important;
+}
+
+
+/* v55 · cierre del draft perfectamente centrado */
+#coachDraft #coachFinished{
+  left:0 !important;
+  right:0 !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  margin:0 auto !important;
+  width:min(420px,74%) !important;
+  text-align:center !important;
+}
+
+/* Botones finales con pequeña descripción inferior */
+.final-action-with-note,
+.final-actions .save-lineup-btn{
+  display:flex !important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  min-height:52px;
+}
+.final-action-with-note small,
+.final-actions .save-lineup-btn small{
+  display:block;
+  font-size:9px;
+  line-height:1.1;
+  font-weight:650;
+  opacity:.68;
+  text-transform:none;
+}
+
+/* Vídeo final. De momento queda debajo de las acciones.
+   Cuando llegue el PNG de la televisión podremos colocarlo detrás del alpha. */
+.celebration-video-wrap{
+  width:min(720px,100%);
+  margin:18px auto 0;
+  display:flex;
+  justify-content:center;
+}
+.celebration-video{
+  display:block;
+  width:100%;
+  max-height:360px;
+  object-fit:contain;
+  border-radius:14px;
+  background:#000;
+}
+
+/* El vídeo es corto y debe verse sin añadir un exceso de altura. */
+@media(min-width:761px){
+  .celebration-card{
+    max-height:96dvh;
+    overflow-y:auto;
+  }
+  .celebration-video-wrap{
+    margin-top:12px;
+  }
+  .celebration-video{
+    max-height:240px;
+  }
+}
+@media(max-width:760px){
+  #coachDraft #coachFinished{
+    width:min(88%,360px) !important;
+  }
+  .celebration-video{
+    max-height:260px;
+  }
+}
+
+
+/* v56 · Pantalla final integrada en la televisión */
+
+/* Fondo transparente: la escena completa la controla .celebration-tv-stage */
+.celebration{
+  background:#050504 !important;
+}
+.celebration:before{
+  display:none !important;
+}
+
+/*
+  La imagen fuente mide 2048x960 (misma proporción que 2560x1200).
+  Hacemos que esta "mesa de composición" siempre cubra toda la ventana
+  conservando exactamente la proporción. Así el vídeo y el PNG nunca
+  pierden su alineación aunque la pantalla sea 16:9.
+*/
+.celebration-tv-stage{
+  position:absolute;
+  z-index:0;
+  left:50%;
+  top:50%;
+  width:max(100vw,calc(100vh * 2.1333333333));
+  height:max(100vh,calc(100vw / 2.1333333333));
+  transform:translate(-50%,-50%);
+  overflow:hidden;
+  pointer-events:none;
+}
+
+/*
+  Hueco transparente real detectado en el PNG:
+  x=879..1178 / 2048
+  y=533..795 / 960
+  Lo ampliamos apenas unas décimas para que no quede ningún borde negro.
+*/
+.celebration-tv-video{
+  position:absolute;
+  z-index:1;
+  left:42.87%;
+  top:55.42%;
+  width:14.75%;
+  height:27.60%;
+  object-fit:cover;
+  object-position:center center;
+  background:#000;
+}
+
+/* El PNG va DELANTE del vídeo. Su alpha deja ver exactamente la pantalla. */
+.celebration-tv-background{
+  position:absolute;
+  z-index:2;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  pointer-events:none;
+  user-select:none;
+}
+
+/* Fuegos y contenido, por encima de la escena */
+.celebration .firework{
+  z-index:3;
+}
+
+/*
+  Dejamos la interfaz de "Que gane el mejor" en la mitad superior.
+  La pantalla de la TV empieza aproximadamente al 55.5% de alto,
+  así que queda totalmente libre y visible.
+*/
+.celebration-card{
+  z-index:5 !important;
+  width:min(1080px,calc(100% - 28px)) !important;
+  max-height:51vh !important;
+  overflow:visible !important;
+  margin:1.2vh auto 0 !important;
+  padding:12px 18px 10px !important;
+  background:rgba(7,10,9,.64) !important;
+  backdrop-filter:blur(7px) !important;
+  border-radius:20px !important;
+}
+
+/* Compactamos la parte superior para no invadir la televisión */
+.celebration-title{
+  margin-bottom:8px !important;
+}
+.celebration-title .kicker{
+  font-size:9px !important;
+}
+.celebration-title h2{
+  font-size:clamp(28px,4vw,44px) !important;
+  margin:1px 0 !important;
+}
+.celebration-title p{
+  font-size:10px !important;
+}
+
+.celebration .final-pitch{
+  padding:8px 10px !important;
+  border-radius:14px !important;
+}
+.celebration .final-team{
+  padding:7px 8px !important;
+  border-radius:11px !important;
+}
+.celebration .final-team h3{
+  margin:0 0 5px !important;
+  font-size:11px !important;
+}
+.celebration .final-shirt-grid{
+  gap:5px !important;
+}
+.celebration .final-shirt-grid .big-shirt{
+  min-width:54px !important;
+  max-width:78px !important;
+  min-height:56px !important;
+  padding:4px !important;
+  gap:3px !important;
+  font-size:9px !important;
+}
+.celebration .shirt-shape{
+  width:26px !important;
+  height:29px !important;
+}
+.celebration .patx-quote{
+  font-size:clamp(12px,1.5vw,17px) !important;
+  margin:7px auto 0 !important;
+  min-height:20px !important;
+}
+.celebration .final-actions{
+  margin-top:7px !important;
+  gap:7px !important;
+}
+.celebration .final-actions button{
+  padding:7px 12px !important;
+  min-height:40px !important;
+  font-size:10px !important;
+}
+.celebration .final-action-with-note small,
+.celebration .save-lineup-btn small{
+  font-size:8px !important;
+}
+.celebration-home{
+  top:9px !important;
+  right:10px !important;
+  padding:7px 10px !important;
+  font-size:10px !important;
+}
+
+/* Eliminamos por completo el antiguo vídeo suelto inferior */
+.celebration-video-wrap,
+.celebration-video{
+  display:none !important;
+}
+
+/* En pantallas bajas reducimos un poco más la tarjeta superior. */
+@media(min-width:761px) and (max-height:820px){
+  .celebration-card{
+    max-height:52vh !important;
+    padding:8px 14px 7px !important;
+  }
+  .celebration-title h2{
+    font-size:32px !important;
+  }
+  .celebration .final-shirt-grid .big-shirt{
+    min-height:48px !important;
+    max-width:70px !important;
+  }
+  .celebration .shirt-shape{
+    width:22px !important;
+    height:25px !important;
+  }
+}
+
+/* En móvil prima la legibilidad; la composición TV sigue manteniendo su alineación. */
+@media(max-width:760px){
+  .celebration-card{
+    max-height:53vh !important;
+    overflow:auto !important;
+    padding:10px !important;
+    width:calc(100% - 16px) !important;
+  }
+  .celebration-title h2{
+    font-size:27px !important;
+  }
+  .celebration .final-teams{
+    grid-template-columns:1fr 1fr !important;
+    gap:6px !important;
+  }
+  .celebration .final-shirt-grid .big-shirt{
+    flex:0 1 calc(50% - 4px) !important;
+    min-width:42px !important;
+    max-width:64px !important;
+    font-size:8px !important;
+  }
+}
+
+
+/* v58 · Ajustes de altura, cierre centrado y final más grande */
+
+/* 1) Sala de espera: cabe completa en una pantalla de escritorio */
+@media(min-width:761px){
+  body:has(#coachRoom.active){
+    overflow-y:hidden;
+  }
+  #coachRoom.active{
+    min-height:100dvh !important;
+    height:100dvh !important;
+    padding:10px 0 !important;
+    align-items:center !important;
+  }
+  #coachRoom.active > .coach-room-card{
+    max-height:calc(100dvh - 20px) !important;
+    overflow:hidden !important;
+    padding:18px 24px !important;
+  }
+  #coachRoom .coach-room-header{
+    margin-bottom:8px !important;
+  }
+  #coachRoom .coach-waiting{
+    margin-top:10px !important;
+    padding:18px !important;
+  }
+  #coachRoom .coach-waiting h3{
+    margin:8px 0 5px !important;
+  }
+  #coachRoom .coach-waiting p{
+    margin:0 0 12px !important;
+  }
+  #coachRoom .coach-share-row{
+    margin:10px auto !important;
+  }
+  #coachRoom .coach-big-btn{
+    margin-top:10px !important;
+  }
+}
+
+/* Pantallas bajas: compactamos un poco más la espera */
+@media(min-width:761px) and (max-height:760px){
+  #coachRoom.active > .coach-room-card{
+    padding:12px 20px !important;
+  }
+  #coachRoom .coach-waiting{
+    padding:12px !important;
+    margin-top:6px !important;
+  }
+  #coachRoom .coach-waiting h3{
+    font-size:20px !important;
+  }
+}
+
+/*
+  2) "Equipos cerrados": lo centramos respecto a TODA la pizarra,
+  independientemente de la rejilla/columnas internas.
+*/
+#coachDraft{
+  position:relative !important;
+}
+#coachDraft #coachFinished{
+  position:absolute !important;
+  z-index:50 !important;
+  top:50% !important;
+  left:50% !important;
+  right:auto !important;
+  bottom:auto !important;
+  transform:translate(-50%,-50%) !important;
+  margin:0 !important;
+  width:min(430px,72%) !important;
+  max-width:430px !important;
+  text-align:center !important;
+  box-sizing:border-box !important;
+}
+#coachDraft #coachFinished h3{
+  text-align:center !important;
+}
+#coachDraft #coachFinished p{
+  text-align:center !important;
+}
+#coachDraft #coachFinished .coach-big-btn{
+  display:block !important;
+  margin:14px auto 0 !important;
+}
+
+/* 3) Pantalla final: aprovechamos mejor el hueco hasta la televisión.
+   La hacemos bastante más grande que en v56/v57, sin invadir el CRT. */
+.celebration-card{
+  width:min(1160px,calc(100% - 30px)) !important;
+  max-height:55vh !important;
+  margin:1.8vh auto 0 !important;
+  padding:20px 24px 16px !important;
+  background:rgba(7,10,9,.68) !important;
+}
+
+.celebration-title{
+  margin-bottom:12px !important;
+}
+.celebration-title .kicker{
+  font-size:11px !important;
+}
+.celebration-title h2{
+  font-size:clamp(38px,5vw,58px) !important;
+  margin:2px 0 3px !important;
+}
+.celebration-title p{
+  font-size:12px !important;
+}
+
+.celebration .final-pitch{
+  padding:13px 15px !important;
+  border-radius:17px !important;
+}
+.celebration .final-teams{
+  gap:12px !important;
+}
+.celebration .final-team{
+  padding:11px 12px !important;
+  border-radius:14px !important;
+}
+.celebration .final-team h3{
+  margin:0 0 8px !important;
+  font-size:14px !important;
+}
+.celebration .final-shirt-grid{
+  gap:8px !important;
+}
+.celebration .final-shirt-grid .big-shirt{
+  min-width:66px !important;
+  max-width:92px !important;
+  min-height:68px !important;
+  padding:6px !important;
+  gap:4px !important;
+  font-size:11px !important;
+}
+.celebration .shirt-shape{
+  width:32px !important;
+  height:36px !important;
+}
+.celebration .patx-quote{
+  font-size:clamp(14px,1.7vw,20px) !important;
+  margin:10px auto 0 !important;
+  min-height:24px !important;
+}
+.celebration .final-actions{
+  margin-top:10px !important;
+  gap:9px !important;
+}
+.celebration .final-actions button{
+  padding:9px 15px !important;
+  min-height:46px !important;
+  font-size:11px !important;
+}
+.celebration .final-action-with-note small,
+.celebration .save-lineup-btn small{
+  font-size:9px !important;
+}
+.celebration-home{
+  top:12px !important;
+  right:13px !important;
+  padding:8px 12px !important;
+  font-size:11px !important;
+}
+
+/* Si la pantalla es especialmente baja, mantenemos una versión intermedia,
+   no tan diminuta como antes. */
+@media(min-width:761px) and (max-height:820px){
+  .celebration-card{
+    max-height:54vh !important;
+    padding:14px 20px 11px !important;
+    margin-top:1vh !important;
+  }
+  .celebration-title h2{
+    font-size:40px !important;
+  }
+  .celebration .final-shirt-grid .big-shirt{
+    min-height:58px !important;
+    min-width:58px !important;
+    max-width:82px !important;
+    font-size:10px !important;
+  }
+  .celebration .shirt-shape{
+    width:28px !important;
+    height:31px !important;
+  }
+}
+
+/* Móvil: no forzamos ausencia de scroll en la sala de espera,
+   porque prima que todo siga siendo usable. */
+@media(max-width:760px){
+  #coachDraft #coachFinished{
+    width:min(88%,360px) !important;
+    left:50% !important;
+    transform:translate(-50%,-50%) !important;
+  }
+  .celebration-card{
+    max-height:56vh !important;
+  }
+}
+
+
+/* v60 · centrado real del cierre del draft */
+#coachDraft{
+  position:relative !important;
+}
+#coachDraft > #coachFinished{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  right:auto !important;
+  bottom:auto !important;
+  transform:translate(-50%,-50%) !important;
+  margin:0 !important;
+  width:min(430px,72%) !important;
+  max-width:430px !important;
+  z-index:60 !important;
+  text-align:center !important;
+  box-sizing:border-box !important;
+}
+#coachDraft > #coachFinished h3,
+#coachDraft > #coachFinished p{
+  text-align:center !important;
+}
+#coachDraft > #coachFinished .coach-big-btn{
+  display:block !important;
+  margin:14px auto 0 !important;
+}
+
+
+/* v61 · Los jugadores fichados se separan un poco de los bordes */
+.coach-field-red{
+  left:5.5% !important;
+  width:25% !important;
+}
+.coach-field-black{
+  right:5.5% !important;
+  width:25% !important;
+}
+@media(max-width:800px){
+  .coach-field-red{
+    left:3% !important;
+    width:23% !important;
+  }
+  .coach-field-black{
+    right:3% !important;
+    width:23% !important;
+  }
+}
+
+
+/* v63 · Álbum provisional de cartas */
+.card-album-panel{min-height:420px}
+.card-album-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+  gap:22px;
+  align-items:start;
+  margin-top:20px;
+}
+.album-card{
+  appearance:none;
+  border:0;
+  background:transparent;
+  color:#fff;
+  padding:0;
+  cursor:pointer;
+  font:inherit;
+  min-width:0;
+  transition:transform .18s ease;
+}
+.album-card:hover{transform:translateY(-5px) scale(1.02)}
+.album-card img{
+  display:block;
+  width:100%;
+  max-width:220px;
+  aspect-ratio:0.714;
+  object-fit:contain;
+  margin:0 auto;
+  filter:drop-shadow(0 10px 14px rgba(0,0,0,.42));
+}
+.album-card span{
+  display:block;
+  margin-top:8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:850;
+}
+@media(max-width:600px){
+  .card-album-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px 10px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -716,12 +2398,529 @@ body.bg-player-selection:before{
 <button class="mode greenline home-image-card" onclick="openSeason()"><span class="home-card-copy"><span class="icon">🏆</span><strong>Temporada 26/27</strong><span>Clasificación, calendario y jugadores</span></span><span class="home-card-image"><img src="temporada.jpg" alt=""></span></button>
 <button class="mode greenline home-image-card" onclick="show('resultMode')"><span class="home-card-copy"><span class="icon">📝</span><strong>Apuntar resultado</strong><span>Partido ya jugado</span></span><span class="home-card-image"><img src="apuntar resultado.jpg" alt=""></span></button>
 </div>
-</div></section>
+</div>
+<div class="home-version-link">
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v64 · Ver historial de cambios</a>
+</div>
+</section>
 
 <section id="createMode" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2>Crear equipos</h2><div class="subtitle">Elige la modalidad para generar las alineaciones.</div></div></div>
 <div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="startGame('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>14 jugadores.</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="startGame('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>10 jugadores.</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
+
+<section id="creationMethod" class="screen"><div class="card">
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('createMode')">← Volver</button><h2>¿Cómo hacemos los equipos?</h2><div class="subtitle" id="creationMethodSubtitle">Elige cómo quieres crear las alineaciones.</div></div></div>
+<div class="home-options coach-method-options">
+  <button class="mode redline coach-method-card" onclick="startAutomaticGame()">
+    <span class="icon">⚙️</span>
+    <strong>Algoritmo automático basado en posiciones</strong>
+    <span>La web equilibra los equipos según posiciones y estadísticas.</span>
+  </button>
+  <button class="mode greenline coach-method-card" onclick="openCoachMode()">
+    <span class="icon">🧠</span>
+    <strong>Modo Entrenador</strong>
+    <span>Dos entrenadores crean los equipos por turnos en una sala compartida.</span>
+  </button>
+</div>
+</div></section>
+
+<section id="coachLobby" class="screen"><div class="card coach-lobby-card">
+<div class="topbar">
+  <div>
+    <button class="back" onclick="leaveCoachView()">← Volver</button>
+    <h2 id="coachSetupTitle">Modo Entrenador</h2>
+    <div class="subtitle" id="coachLobbyMode">Selecciona quién juega hoy antes de crear la sala.</div>
+  </div>
+  <div id="coachSetupCountBox" class="count"><b id="coachSetupCount">0</b> / <span id="coachSetupNeeded">14</span></div>
+</div>
+
+<div id="coachLobbyCreate" class="coach-lobby-panel">
+  <div class="coach-draft-intro">
+    <div class="coach-draft-intro-icon">🧠</div>
+    <div>
+      <strong>Draft de entrenadores</strong>
+      <span>Dos personas, un turno cada una. Cuando estéis los dos, una moneda decidirá quién ficha primero.</span>
+    </div>
+  </div>
+
+  <div class="coach-whatsapp-import">
+    <div class="coach-whatsapp-head">
+      <div>
+        <strong>📋 Copia y pega convocatoria aquí</strong>
+      </div>
+    </div>
+    <textarea id="coachCallupText" rows="7" placeholder=""></textarea>
+    <div class="coach-whatsapp-actions">
+      <button class="secondary" onclick="parseCoachCallup()">Detectar convocatoria</button>
+      <button class="ghost" onclick="clearCoachCallup()">Limpiar</button>
+    </div>
+    <div id="coachCallupReview" class="coach-callup-review" style="display:none">
+      <div class="coach-callup-review-head">
+        <div>
+          <strong>¿La convocatoria es correcta?</strong>
+          <span id="coachCallupSummary"></span>
+        </div>
+        <button id="coachConfirmCallupBtn" class="primary" onclick="createRoomFromDetectedCallup()">Crear sala</button>
+      </div>
+      <div id="coachCallupWarning" class="coach-callup-warning" style="display:none"></div>
+      <div id="coachCallupDetected" class="coach-callup-detected"></div>
+      <div class="coach-callup-modify-row">
+        <button class="coach-modify-callup-btn" onclick="modifyCoachCallup()">Modificar convocatoria</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="coach-manual-label">
+    <strong>O selecciona los jugadores manualmente</strong>
+    <span>También puedes corregir aquí cualquier jugador que falte.</span>
+  </div>
+  <div class="players" id="coachSetupPlayers"></div>
+
+  <div class="footerbar coach-setup-footer">
+    <span class="count">Selecciona exactamente <b id="coachSetupNeededText">14</b> jugadores.</span>
+    <button id="coachCreateRoomBtn" class="primary" disabled onclick="createCoachRoom()">Crear sala</button>
+  </div>
+</div>
+
+<div id="coachLobbyJoin" class="coach-lobby-panel" style="display:none">
+  <div class="coach-lobby-hero">
+    <div class="coach-lobby-icon">🔗</div>
+    <h3>Te han invitado a una sala</h3>
+    <p id="coachJoinText">Pulsa para entrar como segundo entrenador.</p>
+    <button class="primary coach-big-btn" onclick="joinCoachRoom()">Entrar en la sala</button>
+  </div>
+</div>
+</div></section>
+
+<section id="coachIdentity" class="screen">
+  <div class="card coach-identity-card">
+    <div id="coachIdentityBadge" class="coach-identity-badge red"></div>
+    <div class="coach-identity-kicker">EL MÍSTER HA HABLADO</div>
+    <h2 id="coachIdentityTitle">Te ha tocado entrenar al equipo rojo</h2>
+    <p id="coachIdentityJoke">Hoy toca sacar la libreta y fingir que todo estaba planeado.</p>
+    <button class="primary coach-big-btn" onclick="continueCoachIdentity()">Entrar al vestuario</button>
+  </div>
+</section>
+
+<section id="coachRoom" class="screen"><div class="card coach-room-card">
+<div class="coach-room-header">
+  <button class="back" onclick="leaveCoachView()">← Salir</button>
+  <div class="coach-room-title">
+    <span id="coachRoomMode">Fútbol 7</span>
+    <strong>Modo Entrenador</strong>
+  </div>
+  <div class="coach-room-code">Sala <b id="coachRoomCode">------</b></div>
+</div>
+
+<div id="coachWaiting" class="coach-waiting">
+  <div class="coach-status-dot"></div>
+  <h3 id="coachWaitingTitle">Esperando al segundo entrenador…</h3>
+  <p id="coachWaitingText">Comparte este enlace para que entre el otro entrenador.</p>
+  <div class="coach-share-row">
+    <input id="coachShareLink" readonly>
+    <button class="secondary" onclick="copyCoachLink()">Copiar enlace</button>
+  </div>
+  <button id="coachStartBtn" class="primary coach-big-btn" disabled onclick="startCoachDraft()">COMENZAR</button>
+</div>
+
+<div id="coachCoinOverlay" class="coach-coin-overlay" style="display:none">
+  <div class="ref-coin" id="coachCoin">
+    <div class="coin-face coin-red">R</div>
+    <div class="coin-face coin-black">N</div>
+  </div>
+  <h3 id="coachCoinText">El árbitro lanza la moneda…</h3>
+</div>
+
+
+
+<div id="coachOpponentAlert" class="coach-opponent-alert" style="display:none">
+  <div class="coach-opponent-alert-card">
+    <div class="coach-opponent-alert-icon">👀</div>
+    <strong>¡HA LLEGADO EL OTRO ENTRENADOR!</strong>
+    <span>Ya sois dos. Es hora de dejar de esconder la pizarra.</span>
+    <button class="primary" onclick="hideCoachOpponentAlert()">Perfecto</button>
+  </div>
+</div>
+
+<div id="coachDraft" class="coach-draft coach-draft-board" style="display:none">
+  <div class="coach-turn-banner" id="coachTurnBanner">Esperando…</div>
+  <div id="coachTurnStatus" class="coach-turn-status" style="display:none"></div>
+
+  <div class="coach-field-zone coach-field-red">
+    <div class="coach-side-label"><span class="badge red"></span> EQUIPO ROJO</div>
+    <div id="coachRedPicks" class="coach-picked-list coach-picked-on-field"></div>
+  </div>
+
+  <div class="coach-waiting-zone">
+    <div class="coach-board-title">JUGADORES ESPERANDO</div>
+    <div id="coachAvailablePlayers" class="coach-tokens coach-tokens-center"></div>
+    <div id="coachSelectedHint" class="coach-selected-hint">Selecciona una ficha</div>
+  </div>
+
+  <div class="coach-field-zone coach-field-black">
+    <div class="coach-side-label"><span class="badge black"></span> EQUIPO NEGRO</div>
+    <div id="coachBlackPicks" class="coach-picked-list coach-picked-on-field"></div>
+  </div>
+
+  <div id="coachFinished" class="coach-finished" style="display:none">
+    <h3>Equipos cerrados</h3>
+    <p>El draft ha terminado. Ya podéis ver la alineación final.</p>
+    <button class="primary coach-big-btn" onclick="openCoachFinalLineup()">Ver alineaciones</button>
+  </div>
+</div>
+
+
+</div></section>
+
+<section id="changeHistory" class="screen">
+  <div class="card history-card">
+    <div class="history-topbar">
+      <button class="back" onclick="show('home')">← Volver</button>
+    </div>
+    <div class="history-wrap">
+      
+  <header class="history-header">
+    <div class="history-kicker">Patxanguilles Antifeixistes</div>
+    <h1>Historial de cambios</h1>
+    <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
+    <span class="history-version">VERSIÓN v64</span>
+  </header>
+  
+    <section class="history-change-section">
+      <div class="history-section-number">01</div>
+      <div class="history-section-content">
+        <h2>Base de la aplicación</h2>
+        <ul><li>Creación de la web de Patxanguilles Antifeixistes como aplicación web responsive.</li>
+<li>Flujo principal para crear alineaciones de Fútbol 7 y Fútbol Sala.</li>
+<li>Selección de jugadores y generación automática de dos equipos equilibrados.</li>
+<li>Fútbol 7 configurado para 14 jugadores y Fútbol Sala para 10.</li>
+<li>Pantalla de carga con frases aleatorias antes de mostrar las alineaciones.</li>
+<li>Pantalla final con equipos Rojo y Negro y presentación visual de las alineaciones.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">02</div>
+      <div class="history-section-content">
+        <h2>Generación y equilibrio de equipos</h2>
+        <ul><li>Mejora del algoritmo para tener en cuenta nivel, reservas, posiciones y resultados anteriores.</li>
+<li>Los reservas cuentan para completar el número necesario de jugadores.</li>
+<li>Equilibrio por posiciones con prioridad para portero, defensa, centro del campo y ataque.</li>
+<li>En Fútbol 7 se busca una estructura aproximada 1-3-2-1.</li>
+<li>El porcentaje de victorias se pondera para evitar que pocas apariciones distorsionen demasiado el equilibrio.</li>
+<li>Se puede pulsar «Probar otra alineación» para generar otra combinación.</li>
+<li>Presentación de Fútbol 7 sobre el campo con distribución por líneas.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">03</div>
+      <div class="history-section-content">
+        <h2>Jugadores y perfiles</h2>
+        <ul><li>Jugadores almacenados en Supabase y visibles desde la web.</li>
+<li>Perfil individual con apodo, nombre, fotografía, posición, pierna, fecha de nacimiento y edad.</li>
+<li>El apodo puede editarse desde el perfil.</li>
+<li>La edad se calcula automáticamente a partir de la fecha de nacimiento.</li>
+<li>Fotografía de perfil ampliable al pulsarla.</li>
+<li>Avatares circulares de los jugadores en la clasificación.</li>
+<li>Soporte para jugadores disponibles en Fútbol 7, Fútbol Sala o ambas modalidades.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">04</div>
+      <div class="history-section-content">
+        <h2>Cartas de jugador</h2>
+        <ul><li>Integración del sistema de cartas personalizadas de Patxanguilles.</li>
+<li>Botones «Ver carta» y «Crear carta» desde el perfil.</li>
+<li>Formulario de creación con selfie, nombre, apodo, sexo, altura, peso y posición.</li>
+<li>Generación mediante una función de Supabase conectada al sistema de generación de imágenes.</li>
+<li>Límite de tres intentos de generación por jugador.</li>
+<li>Previsualización de la carta antes de guardarla como carta oficial.</li>
+<li>Posibilidad para el administrador de cambiar manualmente la carta de un jugador.</li>
+<li>Visualización de la carta con efectos de estrellas, fuegos artificiales y brillo.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">05</div>
+      <div class="history-section-content">
+        <h2>Temporada 26/27</h2>
+        <ul><li>Sección de temporada con Clasificación y Calendario.</li>
+<li>Clasificación ordenable por jugador, partidos jugados, victorias, empates, derrotas y porcentaje de victorias.</li>
+<li>Columnas adicionales de goles y asistencias disponibles para administración.</li>
+<li>Calendario de partidos guardados y resultados.</li>
+<li>Los partidos pendientes no cuentan en las estadísticas hasta que tienen resultado final.</li>
+<li>Detalle de cada partido con alineaciones y eventos de los jugadores.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">06</div>
+      <div class="history-section-content">
+        <h2>Resultados, goles y asistencias</h2>
+        <ul><li>Pantalla «Apuntar resultado» accesible desde la home.</li>
+<li>Selección previa entre Fútbol 7 y Fútbol Sala.</li>
+<li>Registro de resultado, jugadores, goles y asistencias.</li>
+<li>Los resultados finales pueden guardarse sin iniciar sesión como administrador.</li>
+<li>En el detalle del partido aparecen iconos de balón para goles y bota para asistencias.</li>
+<li>Posibilidad de editar partidos pendientes y completar posteriormente el resultado.</li>
+<li>Herramientas administrativas para gestionar y eliminar resultados.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">07</div>
+      <div class="history-section-content">
+        <h2>Crónicas y fotografías de partido</h2>
+        <ul><li>Posibilidad de subir una fotografía al registrar un resultado.</li>
+<li>Campos para crear titular y crónica del partido.</li>
+<li>La fotografía y la crónica aparecen en el detalle del encuentro.</li>
+<li>Al editar un resultado se recuperan la fotografía y la crónica existentes.</li>
+<li>Los controles de fotografía y crónica se reorganizaron para integrarse mejor en el formulario.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">08</div>
+      <div class="history-section-content">
+        <h2>Compartir alineaciones y resultados</h2>
+        <ul><li>Botón para copiar las alineaciones en formato de texto.</li>
+<li>Formato de texto separado en Rojos y Negros para compartir fácilmente.</li>
+<li>Captura de la alineación mediante html2canvas.</li>
+<li>Intento de copiar la imagen directamente al portapapeles y descarga PNG como alternativa.</li>
+<li>Botón Home y controles de la pantalla final reorganizados.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">09</div>
+      <div class="history-section-content">
+        <h2>Home y diseño visual</h2>
+        <ul><li>Rediseño de la pantalla principal con tres accesos: Crear alineaciones, Temporada 26/27 y Apuntar resultado.</li>
+<li>Eliminación del antiguo título grande, balón flotante y subrayado decorativo de la home.</li>
+<li>Los tres accesos aparecen en una fila en escritorio y se adaptan a móvil.</li>
+<li>Las tarjetas principales incorporan fotografías.</li>
+<li>Home ampliada y ensanchada para aprovechar mejor pantallas de escritorio.</li>
+<li>Corrección del espacio que aparecía encima de las imágenes de las tarjetas.</li>
+<li>Nuevo background general externo mediante background-home.jpg.</li>
+<li>Fondos específicos para determinadas secciones de la web.</li>
+<li>Selector Fútbol 7 / Fútbol Sala rediseñado con fotografías.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">10</div>
+      <div class="history-section-content">
+        <h2>Navegación y móvil</h2>
+        <ul><li>Adaptación responsive de las principales pantallas, formularios, clasificación, modales y reproductor.</li>
+<li>Corrección de controles que se salían del contenedor en móvil.</li>
+<li>Implementación de historial de navegación mediante hashes.</li>
+<li>El botón Atrás del navegador vuelve ahora a la pantalla anterior de la web en lugar de abandonarla directamente.</li>
+<li>Las distintas secciones pueden reflejar su estado en la URL.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">11</div>
+      <div class="history-section-content">
+        <h2>Música</h2>
+        <ul><li>Reproductor de música integrado en la web.</li>
+<li>Volumen inicial establecido al 20 %.</li>
+<li>Playlist con varias canciones relacionadas con fútbol.</li>
+<li>Selección aleatoria de canción al entrar.</li>
+<li>Al terminar una canción se reproduce otra aleatoria evitando repetir inmediatamente la misma.</li>
+<li>El reproductor muestra «Ahora sonando», canción y artista.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">12</div>
+      <div class="history-section-content">
+        <h2>Nueva elección de método para crear equipos</h2>
+        <ul><li>Después de elegir Fútbol 7 o Fútbol Sala aparece la pantalla «¿Cómo hacemos los equipos?».</li>
+<li>Opción «Algoritmo automático basado en posiciones» para utilizar el sistema tradicional.</li>
+<li>Nueva opción «Modo Entrenador» para crear los equipos entre dos personas.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">13</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · salas compartidas</h2>
+        <ul><li>Creación de una sala personalizada con código y enlace compartible.</li>
+<li>Un segundo entrenador puede entrar desde otro ordenador o móvil mediante el enlace.</li>
+<li>Sincronización del estado de la sala a través de Supabase.</li>
+<li>Refresco periódico de respaldo para mantener ambos dispositivos actualizados.</li>
+<li>Sistema de draft estrictamente por turnos.</li>
+<li>Supabase valida los fichajes para evitar selecciones fuera de turno.</li>
+<li>Al completar los dos equipos se reutiliza la pantalla final de alineaciones.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">14</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · convocatoria</h2>
+        <ul><li>Antes de crear la sala se seleccionan exactamente 14 jugadores en Fútbol 7 o 10 en Fútbol Sala.</li>
+<li>La convocatoria queda guardada en la sala y únicamente esos jugadores participan en el draft.</li>
+<li>Importador «Copia y pega convocatoria aquí» para pegar directamente el mensaje del grupo de WhatsApp.</li>
+<li>El importador detecta las líneas numeradas con jugadores e ignora la cabecera del mensaje.</li>
+<li>Todo lo que aparece a partir de «Reserva» o «Reservas» se excluye de la convocatoria.</li>
+<li>Se limpian anotaciones habituales como «(porter)» o «(Futsal)».</li>
+<li>Los nombres desconocidos pueden incorporarse como invitados temporales solo para esa sala.</li>
+<li>Los posibles errores de escritura se señalan para revisión.</li>
+<li>Si faltan jugadores, la web avisa y permite corregir la selección manualmente.</li>
+<li>Flujo simplificado: pegar mensaje → Detectar convocatoria → revisar → Crear sala.</li>
+<li>Botón pequeño «Modificar convocatoria» para hacer ajustes antes de crear la sala.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">15</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · sorteo e identidad</h2>
+        <ul><li>Cuando entra el segundo entrenador, el primero recibe un aviso destacado.</li>
+<li>Antes del draft cada persona ve claramente si le ha tocado entrenar al equipo Rojo o Negro.</li>
+<li>Se muestran frases graciosas aleatorias en la presentación del equipo.</li>
+<li>Cuando ambos están preparados aparece el botón Comenzar.</li>
+<li>Una moneda animada decide aleatoriamente qué equipo ficha primero.</li>
+<li>El sorteo se realiza de forma compartida para que ambos dispositivos reciban el mismo resultado.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">16</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · tablero de fichajes</h2>
+        <ul><li>Nuevo fondo cenital de mesa y pizarra para el draft.</li>
+<li>Los jugadores disponibles se sitúan en la zona central.</li>
+<li>Las fichas de jugadores tienen forma de camiseta en tono amarillo/beige.</li>
+<li>Los nombres de las camisetas se hicieron más grandes.</li>
+<li>Al seleccionar un jugador aparece «FICHAR» junto a su propia ficha.</li>
+<li>Los jugadores fichados se desplazan visualmente al lado del equipo Rojo o Negro.</li>
+<li>Las listas de fichados se acercaron a los bordes para separarlas de los jugadores centrales.</li>
+<li>La etiqueta de Equipo Negro se desplazó hacia el borde de su campo.</li>
+<li>Se eliminó el rótulo «Jugadores esperando».</li>
+<li>El mensaje que indica que es turno del otro entrenador se recolocó para evitar que quede tapado.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">17</div>
+      <div class="history-section-content">
+        <h2>Supabase y backend</h2>
+        <ul><li>Supabase centraliza jugadores, partidos, estadísticas, perfiles, cartas y Modo Entrenador.</li>
+<li>Configuración de políticas para lectura pública y las operaciones necesarias desde la web.</li>
+<li>Storage para fotografías de jugadores, cartas generadas y fotografías de partidos.</li>
+<li>Funciones de backend para la generación y control de cartas.</li>
+<li>Tablas y funciones específicas para salas, entrenadores, turnos y fichajes del Modo Entrenador.</li>
+<li>Los jugadores seleccionados para una sala se almacenan en la propia sala.</li>
+<li>El backend impide fichar a alguien que no pertenezca a la convocatoria.</li>
+<li>Se eliminaron dependencias problemáticas de pgcrypto que provocaban errores con gen_random_bytes() y digest().</li></ul>
+      </div>
+    </section>
+  
+    <section class="history-change-section">
+      <div class="history-section-number">18</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · mejoras de convocatoria y tablero</h2>
+        <ul>
+          <li>La convocatoria importada desde WhatsApp puede crear la sala directamente después de revisar los jugadores detectados.</li>
+          <li>Se eliminó el texto de ejemplo del campo de convocatoria y explicaciones innecesarias para simplificar el flujo.</li>
+          <li>Se añadió «Modificar convocatoria» como acceso secundario para corregir la selección antes de crear la sala.</li>
+          <li>Los jugadores disponibles del draft se distribuyen en varias columnas y sus camisetas se redujeron para que toda la convocatoria quepa dentro de la pizarra.</li>
+          <li>Los jugadores ya fichados se muestran en una sola columna a cada lado del campo para dejar libre la zona central.</li>
+          <li>Se eliminó el mensaje «Ahora pulsa FICHAR junto a…».</li>
+          <li>El turno propio se destaca visualmente y, cuando elige el rival, aparece el aviso «El otro entrenador está eligiendo un nuevo jugador».</li>
+          <li>La pizarra se oscurece ligeramente cuando no es tu turno.</li>
+          <li>Las columnas de jugadores fichados se desplazaron ligeramente hacia el centro para que no queden pegadas a los bordes.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">19</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · sala, enlaces y cierre del draft</h2>
+        <ul>
+          <li>La pantalla «Esperando al segundo entrenador…» se ajustó verticalmente para caber en una sola pantalla de escritorio sin desplazamiento.</li>
+          <li>El aviso nativo del navegador al copiar el enlace se sustituyó por una notificación discreta dentro de la web.</li>
+          <li>El bloque «Equipos cerrados» se movió fuera de la columna del Equipo Negro y ahora se centra respecto a toda la pizarra.</li>
+          <li>El botón «Ver alineaciones» queda centrado junto al mensaje de finalización.</li>
+          <li>Al terminar un draft del Modo Entrenador se omite la pantalla intermedia «¿Qué te parece este partido?» y se abre directamente la presentación final.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">20</div>
+      <div class="history-section-content">
+        <h2>Pantalla final · «Que gane el mejor»</h2>
+        <ul>
+          <li>La pantalla final se reorganizó para aprovechar mejor el alto disponible y dar más tamaño a equipos, camisetas, nombres y controles.</li>
+          <li>El botón «Copiar alineación» incorpora la descripción «Texto».</li>
+          <li>El botón «Screenshot» incorpora la descripción «Compartir imagen».</li>
+          <li>Se integró un nuevo fondo con una televisión y canal alpha.</li>
+          <li>Un vídeo MP4 se reproduce detrás del hueco transparente de la televisión para que parezca formar parte de la escena.</li>
+          <li>El fondo y el vídeo escalan conjuntamente para conservar su alineación.</li>
+          <li>Al entrar en la pantalla final se pausa la música y se intenta reproducir automáticamente el vídeo desde el principio.</li>
+          <li>La interfaz se recolocó y amplió aprovechando el espacio disponible antes de la televisión.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">21</div>
+      <div class="history-section-content">
+        <h2>Interfaz, navegación e historial</h2>
+        <ul>
+          <li>La referencia de versión se trasladó al pie inferior y centrado de la Home.</li>
+          <li>Se corrigió un conflicto de CSS que mantenía la Home visible e impedía navegar correctamente con sus botones.</li>
+          <li>El historial de cambios se integró dentro del propio index como una pantalla de la aplicación.</li>
+          <li>Se corrigió la estructura del HTML para que el historial no quede anidado dentro de Modo Entrenador.</li>
+          <li>El enlace de versión abre el historial dentro de la misma pestaña y el botón «Volver» regresa a Home.</li>
+          <li>La pantalla de alineaciones se ajustó verticalmente en escritorio para evitar desplazamientos innecesarios.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">22</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · sorteos aleatorios</h2>
+        <ul>
+          <li>El creador de la sala ya no aparece siempre como entrenador del Equipo Rojo: la asignación visible Rojo/Negro se sortea de forma estable para cada sala.</li>
+          <li>El segundo entrenador recibe automáticamente el color contrario.</li>
+          <li>Ambos dispositivos calculan la misma asignación a partir del código de sala, por lo que ven siempre los mismos colores.</li>
+          <li>El lanzamiento de moneda muestra correctamente un ganador Rojo o Negro de acuerdo con el primer turno sorteado.</li>
+          <li>La asignación aleatoria de colores se mantiene durante todo el draft, los turnos y la alineación final.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">23</div>
+      <div class="history-section-content">
+        <h2>Clasificación y álbum de cartas</h2>
+        <ul>
+          <li>La clasificación deja de abrir siempre con el mismo baremo: cada vez que se entra en una competición los jugadores aparecen inicialmente en un orden aleatorio.</li>
+          <li>Después del orden inicial aleatorio se mantienen todos los controles de ordenación por columnas, incluyendo jugador, partidos, victorias, empates, derrotas y porcentaje de victorias.</li>
+          <li>Se añade «Ver álbum de cartas» junto a Clasificación y Calendario.</li>
+          <li>El álbum muestra en una cuadrícula todas las cartas de jugador que existen actualmente.</li>
+          <li>Al pulsar una carta del álbum se abre su visualización ampliada habitual.</li>
+          <li>Esta primera versión utiliza un diseño provisional en grid, preparado para sustituirse más adelante por el fondo y los huecos del álbum abierto.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">24</div>
+      <div class="history-section-content">
+        <h2>Clasificación · desempate por partidos jugados</h2>
+        <ul>
+          <li>Al ordenar la clasificación por porcentaje de victorias, los empates de porcentaje se resuelven por número de partidos jugados.</li>
+          <li>Si dos jugadores tienen el mismo porcentaje, aparece primero quien haya disputado más partidos.</li>
+          <li>Si también coinciden en partidos jugados, se utiliza el nombre como último criterio de desempate.</li>
+        </ul>
+      </div>
+    </section>
+
+  <div class="history-footer">PATXANGUILLES ANTIFEIXISTES · TEMPORADA 26/27</div>
+
+    </div>
+  </div>
+</section>
+
+
 
 <section id="selection" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="selectionTitle">Fútbol 7</h2><div class="subtitle">Selecciona los que juegan hoy.</div></div><div class="count"><b id="selectedCount">0</b> / <span id="neededCount">14</span></div></div>
@@ -758,7 +2957,7 @@ body.bg-player-selection:before{
 
 <section id="season" class="screen results"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><button class="primary" onclick="openResultForm()">＋ Añadir resultado</button></div>
-<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
+<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn" onclick="seasonTab('cards',this)">Ver álbum de cartas</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
 <div id="seasonContent"></div>
 </div></section>
 
@@ -791,7 +2990,17 @@ body.bg-player-selection:before{
 </div></section>
 </div>
 
-<div id="celebration" class="celebration" style="display:none"><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="final-actions"><button class="primary" onclick="copyFinalAndToast()">Copiar alineación</button><button class="secondary" onclick="copyLineupScreenshot()">Screenshot</button><button class="primary save-lineup-btn" onclick="saveCurrentLineup()"><span>Guardar alineación</span><small>para apuntar el resultado después</small></button><button class="secondary" onclick="closeCelebration()">Volver</button></div></div></div>
+<div id="celebration" class="celebration" style="display:none">
+  <div class="celebration-tv-stage" aria-hidden="true">
+    <video id="celebrationVideo" class="celebration-tv-video" src="video-tv.mp4" playsinline preload="auto"></video>
+    <img class="celebration-tv-background" src="background-final-tv.png" alt="">
+  </div><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="final-actions">
+  <button class="primary final-action-with-note" onclick="copyFinalAndToast()"><span>Copiar alineación</span><small>Texto</small></button>
+  <button class="secondary final-action-with-note" onclick="copyLineupScreenshot()"><span>Screenshot</span><small>Compartir imagen</small></button>
+  <button class="primary save-lineup-btn" onclick="saveCurrentLineup()"><span>Guardar alineación</span><small>para apuntar el resultado después</small></button>
+  <button class="secondary" onclick="closeCelebration()">Volver</button>
+</div>
+</div></div>
 
 <div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div></div></div>
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
@@ -840,6 +3049,16 @@ let db={players:{},matches:[]};
 let playerIdByName={};
 let adminLogged=false;
 let classificationSort={key:null,dir:'asc'};
+let classificationRandomOrder=[];
+
+function resetClassificationRandomOrder(){
+  classificationSort={key:null,dir:'asc'};
+  classificationRandomOrder=stats().map(x=>x.name);
+  for(let i=classificationRandomOrder.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [classificationRandomOrder[i],classificationRandomOrder[j]]=[classificationRandomOrder[j],classificationRandomOrder[i]];
+  }
+}
 const cardGenerationDrafts={};
 function defaultPlayer(name){return {name,fullName:name,birthDate:"",age:"",photo:"",leg:"",palmares:"",position:"",number:""}}
 function saveDB(){}
@@ -882,6 +3101,11 @@ async function verifyAdminSession(){
 const historyRoutes={
   home:'home',
   createMode:'crear-alineaciones',
+  creationMethod:'metodo-alineaciones',
+  coachLobby:'modo-entrenador',
+  coachIdentity:'equipo-entrenador',
+  changeHistory:'historial-cambios',
+  coachRoom:'entrenador',
   selection:'seleccionar-jugadores',
   results:'alineaciones',
   resultMode:'apuntar-resultado',
@@ -891,6 +3115,17 @@ const historyRoutes={
 };
 const transientScreens=new Set(['loading']);
 let handlingPopState=false;
+
+
+
+
+function openHistoryFromHash(){
+  if(location.hash==='#historial-cambios'){
+    show('changeHistory',{fromHistory:true});
+    return true;
+  }
+  return false;
+}
 
 function screenHistoryState(id){
   return{
@@ -909,6 +3144,7 @@ function show(id,opts={}){
 
   /* Background específico por sección */
   document.body.classList.toggle('bg-player-selection',id==='selection');
+  document.body.classList.toggle('bg-coach-room',id==='coachRoom');
 
   window.scrollTo(0,0);
 
@@ -949,10 +3185,749 @@ window.addEventListener('popstate',event=>{
 
 /* La primera carga queda registrada como Home. A partir de aquí, cada
    apartado que abra el usuario se añade al historial del navegador. */
-history.replaceState(screenHistoryState('home'),'','#home');
+const initialCoachInvite=coachInviteCodeFromHash?.();
+if(initialCoachInvite){
+  history.replaceState(screenHistoryState('coachLobby'),'','#entrenador/'+initialCoachInvite);
+  setTimeout(()=>prepareCoachInvite(initialCoachInvite),0);
+}else{
+  history.replaceState(screenHistoryState('home'),'','#home');
+}
 
 function openCreateGame(){show('createMode')}
-function startGame(type){game=type;selected=[];reserves=[];pendingSwap=null;const list=type==='f7'?F7:FS,needed=type==='f7'?14:10;document.getElementById('selectionTitle').textContent=type==='f7'?'Fútbol 7':'Fútbol Sala';document.getElementById('neededCount').textContent=needed;document.getElementById('reserveQty').value='0';document.getElementById('reserveConfig').classList.remove('open');document.getElementById('reserveFields').innerHTML='';renderPlayerList(list,needed);updateCount();show('selection')}
+function startGame(type){
+  game=type;
+  selected=[];reserves=[];pendingSwap=null;
+  document.getElementById('creationMethodSubtitle').textContent=(type==='f7'?'Fútbol 7':'Fútbol Sala')+' · Elige cómo quieres crear los equipos.';
+  show('creationMethod');
+}
+function startAutomaticGame(){
+  selected=[];reserves=[];pendingSwap=null;
+  const list=game==='f7'?F7:FS,needed=game==='f7'?14:10;
+  document.getElementById('selectionTitle').textContent=game==='f7'?'Fútbol 7':'Fútbol Sala';
+  document.getElementById('neededCount').textContent=needed;
+  document.getElementById('reserveQty').value='0';
+  document.getElementById('reserveConfig').classList.remove('open');
+  document.getElementById('reserveFields').innerHTML='';
+  renderPlayerList(list,needed);
+  updateCount();
+  show('selection');
+}
+
+/* =========================
+   MODO ENTRENADOR · v44 MVP
+   ========================= */
+let coachRoomCode=null;
+let coachRoomId=null;
+let coachToken=null;
+let coachTeam=null;
+let coachSelectedPlayer=null;
+let coachRealtimeChannel=null;
+let coachLastStatus=null;
+let coachCoinAnimating=false;
+let coachSelectedParticipants=[];
+let coachGuestPlayers=[];
+let coachParsedCallup=[];
+let coachCallupConfirmed=false;
+let coachHadSecond=false;
+let coachPollTimer=null;
+
+function coachStorageKey(code){return 'patx_coach_'+String(code||'').toUpperCase()}
+function coachColorsSwapped(code=coachRoomCode){
+  const s=String(code||'').toUpperCase();
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){
+    h^=s.charCodeAt(i);
+    h=Math.imul(h,16777619);
+  }
+  return (h>>>0)%2===1;
+}
+function coachDisplayTeam(team,code=coachRoomCode){
+  if(!coachColorsSwapped(code))return team;
+  return team==='red'?'black':team==='black'?'red':team;
+}
+function coachModeLabel(mode){return mode==='fs'?'Fútbol Sala':'Fútbol 7'}
+function coachPlayersForMode(mode){return mode==='fs'?[...FS]:[...F7]}
+
+function openCoachMode(){
+  resetCoachLocalView(false);
+  coachSelectedParticipants=[];
+  coachGuestPlayers=[];
+  coachParsedCallup=[];
+  coachCallupConfirmed=false;
+  const callupText=document.getElementById('coachCallupText');
+  if(callupText)callupText.value='';
+  const callupReview=document.getElementById('coachCallupReview');
+  if(callupReview)callupReview.style.display='none';
+  const needed=game==='f7'?14:10;
+  document.getElementById('coachSetupTitle').textContent='Modo Entrenador · '+coachModeLabel(game);
+  document.getElementById('coachLobbyMode').textContent='Selecciona quién juega hoy antes de crear la sala.';
+  document.getElementById('coachSetupNeeded').textContent=needed;
+  document.getElementById('coachSetupNeededText').textContent=needed;
+  document.getElementById('coachSetupCountBox').style.display='';
+  document.getElementById('coachLobbyCreate').style.display='';
+  document.getElementById('coachLobbyJoin').style.display='none';
+  renderCoachSetupPlayers();
+  show('coachLobby');
+}
+
+
+
+function normalizeCoachCallupName(value){
+  return String(value||'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase()
+    .replace(/[’'`´]/g,'')
+    .replace(/[^a-z0-9]+/g,' ')
+    .trim()
+    .replace(/\s+/g,' ');
+}
+
+function cleanCoachCallupLine(line){
+  let s=String(line||'')
+    .replace(/[\u200B-\u200D\uFEFF]/g,'')
+    .replace(/[⁠ ]/g,' ')
+    .trim();
+
+  // Quitar numeración típica de WhatsApp: "1.", "1)", "1.-", etc.
+  s=s.replace(/^\s*\d{1,2}\s*[\.\)\-:ºª]*\s*/,'');
+  s=s.replace(/^[•\-–—]\s*/,'');
+  s=s.replace(/\s+/g,' ').trim();
+
+  // Notas que suelen acompañar el nombre pero no forman parte del apodo.
+  s=s.replace(/\s*\((?:porter|portero|futsal|f-?sala|futbol\s*sala|fútbol\s*sala)\)\s*$/i,'').trim();
+  return s;
+}
+
+function coachLevenshtein(a,b){
+  a=normalizeCoachCallupName(a); b=normalizeCoachCallupName(b);
+  const m=a.length,n=b.length;
+  if(!m)return n;if(!n)return m;
+  const prev=Array.from({length:n+1},(_,i)=>i), cur=new Array(n+1);
+  for(let i=1;i<=m;i++){
+    cur[0]=i;
+    for(let j=1;j<=n;j++){
+      cur[j]=Math.min(
+        cur[j-1]+1,
+        prev[j]+1,
+        prev[j-1]+(a[i-1]===b[j-1]?0:1)
+      );
+    }
+    for(let j=0;j<=n;j++)prev[j]=cur[j];
+  }
+  return prev[n];
+}
+
+function closestCoachRosterName(name, roster){
+  const norm=normalizeCoachCallupName(name);
+  let best=null,bestDistance=Infinity;
+  roster.forEach(candidate=>{
+    const d=coachLevenshtein(norm,candidate);
+    if(d<bestDistance){bestDistance=d;best=candidate}
+  });
+  // Solo consideramos "posible errata" si realmente se parece mucho.
+  const maxLen=Math.max(norm.length,normalizeCoachCallupName(best||'').length);
+  const similar=best && (bestDistance<=1 || (maxLen>=6 && bestDistance<=2));
+  return similar?{name:best,distance:bestDistance}:null;
+}
+
+function parseCoachCallup(){
+  const text=document.getElementById('coachCallupText')?.value||'';
+  const needed=game==='f7'?14:10;
+  const roster=coachPlayersForMode(game);
+
+  const rawLines=text.split(/\r?\n/);
+  const participantLines=[];
+  let inReserves=false;
+
+  for(const raw of rawLines){
+    const trimmed=String(raw||'').replace(/[⁠ ]/g,' ').trim();
+    if(!trimmed)continue;
+
+    // Desde "Reserva" o "Reservas" en adelante no nos interesa nada.
+    if(/^\s*reservas?\b/i.test(trimmed)){
+      inReserves=true;
+      continue;
+    }
+    if(inReserves)continue;
+
+    // Priorizamos líneas que vienen numeradas: son la convocatoria real.
+    if(/^\s*\d{1,2}\s*[\.\)\-:ºª]/.test(trimmed) || /^\s*\d{1,2}\s+[^\d]/.test(trimmed)){
+      const cleaned=cleanCoachCallupLine(trimmed);
+      if(cleaned)participantLines.push(cleaned);
+    }
+  }
+
+  // Si el mensaje no llevaba números, intento reconocer líneas que coincidan con jugadores.
+  if(!participantLines.length){
+    for(const raw of rawLines){
+      const trimmed=String(raw||'').trim();
+      if(/^\s*reservas?\b/i.test(trimmed))break;
+      const cleaned=cleanCoachCallupLine(trimmed);
+      if(!cleaned)continue;
+      const norm=normalizeCoachCallupName(cleaned);
+      if(roster.some(r=>normalizeCoachCallupName(r)===norm))participantLines.push(cleaned);
+    }
+  }
+
+  const seen=new Set();
+  const parsed=[];
+  const possibleTypos=[];
+
+  participantLines.forEach(rawName=>{
+    const norm=normalizeCoachCallupName(rawName);
+    if(!norm || seen.has(norm))return;
+    seen.add(norm);
+
+    const exact=roster.find(r=>normalizeCoachCallupName(r)===norm);
+    if(exact){
+      parsed.push({name:exact,type:'known'});
+      return;
+    }
+
+    const close=closestCoachRosterName(rawName,roster);
+    if(close){
+      // No lo corregimos a escondidas: avisamos y dejamos el texto original como invitado
+      // hasta que el usuario confirme/corrija manualmente.
+      parsed.push({name:rawName,type:'uncertain',suggestion:close.name});
+      possibleTypos.push({name:rawName,suggestion:close.name});
+      return;
+    }
+
+    // Nombre desconocido: puede ser un invitado/reserva externo que sí juega hoy.
+    parsed.push({name:rawName,type:'guest'});
+  });
+
+  coachParsedCallup=parsed;
+  coachCallupConfirmed=false;
+
+  const review=document.getElementById('coachCallupReview');
+  const detected=document.getElementById('coachCallupDetected');
+  const summary=document.getElementById('coachCallupSummary');
+  const warning=document.getElementById('coachCallupWarning');
+  const confirm=document.getElementById('coachConfirmCallupBtn');
+
+  review.style.display='';
+  const manualCreate=document.getElementById('coachCreateRoomBtn');
+  if(manualCreate)manualCreate.style.display='none';
+  summary.textContent=`He detectado ${parsed.length} de ${needed} jugadores.`;
+  detected.innerHTML=parsed.map((p,i)=>{
+    const extra=p.type==='guest'
+      ? '<span class="callup-tag guest">Invitado</span>'
+      : p.type==='uncertain'
+        ? `<span class="callup-tag uncertain">¿Quizá ${escapeHtml(p.suggestion)}?</span>`
+        : '<span class="callup-tag ok">✓</span>';
+    return `<div class="coach-callup-name"><b>${i+1}.</b><span>${escapeHtml(p.name)}</span>${extra}</div>`;
+  }).join('');
+
+  const warnings=[];
+  if(parsed.length<needed)warnings.push(`⚠️ Falta${needed-parsed.length===1?'':'n'} ${needed-parsed.length} jugador${needed-parsed.length===1?'':'es'}. Puedes seleccionarlo${needed-parsed.length===1?'':'s'} manualmente debajo.`);
+  if(parsed.length>needed)warnings.push(`⚠️ He detectado ${parsed.length-needed} jugador${parsed.length-needed===1?'':'es'} de más. Revisa el texto antes de confirmar.`);
+  if(possibleTypos.length){
+    warnings.push('🔎 Hay nombres que se parecen a jugadores conocidos. Revísalos antes de confirmar: '+possibleTypos.map(x=>`${x.name} → ¿${x.suggestion}?`).join(', ')+'.');
+  }
+
+  warning.style.display=warnings.length?'':'none';
+  warning.innerHTML=warnings.join('<br>');
+
+  // Si hay exactamente los jugadores necesarios, Crear sala queda listo.
+  // Si faltan/sobran, se obliga a modificar/corregir antes.
+  confirm.textContent='Crear sala';
+  confirm.disabled=parsed.length!==needed;
+}
+
+
+async function createRoomFromDetectedCallup(){
+  const needed=game==='f7'?14:10;
+  if(coachParsedCallup.length!==needed){
+    alert('La convocatoria debe tener exactamente '+needed+' jugadores antes de crear la sala.');
+    return;
+  }
+
+  // La lista visible es la que se utilizará para crear la sala.
+  coachGuestPlayers=coachParsedCallup
+    .filter(p=>p.type==='guest'||p.type==='uncertain')
+    .map(p=>p.name);
+  coachSelectedParticipants=coachParsedCallup.map(p=>p.name);
+  coachCallupConfirmed=true;
+  renderCoachSetupPlayers();
+
+  const btn=document.getElementById('coachConfirmCallupBtn');
+  if(btn){btn.disabled=true;btn.textContent='Creando sala…'}
+  await createCoachRoom();
+  if(btn && document.getElementById('coachLobby')?.classList.contains('active')){
+    btn.disabled=false;
+    btn.textContent='Crear sala';
+  }
+}
+
+function modifyCoachCallup(){
+  // Carga provisionalmente lo detectado en la selección manual para que
+  // el usuario pueda corregir nombres, quitar jugadores o añadir los que falten.
+  const needed=game==='f7'?14:10;
+  coachGuestPlayers=coachParsedCallup
+    .filter(p=>p.type==='guest'||p.type==='uncertain')
+    .map(p=>p.name);
+  coachSelectedParticipants=coachParsedCallup.map(p=>p.name).slice(0,needed);
+  coachCallupConfirmed=false;
+  renderCoachSetupPlayers();
+  const manualCreate=document.getElementById('coachCreateRoomBtn');
+  if(manualCreate)manualCreate.style.display='';
+
+  const review=document.getElementById('coachCallupReview');
+  if(review)review.style.display='none';
+
+  const textarea=document.getElementById('coachCallupText');
+  if(textarea){
+    textarea.focus();
+    textarea.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+
+function confirmCoachCallup(){
+  const needed=game==='f7'?14:10;
+  if(!coachParsedCallup.length)return;
+
+  // Usamos exactamente lo que el usuario ha visto y confirmado.
+  // Los desconocidos se incorporan solo a esta sala como invitados.
+  const names=coachParsedCallup.map(p=>p.name);
+  coachGuestPlayers=coachParsedCallup
+    .filter(p=>p.type==='guest'||p.type==='uncertain')
+    .map(p=>p.name);
+
+  coachSelectedParticipants=[...names].slice(0,needed);
+  coachCallupConfirmed=true;
+  renderCoachSetupPlayers();
+
+  const remaining=needed-coachSelectedParticipants.length;
+  const summary=document.getElementById('coachCallupSummary');
+  if(remaining>0){
+    summary.textContent=`Convocatoria cargada. Falta${remaining===1?'':'n'} ${remaining} jugador${remaining===1?'':'es'}: selecciónalo${remaining===1?'':'s'} manualmente debajo.`;
+  }else{
+    summary.textContent='✓ Convocatoria cargada. Los jugadores seleccionados coinciden con la lista confirmada.';
+  }
+
+  document.getElementById('coachConfirmCallupBtn').textContent='✓ Convocatoria cargada';
+  document.getElementById('coachConfirmCallupBtn').disabled=true;
+}
+
+function clearCoachCallup(){
+  const text=document.getElementById('coachCallupText');
+  if(text)text.value='';
+  coachParsedCallup=[];
+  coachGuestPlayers=[];
+  coachCallupConfirmed=false;
+  coachSelectedParticipants=[];
+  const manualCreate=document.getElementById('coachCreateRoomBtn');
+  if(manualCreate)manualCreate.style.display='';
+  const review=document.getElementById('coachCallupReview');
+  if(review)review.style.display='none';
+  const btn=document.getElementById('coachConfirmCallupBtn');
+  if(btn){btn.textContent='Crear sala';btn.disabled=false}
+  renderCoachSetupPlayers();
+}
+
+function renderCoachSetupPlayers(){
+  const needed=game==='f7'?14:10;
+  const base=coachPlayersForMode(game);
+  const list=[...base,...coachGuestPlayers.filter(n=>!base.some(x=>normalizeCoachCallupName(x)===normalizeCoachCallupName(n)))];
+  const box=document.getElementById('coachSetupPlayers');
+  if(!box)return;
+  box.innerHTML='';
+  list.forEach(name=>{
+    const b=document.createElement('button');
+    const isGuest=coachGuestPlayers.includes(name);
+    b.className='player'+(coachSelectedParticipants.includes(name)?' selected':'')+(isGuest?' coach-guest-player':'');
+    b.innerHTML=escapeHtml(name)+(isGuest?'<small>Invitado</small>':'');
+    b.onclick=()=>toggleCoachSetupPlayer(name);
+    box.appendChild(b);
+  });
+  const count=document.getElementById('coachSetupCount');
+  if(count)count.textContent=coachSelectedParticipants.length;
+  const create=document.getElementById('coachCreateRoomBtn');
+  if(create)create.disabled=coachSelectedParticipants.length!==needed;
+}
+function toggleCoachSetupPlayer(name){
+  const needed=game==='f7'?14:10;
+  if(coachSelectedParticipants.includes(name)){
+    coachSelectedParticipants=coachSelectedParticipants.filter(x=>x!==name);
+  }else if(coachSelectedParticipants.length<needed){
+    coachSelectedParticipants.push(name);
+  }
+  renderCoachSetupPlayers();
+}
+
+function resetCoachLocalView(clearIdentity=true){
+  coachSelectedPlayer=null;
+  coachCoinAnimating=false;
+  if(coachRealtimeChannel){
+    sbPublic.removeChannel(coachRealtimeChannel);
+    coachRealtimeChannel=null;
+  }
+  if(coachPollTimer){
+    clearInterval(coachPollTimer);
+    coachPollTimer=null;
+  }
+  if(clearIdentity){
+    coachRoomCode=null;coachRoomId=null;coachToken=null;coachTeam=null;
+  }
+}
+
+function leaveCoachView(){
+  resetCoachLocalView(false);
+  if(history.length>1)history.back();else show('creationMethod');
+}
+
+async function createCoachRoom(){
+  const needed=game==='f7'?14:10;
+  if(coachSelectedParticipants.length!==needed){
+    alert('Selecciona exactamente '+needed+' jugadores.');
+    return;
+  }
+  const btn=document.getElementById('coachCreateRoomBtn');
+  if(btn){btn.disabled=true;btn.textContent='Creando sala…'}
+  try{
+    const {data,error}=await sbPublic.rpc('create_coach_room',{
+      p_mode:game,
+      p_players:coachSelectedParticipants
+    });
+    if(error)throw error;
+    coachRoomCode=data.code;
+    coachRoomId=data.room_id;
+    coachToken=data.token;
+    coachTeam=data.team;
+    localStorage.setItem(coachStorageKey(coachRoomCode),JSON.stringify({
+      token:coachToken,team:coachTeam,mode:game,identitySeen:false
+    }));
+    history.pushState(screenHistoryState('coachIdentity'),'','#equipo-entrenador');
+    showCoachIdentity();
+  }catch(e){
+    alert('No se ha podido crear la sala: '+(e.message||e));
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Crear sala'}
+  }
+}
+
+
+const coachIdentityJokes={
+  red:[
+    'Hoy mandas tú. Si sale mal, siempre puedes culpar al árbitro.',
+    'Rojo te queda bien. Ahora falta que las decisiones también.',
+    'Tienes la pizarra, tienes el silbato y, en teoría, un plan.'
+  ],
+  black:[
+    'El negro impone. Sobre todo cuando no tienes ni idea de a quién fichar.',
+    'Hoy eres el míster oscuro. Que la táctica te acompañe.',
+    'Equipo negro. Cero excusas, muchas indicaciones desde la banda.'
+  ]
+};
+function showCoachIdentity(){
+  const displayTeam=coachDisplayTeam(coachTeam);
+  const red=displayTeam==='red';
+  const badge=document.getElementById('coachIdentityBadge');
+  badge.className='coach-identity-badge '+displayTeam;
+  badge.textContent=red?'ROJO':'NEGRO';
+  document.getElementById('coachIdentityTitle').textContent='Te ha tocado entrenar al equipo '+(red?'rojo':'negro');
+  const jokes=coachIdentityJokes[displayTeam]||coachIdentityJokes.red;
+  document.getElementById('coachIdentityJoke').textContent=jokes[Math.floor(Math.random()*jokes.length)];
+  show('coachIdentity',{fromHistory:true});
+}
+async function continueCoachIdentity(){
+  const saved=JSON.parse(localStorage.getItem(coachStorageKey(coachRoomCode))||'{}');
+  saved.identitySeen=true;
+  localStorage.setItem(coachStorageKey(coachRoomCode),JSON.stringify(saved));
+  history.replaceState(screenHistoryState('coachRoom'),'','#entrenador/'+coachRoomCode);
+  await enterCoachRoom();
+}
+
+function coachInviteCodeFromHash(){
+  const m=location.hash.match(/^#entrenador\/([A-Za-z0-9_-]+)$/);
+  return m?m[1].toUpperCase():null;
+}
+
+async function prepareCoachInvite(code){
+  coachRoomCode=String(code||'').toUpperCase();
+  const saved=localStorage.getItem(coachStorageKey(coachRoomCode));
+  if(saved){
+    try{
+      const s=JSON.parse(saved);
+      const {data,error}=await sbPublic.rpc('join_coach_room',{p_code:coachRoomCode,p_token:s.token});
+      if(!error&&data){
+        coachRoomId=data.room_id;coachToken=data.token;coachTeam=data.team;game=data.mode;
+        if(s.identitySeen){
+          await enterCoachRoom();
+        }else{
+          history.replaceState(screenHistoryState('coachIdentity'),'','#equipo-entrenador');
+          showCoachIdentity();
+        }
+        return;
+      }
+    }catch(_){}
+  }
+  document.getElementById('coachLobbyCreate').style.display='none';
+  document.getElementById('coachSetupCountBox').style.display='none';
+  document.getElementById('coachLobbyJoin').style.display='';
+  document.getElementById('coachJoinText').textContent='Sala '+coachRoomCode+' · Entra como segundo entrenador.';
+  show('coachLobby',{fromHistory:true});
+}
+
+async function joinCoachRoom(){
+  if(!coachRoomCode)return;
+  const btn=document.querySelector('#coachLobbyJoin .coach-big-btn');
+  if(btn){btn.disabled=true;btn.textContent='Entrando…'}
+  try{
+    const {data,error}=await sbPublic.rpc('join_coach_room',{p_code:coachRoomCode,p_token:null});
+    if(error)throw error;
+    coachRoomId=data.room_id;coachToken=data.token;coachTeam=data.team;game=data.mode;
+    localStorage.setItem(coachStorageKey(coachRoomCode),JSON.stringify({token:coachToken,team:coachTeam,mode:game,identitySeen:false}));
+    history.replaceState(screenHistoryState('coachIdentity'),'','#equipo-entrenador');
+    showCoachIdentity();
+  }catch(e){
+    alert('No se ha podido entrar: '+(e.message||e));
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Entrar en la sala'}
+  }
+}
+
+async function enterCoachRoom(){
+  document.getElementById('coachRoomCode').textContent=coachRoomCode;
+  document.getElementById('coachRoomMode').textContent=coachModeLabel(game);
+  document.getElementById('coachShareLink').value=location.origin+location.pathname+'#entrenador/'+coachRoomCode;
+  history.replaceState(screenHistoryState('coachRoom'),'','#entrenador/'+coachRoomCode);
+  show('coachRoom',{fromHistory:true});
+  subscribeCoachRoom();
+  coachHadSecond=false;
+  await refreshCoachRoom();
+  if(coachPollTimer)clearInterval(coachPollTimer);
+  coachPollTimer=setInterval(()=>{
+    if(document.getElementById('coachRoom')?.classList.contains('active'))refreshCoachRoom();
+  },1800);
+}
+
+function subscribeCoachRoom(){
+  if(coachRealtimeChannel)sbPublic.removeChannel(coachRealtimeChannel);
+  coachRealtimeChannel=sbPublic.channel('coach-room-'+coachRoomCode)
+    .on('postgres_changes',{event:'*',schema:'public',table:'coach_rooms',filter:'id=eq.'+coachRoomId},()=>refreshCoachRoom())
+    .on('postgres_changes',{event:'*',schema:'public',table:'coach_room_picks',filter:'room_id=eq.'+coachRoomId},()=>refreshCoachRoom())
+    .subscribe();
+}
+
+async function refreshCoachRoom(){
+  if(!coachRoomId)return;
+  const [{data:room,error:roomError},{data:picks,error:picksError}]=await Promise.all([
+    sbPublic.from('coach_rooms').select('id,code,mode,status,black_token_hash,current_turn,first_turn,started_at,selected_players').eq('id',coachRoomId).single(),
+    sbPublic.from('coach_room_picks').select('player_name,team,pick_order').eq('room_id',coachRoomId).order('pick_order')
+  ]);
+  if(roomError||!room)return;
+  if(picksError)return;
+  game=room.mode;
+  renderCoachRoom(room,picks||[]);
+}
+
+function renderCoachRoom(room,picks){
+  const waiting=document.getElementById('coachWaiting');
+  const draft=document.getElementById('coachDraft');
+  const finished=document.getElementById('coachFinished');
+  const coin=document.getElementById('coachCoinOverlay');
+
+  document.getElementById('coachRoomCode').textContent=room.code;
+  document.getElementById('coachRoomMode').textContent=coachModeLabel(room.mode);
+  document.getElementById('coachShareLink').value=location.origin+location.pathname+'#entrenador/'+room.code;
+
+  const secondReady=!!room.black_token_hash;
+  if(secondReady&&!coachHadSecond&&coachTeam==='red'&&room.status==='waiting'){
+    showCoachOpponentAlert();
+  }
+  coachHadSecond=secondReady;
+  document.getElementById('coachWaitingTitle').textContent=secondReady?'¡El otro entrenador ya está aquí!':'Esperando al segundo entrenador…';
+  document.getElementById('coachWaitingText').textContent=secondReady?'Ya podéis comenzar. La moneda decidirá quién ficha primero.':'Comparte este enlace para que entre el otro entrenador.';
+  const startBtn=document.getElementById('coachStartBtn');
+  startBtn.disabled=!secondReady;
+  startBtn.textContent=secondReady?'COMENZAR':'ESPERANDO AL RIVAL…';
+
+  if(room.status==='waiting'){
+    waiting.style.display='';
+    draft.style.display='none';
+    finished.style.display='none';
+    coin.style.display='none';
+  }else if(room.status==='drafting'){
+    waiting.style.display='none';
+    finished.style.display='none';
+    if(coachLastStatus==='waiting'&&!coachCoinAnimating){
+      animateCoachCoin(room.first_turn,()=>{draft.style.display='grid'});
+    }else if(!coachCoinAnimating){
+      coin.style.display='none';
+      draft.style.display='grid';
+    }
+    renderCoachDraft(room,picks);
+  }else if(room.status==='finished'){
+    waiting.style.display='none';
+    coin.style.display='none';
+    draft.style.display='grid';
+    finished.style.display='';
+    renderCoachDraft(room,picks);
+  }
+  coachLastStatus=room.status;
+}
+
+
+function showCoachOpponentAlert(){
+  const el=document.getElementById('coachOpponentAlert');
+  if(!el)return;
+  el.style.display='grid';
+  setTimeout(()=>{if(el.style.display!=='none')el.classList.add('pulse-again')},1200);
+}
+function hideCoachOpponentAlert(){
+  const el=document.getElementById('coachOpponentAlert');
+  if(el)el.style.display='none';
+}
+
+function renderCoachDraft(room,picks){
+  const displayRed=picks.filter(p=>coachDisplayTeam(p.team,room.code)==='red');
+  const displayBlack=picks.filter(p=>coachDisplayTeam(p.team,room.code)==='black');
+  const picked=new Set(picks.map(p=>p.player_name));
+  const all=(room.selected_players&&room.selected_players.length)?room.selected_players:coachPlayersForMode(room.mode);
+  const available=all.filter(n=>!picked.has(n));
+  if(coachSelectedPlayer&&picked.has(coachSelectedPlayer))coachSelectedPlayer=null;
+
+  document.getElementById('coachRedPicks').innerHTML=displayRed.map((p,i)=>`<div class="coach-picked-token red-pick"><span>${i+1}</span>${escapeHtml(p.player_name)}</div>`).join('');
+  document.getElementById('coachBlackPicks').innerHTML=displayBlack.map((p,i)=>`<div class="coach-picked-token black-pick"><span>${i+1}</span>${escapeHtml(p.player_name)}</div>`).join('');
+
+  const mine=room.current_turn===coachTeam&&room.status==='drafting';
+  const box=document.getElementById('coachAvailablePlayers');
+  box.innerHTML='';
+  available.forEach(name=>{
+    const wrap=document.createElement('div');
+    wrap.className='coach-token-wrap'+(coachSelectedPlayer===name?' selected':'');
+    const b=document.createElement('button');
+    b.className='coach-token'+(coachSelectedPlayer===name?' selected':'');
+    b.textContent=name;
+    b.disabled=!mine;
+    b.onclick=()=>{
+      if(!mine)return;
+      coachSelectedPlayer=name;
+      renderCoachDraft(room,picks);
+    };
+    wrap.appendChild(b);
+
+    if(mine&&coachSelectedPlayer===name){
+      const pick=document.createElement('button');
+      pick.className='coach-inline-pick';
+      pick.textContent='FICHAR';
+      pick.onclick=(ev)=>{ev.stopPropagation();confirmCoachPick()};
+      wrap.appendChild(pick);
+    }
+    box.appendChild(wrap);
+  });
+
+  const banner=document.getElementById('coachTurnBanner');
+  const turnStatus=document.getElementById('coachTurnStatus');
+  const draftBoard=document.getElementById('coachDraft');
+  const myDisplayTeam=coachDisplayTeam(coachTeam,room.code);
+  const turnDisplayTeam=coachDisplayTeam(room.current_turn,room.code);
+
+  if(room.status==='finished'){
+    banner.textContent='DRAFT TERMINADO';
+    banner.className='coach-turn-banner finished';
+    if(turnStatus){turnStatus.style.display='none';turnStatus.textContent=''}
+    if(draftBoard)draftBoard.classList.remove('other-turn');
+  }else if(mine){
+    banner.textContent='TU TURNO · '+(myDisplayTeam==='red'?'EQUIPO ROJO':'EQUIPO NEGRO');
+    banner.className='coach-turn-banner my-turn '+myDisplayTeam;
+    if(turnStatus){
+      turnStatus.textContent='ELIGE TU PRÓXIMO FICHAJE';
+      turnStatus.className='coach-turn-status my-turn-status';
+      turnStatus.style.display='';
+    }
+    if(draftBoard)draftBoard.classList.remove('other-turn');
+  }else{
+    banner.textContent='TURNO DEL EQUIPO '+(turnDisplayTeam==='red'?'ROJO':'NEGRO');
+    banner.className='coach-turn-banner waiting-turn';
+    if(turnStatus){
+      turnStatus.textContent='El otro entrenador está eligiendo un nuevo jugador';
+      turnStatus.className='coach-turn-status waiting-status';
+      turnStatus.style.display='';
+    }
+    if(draftBoard)draftBoard.classList.add('other-turn');
+  }
+  document.getElementById('coachSelectedHint').textContent='';
+}
+
+async function startCoachDraft(){
+  if(!coachRoomCode||!coachToken)return;
+  const btn=document.getElementById('coachStartBtn');
+  btn.disabled=true;
+  try{
+    const {data,error}=await sbPublic.rpc('start_coach_room',{p_code:coachRoomCode,p_token:coachToken});
+    if(error)throw error;
+    animateCoachCoin(data.first_turn);
+    await refreshCoachRoom();
+  }catch(e){
+    alert('No se ha podido comenzar: '+(e.message||e));
+    btn.disabled=false;
+  }
+}
+
+function animateCoachCoin(firstTurn,onDone){
+  if(coachCoinAnimating)return;
+  coachCoinAnimating=true;
+  const overlay=document.getElementById('coachCoinOverlay');
+  const coin=document.getElementById('coachCoin');
+  const text=document.getElementById('coachCoinText');
+  overlay.style.display='flex';
+  document.getElementById('coachDraft').style.display='none';
+  text.textContent='El árbitro lanza la moneda…';
+  coin.classList.remove('tossing','land-red','land-black');
+  void coin.offsetWidth;
+  coin.classList.add('tossing');
+  setTimeout(()=>{
+    const displayFirst=coachDisplayTeam(firstTurn);
+    coin.classList.remove('tossing');
+    coin.classList.add(displayFirst==='red'?'land-red':'land-black');
+    text.textContent='¡Empieza el equipo '+(displayFirst==='red'?'ROJO':'NEGRO')+'!';
+  },2100);
+  setTimeout(()=>{
+    overlay.style.display='none';
+    document.getElementById('coachDraft').style.display='grid';
+    coachCoinAnimating=false;
+    if(onDone)onDone();
+  },3500);
+}
+
+async function confirmCoachPick(){
+  if(!coachSelectedPlayer||!coachRoomCode||!coachToken)return;
+  const name=coachSelectedPlayer;
+  try{
+    const {error}=await sbPublic.rpc('pick_coach_player',{p_code:coachRoomCode,p_token:coachToken,p_player_name:name});
+    if(error)throw error;
+    coachSelectedPlayer=null;
+    await refreshCoachRoom();
+  }catch(e){
+    alert(e.message||'No se ha podido fichar al jugador.');
+    await refreshCoachRoom();
+  }
+}
+
+async function copyCoachLink(){
+  const input=document.getElementById('coachShareLink');
+  const link=input.value;
+  try{
+    await navigator.clipboard.writeText(link);
+    toast('Enlace copiado ✓');
+  }catch(_){
+    input.select();
+    document.execCommand('copy');
+    toast('Enlace copiado ✓');
+  }
+}
+
+function openCoachFinalLineup(){
+  const red=[...document.querySelectorAll('#coachRedPicks .coach-picked-token')].map(x=>x.childNodes[x.childNodes.length-1].textContent.trim());
+  const black=[...document.querySelectorAll('#coachBlackPicks .coach-picked-token')].map(x=>x.childNodes[x.childNodes.length-1].textContent.trim());
+  teams={red,black};
+  renderResults();
+  showCelebration();
+}
+
 function renderPlayerList(list,needed){const box=document.getElementById('players');box.innerHTML='';[...list,...reserves.map(r=>r.name)].forEach(name=>{const b=document.createElement('button');b.className='player';b.textContent=name;b.onclick=()=>togglePlayer(name,b,needed);box.appendChild(b)})}
 function toggleReserves(){const p=document.getElementById('reserveConfig');p.classList.toggle('open');document.getElementById('reserveArrow').textContent=p.classList.contains('open')?'▴':'▾'}
 function buildReserveFields(){const qty=Number(document.getElementById('reserveQty').value),box=document.getElementById('reserveFields'),previous=reserves.slice();box.innerHTML='';for(let i=0;i<qty;i++){const old=previous[i]||{name:'',level:'medio'};const row=document.createElement('div');row.className='reserve-row';row.innerHTML=`<input id="reserveName${i}" placeholder="Nombre de la reserva ${i+1}" value="${escapeHtml(old.name)}"><select id="reserveLevel${i}"><option value="alto" ${old.level==='alto'?'selected':''}>Alto</option><option value="medio" ${old.level==='medio'?'selected':''}>Medio</option><option value="bajo" ${old.level==='bajo'?'selected':''}>Bajo</option></select>`;box.appendChild(row)}reserves=[];for(let i=0;i<qty;i++){document.getElementById('reserveName'+i).addEventListener('input',syncReserves);document.getElementById('reserveLevel'+i).addEventListener('change',syncReserves)}syncReserves()}
@@ -1158,9 +4133,40 @@ function toggleAdjust(){document.getElementById('adjustPanel').classList.toggle(
 function newLineup(){pendingSwap=null;teams=balancedTeams(selected);renderResults();document.getElementById('adjustPanel').classList.remove('open');toast('Nueva alineación generada')}
 
 const patxQuotes=["Que gane el mejor. O el que llegue al balón antes.","Lo importante es no lesionarse. El resultado es secundario.","A estas edades, calentar también cuenta como partido.","Si mañana duele, es que hoy se ha competido.","Prohibido hacer entradas. Permitidas las excusas.","El que diga que no está cansado, miente.","Aquí no hay primas: hay agujetas.","Fair play, salvo que quede un minuto.","La técnica permanece. Las rodillas, veremos.","Hoy se corre. Mañana se explica la lesión.","El árbitro no está comprado. Simplemente se equivoca.","Tercer tiempo confirmado. Primer tiempo, ya veremos.","Que nadie haga un sprint innecesario. Tenemos una edad.","La veteranía es un grado. La velocidad, una anécdota.","El balón no corre más que tú. Simplemente parece que sí.","Tenemos físico de Champions y recuperación de pretemporada.","Si te tiras al suelo, que sea porque te han hecho falta.","El verdadero rival es el día siguiente.","No estamos viejos: estamos estratégicamente cansados.","La calidad está intacta. El cardio está negociando.","Hoy hay fútbol. Mañana habrá ibuprofeno.","Correr hacia atrás sigue siendo correr. Evitémoslo.","El que conserve los isquios, gana.","Nadie ha venido a demostrar nada. Excepto todos.","Patxanga: donde el tercer tiempo dura más que el primero."];
-function showCelebration(){document.getElementById('celebrationMode').textContent=(game==='f7'?'FÚTBOL 7':'FÚTBOL SALA')+' · ALINEACIÓN FINAL';renderFinalTeam('finalRed',teams.red,'red');renderFinalTeam('finalBlack',teams.black,'black');document.getElementById('patxQuote').textContent=patxQuotes[Math.floor(Math.random()*patxQuotes.length)];document.getElementById('celebration').style.display='block'}
+function showCelebration(){
+  document.getElementById('celebrationMode').textContent=(game==='f7'?'FÚTBOL 7':'FÚTBOL SALA')+' · ALINEACIÓN FINAL';
+  renderFinalTeam('finalRed',teams.red,'red');
+  renderFinalTeam('finalBlack',teams.black,'black');
+  document.getElementById('patxQuote').textContent=patxQuotes[Math.floor(Math.random()*patxQuotes.length)];
+  document.getElementById('celebration').style.display='block';
+
+  const music=document.getElementById('bgMusic');
+  if(music&&!music.paused)music.pause();
+
+  const video=document.getElementById('celebrationVideo');
+  if(video){
+    try{
+      video.pause();
+      video.currentTime=0;
+      video.muted=false;
+      video.volume=1;
+      const playPromise=video.play();
+      if(playPromise&&typeof playPromise.catch==='function'){
+        playPromise.catch(()=>{
+          toast('El navegador ha bloqueado el sonido automático');
+          video.muted=true;
+          video.play().catch(()=>{});
+        });
+      }
+    }catch(_){}
+  }
+}
 function renderFinalTeam(id,list,color){document.getElementById(id).innerHTML=list.map(p=>`<div class="big-shirt"><span class="shirt-shape ${color}"></span><span>${escapeHtml(p)}</span></div>`).join('')}
-function closeCelebration(){document.getElementById('celebration').style.display='none'}
+function closeCelebration(){
+  document.getElementById('celebration').style.display='none';
+  const video=document.getElementById('celebrationVideo');
+  if(video){video.pause();try{video.currentTime=0}catch(_){}}
+}
 async function copyTextRobust(text){
   try{
     if(navigator.clipboard&&window.isSecureContext){
@@ -1238,17 +4244,36 @@ async function saveCurrentLineup(){
 }
 
 function updateSeasonAdminTabs(){document.querySelectorAll('.admin-season-tab').forEach(x=>x.style.display=adminLogged?'':'none')}
-function openSeason(mode){if(!mode){show('seasonMode');return}currentSeasonMode=mode;document.getElementById('seasonTitle').textContent='Temporada 26/27 · '+(mode==='f7'?'Fútbol 7':'Fútbol Sala');updateSeasonAdminTabs();show('season');seasonTab('classification',document.querySelector('.nav-btn'))}
-function seasonTab(tab,btn){document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');const c=document.getElementById('seasonContent');if(tab==='classification')renderClassification(c);if(tab==='calendar')renderCalendar(c);if(tab==='scorers')renderLeaders(c,'goals');if(tab==='assists')renderLeaders(c,'assists')}
+function openSeason(mode){if(!mode){show('seasonMode');return}currentSeasonMode=mode;document.getElementById('seasonTitle').textContent='Temporada 26/27 · '+(mode==='f7'?'Fútbol 7':'Fútbol Sala');updateSeasonAdminTabs();resetClassificationRandomOrder();show('season');seasonTab('classification',document.querySelector('#season .nav-btn'))}
+function seasonTab(tab,btn){document.querySelectorAll('#season .nav-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');const c=document.getElementById('seasonContent');if(tab==='classification')renderClassification(c);if(tab==='calendar')renderCalendar(c);if(tab==='cards')renderCardAlbum(c);if(tab==='scorers')renderLeaders(c,'goals');if(tab==='assists')renderLeaders(c,'assists')}
 function stats(){const s={};const list=currentSeasonMode==='f7'?F7:FS;list.forEach(n=>s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0});db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode&&m.status!=='in_progress').forEach(m=>{const rs=Number(m.redScore),bs=Number(m.blackScore);const outcome=rs===bs?'draw':rs>bs?'red':'black';[...m.red,...m.black].forEach(n=>{if(!s[n])s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0};s[n].played++;const team=m.red.includes(n)?'red':'black';if(outcome==='draw')s[n].draws++;else if(team===outcome)s[n].wins++;else s[n].losses++});(m.goals||[]).forEach(e=>{if(s[e.player])s[e.player].goals+=Number(e.count)||1});(m.assists||[]).forEach(e=>{if(s[e.player])s[e.player].assists+=Number(e.count)||1})});return Object.values(s).map(x=>({...x,winPct:x.played?Math.round(x.wins/x.played*100):0}))}
 function sortedStats(){
   const rows=stats();
   if(!classificationSort.key){
-    return rows.sort((a,b)=>b.wins-a.wins||b.played-a.played||b.goals-a.goals||b.assists-a.assists||a.name.localeCompare(b.name,'es'));
+    if(!classificationRandomOrder.length){
+      classificationRandomOrder=rows.map(x=>x.name);
+      for(let i=classificationRandomOrder.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [classificationRandomOrder[i],classificationRandomOrder[j]]=[classificationRandomOrder[j],classificationRandomOrder[i]];
+      }
+    }
+    const pos=new Map(classificationRandomOrder.map((name,i)=>[name,i]));
+    return rows.sort((a,b)=>(pos.get(a.name)??9999)-(pos.get(b.name)??9999));
   }
   const {key,dir}=classificationSort,mult=dir==='asc'?1:-1;
   return rows.sort((a,b)=>{
     const av=a[key],bv=b[key];
+
+    // Al ordenar por porcentaje de victorias, si dos jugadores tienen
+    // exactamente el mismo porcentaje, queda primero quien más partidos ha jugado.
+    if(key==='winPct'){
+      const pctDiff=((Number(av)||0)-(Number(bv)||0))*mult;
+      if(pctDiff!==0)return pctDiff;
+      const playedDiff=(Number(b.played)||0)-(Number(a.played)||0);
+      if(playedDiff!==0)return playedDiff;
+      return String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base',numeric:true});
+    }
+
     if(typeof av==='string'||typeof bv==='string')return String(av??'').localeCompare(String(bv??''),'es',{sensitivity:'base',numeric:true})*mult;
     return ((Number(av)||0)-(Number(bv)||0))*mult;
   });
@@ -1268,6 +4293,33 @@ function renderClassification(c){
   const rows=sortedStats();
   const adminExtraHeaders=adminLogged?`${classificationHeader('GL','goals')}${classificationHeader('AS','assists')}`:'';
   c.innerHTML=`<div class="season-grid"><div class="panel"><h3>Clasificación de jugadores</h3><div class="table-wrap"><table class="standings"><thead><tr><th>#</th>${classificationHeader('Jugador','name')}${classificationHeader('PJ','played')}${classificationHeader('G','wins')}${classificationHeader('E','draws')}${classificationHeader('P','losses')}${classificationHeader('% V','winPct')}${adminExtraHeaders}</tr></thead><tbody>${rows.map((s,i)=>`<tr><td class="rank">${i+1}</td><td class="player-link" onclick="openProfile('${escapeJs(s.name)}')"><span class="classification-player">${db.players?.[s.name]?.photo?`<img class="classification-avatar" src="${escapeHtml(db.players[s.name].photo)}" alt="" loading="lazy">`:''}<span>${escapeHtml(s.name)}</span></span></td><td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td><td>${s.winPct}%</td>${adminLogged?`<td>${s.goals}</td><td>${s.assists}</td>`:''}</tr>`).join('')}</tbody></table></div><div class="sort-help">Pulsa en el nombre de una columna para ordenar. Vuelve a pulsar para invertir el orden.</div></div><div class="panel"><h3>Últimos partidos</h3>${matchRows(db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6))}</div></div>`;
+}
+
+function renderCardAlbum(c){
+  const cards=Object.entries(db.players||{})
+    .filter(([name,p])=>p&&p.card)
+    .sort((a,b)=>a[0].localeCompare(b[0],'es',{sensitivity:'base'}));
+
+  c.innerHTML=`
+    <div class="panel card-album-panel">
+      <div class="calendar-header">
+        <div>
+          <h3>Álbum de cartas</h3>
+          <div class="subtitle">Todas las cartas creadas hasta ahora.</div>
+        </div>
+        <span class="count">${cards.length} carta${cards.length===1?'':'s'}</span>
+      </div>
+      ${cards.length?`
+        <div class="card-album-grid">
+          ${cards.map(([name,p])=>`
+            <button class="album-card" onclick="openFifaCard('${escapeJs(name)}')" title="Ver carta de ${escapeHtml(name)}">
+              <img src="${escapeHtml(p.card)}" alt="Carta de ${escapeHtml(name)}" loading="lazy">
+              <span>${escapeHtml(name)}</span>
+            </button>
+          `).join('')}
+        </div>
+      `:'<div class="empty">Todavía no hay cartas creadas.</div>'}
+    </div>`;
 }
 
 function renderCalendar(c){
@@ -1901,5 +4953,12 @@ music.addEventListener('ended',()=>{
 loadTrack(chooseRandomTrack(false));
 document.addEventListener('click',startMusic,{once:true});
 updateMusicButton();
+
+window.addEventListener('DOMContentLoaded',()=>{
+  if(location.hash==='#historial-cambios'){
+    setTimeout(()=>show('changeHistory',{fromHistory:true}),0);
+  }
+});
+
 </script>
 </body></html>
