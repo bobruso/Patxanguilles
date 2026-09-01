@@ -536,6 +536,35 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
   }
 }
 
+
+/* v39 · selector de modalidad con fotografías */
+.mode-photo-options{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.mode-photo-options .mode-photo-card{
+  width:100%;
+  min-height:190px;
+  grid-template-columns:44% 56%;
+}
+.mode-photo-options .mode-photo-card .home-card-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.mode-photo-options .mode-photo-card:first-child .home-card-image img{
+  object-position:50% 50%;
+}
+.mode-photo-options .mode-photo-card:last-child .home-card-image img{
+  object-position:50% 50%;
+}
+@media(max-width:700px){
+  .mode-photo-options{grid-template-columns:1fr}
+  .mode-photo-options .mode-photo-card{
+    grid-template-columns:48% 52%;
+    min-height:150px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -553,7 +582,7 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 
 <section id="createMode" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Crear equipos</h2><div class="subtitle">Elige la modalidad para generar las alineaciones.</div></div></div>
-<div class="home-options"><button class="mode redline" onclick="startGame('f7')"><div class="icon">⚽</div><strong>Fútbol 7</strong><span>14 jugadores.</span></button><button class="mode greenline" onclick="startGame('fs')"><div class="icon">🥅</div><strong>Fútbol Sala</strong><span>10 jugadores.</span></button></div>
+<div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="startGame('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>14 jugadores.</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="startGame('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>10 jugadores.</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
 <section id="selection" class="screen"><div class="card">
@@ -581,15 +610,12 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 
 <section id="resultMode" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Apuntar resultado</h2><div class="subtitle">Selecciona la modalidad del partido.</div></div></div>
-<div class="home-options">
-  <button class="mode redline" onclick="openResultMode('f7')"><div class="icon">⚽</div><strong>Fútbol 7</strong><span>Apuntar partido de Fútbol 7</span></button>
-  <button class="mode greenline" onclick="openResultMode('fs')"><div class="icon">🥅</div><strong>Fútbol Sala</strong><span>Apuntar partido de Fútbol Sala</span></button>
-</div>
+<div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="openResultMode('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>Apuntar partido de Fútbol 7</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="openResultMode('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>Apuntar partido de Fútbol Sala</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
 <section id="seasonMode" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Temporada 26/27</h2><div class="subtitle">Selecciona la competición.</div></div></div>
-<div class="home-options"><button class="mode redline" onclick="openSeason('f7')"><div class="icon">⚽</div><strong>Fútbol 7</strong><span>Clasificación y calendario.</span></button><button class="mode greenline" onclick="openSeason('fs')"><div class="icon">🥅</div><strong>Fútbol Sala</strong><span>Clasificación y calendario.</span></button></div>
+<div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="openSeason('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>Clasificación y calendario.</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="openSeason('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>Clasificación y calendario.</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
 <section id="season" class="screen results"><div class="card">
@@ -632,7 +658,7 @@ overflow:hidden;transform:rotateX(5deg) scale(.86);opacity:0;animation:fifaRevea
 <div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div></div></div>
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
 <div class="admin-corner"><button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button></div>
-<div class="music-controls" title="Música"><button id="musicToggle" type="button" onclick="toggleMusic()" aria-label="Pausar o reproducir música">⏸</button><span style="font-size:11px;color:#c8ced5">♫</span><input id="musicVolume" type="range" min="0" max="100" value="35" oninput="setMusicVolume(this.value)" aria-label="Volumen de música"><span id="musicVolumeLabel" class="music-volume-label">35%</span></div>
+<div class="music-controls" title="Música"><button id="musicToggle" type="button" onclick="toggleMusic()" aria-label="Pausar o reproducir música">⏸</button><span style="font-size:11px;color:#c8ced5">♫</span><input id="musicVolume" type="range" min="0" max="100" value="20" oninput="setMusicVolume(this.value)" aria-label="Volumen de música"><span id="musicVolumeLabel" class="music-volume-label">20%</span></div>
 <div id="adminModal" class="admin-modal"><div class="admin-card"><div id="adminContent"></div></div></div>
 
 <div id="photoViewer" class="photo-viewer" onclick="if(event.target===this)closePhotoViewer()">
@@ -1575,7 +1601,7 @@ document.addEventListener('keydown',e=>{
 /* Música: un único audio vive fuera de las pantallas, así no se reinicia al navegar.
    Los navegadores bloquean el autoplay con sonido hasta que exista interacción del usuario. */
 const music=document.getElementById('bgMusic');
-music.src='patxanguilles.mp3';music.volume=.35;
+music.src='patxanguilles.mp3';music.volume=.20;
 let musicStarted=false;
 function updateMusicButton(){const b=document.getElementById('musicToggle');if(b)b.textContent=music.paused?'▶':'⏸'}
 function startMusic(e){if(e?.target?.closest?.('.music-controls'))return;if(musicStarted)return;musicStarted=true;music.play().then(updateMusicButton).catch(()=>{musicStarted=false;updateMusicButton()})}
