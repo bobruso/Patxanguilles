@@ -4642,9 +4642,35 @@ async function makeTeams(){
     i++;
     if(i<msgs.length)title.textContent=msgs[i];
   },1800);
+
+  const generated=game==='f7'
+    ? (async()=>{
+        try{
+          return await sbPublic.rpc('generate_teams',{p_players:selected});
+        }catch(e){
+          console.warn('Generación remota no disponible',e);
+          return null;
+        }
+      })()
+    : Promise.resolve(null);
+
   await wait(7200);
   clearInterval(timer);
-  teams=balancedTeams(selected);
+
+  const result=await generated;
+  const data=result?.data;
+  if(
+    data &&
+    Array.isArray(data.red) &&
+    Array.isArray(data.black) &&
+    data.red.length===selected.length/2 &&
+    data.black.length===selected.length/2
+  ){
+    teams={red:[...data.red],black:[...data.black]};
+  }else{
+    teams=balancedTeams(selected);
+  }
+
   renderResults();
   show('results')
 }
