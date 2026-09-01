@@ -2385,6 +2385,100 @@ body.bg-coach-room{
   }
 }
 
+
+/* v65 · Pantalla final responsive clásica, sin televisión ni vídeo */
+.celebration{
+  position:fixed !important;inset:0 !important;overflow:hidden !important;
+  background:#07100b url('background-home.jpg') center center/cover no-repeat !important;z-index:20 !important;
+}
+.celebration:before{
+  display:block !important;content:"" !important;position:absolute !important;inset:0 !important;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 70px,transparent 70px 140px),
+  linear-gradient(90deg,transparent 49.8%,rgba(255,255,255,.13) 50%,transparent 50.2%) !important;opacity:.8 !important;
+}
+.celebration .firework{z-index:auto !important}
+.celebration-card{
+  position:relative !important;z-index:2 !important;width:min(1000px,calc(100% - 28px)) !important;
+  max-height:94vh !important;overflow:auto !important;margin:3vh auto !important;
+  background:rgba(9,13,11,.72) !important;backdrop-filter:blur(12px) !important;
+  border:1px solid rgba(255,255,255,.18) !important;border-radius:26px !important;padding:24px !important;
+  box-sizing:border-box !important;
+}
+.celebration-title{text-align:center !important;margin-bottom:18px !important}
+.celebration-title h2{font-size:clamp(30px,6vw,58px) !important;text-transform:uppercase !important;margin:4px 0 !important}
+.celebration-title p{color:#c4ccc6 !important;margin:0 !important;font-size:inherit !important}
+.celebration .final-pitch{
+  position:relative !important;overflow:hidden !important;border-radius:20px !important;padding:22px 16px !important;
+  background:repeating-linear-gradient(0deg,#1b5c3b 0,#1b5c3b 48px,#206642 48px,#206642 96px) !important;
+  border:3px solid rgba(255,255,255,.16) !important;
+}
+.celebration .final-teams{position:relative !important;z-index:2 !important;display:grid !important;grid-template-columns:1fr 1fr !important;gap:16px !important}
+.celebration .final-team{background:rgba(5,8,7,.5) !important;border:1px solid rgba(255,255,255,.18) !important;border-radius:16px !important;padding:14px !important;text-align:center !important}
+.celebration .final-team h3{margin:0 0 12px !important;text-transform:uppercase !important;letter-spacing:.12em !important;font-size:inherit !important}
+.celebration .final-shirt-grid{display:flex !important;flex-wrap:wrap !important;justify-content:center !important;gap:12px !important}
+.celebration .final-shirt-grid .big-shirt{flex:0 1 calc(25% - 9px) !important;min-width:64px !important;max-width:100px !important;min-height:82px !important;padding:8px !important;gap:6px !important;font-size:12px !important}
+.celebration .shirt-shape{width:34px !important;height:38px !important}
+.celebration .patx-quote{text-align:center !important;font-size:clamp(17px,3vw,25px) !important;font-weight:900 !important;margin:20px auto 4px !important;min-height:32px !important}
+.celebration .final-actions{display:flex !important;justify-content:center !important;gap:10px !important;flex-wrap:wrap !important;margin-top:18px !important}
+.celebration .final-actions button{min-height:unset !important;font-size:inherit !important}
+.celebration-home{top:18px !important;right:18px !important;padding:10px 16px !important;font-size:inherit !important}
+@media(max-width:700px){
+  .celebration{overflow:auto !important}
+  .celebration-card{width:calc(100% - 28px) !important;max-height:none !important;padding:68px 16px 16px !important;margin:2vh auto !important;border-radius:20px !important}
+  .celebration-home{top:14px !important;right:14px !important}
+  .celebration .final-teams{grid-template-columns:1fr !important;gap:12px !important}
+  .celebration .final-shirt-grid{gap:8px !important}
+  .celebration .final-shirt-grid .big-shirt{flex:0 1 calc(25% - 8px) !important;min-width:58px !important;max-width:92px !important}
+}
+
+
+/* v66 · La alineación final no revela el orden del draft y mantiene 4+3 en móvil */
+@media(max-width:700px){
+  .celebration-card{
+    width:calc(100% - 16px) !important;
+    padding:60px 8px 14px !important;
+  }
+  .celebration .final-pitch{
+    padding:12px 6px !important;
+  }
+  .celebration .final-teams{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:6px !important;
+  }
+  .celebration .final-team{
+    min-width:0 !important;
+    padding:9px 4px !important;
+  }
+  .celebration .final-team h3{
+    margin-bottom:8px !important;
+    font-size:11px !important;
+  }
+  .celebration .final-shirt-grid{
+    display:grid !important;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:8px 2px !important;
+    align-items:start !important;
+    justify-items:center !important;
+  }
+  .celebration .final-shirt-grid .big-shirt{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    min-height:62px !important;
+    padding:3px 1px !important;
+    font-size:8px !important;
+    line-height:1.05 !important;
+    overflow:hidden !important;
+  }
+  .celebration .shirt-shape{
+    width:25px !important;
+    height:29px !important;
+  }
+  .celebration .final-shirt-grid .big-shirt:nth-child(n+5){
+    transform:translateX(50%) !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2400,7 +2494,7 @@ body.bg-coach-room{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v64 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v66 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -2584,7 +2678,7 @@ body.bg-coach-room{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v64</span>
+    <span class="history-version">VERSIÓN v66</span>
   </header>
   
     <section class="history-change-section">
@@ -2914,6 +3008,37 @@ body.bg-coach-room{
       </div>
     </section>
 
+  
+    <section class="history-change-section">
+      <div class="history-section-number">25</div>
+      <div class="history-section-content">
+        <h2>Pantalla final · restauración responsive</h2>
+        <ul>
+          <li>Se elimina la composición de televisión con vídeo de la pantalla «Que gane el mejor» para evitar deformaciones en móvil.</li>
+          <li>Se recupera el fondo genérico de la aplicación y el diseño clásico de la pantalla final.</li>
+          <li>Se restauran los tamaños y proporciones anteriores a la integración de la televisión.</li>
+          <li>En móvil los equipos se colocan verticalmente en una sola columna y la pantalla puede desplazarse de forma natural si es necesario.</li>
+          <li>Se elimina la reproducción automática y toda la lógica específica del vídeo final.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">26</div>
+      <div class="history-section-content">
+        <h2>Alineación final · privacidad del draft y diseño móvil</h2>
+        <ul>
+          <li>Al abrir «Ver alineaciones», el orden de los jugadores de cada equipo se mezcla aleatoriamente antes de mostrar la alineación final.</li>
+          <li>El orden visual ya no permite deducir quién fue elegido primero, segundo o en cualquier otra posición durante el draft.</li>
+          <li>El texto de «Copiar alineación» utiliza también el orden aleatorio mostrado en pantalla.</li>
+          <li>La aleatorización afecta únicamente a la presentación final y no modifica los equipos ni el funcionamiento interno del draft.</li>
+          <li>En móvil se elimina la disposición de equipos uno debajo del otro y se mantienen Rojo y Negro lado a lado.</li>
+          <li>Las camisetas de cada equipo mantienen una composición 4+3 también en móvil, pensada para que el screenshot conserve el aspecto de escritorio.</li>
+        </ul>
+      </div>
+    </section>
+
   <div class="history-footer">PATXANGUILLES ANTIFEIXISTES · TEMPORADA 26/27</div>
 
     </div>
@@ -2990,11 +3115,7 @@ body.bg-coach-room{
 </div></section>
 </div>
 
-<div id="celebration" class="celebration" style="display:none">
-  <div class="celebration-tv-stage" aria-hidden="true">
-    <video id="celebrationVideo" class="celebration-tv-video" src="video-tv.mp4" playsinline preload="auto"></video>
-    <img class="celebration-tv-background" src="background-final-tv.png" alt="">
-  </div><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="final-actions">
+<div id="celebration" class="celebration" style="display:none"><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="final-actions">
   <button class="primary final-action-with-note" onclick="copyFinalAndToast()"><span>Copiar alineación</span><small>Texto</small></button>
   <button class="secondary final-action-with-note" onclick="copyLineupScreenshot()"><span>Screenshot</span><small>Compartir imagen</small></button>
   <button class="primary save-lineup-btn" onclick="saveCurrentLineup()"><span>Guardar alineación</span><small>para apuntar el resultado después</small></button>
@@ -4133,39 +4254,35 @@ function toggleAdjust(){document.getElementById('adjustPanel').classList.toggle(
 function newLineup(){pendingSwap=null;teams=balancedTeams(selected);renderResults();document.getElementById('adjustPanel').classList.remove('open');toast('Nueva alineación generada')}
 
 const patxQuotes=["Que gane el mejor. O el que llegue al balón antes.","Lo importante es no lesionarse. El resultado es secundario.","A estas edades, calentar también cuenta como partido.","Si mañana duele, es que hoy se ha competido.","Prohibido hacer entradas. Permitidas las excusas.","El que diga que no está cansado, miente.","Aquí no hay primas: hay agujetas.","Fair play, salvo que quede un minuto.","La técnica permanece. Las rodillas, veremos.","Hoy se corre. Mañana se explica la lesión.","El árbitro no está comprado. Simplemente se equivoca.","Tercer tiempo confirmado. Primer tiempo, ya veremos.","Que nadie haga un sprint innecesario. Tenemos una edad.","La veteranía es un grado. La velocidad, una anécdota.","El balón no corre más que tú. Simplemente parece que sí.","Tenemos físico de Champions y recuperación de pretemporada.","Si te tiras al suelo, que sea porque te han hecho falta.","El verdadero rival es el día siguiente.","No estamos viejos: estamos estratégicamente cansados.","La calidad está intacta. El cardio está negociando.","Hoy hay fútbol. Mañana habrá ibuprofeno.","Correr hacia atrás sigue siendo correr. Evitémoslo.","El que conserve los isquios, gana.","Nadie ha venido a demostrar nada. Excepto todos.","Patxanga: donde el tercer tiempo dura más que el primero."];
+let finalDisplayTeams={red:[],black:[]};
+
+function shuffledFinalLineup(list){
+  const arr=[...(list||[])];
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function prepareRandomFinalDisplay(){
+  finalDisplayTeams={
+    red:shuffledFinalLineup(teams.red),
+    black:shuffledFinalLineup(teams.black)
+  };
+}
+
 function showCelebration(){
+  prepareRandomFinalDisplay();
   document.getElementById('celebrationMode').textContent=(game==='f7'?'FÚTBOL 7':'FÚTBOL SALA')+' · ALINEACIÓN FINAL';
-  renderFinalTeam('finalRed',teams.red,'red');
-  renderFinalTeam('finalBlack',teams.black,'black');
+  renderFinalTeam('finalRed',finalDisplayTeams.red,'red');
+  renderFinalTeam('finalBlack',finalDisplayTeams.black,'black');
   document.getElementById('patxQuote').textContent=patxQuotes[Math.floor(Math.random()*patxQuotes.length)];
   document.getElementById('celebration').style.display='block';
-
-  const music=document.getElementById('bgMusic');
-  if(music&&!music.paused)music.pause();
-
-  const video=document.getElementById('celebrationVideo');
-  if(video){
-    try{
-      video.pause();
-      video.currentTime=0;
-      video.muted=false;
-      video.volume=1;
-      const playPromise=video.play();
-      if(playPromise&&typeof playPromise.catch==='function'){
-        playPromise.catch(()=>{
-          toast('El navegador ha bloqueado el sonido automático');
-          video.muted=true;
-          video.play().catch(()=>{});
-        });
-      }
-    }catch(_){}
-  }
 }
 function renderFinalTeam(id,list,color){document.getElementById(id).innerHTML=list.map(p=>`<div class="big-shirt"><span class="shirt-shape ${color}"></span><span>${escapeHtml(p)}</span></div>`).join('')}
 function closeCelebration(){
   document.getElementById('celebration').style.display='none';
-  const video=document.getElementById('celebrationVideo');
-  if(video){video.pause();try{video.currentTime=0}catch(_){}}
 }
 async function copyTextRobust(text){
   try{
@@ -4191,7 +4308,9 @@ async function copyTextRobust(text){
   }catch(err){console.error('Fallback copy failed',err);return false}
 }
 async function copyFinalAndToast(){
-  const text=`Rojos\n\n${teams.red.join('\n')}\n\nNegros\n\n${teams.black.join('\n')}`;
+  const red=finalDisplayTeams.red.length?finalDisplayTeams.red:shuffledFinalLineup(teams.red);
+  const black=finalDisplayTeams.black.length?finalDisplayTeams.black:shuffledFinalLineup(teams.black);
+  const text=`Rojos\n\n${red.join('\n')}\n\nNegros\n\n${black.join('\n')}`;
   const ok=await copyTextRobust(text);
   toast(ok?'Alineaciones copiadas al portapapeles':'No se pudo copiar la alineación');
 }
