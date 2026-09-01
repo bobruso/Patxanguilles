@@ -2713,6 +2713,86 @@ body.bg-coach-room{
   }
 }
 
+
+/* v72 · correcciones selector fotográfico y fondo Modo Entrenador */
+#creationMethod .coach-method-photo{
+  position:relative !important;
+  overflow:hidden !important;
+}
+#creationMethod .coach-method-bg,
+#creationMethod .coach-method-overlay{
+  position:absolute !important;
+  inset:-1px !important;
+  width:calc(100% + 2px) !important;
+  height:calc(100% + 2px) !important;
+  margin:0 !important;
+  border:0 !important;
+}
+#creationMethod .coach-method-bg{
+  object-fit:cover !important;
+}
+#creationMethod .coach-method-overlay{
+  display:block !important;
+  z-index:1 !important;
+}
+
+/* #modo-entrenador usa exactamente el mismo background que #seleccionar-jugadores. */
+body:has(#coachLobby.active){
+  background-image:url('background-seleccion-jugadores.jpg') !important;
+  background-position:center center !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
+  background-attachment:fixed !important;
+}
+body:has(#coachLobby.active):before{
+  background:rgba(0,0,0,.30) !important;
+}
+@media(max-width:700px){
+  body:has(#coachLobby.active){
+    background-position:62% center !important;
+    background-attachment:scroll !important;
+  }
+}
+
+
+/* v73 · Recuadros principales más transparentes */
+.card{
+  background:rgba(7,10,9,.50) !important;
+}
+.panel{
+  background:rgba(10,14,18,.50) !important;
+}
+.celebration-card{
+  background:rgba(9,13,11,.50) !important;
+}
+
+
+/* v74 · desenfoque reducido */
+.card,
+.panel,
+.celebration-card{
+  backdrop-filter:blur(4px) !important;
+  -webkit-backdrop-filter:blur(4px) !important;
+}
+
+
+/* v76 · ajuste de transparencia y desenfoque */
+.card{
+  background:rgba(7,10,9,.60) !important;
+}
+.panel{
+  background:rgba(10,14,18,.60) !important;
+}
+.celebration-card{
+  background:rgba(9,13,11,.60) !important;
+}
+.card,
+.panel,
+.celebration-card{
+  backdrop-filter:blur(6px) !important;
+  -webkit-backdrop-filter:blur(6px) !important;
+}
+
 </style>
 </head>
 <body>
@@ -2728,7 +2808,7 @@ body.bg-coach-room{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v71 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v76 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -2918,347 +2998,136 @@ body.bg-coach-room{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v71</span>
+    <span class="history-version">VERSIÓN v76</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">36</div>
+      <div class="history-section-content">
+        <h2>Interfaz general · opacidad y desenfoque reajustados</h2>
+        <ul>
+          <li>Los principales recuadros de contenido pasan al 60% de opacidad.</li>
+          <li>El desenfoque del fondo a través de esos recuadros pasa a 6px.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">35</div>
+      <div class="history-section-content">
+        <h2>Historial de cambios · orden cronológico inverso</h2>
+        <ul>
+          <li>El historial muestra ahora primero las versiones y cambios más recientes.</li>
+          <li>Las entradas antiguas quedan progresivamente más abajo, evitando tener que recorrer todo el historial para consultar la última actualización.</li>
+        </ul>
+      </div>
+    </section>
+
+
   
     <section class="history-change-section">
-      <div class="history-section-number">01</div>
+      <div class="history-section-number">34</div>
       <div class="history-section-content">
-        <h2>Base de la aplicación</h2>
-        <ul><li>Creación de la web de Patxanguilles Antifeixistes como aplicación web responsive.</li>
-<li>Flujo principal para crear alineaciones de Fútbol 7 y Fútbol Sala.</li>
-<li>Selección de jugadores y generación automática de dos equipos equilibrados.</li>
-<li>Fútbol 7 configurado para 14 jugadores y Fútbol Sala para 10.</li>
-<li>Pantalla de carga con frases aleatorias antes de mostrar las alineaciones.</li>
-<li>Pantalla final con equipos Rojo y Negro y presentación visual de las alineaciones.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">02</div>
-      <div class="history-section-content">
-        <h2>Generación y equilibrio de equipos</h2>
-        <ul><li>Mejora del algoritmo para tener en cuenta nivel, reservas, posiciones y resultados anteriores.</li>
-<li>Los reservas cuentan para completar el número necesario de jugadores.</li>
-<li>Equilibrio por posiciones con prioridad para portero, defensa, centro del campo y ataque.</li>
-<li>En Fútbol 7 se busca una estructura aproximada 1-3-2-1.</li>
-<li>El porcentaje de victorias se pondera para evitar que pocas apariciones distorsionen demasiado el equilibrio.</li>
-<li>Se puede pulsar «Probar otra alineación» para generar otra combinación.</li>
-<li>Presentación de Fútbol 7 sobre el campo con distribución por líneas.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">03</div>
-      <div class="history-section-content">
-        <h2>Jugadores y perfiles</h2>
-        <ul><li>Jugadores almacenados en Supabase y visibles desde la web.</li>
-<li>Perfil individual con apodo, nombre, fotografía, posición, pierna, fecha de nacimiento y edad.</li>
-<li>El apodo puede editarse desde el perfil.</li>
-<li>La edad se calcula automáticamente a partir de la fecha de nacimiento.</li>
-<li>Fotografía de perfil ampliable al pulsarla.</li>
-<li>Avatares circulares de los jugadores en la clasificación.</li>
-<li>Soporte para jugadores disponibles en Fútbol 7, Fútbol Sala o ambas modalidades.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">04</div>
-      <div class="history-section-content">
-        <h2>Cartas de jugador</h2>
-        <ul><li>Integración del sistema de cartas personalizadas de Patxanguilles.</li>
-<li>Botones «Ver carta» y «Crear carta» desde el perfil.</li>
-<li>Formulario de creación con selfie, nombre, apodo, sexo, altura, peso y posición.</li>
-<li>Generación mediante una función de Supabase conectada al sistema de generación de imágenes.</li>
-<li>Límite de tres intentos de generación por jugador.</li>
-<li>Previsualización de la carta antes de guardarla como carta oficial.</li>
-<li>Posibilidad para el administrador de cambiar manualmente la carta de un jugador.</li>
-<li>Visualización de la carta con efectos de estrellas, fuegos artificiales y brillo.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">05</div>
-      <div class="history-section-content">
-        <h2>Temporada 26/27</h2>
-        <ul><li>Sección de temporada con Clasificación y Calendario.</li>
-<li>Clasificación ordenable por jugador, partidos jugados, victorias, empates, derrotas y porcentaje de victorias.</li>
-<li>Columnas adicionales de goles y asistencias disponibles para administración.</li>
-<li>Calendario de partidos guardados y resultados.</li>
-<li>Los partidos pendientes no cuentan en las estadísticas hasta que tienen resultado final.</li>
-<li>Detalle de cada partido con alineaciones y eventos de los jugadores.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">06</div>
-      <div class="history-section-content">
-        <h2>Resultados, goles y asistencias</h2>
-        <ul><li>Pantalla «Apuntar resultado» accesible desde la home.</li>
-<li>Selección previa entre Fútbol 7 y Fútbol Sala.</li>
-<li>Registro de resultado, jugadores, goles y asistencias.</li>
-<li>Los resultados finales pueden guardarse sin iniciar sesión como administrador.</li>
-<li>En el detalle del partido aparecen iconos de balón para goles y bota para asistencias.</li>
-<li>Posibilidad de editar partidos pendientes y completar posteriormente el resultado.</li>
-<li>Herramientas administrativas para gestionar y eliminar resultados.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">07</div>
-      <div class="history-section-content">
-        <h2>Crónicas y fotografías de partido</h2>
-        <ul><li>Posibilidad de subir una fotografía al registrar un resultado.</li>
-<li>Campos para crear titular y crónica del partido.</li>
-<li>La fotografía y la crónica aparecen en el detalle del encuentro.</li>
-<li>Al editar un resultado se recuperan la fotografía y la crónica existentes.</li>
-<li>Los controles de fotografía y crónica se reorganizaron para integrarse mejor en el formulario.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">08</div>
-      <div class="history-section-content">
-        <h2>Compartir alineaciones y resultados</h2>
-        <ul><li>Botón para copiar las alineaciones en formato de texto.</li>
-<li>Formato de texto separado en Rojos y Negros para compartir fácilmente.</li>
-<li>Captura de la alineación mediante html2canvas.</li>
-<li>Intento de copiar la imagen directamente al portapapeles y descarga PNG como alternativa.</li>
-<li>Botón Home y controles de la pantalla final reorganizados.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">09</div>
-      <div class="history-section-content">
-        <h2>Home y diseño visual</h2>
-        <ul><li>Rediseño de la pantalla principal con tres accesos: Crear alineaciones, Temporada 26/27 y Apuntar resultado.</li>
-<li>Eliminación del antiguo título grande, balón flotante y subrayado decorativo de la home.</li>
-<li>Los tres accesos aparecen en una fila en escritorio y se adaptan a móvil.</li>
-<li>Las tarjetas principales incorporan fotografías.</li>
-<li>Home ampliada y ensanchada para aprovechar mejor pantallas de escritorio.</li>
-<li>Corrección del espacio que aparecía encima de las imágenes de las tarjetas.</li>
-<li>Nuevo background general externo mediante background-home.jpg.</li>
-<li>Fondos específicos para determinadas secciones de la web.</li>
-<li>Selector Fútbol 7 / Fútbol Sala rediseñado con fotografías.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">10</div>
-      <div class="history-section-content">
-        <h2>Navegación y móvil</h2>
-        <ul><li>Adaptación responsive de las principales pantallas, formularios, clasificación, modales y reproductor.</li>
-<li>Corrección de controles que se salían del contenedor en móvil.</li>
-<li>Implementación de historial de navegación mediante hashes.</li>
-<li>El botón Atrás del navegador vuelve ahora a la pantalla anterior de la web en lugar de abandonarla directamente.</li>
-<li>Las distintas secciones pueden reflejar su estado en la URL.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">11</div>
-      <div class="history-section-content">
-        <h2>Música</h2>
-        <ul><li>Reproductor de música integrado en la web.</li>
-<li>Volumen inicial establecido al 20 %.</li>
-<li>Playlist con varias canciones relacionadas con fútbol.</li>
-<li>Selección aleatoria de canción al entrar.</li>
-<li>Al terminar una canción se reproduce otra aleatoria evitando repetir inmediatamente la misma.</li>
-<li>El reproductor muestra «Ahora sonando», canción y artista.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">12</div>
-      <div class="history-section-content">
-        <h2>Nueva elección de método para crear equipos</h2>
-        <ul><li>Después de elegir Fútbol 7 o Fútbol Sala aparece la pantalla «¿Cómo hacemos los equipos?».</li>
-<li>Opción «Algoritmo automático basado en posiciones» para utilizar el sistema tradicional.</li>
-<li>Nueva opción «Modo Entrenador» para crear los equipos entre dos personas.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">13</div>
-      <div class="history-section-content">
-        <h2>Modo Entrenador · salas compartidas</h2>
-        <ul><li>Creación de una sala personalizada con código y enlace compartible.</li>
-<li>Un segundo entrenador puede entrar desde otro ordenador o móvil mediante el enlace.</li>
-<li>Sincronización del estado de la sala a través de Supabase.</li>
-<li>Refresco periódico de respaldo para mantener ambos dispositivos actualizados.</li>
-<li>Sistema de draft estrictamente por turnos.</li>
-<li>Supabase valida los fichajes para evitar selecciones fuera de turno.</li>
-<li>Al completar los dos equipos se reutiliza la pantalla final de alineaciones.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">14</div>
-      <div class="history-section-content">
-        <h2>Modo Entrenador · convocatoria</h2>
-        <ul><li>Antes de crear la sala se seleccionan exactamente 14 jugadores en Fútbol 7 o 10 en Fútbol Sala.</li>
-<li>La convocatoria queda guardada en la sala y únicamente esos jugadores participan en el draft.</li>
-<li>Importador «Copia y pega convocatoria aquí» para pegar directamente el mensaje del grupo de WhatsApp.</li>
-<li>El importador detecta las líneas numeradas con jugadores e ignora la cabecera del mensaje.</li>
-<li>Todo lo que aparece a partir de «Reserva» o «Reservas» se excluye de la convocatoria.</li>
-<li>Se limpian anotaciones habituales como «(porter)» o «(Futsal)».</li>
-<li>Los nombres desconocidos pueden incorporarse como invitados temporales solo para esa sala.</li>
-<li>Los posibles errores de escritura se señalan para revisión.</li>
-<li>Si faltan jugadores, la web avisa y permite corregir la selección manualmente.</li>
-<li>Flujo simplificado: pegar mensaje → Detectar convocatoria → revisar → Crear sala.</li>
-<li>Botón pequeño «Modificar convocatoria» para hacer ajustes antes de crear la sala.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">15</div>
-      <div class="history-section-content">
-        <h2>Modo Entrenador · sorteo e identidad</h2>
-        <ul><li>Cuando entra el segundo entrenador, el primero recibe un aviso destacado.</li>
-<li>Antes del draft cada persona ve claramente si le ha tocado entrenar al equipo Rojo o Negro.</li>
-<li>Se muestran frases graciosas aleatorias en la presentación del equipo.</li>
-<li>Cuando ambos están preparados aparece el botón Comenzar.</li>
-<li>Una moneda animada decide aleatoriamente qué equipo ficha primero.</li>
-<li>El sorteo se realiza de forma compartida para que ambos dispositivos reciban el mismo resultado.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">16</div>
-      <div class="history-section-content">
-        <h2>Modo Entrenador · tablero de fichajes</h2>
-        <ul><li>Nuevo fondo cenital de mesa y pizarra para el draft.</li>
-<li>Los jugadores disponibles se sitúan en la zona central.</li>
-<li>Las fichas de jugadores tienen forma de camiseta en tono amarillo/beige.</li>
-<li>Los nombres de las camisetas se hicieron más grandes.</li>
-<li>Al seleccionar un jugador aparece «FICHAR» junto a su propia ficha.</li>
-<li>Los jugadores fichados se desplazan visualmente al lado del equipo Rojo o Negro.</li>
-<li>Las listas de fichados se acercaron a los bordes para separarlas de los jugadores centrales.</li>
-<li>La etiqueta de Equipo Negro se desplazó hacia el borde de su campo.</li>
-<li>Se eliminó el rótulo «Jugadores esperando».</li>
-<li>El mensaje que indica que es turno del otro entrenador se recolocó para evitar que quede tapado.</li></ul>
-      </div>
-    </section>
-    <section class="history-change-section">
-      <div class="history-section-number">17</div>
-      <div class="history-section-content">
-        <h2>Supabase y backend</h2>
-        <ul><li>Supabase centraliza jugadores, partidos, estadísticas, perfiles, cartas y Modo Entrenador.</li>
-<li>Configuración de políticas para lectura pública y las operaciones necesarias desde la web.</li>
-<li>Storage para fotografías de jugadores, cartas generadas y fotografías de partidos.</li>
-<li>Funciones de backend para la generación y control de cartas.</li>
-<li>Tablas y funciones específicas para salas, entrenadores, turnos y fichajes del Modo Entrenador.</li>
-<li>Los jugadores seleccionados para una sala se almacenan en la propia sala.</li>
-<li>El backend impide fichar a alguien que no pertenezca a la convocatoria.</li>
-<li>Se eliminaron dependencias problemáticas de pgcrypto que provocaban errores con gen_random_bytes() y digest().</li></ul>
-      </div>
-    </section>
-  
-    <section class="history-change-section">
-      <div class="history-section-number">18</div>
-      <div class="history-section-content">
-        <h2>Modo Entrenador · mejoras de convocatoria y tablero</h2>
+        <h2>Interfaz general · desenfoque de fondo reducido</h2>
         <ul>
-          <li>La convocatoria importada desde WhatsApp puede crear la sala directamente después de revisar los jugadores detectados.</li>
-          <li>Se eliminó el texto de ejemplo del campo de convocatoria y explicaciones innecesarias para simplificar el flujo.</li>
-          <li>Se añadió «Modificar convocatoria» como acceso secundario para corregir la selección antes de crear la sala.</li>
-          <li>Los jugadores disponibles del draft se distribuyen en varias columnas y sus camisetas se redujeron para que toda la convocatoria quepa dentro de la pizarra.</li>
-          <li>Los jugadores ya fichados se muestran en una sola columna a cada lado del campo para dejar libre la zona central.</li>
-          <li>Se eliminó el mensaje «Ahora pulsa FICHAR junto a…».</li>
-          <li>El turno propio se destaca visualmente y, cuando elige el rival, aparece el aviso «El otro entrenador está eligiendo un nuevo jugador».</li>
-          <li>La pizarra se oscurece ligeramente cuando no es tu turno.</li>
-          <li>Las columnas de jugadores fichados se desplazaron ligeramente hacia el centro para que no queden pegadas a los bordes.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="history-change-section">
-      <div class="history-section-number">19</div>
-      <div class="history-section-content">
-        <h2>Modo Entrenador · sala, enlaces y cierre del draft</h2>
-        <ul>
-          <li>La pantalla «Esperando al segundo entrenador…» se ajustó verticalmente para caber en una sola pantalla de escritorio sin desplazamiento.</li>
-          <li>El aviso nativo del navegador al copiar el enlace se sustituyó por una notificación discreta dentro de la web.</li>
-          <li>El bloque «Equipos cerrados» se movió fuera de la columna del Equipo Negro y ahora se centra respecto a toda la pizarra.</li>
-          <li>El botón «Ver alineaciones» queda centrado junto al mensaje de finalización.</li>
-          <li>Al terminar un draft del Modo Entrenador se omite la pantalla intermedia «¿Qué te parece este partido?» y se abre directamente la presentación final.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="history-change-section">
-      <div class="history-section-number">20</div>
-      <div class="history-section-content">
-        <h2>Pantalla final · «Que gane el mejor»</h2>
-        <ul>
-          <li>La pantalla final se reorganizó para aprovechar mejor el alto disponible y dar más tamaño a equipos, camisetas, nombres y controles.</li>
-          <li>El botón «Copiar alineación» incorpora la descripción «Texto».</li>
-          <li>El botón «Screenshot» incorpora la descripción «Compartir imagen».</li>
-          <li>Se integró un nuevo fondo con una televisión y canal alpha.</li>
-          <li>Un vídeo MP4 se reproduce detrás del hueco transparente de la televisión para que parezca formar parte de la escena.</li>
-          <li>El fondo y el vídeo escalan conjuntamente para conservar su alineación.</li>
-          <li>Al entrar en la pantalla final se pausa la música y se intenta reproducir automáticamente el vídeo desde el principio.</li>
-          <li>La interfaz se recolocó y amplió aprovechando el espacio disponible antes de la televisión.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="history-change-section">
-      <div class="history-section-number">21</div>
-      <div class="history-section-content">
-        <h2>Interfaz, navegación e historial</h2>
-        <ul>
-          <li>La referencia de versión se trasladó al pie inferior y centrado de la Home.</li>
-          <li>Se corrigió un conflicto de CSS que mantenía la Home visible e impedía navegar correctamente con sus botones.</li>
-          <li>El historial de cambios se integró dentro del propio index como una pantalla de la aplicación.</li>
-          <li>Se corrigió la estructura del HTML para que el historial no quede anidado dentro de Modo Entrenador.</li>
-          <li>El enlace de versión abre el historial dentro de la misma pestaña y el botón «Volver» regresa a Home.</li>
-          <li>La pantalla de alineaciones se ajustó verticalmente en escritorio para evitar desplazamientos innecesarios.</li>
+          <li>El desenfoque aplicado detrás de los principales recuadros translúcidos se reduce a 4px.</li>
+          <li>Se mantiene la opacidad de los recuadros al 50%, haciendo que los fondos se perciban más nítidos a través de ellos.</li>
         </ul>
       </div>
     </section>
 
   
     <section class="history-change-section">
-      <div class="history-section-number">22</div>
+      <div class="history-section-number">33</div>
       <div class="history-section-content">
-        <h2>Modo Entrenador · sorteos aleatorios</h2>
+        <h2>Interfaz general · transparencia de los recuadros</h2>
         <ul>
-          <li>El creador de la sala ya no aparece siempre como entrenador del Equipo Rojo: la asignación visible Rojo/Negro se sortea de forma estable para cada sala.</li>
-          <li>El segundo entrenador recibe automáticamente el color contrario.</li>
-          <li>Ambos dispositivos calculan la misma asignación a partir del código de sala, por lo que ven siempre los mismos colores.</li>
-          <li>El lanzamiento de moneda muestra correctamente un ganador Rojo o Negro de acuerdo con el primer turno sorteado.</li>
-          <li>La asignación aleatoria de colores se mantiene durante todo el draft, los turnos y la alineación final.</li>
+          <li>La capa oscura de los principales recuadros que envuelven el contenido se reduce globalmente al 50% de opacidad.</li>
+          <li>El cambio afecta a tarjetas principales, paneles interiores y al contenedor de la alineación final, dejando ver mejor los fondos sin perder legibilidad.</li>
         </ul>
       </div>
     </section>
 
   
     <section class="history-change-section">
-      <div class="history-section-number">23</div>
+      <div class="history-section-number">32</div>
       <div class="history-section-content">
-        <h2>Clasificación y álbum de cartas</h2>
+        <h2>Selector de método y Modo Entrenador · ajustes visuales</h2>
         <ul>
-          <li>La clasificación deja de abrir siempre con el mismo baremo: cada vez que se entra en una competición los jugadores aparecen inicialmente en un orden aleatorio.</li>
-          <li>Después del orden inicial aleatorio se mantienen todos los controles de ordenación por columnas, incluyendo jugador, partidos, victorias, empates, derrotas y porcentaje de victorias.</li>
-          <li>Se añade «Ver álbum de cartas» junto a Clasificación y Calendario.</li>
-          <li>El álbum muestra en una cuadrícula todas las cartas de jugador que existen actualmente.</li>
-          <li>Al pulsar una carta del álbum se abre su visualización ampliada habitual.</li>
-          <li>Esta primera versión utiliza un diseño provisional en grid, preparado para sustituirse más adelante por el fondo y los huecos del álbum abierto.</li>
+          <li>El degradado de los botones fotográficos cubre ahora toda la superficie del botón, eliminando la pequeña franja superior que quedaba sin cubrir.</li>
+          <li>La pantalla «Modo Entrenador» utiliza ahora el mismo fondo que «Seleccionar jugadores»: «background-seleccion-jugadores.jpg».</li>
+          <li>Se conserva el mismo encuadre y oscurecimiento responsive del fondo de selección de jugadores.</li>
         </ul>
       </div>
     </section>
 
   
     <section class="history-change-section">
-      <div class="history-section-number">24</div>
+      <div class="history-section-number">31</div>
       <div class="history-section-content">
-        <h2>Clasificación · desempate por partidos jugados</h2>
+        <h2>Crear equipos · nombres definitivos de imágenes</h2>
         <ul>
-          <li>Al ordenar la clasificación por porcentaje de victorias, los empates de porcentaje se resuelven por número de partidos jugados.</li>
-          <li>Si dos jugadores tienen el mismo porcentaje, aparece primero quien haya disputado más partidos.</li>
-          <li>Si también coinciden en partidos jugados, se utiliza el nombre como último criterio de desempate.</li>
+          <li>El botón «Algoritmo automático basado en posiciones» utiliza ahora exactamente «boton algoritmo.jpg».</li>
+          <li>El botón «Modo Entrenador» utiliza ahora exactamente «boton entrenador.jpg».</li>
+          <li>Se mantiene sin cambios el diseño fotográfico 21:9, los degradados y el comportamiento responsive.</li>
         </ul>
       </div>
     </section>
 
   
     <section class="history-change-section">
-      <div class="history-section-number">25</div>
+      <div class="history-section-number">30</div>
       <div class="history-section-content">
-        <h2>Pantalla final · restauración responsive</h2>
+        <h2>Crear equipos · selector de método fotográfico</h2>
         <ul>
-          <li>Se elimina la composición de televisión con vídeo de la pantalla «Que gane el mejor» para evitar deformaciones en móvil.</li>
-          <li>Se recupera el fondo genérico de la aplicación y el diseño clásico de la pantalla final.</li>
-          <li>Se restauran los tamaños y proporciones anteriores a la integración de la televisión.</li>
-          <li>En móvil los equipos se colocan verticalmente en una sola columna y la pantalla puede desplazarse de forma natural si es necesario.</li>
-          <li>Se elimina la reproducción automática y toda la lógica específica del vídeo final.</li>
+          <li>Los botones «Algoritmo automático basado en posiciones» y «Modo Entrenador» pasan a utilizar imágenes a sangre ocupando toda la superficie del botón.</li>
+          <li>Se conservan exactamente los nombres de archivo originales: «composite (1).png» y «composite.png».</li>
+          <li>El texto se coloca sobre la fotografía con degradados oscuros y ligeramente coloreados para mantener una lectura clara.</li>
+          <li>Las imágenes mantienen su proporción panorámica 21:9 y se adaptan automáticamente al tamaño del botón.</li>
+          <li>En móvil los dos botones se apilan verticalmente conservando el formato panorámico.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">29</div>
+      <div class="history-section-content">
+        <h2>Música · modo minimal activado por defecto</h2>
+        <ul>
+          <li>El reproductor permanece normalmente en modo minimalista mostrando solo el título de la canción y pausa/reproducción.</li>
+          <li>Se eliminan los despliegues provocados por movimiento del ratón, hover, scroll o interacción general con la página.</li>
+          <li>Solo un click o toque directamente sobre el reproductor minimalista despliega los controles completos.</li>
+          <li>Después de utilizar el reproductor desplegado, vuelve automáticamente al modo minimalista tras unos segundos.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">28</div>
+      <div class="history-section-content">
+        <h2>Música · reproductor minimal y auto-ocultable</h2>
+        <ul>
+          <li>Se reduce el tamaño general del reproductor para que ocupe menos espacio en pantalla.</li>
+          <li>Tras unos segundos sin interacción, el reproductor pasa automáticamente a un modo minimalista que muestra únicamente el título de la canción y el botón de pausa/reproducción.</li>
+          <li>Al pasar el ratón por encima, mover el puntero, hacer scroll o tocar la pantalla, el reproductor recupera temporalmente todos sus controles.</li>
+          <li>Se mantienen los botones anterior, pausa/reproducción, siguiente y volumen en el modo desplegado.</li>
+          <li>Se unifica la lógica interna del reproductor para que anterior, siguiente, reproducción aleatoria y avance automático compartan el mismo estado e historial de canciones.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">27</div>
+      <div class="history-section-content">
+        <h2>Música · nuevas canciones y controles</h2>
+        <ul>
+          <li>Se añaden 10 nuevas canciones al reproductor manteniendo exactamente los nombres originales de sus archivos, sin necesidad de renombrarlos.</li>
+          <li>El reproductor incorpora controles de canción anterior, pausa/reproducción y canción siguiente.</li>
+          <li>El botón siguiente mantiene la reproducción aleatoria y evita repetir inmediatamente la canción que está sonando.</li>
+          <li>El botón anterior permite regresar a la canción reproducida anteriormente.</li>
+          <li>Al terminar una canción, el reproductor continúa automáticamente con otra canción aleatoria.</li>
         </ul>
       </div>
     </section>
@@ -3281,73 +3150,343 @@ body.bg-coach-room{
 
   
     <section class="history-change-section">
-      <div class="history-section-number">27</div>
+      <div class="history-section-number">25</div>
       <div class="history-section-content">
-        <h2>Música · nuevas canciones y controles</h2>
+        <h2>Pantalla final · restauración responsive</h2>
         <ul>
-          <li>Se añaden 10 nuevas canciones al reproductor manteniendo exactamente los nombres originales de sus archivos, sin necesidad de renombrarlos.</li>
-          <li>El reproductor incorpora controles de canción anterior, pausa/reproducción y canción siguiente.</li>
-          <li>El botón siguiente mantiene la reproducción aleatoria y evita repetir inmediatamente la canción que está sonando.</li>
-          <li>El botón anterior permite regresar a la canción reproducida anteriormente.</li>
-          <li>Al terminar una canción, el reproductor continúa automáticamente con otra canción aleatoria.</li>
+          <li>Se elimina la composición de televisión con vídeo de la pantalla «Que gane el mejor» para evitar deformaciones en móvil.</li>
+          <li>Se recupera el fondo genérico de la aplicación y el diseño clásico de la pantalla final.</li>
+          <li>Se restauran los tamaños y proporciones anteriores a la integración de la televisión.</li>
+          <li>En móvil los equipos se colocan verticalmente en una sola columna y la pantalla puede desplazarse de forma natural si es necesario.</li>
+          <li>Se elimina la reproducción automática y toda la lógica específica del vídeo final.</li>
         </ul>
       </div>
     </section>
 
   
     <section class="history-change-section">
-      <div class="history-section-number">28</div>
+      <div class="history-section-number">24</div>
       <div class="history-section-content">
-        <h2>Música · reproductor minimal y auto-ocultable</h2>
+        <h2>Clasificación · desempate por partidos jugados</h2>
         <ul>
-          <li>Se reduce el tamaño general del reproductor para que ocupe menos espacio en pantalla.</li>
-          <li>Tras unos segundos sin interacción, el reproductor pasa automáticamente a un modo minimalista que muestra únicamente el título de la canción y el botón de pausa/reproducción.</li>
-          <li>Al pasar el ratón por encima, mover el puntero, hacer scroll o tocar la pantalla, el reproductor recupera temporalmente todos sus controles.</li>
-          <li>Se mantienen los botones anterior, pausa/reproducción, siguiente y volumen en el modo desplegado.</li>
-          <li>Se unifica la lógica interna del reproductor para que anterior, siguiente, reproducción aleatoria y avance automático compartan el mismo estado e historial de canciones.</li>
+          <li>Al ordenar la clasificación por porcentaje de victorias, los empates de porcentaje se resuelven por número de partidos jugados.</li>
+          <li>Si dos jugadores tienen el mismo porcentaje, aparece primero quien haya disputado más partidos.</li>
+          <li>Si también coinciden en partidos jugados, se utiliza el nombre como último criterio de desempate.</li>
         </ul>
       </div>
     </section>
 
   
     <section class="history-change-section">
-      <div class="history-section-number">29</div>
+      <div class="history-section-number">23</div>
       <div class="history-section-content">
-        <h2>Música · modo minimal activado por defecto</h2>
+        <h2>Clasificación y álbum de cartas</h2>
         <ul>
-          <li>El reproductor permanece normalmente en modo minimalista mostrando solo el título de la canción y pausa/reproducción.</li>
-          <li>Se eliminan los despliegues provocados por movimiento del ratón, hover, scroll o interacción general con la página.</li>
-          <li>Solo un click o toque directamente sobre el reproductor minimalista despliega los controles completos.</li>
-          <li>Después de utilizar el reproductor desplegado, vuelve automáticamente al modo minimalista tras unos segundos.</li>
+          <li>La clasificación deja de abrir siempre con el mismo baremo: cada vez que se entra en una competición los jugadores aparecen inicialmente en un orden aleatorio.</li>
+          <li>Después del orden inicial aleatorio se mantienen todos los controles de ordenación por columnas, incluyendo jugador, partidos, victorias, empates, derrotas y porcentaje de victorias.</li>
+          <li>Se añade «Ver álbum de cartas» junto a Clasificación y Calendario.</li>
+          <li>El álbum muestra en una cuadrícula todas las cartas de jugador que existen actualmente.</li>
+          <li>Al pulsar una carta del álbum se abre su visualización ampliada habitual.</li>
+          <li>Esta primera versión utiliza un diseño provisional en grid, preparado para sustituirse más adelante por el fondo y los huecos del álbum abierto.</li>
         </ul>
       </div>
     </section>
 
   
     <section class="history-change-section">
-      <div class="history-section-number">30</div>
+      <div class="history-section-number">22</div>
       <div class="history-section-content">
-        <h2>Crear equipos · selector de método fotográfico</h2>
+        <h2>Modo Entrenador · sorteos aleatorios</h2>
         <ul>
-          <li>Los botones «Algoritmo automático basado en posiciones» y «Modo Entrenador» pasan a utilizar imágenes a sangre ocupando toda la superficie del botón.</li>
-          <li>Se conservan exactamente los nombres de archivo originales: «composite (1).png» y «composite.png».</li>
-          <li>El texto se coloca sobre la fotografía con degradados oscuros y ligeramente coloreados para mantener una lectura clara.</li>
-          <li>Las imágenes mantienen su proporción panorámica 21:9 y se adaptan automáticamente al tamaño del botón.</li>
-          <li>En móvil los dos botones se apilan verticalmente conservando el formato panorámico.</li>
+          <li>El creador de la sala ya no aparece siempre como entrenador del Equipo Rojo: la asignación visible Rojo/Negro se sortea de forma estable para cada sala.</li>
+          <li>El segundo entrenador recibe automáticamente el color contrario.</li>
+          <li>Ambos dispositivos calculan la misma asignación a partir del código de sala, por lo que ven siempre los mismos colores.</li>
+          <li>El lanzamiento de moneda muestra correctamente un ganador Rojo o Negro de acuerdo con el primer turno sorteado.</li>
+          <li>La asignación aleatoria de colores se mantiene durante todo el draft, los turnos y la alineación final.</li>
         </ul>
       </div>
     </section>
 
+    <section class="history-change-section">
+      <div class="history-section-number">21</div>
+      <div class="history-section-content">
+        <h2>Interfaz, navegación e historial</h2>
+        <ul>
+          <li>La referencia de versión se trasladó al pie inferior y centrado de la Home.</li>
+          <li>Se corrigió un conflicto de CSS que mantenía la Home visible e impedía navegar correctamente con sus botones.</li>
+          <li>El historial de cambios se integró dentro del propio index como una pantalla de la aplicación.</li>
+          <li>Se corrigió la estructura del HTML para que el historial no quede anidado dentro de Modo Entrenador.</li>
+          <li>El enlace de versión abre el historial dentro de la misma pestaña y el botón «Volver» regresa a Home.</li>
+          <li>La pantalla de alineaciones se ajustó verticalmente en escritorio para evitar desplazamientos innecesarios.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">20</div>
+      <div class="history-section-content">
+        <h2>Pantalla final · «Que gane el mejor»</h2>
+        <ul>
+          <li>La pantalla final se reorganizó para aprovechar mejor el alto disponible y dar más tamaño a equipos, camisetas, nombres y controles.</li>
+          <li>El botón «Copiar alineación» incorpora la descripción «Texto».</li>
+          <li>El botón «Screenshot» incorpora la descripción «Compartir imagen».</li>
+          <li>Se integró un nuevo fondo con una televisión y canal alpha.</li>
+          <li>Un vídeo MP4 se reproduce detrás del hueco transparente de la televisión para que parezca formar parte de la escena.</li>
+          <li>El fondo y el vídeo escalan conjuntamente para conservar su alineación.</li>
+          <li>Al entrar en la pantalla final se pausa la música y se intenta reproducir automáticamente el vídeo desde el principio.</li>
+          <li>La interfaz se recolocó y amplió aprovechando el espacio disponible antes de la televisión.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">19</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · sala, enlaces y cierre del draft</h2>
+        <ul>
+          <li>La pantalla «Esperando al segundo entrenador…» se ajustó verticalmente para caber en una sola pantalla de escritorio sin desplazamiento.</li>
+          <li>El aviso nativo del navegador al copiar el enlace se sustituyó por una notificación discreta dentro de la web.</li>
+          <li>El bloque «Equipos cerrados» se movió fuera de la columna del Equipo Negro y ahora se centra respecto a toda la pizarra.</li>
+          <li>El botón «Ver alineaciones» queda centrado junto al mensaje de finalización.</li>
+          <li>Al terminar un draft del Modo Entrenador se omite la pantalla intermedia «¿Qué te parece este partido?» y se abre directamente la presentación final.</li>
+        </ul>
+      </div>
+    </section>
   
     <section class="history-change-section">
-      <div class="history-section-number">31</div>
+      <div class="history-section-number">18</div>
       <div class="history-section-content">
-        <h2>Crear equipos · nombres definitivos de imágenes</h2>
+        <h2>Modo Entrenador · mejoras de convocatoria y tablero</h2>
         <ul>
-          <li>El botón «Algoritmo automático basado en posiciones» utiliza ahora exactamente «boton algoritmo.jpg».</li>
-          <li>El botón «Modo Entrenador» utiliza ahora exactamente «boton entrenador.jpg».</li>
-          <li>Se mantiene sin cambios el diseño fotográfico 21:9, los degradados y el comportamiento responsive.</li>
+          <li>La convocatoria importada desde WhatsApp puede crear la sala directamente después de revisar los jugadores detectados.</li>
+          <li>Se eliminó el texto de ejemplo del campo de convocatoria y explicaciones innecesarias para simplificar el flujo.</li>
+          <li>Se añadió «Modificar convocatoria» como acceso secundario para corregir la selección antes de crear la sala.</li>
+          <li>Los jugadores disponibles del draft se distribuyen en varias columnas y sus camisetas se redujeron para que toda la convocatoria quepa dentro de la pizarra.</li>
+          <li>Los jugadores ya fichados se muestran en una sola columna a cada lado del campo para dejar libre la zona central.</li>
+          <li>Se eliminó el mensaje «Ahora pulsa FICHAR junto a…».</li>
+          <li>El turno propio se destaca visualmente y, cuando elige el rival, aparece el aviso «El otro entrenador está eligiendo un nuevo jugador».</li>
+          <li>La pizarra se oscurece ligeramente cuando no es tu turno.</li>
+          <li>Las columnas de jugadores fichados se desplazaron ligeramente hacia el centro para que no queden pegadas a los bordes.</li>
         </ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">17</div>
+      <div class="history-section-content">
+        <h2>Supabase y backend</h2>
+        <ul><li>Supabase centraliza jugadores, partidos, estadísticas, perfiles, cartas y Modo Entrenador.</li>
+<li>Configuración de políticas para lectura pública y las operaciones necesarias desde la web.</li>
+<li>Storage para fotografías de jugadores, cartas generadas y fotografías de partidos.</li>
+<li>Funciones de backend para la generación y control de cartas.</li>
+<li>Tablas y funciones específicas para salas, entrenadores, turnos y fichajes del Modo Entrenador.</li>
+<li>Los jugadores seleccionados para una sala se almacenan en la propia sala.</li>
+<li>El backend impide fichar a alguien que no pertenezca a la convocatoria.</li>
+<li>Se eliminaron dependencias problemáticas de pgcrypto que provocaban errores con gen_random_bytes() y digest().</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">16</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · tablero de fichajes</h2>
+        <ul><li>Nuevo fondo cenital de mesa y pizarra para el draft.</li>
+<li>Los jugadores disponibles se sitúan en la zona central.</li>
+<li>Las fichas de jugadores tienen forma de camiseta en tono amarillo/beige.</li>
+<li>Los nombres de las camisetas se hicieron más grandes.</li>
+<li>Al seleccionar un jugador aparece «FICHAR» junto a su propia ficha.</li>
+<li>Los jugadores fichados se desplazan visualmente al lado del equipo Rojo o Negro.</li>
+<li>Las listas de fichados se acercaron a los bordes para separarlas de los jugadores centrales.</li>
+<li>La etiqueta de Equipo Negro se desplazó hacia el borde de su campo.</li>
+<li>Se eliminó el rótulo «Jugadores esperando».</li>
+<li>El mensaje que indica que es turno del otro entrenador se recolocó para evitar que quede tapado.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">15</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · sorteo e identidad</h2>
+        <ul><li>Cuando entra el segundo entrenador, el primero recibe un aviso destacado.</li>
+<li>Antes del draft cada persona ve claramente si le ha tocado entrenar al equipo Rojo o Negro.</li>
+<li>Se muestran frases graciosas aleatorias en la presentación del equipo.</li>
+<li>Cuando ambos están preparados aparece el botón Comenzar.</li>
+<li>Una moneda animada decide aleatoriamente qué equipo ficha primero.</li>
+<li>El sorteo se realiza de forma compartida para que ambos dispositivos reciban el mismo resultado.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">14</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · convocatoria</h2>
+        <ul><li>Antes de crear la sala se seleccionan exactamente 14 jugadores en Fútbol 7 o 10 en Fútbol Sala.</li>
+<li>La convocatoria queda guardada en la sala y únicamente esos jugadores participan en el draft.</li>
+<li>Importador «Copia y pega convocatoria aquí» para pegar directamente el mensaje del grupo de WhatsApp.</li>
+<li>El importador detecta las líneas numeradas con jugadores e ignora la cabecera del mensaje.</li>
+<li>Todo lo que aparece a partir de «Reserva» o «Reservas» se excluye de la convocatoria.</li>
+<li>Se limpian anotaciones habituales como «(porter)» o «(Futsal)».</li>
+<li>Los nombres desconocidos pueden incorporarse como invitados temporales solo para esa sala.</li>
+<li>Los posibles errores de escritura se señalan para revisión.</li>
+<li>Si faltan jugadores, la web avisa y permite corregir la selección manualmente.</li>
+<li>Flujo simplificado: pegar mensaje → Detectar convocatoria → revisar → Crear sala.</li>
+<li>Botón pequeño «Modificar convocatoria» para hacer ajustes antes de crear la sala.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">13</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · salas compartidas</h2>
+        <ul><li>Creación de una sala personalizada con código y enlace compartible.</li>
+<li>Un segundo entrenador puede entrar desde otro ordenador o móvil mediante el enlace.</li>
+<li>Sincronización del estado de la sala a través de Supabase.</li>
+<li>Refresco periódico de respaldo para mantener ambos dispositivos actualizados.</li>
+<li>Sistema de draft estrictamente por turnos.</li>
+<li>Supabase valida los fichajes para evitar selecciones fuera de turno.</li>
+<li>Al completar los dos equipos se reutiliza la pantalla final de alineaciones.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">12</div>
+      <div class="history-section-content">
+        <h2>Nueva elección de método para crear equipos</h2>
+        <ul><li>Después de elegir Fútbol 7 o Fútbol Sala aparece la pantalla «¿Cómo hacemos los equipos?».</li>
+<li>Opción «Algoritmo automático basado en posiciones» para utilizar el sistema tradicional.</li>
+<li>Nueva opción «Modo Entrenador» para crear los equipos entre dos personas.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">11</div>
+      <div class="history-section-content">
+        <h2>Música</h2>
+        <ul><li>Reproductor de música integrado en la web.</li>
+<li>Volumen inicial establecido al 20 %.</li>
+<li>Playlist con varias canciones relacionadas con fútbol.</li>
+<li>Selección aleatoria de canción al entrar.</li>
+<li>Al terminar una canción se reproduce otra aleatoria evitando repetir inmediatamente la misma.</li>
+<li>El reproductor muestra «Ahora sonando», canción y artista.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">10</div>
+      <div class="history-section-content">
+        <h2>Navegación y móvil</h2>
+        <ul><li>Adaptación responsive de las principales pantallas, formularios, clasificación, modales y reproductor.</li>
+<li>Corrección de controles que se salían del contenedor en móvil.</li>
+<li>Implementación de historial de navegación mediante hashes.</li>
+<li>El botón Atrás del navegador vuelve ahora a la pantalla anterior de la web en lugar de abandonarla directamente.</li>
+<li>Las distintas secciones pueden reflejar su estado en la URL.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">09</div>
+      <div class="history-section-content">
+        <h2>Home y diseño visual</h2>
+        <ul><li>Rediseño de la pantalla principal con tres accesos: Crear alineaciones, Temporada 26/27 y Apuntar resultado.</li>
+<li>Eliminación del antiguo título grande, balón flotante y subrayado decorativo de la home.</li>
+<li>Los tres accesos aparecen en una fila en escritorio y se adaptan a móvil.</li>
+<li>Las tarjetas principales incorporan fotografías.</li>
+<li>Home ampliada y ensanchada para aprovechar mejor pantallas de escritorio.</li>
+<li>Corrección del espacio que aparecía encima de las imágenes de las tarjetas.</li>
+<li>Nuevo background general externo mediante background-home.jpg.</li>
+<li>Fondos específicos para determinadas secciones de la web.</li>
+<li>Selector Fútbol 7 / Fútbol Sala rediseñado con fotografías.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">08</div>
+      <div class="history-section-content">
+        <h2>Compartir alineaciones y resultados</h2>
+        <ul><li>Botón para copiar las alineaciones en formato de texto.</li>
+<li>Formato de texto separado en Rojos y Negros para compartir fácilmente.</li>
+<li>Captura de la alineación mediante html2canvas.</li>
+<li>Intento de copiar la imagen directamente al portapapeles y descarga PNG como alternativa.</li>
+<li>Botón Home y controles de la pantalla final reorganizados.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">07</div>
+      <div class="history-section-content">
+        <h2>Crónicas y fotografías de partido</h2>
+        <ul><li>Posibilidad de subir una fotografía al registrar un resultado.</li>
+<li>Campos para crear titular y crónica del partido.</li>
+<li>La fotografía y la crónica aparecen en el detalle del encuentro.</li>
+<li>Al editar un resultado se recuperan la fotografía y la crónica existentes.</li>
+<li>Los controles de fotografía y crónica se reorganizaron para integrarse mejor en el formulario.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">06</div>
+      <div class="history-section-content">
+        <h2>Resultados, goles y asistencias</h2>
+        <ul><li>Pantalla «Apuntar resultado» accesible desde la home.</li>
+<li>Selección previa entre Fútbol 7 y Fútbol Sala.</li>
+<li>Registro de resultado, jugadores, goles y asistencias.</li>
+<li>Los resultados finales pueden guardarse sin iniciar sesión como administrador.</li>
+<li>En el detalle del partido aparecen iconos de balón para goles y bota para asistencias.</li>
+<li>Posibilidad de editar partidos pendientes y completar posteriormente el resultado.</li>
+<li>Herramientas administrativas para gestionar y eliminar resultados.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">05</div>
+      <div class="history-section-content">
+        <h2>Temporada 26/27</h2>
+        <ul><li>Sección de temporada con Clasificación y Calendario.</li>
+<li>Clasificación ordenable por jugador, partidos jugados, victorias, empates, derrotas y porcentaje de victorias.</li>
+<li>Columnas adicionales de goles y asistencias disponibles para administración.</li>
+<li>Calendario de partidos guardados y resultados.</li>
+<li>Los partidos pendientes no cuentan en las estadísticas hasta que tienen resultado final.</li>
+<li>Detalle de cada partido con alineaciones y eventos de los jugadores.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">04</div>
+      <div class="history-section-content">
+        <h2>Cartas de jugador</h2>
+        <ul><li>Integración del sistema de cartas personalizadas de Patxanguilles.</li>
+<li>Botones «Ver carta» y «Crear carta» desde el perfil.</li>
+<li>Formulario de creación con selfie, nombre, apodo, sexo, altura, peso y posición.</li>
+<li>Generación mediante una función de Supabase conectada al sistema de generación de imágenes.</li>
+<li>Límite de tres intentos de generación por jugador.</li>
+<li>Previsualización de la carta antes de guardarla como carta oficial.</li>
+<li>Posibilidad para el administrador de cambiar manualmente la carta de un jugador.</li>
+<li>Visualización de la carta con efectos de estrellas, fuegos artificiales y brillo.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">03</div>
+      <div class="history-section-content">
+        <h2>Jugadores y perfiles</h2>
+        <ul><li>Jugadores almacenados en Supabase y visibles desde la web.</li>
+<li>Perfil individual con apodo, nombre, fotografía, posición, pierna, fecha de nacimiento y edad.</li>
+<li>El apodo puede editarse desde el perfil.</li>
+<li>La edad se calcula automáticamente a partir de la fecha de nacimiento.</li>
+<li>Fotografía de perfil ampliable al pulsarla.</li>
+<li>Avatares circulares de los jugadores en la clasificación.</li>
+<li>Soporte para jugadores disponibles en Fútbol 7, Fútbol Sala o ambas modalidades.</li></ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">02</div>
+      <div class="history-section-content">
+        <h2>Generación y equilibrio de equipos</h2>
+        <ul><li>Mejora del algoritmo para tener en cuenta nivel, reservas, posiciones y resultados anteriores.</li>
+<li>Los reservas cuentan para completar el número necesario de jugadores.</li>
+<li>Equilibrio por posiciones con prioridad para portero, defensa, centro del campo y ataque.</li>
+<li>En Fútbol 7 se busca una estructura aproximada 1-3-2-1.</li>
+<li>El porcentaje de victorias se pondera para evitar que pocas apariciones distorsionen demasiado el equilibrio.</li>
+<li>Se puede pulsar «Probar otra alineación» para generar otra combinación.</li>
+<li>Presentación de Fútbol 7 sobre el campo con distribución por líneas.</li></ul>
+      </div>
+    </section>
+  
+    <section class="history-change-section">
+      <div class="history-section-number">01</div>
+      <div class="history-section-content">
+        <h2>Base de la aplicación</h2>
+        <ul><li>Creación de la web de Patxanguilles Antifeixistes como aplicación web responsive.</li>
+<li>Flujo principal para crear alineaciones de Fútbol 7 y Fútbol Sala.</li>
+<li>Selección de jugadores y generación automática de dos equipos equilibrados.</li>
+<li>Fútbol 7 configurado para 14 jugadores y Fútbol Sala para 10.</li>
+<li>Pantalla de carga con frases aleatorias antes de mostrar las alineaciones.</li>
+<li>Pantalla final con equipos Rojo y Negro y presentación visual de las alineaciones.</li></ul>
       </div>
     </section>
 
