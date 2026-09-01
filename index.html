@@ -681,6 +681,28 @@ body:before{
   }
 }
 
+
+/* v43 · background específico de selección de jugadores */
+body.bg-player-selection{
+  background-image:url('background-seleccion-jugadores.jpg');
+  background-position:center center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+}
+
+/* Mantiene el mismo nivel de oscurecimiento del resto de la web */
+body.bg-player-selection:before{
+  background:rgba(0,0,0,.30);
+}
+
+@media(max-width:700px){
+  body.bg-player-selection{
+    background-position:62% center;
+    background-attachment:scroll;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -884,6 +906,10 @@ function show(id,opts={}){
   if(!target)return;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   target.classList.add('active');
+
+  /* Background específico por sección */
+  document.body.classList.toggle('bg-player-selection',id==='selection');
+
   window.scrollTo(0,0);
 
   if(opts.fromHistory||handlingPopState||transientScreens.has(id))return;
