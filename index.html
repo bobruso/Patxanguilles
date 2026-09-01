@@ -2479,6 +2479,240 @@ body.bg-coach-room{
   }
 }
 
+
+/* v67 · Controles completos del reproductor */
+.music-transport{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  flex:0 0 auto;
+}
+.music-transport button{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  font-size:13px;
+}
+.music-transport #musicToggle{
+  width:38px;
+  height:38px;
+  min-width:38px;
+  font-size:14px;
+}
+@media(max-width:600px){
+  .music-transport{gap:2px}
+  .music-transport button{width:30px;height:30px;min-width:30px;font-size:11px}
+  .music-transport #musicToggle{width:34px;height:34px;min-width:34px}
+}
+
+
+/* v68 · Reproductor pequeño, discreto y auto-compactable */
+.music-controls{
+  left:8px !important;
+  bottom:8px !important;
+  gap:6px !important;
+  padding:5px 7px !important;
+  border-radius:10px !important;
+  max-width:min(430px,calc(100vw - 16px)) !important;
+  transition:
+    max-width .28s ease,
+    padding .28s ease,
+    gap .28s ease,
+    background .28s ease,
+    opacity .28s ease,
+    transform .28s ease !important;
+}
+.music-transport{gap:2px !important}
+.music-transport button{
+  width:27px !important;
+  height:27px !important;
+  min-width:27px !important;
+  font-size:10px !important;
+}
+.music-transport #musicToggle{
+  width:30px !important;
+  height:30px !important;
+  min-width:30px !important;
+  font-size:11px !important;
+}
+.music-now-playing{
+  width:170px !important;
+  max-width:170px !important;
+}
+.music-now-label{font-size:6px !important;margin-bottom:2px !important}
+.music-track-title{font-size:9px !important}
+.music-track-artist{font-size:7px !important}
+.music-controls input[type=range]{width:58px !important}
+.music-volume-label{font-size:7px !important;min-width:20px !important}
+
+/* Estado habitual: únicamente título + pausa/play. */
+.music-controls.compact{
+  gap:5px !important;
+  padding:4px 6px !important;
+  max-width:min(235px,calc(100vw - 16px)) !important;
+  background:rgba(10,13,16,.68) !important;
+}
+.music-controls.compact #musicPrev,
+.music-controls.compact #musicNext,
+.music-controls.compact .music-now-label,
+.music-controls.compact .music-track-artist,
+.music-controls.compact #musicVolume,
+.music-controls.compact .music-volume-label{
+  display:none !important;
+}
+.music-controls.compact .music-transport{
+  order:2;
+}
+.music-controls.compact .music-now-playing{
+  order:1;
+  width:min(170px,55vw) !important;
+  max-width:min(170px,55vw) !important;
+}
+.music-controls.compact .music-track-title{
+  font-size:8px !important;
+}
+.music-controls.compact .music-transport #musicToggle{
+  width:26px !important;
+  height:26px !important;
+  min-width:26px !important;
+}
+
+@media(max-width:600px){
+  .music-controls{
+    max-width:calc(100vw - 12px) !important;
+    left:6px !important;
+    bottom:6px !important;
+    padding:4px 6px !important;
+  }
+  .music-now-playing{
+    width:135px !important;
+    max-width:135px !important;
+  }
+  .music-controls input[type=range]{width:42px !important}
+  .music-controls.compact{
+    max-width:min(205px,calc(100vw - 12px)) !important;
+  }
+  .music-controls.compact .music-now-playing{
+    width:min(145px,52vw) !important;
+    max-width:min(145px,52vw) !important;
+  }
+}
+
+
+/* v70 · selector de método completamente fotográfico */
+#creationMethod .coach-method-options{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:18px !important;
+}
+#creationMethod .coach-method-photo{
+  position:relative !important;
+  min-height:0 !important;
+  aspect-ratio:21 / 9 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  border-radius:20px !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  background:#090d0b !important;
+  text-align:left !important;
+  isolation:isolate;
+  box-shadow:0 12px 30px rgba(0,0,0,.28);
+}
+#creationMethod .coach-method-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  transition:transform .32s ease,filter .32s ease;
+}
+#creationMethod .coach-method-overlay{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.76) 0%,rgba(0,0,0,.44) 48%,rgba(0,0,0,.08) 100%),
+    linear-gradient(0deg,rgba(0,0,0,.58) 0%,transparent 58%);
+}
+#creationMethod .algorithm-photo .coach-method-overlay{
+  background:
+    linear-gradient(90deg,rgba(0,26,11,.84) 0%,rgba(0,25,11,.48) 50%,rgba(0,0,0,.08) 100%),
+    linear-gradient(0deg,rgba(0,0,0,.54) 0%,transparent 62%);
+}
+#creationMethod .coach-photo .coach-method-overlay{
+  background:
+    linear-gradient(90deg,rgba(37,4,16,.80) 0%,rgba(40,5,20,.43) 50%,rgba(0,0,0,.08) 100%),
+    linear-gradient(0deg,rgba(0,0,0,.55) 0%,transparent 62%);
+}
+#creationMethod .coach-method-copy{
+  position:absolute;
+  z-index:2;
+  left:24px;
+  right:24px;
+  bottom:22px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:7px;
+  color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.75);
+}
+#creationMethod .coach-method-copy strong{
+  display:block;
+  max-width:82%;
+  font-size:clamp(19px,2vw,27px) !important;
+  line-height:1.02 !important;
+  letter-spacing:-.025em;
+}
+#creationMethod .coach-method-copy > span{
+  display:block;
+  max-width:78%;
+  margin:0 !important;
+  color:rgba(255,255,255,.88);
+  font-size:12px !important;
+  line-height:1.3 !important;
+}
+#creationMethod .coach-method-photo:hover .coach-method-bg{
+  transform:scale(1.035);
+  filter:brightness(1.05);
+}
+#creationMethod .coach-method-photo:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.35) !important;
+}
+
+@media(max-width:700px){
+  #creationMethod .coach-method-options{
+    grid-template-columns:1fr !important;
+    gap:13px !important;
+  }
+  #creationMethod .coach-method-photo{
+    aspect-ratio:21 / 9 !important;
+    border-radius:16px !important;
+  }
+  #creationMethod .coach-method-copy{
+    left:16px;
+    right:14px;
+    bottom:14px;
+    gap:4px;
+  }
+  #creationMethod .coach-method-copy strong{
+    max-width:90%;
+    font-size:17px !important;
+  }
+  #creationMethod .coach-method-copy > span{
+    max-width:90%;
+    font-size:10px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2494,7 +2728,7 @@ body.bg-coach-room{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v66 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v71 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -2506,15 +2740,21 @@ body.bg-coach-room{
 <section id="creationMethod" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('createMode')">← Volver</button><h2>¿Cómo hacemos los equipos?</h2><div class="subtitle" id="creationMethodSubtitle">Elige cómo quieres crear las alineaciones.</div></div></div>
 <div class="home-options coach-method-options">
-  <button class="mode redline coach-method-card" onclick="startAutomaticGame()">
-    <span class="icon">⚙️</span>
-    <strong>Algoritmo automático basado en posiciones</strong>
-    <span>La web equilibra los equipos según posiciones y estadísticas.</span>
+  <button class="mode coach-method-card coach-method-photo algorithm-photo" onclick="startAutomaticGame()">
+    <img src="boton algoritmo.jpg" alt="" class="coach-method-bg">
+    <span class="coach-method-overlay"></span>
+    <span class="coach-method-copy">
+      <strong>Algoritmo automático basado en posiciones</strong>
+      <span>La web equilibra los equipos según posiciones y estadísticas.</span>
+    </span>
   </button>
-  <button class="mode greenline coach-method-card" onclick="openCoachMode()">
-    <span class="icon">🧠</span>
-    <strong>Modo Entrenador</strong>
-    <span>Dos entrenadores crean los equipos por turnos en una sala compartida.</span>
+  <button class="mode coach-method-card coach-method-photo coach-photo" onclick="openCoachMode()">
+    <img src="boton entrenador.jpg" alt="" class="coach-method-bg">
+    <span class="coach-method-overlay"></span>
+    <span class="coach-method-copy">
+      <strong>Modo Entrenador</strong>
+      <span>Dos entrenadores crean los equipos por turnos en una sala compartida.</span>
+    </span>
   </button>
 </div>
 </div></section>
@@ -2678,7 +2918,7 @@ body.bg-coach-room{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v66</span>
+    <span class="history-version">VERSIÓN v71</span>
   </header>
   
     <section class="history-change-section">
@@ -3039,6 +3279,78 @@ body.bg-coach-room{
       </div>
     </section>
 
+  
+    <section class="history-change-section">
+      <div class="history-section-number">27</div>
+      <div class="history-section-content">
+        <h2>Música · nuevas canciones y controles</h2>
+        <ul>
+          <li>Se añaden 10 nuevas canciones al reproductor manteniendo exactamente los nombres originales de sus archivos, sin necesidad de renombrarlos.</li>
+          <li>El reproductor incorpora controles de canción anterior, pausa/reproducción y canción siguiente.</li>
+          <li>El botón siguiente mantiene la reproducción aleatoria y evita repetir inmediatamente la canción que está sonando.</li>
+          <li>El botón anterior permite regresar a la canción reproducida anteriormente.</li>
+          <li>Al terminar una canción, el reproductor continúa automáticamente con otra canción aleatoria.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">28</div>
+      <div class="history-section-content">
+        <h2>Música · reproductor minimal y auto-ocultable</h2>
+        <ul>
+          <li>Se reduce el tamaño general del reproductor para que ocupe menos espacio en pantalla.</li>
+          <li>Tras unos segundos sin interacción, el reproductor pasa automáticamente a un modo minimalista que muestra únicamente el título de la canción y el botón de pausa/reproducción.</li>
+          <li>Al pasar el ratón por encima, mover el puntero, hacer scroll o tocar la pantalla, el reproductor recupera temporalmente todos sus controles.</li>
+          <li>Se mantienen los botones anterior, pausa/reproducción, siguiente y volumen en el modo desplegado.</li>
+          <li>Se unifica la lógica interna del reproductor para que anterior, siguiente, reproducción aleatoria y avance automático compartan el mismo estado e historial de canciones.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">29</div>
+      <div class="history-section-content">
+        <h2>Música · modo minimal activado por defecto</h2>
+        <ul>
+          <li>El reproductor permanece normalmente en modo minimalista mostrando solo el título de la canción y pausa/reproducción.</li>
+          <li>Se eliminan los despliegues provocados por movimiento del ratón, hover, scroll o interacción general con la página.</li>
+          <li>Solo un click o toque directamente sobre el reproductor minimalista despliega los controles completos.</li>
+          <li>Después de utilizar el reproductor desplegado, vuelve automáticamente al modo minimalista tras unos segundos.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">30</div>
+      <div class="history-section-content">
+        <h2>Crear equipos · selector de método fotográfico</h2>
+        <ul>
+          <li>Los botones «Algoritmo automático basado en posiciones» y «Modo Entrenador» pasan a utilizar imágenes a sangre ocupando toda la superficie del botón.</li>
+          <li>Se conservan exactamente los nombres de archivo originales: «composite (1).png» y «composite.png».</li>
+          <li>El texto se coloca sobre la fotografía con degradados oscuros y ligeramente coloreados para mantener una lectura clara.</li>
+          <li>Las imágenes mantienen su proporción panorámica 21:9 y se adaptan automáticamente al tamaño del botón.</li>
+          <li>En móvil los dos botones se apilan verticalmente conservando el formato panorámico.</li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <section class="history-change-section">
+      <div class="history-section-number">31</div>
+      <div class="history-section-content">
+        <h2>Crear equipos · nombres definitivos de imágenes</h2>
+        <ul>
+          <li>El botón «Algoritmo automático basado en posiciones» utiliza ahora exactamente «boton algoritmo.jpg».</li>
+          <li>El botón «Modo Entrenador» utiliza ahora exactamente «boton entrenador.jpg».</li>
+          <li>Se mantiene sin cambios el diseño fotográfico 21:9, los degradados y el comportamiento responsive.</li>
+        </ul>
+      </div>
+    </section>
+
   <div class="history-footer">PATXANGUILLES ANTIFEIXISTES · TEMPORADA 26/27</div>
 
     </div>
@@ -3127,7 +3439,11 @@ body.bg-coach-room{
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
 <div class="admin-corner"><button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button></div>
 <div class="music-controls" title="Música">
-  <button id="musicToggle" type="button" onclick="toggleMusic()" aria-label="Pausar o reproducir música">⏸</button>
+  <div class="music-transport">
+    <button id="musicPrev" type="button" onclick="previousMusicTrack()" aria-label="Canción anterior" title="Anterior">⏮</button>
+    <button id="musicToggle" type="button" onclick="toggleMusic()" aria-label="Pausar o reproducir música" title="Pausa / reproducir">⏸</button>
+    <button id="musicNext" type="button" onclick="nextMusicTrack()" aria-label="Siguiente canción" title="Siguiente">⏭</button>
+  </div>
   <div class="music-now-playing" aria-live="polite">
     <span class="music-now-label">AHORA SONANDO</span>
     <span id="musicTrackTitle" class="music-track-title">—</span>
@@ -5005,9 +5321,20 @@ const musicPlaylist=[
   {file:'Kasabian Club Foot Official Audio.m4a',title:'Club Foot',artist:'Kasabian'},
   {file:'KNAAN Wavin Flag Coca Cola Celebration Mix.m4a',title:"Wavin' Flag (Coca-Cola Celebration Mix)",artist:"K'NAAN"},
   {file:'Blur Song 2 Official Music Video.m4a',title:'Song 2',artist:'Blur'},
-  {file:'Gerry The Pacemakers Youll Never Walk Alone Official Video.m4a',title:"You'll Never Walk Alone",artist:'Gerry and the Pacemakers'}
+  {file:'Gerry The Pacemakers Youll Never Walk Alone Official Video.m4a',title:"You'll Never Walk Alone",artist:'Gerry and the Pacemakers'},
+  {file:'POR MALVINAS POR EL DIEGO POR LA ULTIMA DE LEO.m4a',title:'POR MALVINAS POR EL DIEGO POR LA ULTIMA DE LEO',artist:''},
+  {file:'Rodrigo Bueno La mano de Dios HOMENAJE DIEGO MARADONA 2021.m4a',title:'Rodrigo Bueno La mano de Dios HOMENAJE DIEGO MARADONA 2021',artist:''},
+  {file:'Su Jugador Favoritoo Etoo La Granja.m4a',title:'Su Jugador Favoritoo Etoo La Granja',artist:''},
+  {file:'The Lightning Seeds Three Lions 98 Official Video.m4a',title:'The Lightning Seeds Three Lions 98 Official Video',artist:''},
+  {file:'Bellini Samba De Janeiro.m4a',title:'Bellini Samba De Janeiro',artist:''},
+  {file:'CTID Haaland Song Ha Ha Ha Man City chant English Version.m4a',title:'CTID Haaland Song Ha Ha Ha Man City chant English Version',artist:''},
+  {file:'Joaquin Sabina Motivos de un Sentimiento.m4a',title:'Joaquin Sabina Motivos de un Sentimiento',artist:''},
+  {file:'Kaos Urbano Como Cantona.m4a',title:'Kaos Urbano Como Cantona',artist:''},
+  {file:'Oliver y Benji Campeones Intro Espana.m4a',title:'Oliver y Benji Campeones Intro Espana',artist:''},
+  {file:'Oliver y Benji Campeones.m4a',title:'Oliver y Benji Campeones',artist:''}
 ];
-music.volume=.20;
+let musicHistory=[];
+let musicHistoryPos=-1;
 let musicStarted=false;
 let currentTrackIndex=-1;
 
@@ -5018,6 +5345,7 @@ function updateNowPlaying(){
   if(title)title.textContent=track?.title||'—';
   if(artist)artist.textContent=track?.artist||'';
 }
+
 function chooseRandomTrack(avoidCurrent=true){
   if(!musicPlaylist.length)return -1;
   if(musicPlaylist.length===1)return 0;
@@ -5026,58 +5354,159 @@ function chooseRandomTrack(avoidCurrent=true){
   while(avoidCurrent&&next===currentTrackIndex);
   return next;
 }
-function loadTrack(index){
+
+function rememberMusicTrack(index){
+  if(musicHistoryPos < musicHistory.length-1){
+    musicHistory=musicHistory.slice(0,musicHistoryPos+1);
+  }
+  musicHistory.push(index);
+  musicHistoryPos=musicHistory.length-1;
+}
+
+function loadTrack(index,addToHistory=false){
   if(index<0||index>=musicPlaylist.length)return;
   currentTrackIndex=index;
   music.src=musicPlaylist[index].file;
   updateNowPlaying();
+  if(addToHistory)rememberMusicTrack(index);
 }
-function playRandomTrack(){
-  loadTrack(chooseRandomTrack(true));
-  if(musicStarted)music.play().catch(()=>{});
-}
+
 function updateMusicButton(){
   const b=document.getElementById('musicToggle');
   if(b)b.textContent=music.paused?'▶':'⏸';
 }
+
+function playLoadedTrack(){
+  musicStarted=true;
+  const p=music.play();
+  if(p&&typeof p.catch==='function')p.catch(()=>{});
+  setTimeout(updateMusicButton,0);
+}
+
+function nextMusicTrack(){
+  const next=chooseRandomTrack(true);
+  if(next<0)return;
+  loadTrack(next,true);
+  playLoadedTrack();
+}
+
+function previousMusicTrack(){
+  if(musicHistoryPos>0){
+    musicHistoryPos--;
+    loadTrack(musicHistory[musicHistoryPos],false);
+    playLoadedTrack();
+  }else{
+    music.currentTime=0;
+    playLoadedTrack();
+  }
+}
+
+function playRandomTrack(){
+  nextMusicTrack();
+}
+
 function startMusic(e){
   if(e?.target?.closest?.('.music-controls'))return;
   if(musicStarted)return;
   musicStarted=true;
-  music.play().then(updateMusicButton).catch(()=>{musicStarted=false;updateMusicButton()});
+  music.play().then(updateMusicButton).catch(()=>{
+    musicStarted=false;
+    updateMusicButton();
+  });
 }
+
 function toggleMusic(){
   musicStarted=true;
   if(music.paused)music.play().catch(()=>{});
   else music.pause();
   setTimeout(updateMusicButton,0);
 }
+
 function setMusicVolume(v){
   const n=Math.max(0,Math.min(100,Number(v)||0));
   music.volume=n/100;
   const l=document.getElementById('musicVolumeLabel');
   if(l)l.textContent=n+'%';
-  if(n===0&&!music.paused)updateMusicButton();
+  updateMusicButton();
 }
+
+music.volume=.20;
 music.addEventListener('play',updateMusicButton);
 music.addEventListener('pause',updateMusicButton);
 music.addEventListener('ended',()=>{
-  loadTrack(chooseRandomTrack(true));
+  const next=chooseRandomTrack(true);
+  loadTrack(next,true);
   if(musicStarted)music.play().catch(()=>{});
 });
+
+
+/* v69 · reproductor minimal; solo un click sobre él lo despliega */
+let musicUiTimer=null;
+
+function collapseMusicControls(){
+  const box=document.querySelector('.music-controls');
+  if(!box)return;
+  if(box.matches(':hover')){
+    scheduleMusicCollapse();
+    return;
+  }
+  box.classList.add('compact');
+}
+
+function scheduleMusicCollapse(delay=4200){
+  clearTimeout(musicUiTimer);
+  musicUiTimer=setTimeout(collapseMusicControls,delay);
+}
+
+function revealMusicControls(){
+  const box=document.querySelector('.music-controls');
+  if(!box)return;
+  box.classList.remove('compact');
+  scheduleMusicCollapse();
+}
+
+function keepMusicControlsOpen(){
+  clearTimeout(musicUiTimer);
+  const box=document.querySelector('.music-controls');
+  if(box)box.classList.remove('compact');
+}
 
 /* Elegimos una canción distinta al azar en cada carga de la web.
    El navegador empezará a reproducirla tras la primera interacción del usuario,
    para respetar las restricciones de autoplay de móvil/Chrome. */
-loadTrack(chooseRandomTrack(false));
+loadTrack(chooseRandomTrack(false),true);
 document.addEventListener('click',startMusic,{once:true});
 updateMusicButton();
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const box=document.querySelector('.music-controls');
+  if(!box)return;
+
+  // Empieza y permanece en modo minimal.
+  clearTimeout(musicUiTimer);
+  box.classList.add('compact');
+
+  // SOLO un click/tap sobre el propio reproductor lo despliega.
+  box.addEventListener('click',(e)=>{
+    if(box.classList.contains('compact')){
+      e.preventDefault();
+      e.stopPropagation();
+      box.classList.remove('compact');
+      clearTimeout(musicUiTimer);
+      return;
+    }
+
+    // Una vez desplegado, vuelve al modo minimal tras unos segundos.
+    scheduleMusicCollapse(4200);
+  });
+});
 
 window.addEventListener('DOMContentLoaded',()=>{
   if(location.hash==='#historial-cambios'){
     setTimeout(()=>show('changeHistory',{fromHistory:true}),0);
   }
 });
+
 
 </script>
 </body></html>
