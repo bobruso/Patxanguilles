@@ -2994,7 +2994,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v95 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v96 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3184,8 +3184,19 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v95</span>
+    <span class="history-version">VERSIÓN v96</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">53</div>
+      <div class="history-section-content">
+        <h2>Screenshot de Fútbol Sala · escala visual</h2>
+        <ul>
+          <li>Se aumenta la escala de camisetas, nombres y cabecera de Fútbol Sala para igualar su presencia visual con la captura de Fútbol 7.</li>
+          <li>El tamaño se aplica ahora directamente según el modo de exportación, evitando diferencias entre la previsualización y la captura real.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">52</div>
       <div class="history-section-content">
@@ -5313,7 +5324,7 @@ async function copyLineupScreenshot(){
     canvas.width=background.naturalWidth;canvas.height=background.naturalHeight;
     const ctx=canvas.getContext('2d');
     ctx.drawImage(background,0,0,canvas.width,canvas.height);
-    drawLineupHeader(ctx,canvas.width,crest);
+    drawLineupHeader(ctx,canvas.width,crest,game);
     drawExportTeam(ctx,teams.black,'black',game,'top',blackShirt,canvas.width);
     drawExportTeam(ctx,teams.red,'red',game,'bottom',redShirt,canvas.width);
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
@@ -5358,10 +5369,10 @@ function lineupExportLayout(mode,side,width,height){
 }
 function drawExportTeam(ctx,list,color,mode,side,shirtImage,width){
   const {roles,points}=lineupExportLayout(mode,side,width,ctx.canvas.height),players=lineupPlayersByRole(list,roles);
-  players.forEach((name,i)=>{if(name)drawExportPlayer(ctx,name,color,points[i][0],points[i][1],shirtImage)})
+  players.forEach((name,i)=>{if(name)drawExportPlayer(ctx,name,color,points[i][0],points[i][1],shirtImage,mode)})
 }
-function drawExportPlayer(ctx,name,color,x,y,shirtImage){
-  const scale=game==='fs'?1.5:1;
+function drawExportPlayer(ctx,name,color,x,y,shirtImage,mode){
+  const scale=mode==='f7'?1:2.5;
   const shirtH=185*scale,shirtW=shirtH*(shirtImage.naturalWidth/shirtImage.naturalHeight);
   ctx.save();
   ctx.shadowColor='rgba(0,0,0,.58)';ctx.shadowBlur=18*scale;ctx.shadowOffsetY=9*scale;
@@ -5378,18 +5389,18 @@ function drawExportPlayer(ctx,name,color,x,y,shirtImage){
   ctx.fillText(label,x,y+129*scale,labelWidth-22*scale);ctx.restore();
 }
 function roundLineupRect(ctx,x,y,w,h,r){const rr=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+rr,y);ctx.arcTo(x+w,y,x+w,y+h,rr);ctx.arcTo(x+w,y+h,x,y+h,rr);ctx.arcTo(x,y+h,x,y,rr);ctx.arcTo(x,y,x+w,y,rr);ctx.closePath()}
-function drawLineupHeader(ctx,width,crest){
+function drawLineupHeader(ctx,width,crest,mode){
   const rawDate=document.getElementById('lineupShareDate')?.value||'',time=`${document.getElementById('lineupShareHour')?.value||'20'}:${document.getElementById('lineupShareMinute')?.value||'30'}`;
   let dateText='';
   if(rawDate)dateText=new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(rawDate+'T12:00:00')).toUpperCase();
   const method=lineupCreationMethod==='coach'?'MODO ENTRENADOR':'MODO ALGORITMO';
-  const scale=game==='fs'?1.5:1;
+  const scale=mode==='f7'?1:2.5;
   const h=142*scale,pad=Math.max(30,width*.03);
   ctx.save();
   ctx.fillStyle='rgba(5,7,8,.92)';ctx.fillRect(0,0,width,h);
   ctx.textBaseline='middle';ctx.shadowColor='rgba(0,0,0,.65)';ctx.shadowBlur=5;
 
-  if(game==='f7'&&crest){
+  if(mode==='f7'&&crest){
     const logo=92;ctx.drawImage(crest,pad,25,logo,logo);
     ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='900 31px Arial, sans-serif';
     ctx.fillText('PATXANGUILLES',pad+112,49,width*.25);
