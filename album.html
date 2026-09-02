@@ -75,11 +75,39 @@ button{font:inherit}
 .pageinfo{min-width:120px;text-align:center;font-weight:800;font-size:13px}
 .loading{font-size:14px;color:#b8bec6}
 .card-modal{
-  position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.86);
-  display:none;align-items:center;justify-content:center;padding:24px
+  position:fixed;inset:0;z-index:20;
+  display:none;align-items:center;justify-content:center;padding:24px;
+  overflow:hidden;
+  background:rgba(0,0,0,.42);
+}
+.card-modal::before{
+  content:"";
+  position:absolute;
+  inset:-35px;
+  background-image:var(--card-modal-bg,url('album-cartas.jpg'));
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  filter:blur(18px) brightness(.42);
+  transform:scale(1.08);
+  z-index:-2;
+}
+.card-modal::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.28);
+  z-index:-1;
 }
 .card-modal.open{display:flex}
-.card-modal img{max-width:min(92vw,640px);max-height:92vh;object-fit:contain;filter:drop-shadow(0 18px 30px rgba(0,0,0,.65))}
+.card-modal img{
+  position:relative;
+  z-index:1;
+  max-width:min(92vw,640px);
+  max-height:92vh;
+  object-fit:contain;
+  filter:drop-shadow(0 18px 30px rgba(0,0,0,.72));
+}
 .card-modal button{
   position:absolute;top:16px;right:16px;border:1px solid rgba(255,255,255,.2);
   background:#292c30;color:#fff;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer
@@ -392,6 +420,8 @@ function changePage(delta){
 function openCard(url,name){
   const modal=document.getElementById('cardModal');
   const img=document.getElementById('cardModalImg');
+  const background=ALBUM_BACKGROUNDS[pageIndex]||ALBUM_BACKGROUNDS[0];
+  modal.style.setProperty('--card-modal-bg',`url("${background}")`);
   img.src=url;img.alt=`Carta de ${name}`;
   modal.classList.add('open');
 }
