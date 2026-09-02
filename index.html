@@ -3211,7 +3211,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v104 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v105 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3401,8 +3401,19 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v104</span>
+    <span class="history-version">VERSIÓN v105</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">62</div>
+      <div class="history-section-content">
+        <h2>Viernes · imágenes históricas rotatorias</h2>
+        <ul>
+          <li>La bienvenida especial de los viernes dispone ahora de una colección de nueve imágenes futboleras.</li>
+          <li>Cada viernes aparece una imagen distinta y no se repite ninguna hasta completar toda la colección.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">61</div>
       <div class="history-section-content">
@@ -6417,8 +6428,37 @@ function toast(t){const x=document.getElementById('toast');x.textContent=t;x.cla
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function escapeJs(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 
-const FRIDAY_FOOTBALL_PHOTO='https://upload.wikimedia.org/wikipedia/commons/5/5e/Pel%C3%A9_goal_1958_WC_final.jpg';
-const FRIDAY_FOOTBALL_SOURCE='https://commons.wikimedia.org/wiki/File:Pel%C3%A9_goal_1958_WC_final.jpg';
+const FRIDAY_FOOTBALL_PHOTOS=[
+  {src:'https://upload.wikimedia.org/wikipedia/commons/5/5e/Pel%C3%A9_goal_1958_WC_final.jpg',alt:'Pelé marca en la final del Mundial de 1958',credit:'Pelé, final de 1958 · dominio público',source:'https://commons.wikimedia.org/wiki/File:Pel%C3%A9_goal_1958_WC_final.jpg'},
+  {src:'1.jpg',alt:'Momento histórico de fútbol'},
+  {src:'2.jpg',alt:'Momento histórico de fútbol'},
+  {src:'3.jpg',alt:'Momento histórico de fútbol'},
+  {src:'4.jpg',alt:'Momento histórico de fútbol'},
+  {src:'5.jpg',alt:'Momento histórico de fútbol'},
+  {src:'6.jpg',alt:'Momento histórico de fútbol'},
+  {src:'7.jpg',alt:'Momento histórico de fútbol'},
+  {src:'8.jpg',alt:'Momento histórico de fútbol'}
+];
+
+function fridayPhotoForToday(){
+  const now=new Date();
+  const friday=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  friday.setDate(friday.getDate()+(5-friday.getDay()));
+  friday.setHours(12,0,0,0);
+  const firstFriday=new Date(2026,0,2,12,0,0,0);
+  const week=Math.floor((friday-firstFriday)/(7*24*60*60*1000));
+  const total=FRIDAY_FOOTBALL_PHOTOS.length;
+  const cycle=Math.floor(week/total);
+  const position=((week%total)+total)%total;
+  const order=Array.from({length:total},(_,i)=>i);
+  let seed=(0x9e3779b9^(cycle*2654435761))>>>0;
+  for(let i=total-1;i>0;i--){
+    seed=(Math.imul(seed,1664525)+1013904223)>>>0;
+    const j=seed%(i+1);
+    [order[i],order[j]]=[order[j],order[i]];
+  }
+  return FRIDAY_FOOTBALL_PHOTOS[order[position]];
+}
 let specialWelcomeQueue=[];
 
 function todaysBirthdays(){
@@ -6453,7 +6493,9 @@ function showNextSpecialWelcome(){
     const p=item.player,image=p.card||p.photo||'',initial=escapeHtml(String(p.name||'?').charAt(0).toUpperCase());
     content.innerHTML=`${specialFireworksHTML()}<div class="special-card-inner"><div class="special-kicker">Hoy es el cumpleaños de</div><h3>${escapeHtml(p.name)}</h3><div class="birthday-cake" aria-hidden="true">🎂</div>${image?`<img class="special-player-card" src="${escapeHtml(image)}" alt="Carta de ${escapeHtml(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="special-player-fallback" style="display:none">${initial}</div>`:`<div class="special-player-fallback">${initial}</div>`}<button class="primary special-continue" onclick="showNextSpecialWelcome()">Continuar</button></div>`;
   }else{
-    content.innerHTML=`<img class="special-football-photo" src="${FRIDAY_FOOTBALL_PHOTO}" alt="Pelé marca en la final del Mundial de 1958"><a class="special-photo-credit" href="${FRIDAY_FOOTBALL_SOURCE}" target="_blank" rel="noopener">Pelé, final de 1958 · dominio público</a><div class="special-card-inner"><div class="special-kicker">Patxanguilles presenta</div><h2>¡Por fin es viernes!</h2><div style="margin-top:-10px;margin-bottom:18px;font-size:13px;font-style:italic;opacity:.72">— Rafeta dixit</div><button class="primary special-continue" onclick="showNextSpecialWelcome()">Entrar</button></div>`;
+    const fridayPhoto=fridayPhotoForToday();
+    const fridayCredit=fridayPhoto.source?`<a class="special-photo-credit" href="${fridayPhoto.source}" target="_blank" rel="noopener">${escapeHtml(fridayPhoto.credit)}</a>`:'';
+    content.innerHTML=`<img class="special-football-photo" src="${fridayPhoto.src}" alt="${escapeHtml(fridayPhoto.alt)}">${fridayCredit}<div class="special-card-inner"><div class="special-kicker">Patxanguilles presenta</div><h2>¡Por fin es viernes!</h2><div style="margin-top:-10px;margin-bottom:18px;font-size:13px;font-style:italic;opacity:.72">— Rafeta dixit</div><button class="primary special-continue" onclick="showNextSpecialWelcome()">Entrar</button></div>`;
   }
   overlay.classList.add('open');
 }
