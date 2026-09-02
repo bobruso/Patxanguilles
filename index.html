@@ -2915,6 +2915,38 @@ body:has(#results.active.adjusting-lineups){
 @keyframes specialBurst{0%,28%{opacity:0;box-shadow:none}38%{opacity:1;box-shadow:0 -42px 0 #ffd75a,30px -30px 0 #ff565f,42px 0 0 #fff,30px 30px 0 #63d7ff,0 42px 0 #ffd75a,-30px 30px 0 #ff565f,-42px 0 0 #fff,-30px -30px 0 #63d7ff}80%,100%{opacity:0;transform:scale(1.55)}}
 @media(max-width:700px){.special-card-inner{padding:25px 18px}.special-football-photo{height:34vh}.special-player-card{max-height:43vh}.birthday-cake{font-size:52px}}
 
+
+/* v93 · Ajustes pantalla "Que gane el mejor" */
+.celebration .final-actions .celebration-back{
+  margin-left:auto !important;
+}
+.celebration.fs-final .final-shirt-grid{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  justify-content:center !important;
+  align-items:flex-start !important;
+  gap:8px !important;
+}
+.celebration.fs-final .final-shirt-grid .big-shirt{
+  flex:0 1 calc(33.333% - 8px) !important;
+  width:auto !important;
+  min-width:0 !important;
+  max-width:100px !important;
+  transform:none !important;
+}
+@media(max-width:700px){
+  .celebration .final-actions{
+    width:100% !important;
+  }
+  .celebration .final-actions .celebration-back{
+    margin-left:auto !important;
+  }
+  .celebration.fs-final .final-shirt-grid .big-shirt{
+    flex:0 1 calc(33.333% - 6px) !important;
+    max-width:92px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2930,7 +2962,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v92 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v93 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3120,8 +3152,20 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v92</span>
+    <span class="history-version">VERSIÓN v93</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">50</div>
+      <div class="history-section-content">
+        <h2>Que gane el mejor · pequeños ajustes de interfaz</h2>
+        <ul>
+          <li>El botón «Volver» se separa visualmente del resto de acciones y se desplaza al extremo derecho.</li>
+          <li>El selector de hora utiliza intervalos de 15 minutos.</li>
+          <li>En Fútbol Sala, los cinco jugadores de cada equipo se muestran en una distribución 3+2.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">49</div>
       <div class="history-section-content">
@@ -3855,11 +3899,11 @@ body:has(#results.active.adjusting-lineups){
 </div></section>
 </div>
 
-<div id="celebration" class="celebration" style="display:none"><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="lineup-share-details"><label>Día<input id="lineupShareDate" type="date"></label><label>Hora<input id="lineupShareTime" type="time"></label></div><div class="final-actions">
+<div id="celebration" class="celebration" style="display:none"><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="lineup-share-details"><label>Día<input id="lineupShareDate" type="date"></label><label>Hora<input id="lineupShareTime" type="time" step="900"></label></div><div class="final-actions">
   <button class="primary final-action-with-note" onclick="copyFinalAndToast()"><span>Copiar alineación</span><small>Texto</small></button>
   <button class="secondary final-action-with-note" onclick="copyLineupScreenshot()"><span>Screenshot</span><small>Compartir imagen</small></button>
   <button class="primary save-lineup-btn" onclick="saveCurrentLineup()"><span>Guardar alineación</span><small>para apuntar el resultado después</small></button>
-  <button class="secondary" onclick="closeCelebration()">Volver</button>
+  <button class="secondary celebration-back" onclick="closeCelebration()">Volver</button>
 </div>
 </div></div>
 
@@ -5156,6 +5200,8 @@ function prepareRandomFinalDisplay(){
 
 function showCelebration(){
   prepareRandomFinalDisplay();
+  const celebration=document.getElementById('celebration');
+  celebration.classList.toggle('fs-final',game==='fs');
   document.getElementById('celebrationMode').textContent=(game==='f7'?'FÚTBOL 7':'FÚTBOL SALA')+' · ALINEACIÓN FINAL';
   renderFinalTeam('finalRed',finalDisplayTeams.red,'red');
   renderFinalTeam('finalBlack',finalDisplayTeams.black,'black');
