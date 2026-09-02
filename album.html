@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Álbum de cartas · Patxanguilles Antifeixistes</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:#111;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+button{font:inherit}
+.reader{
+  position:fixed;inset:0;
+  display:grid;
+  grid-template-rows:58px minmax(0,1fr) 68px;
+  background:#141516;
+}
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:0 18px;
+  background:#202124;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+  z-index:5;
+}
+.title{min-width:0}
+.title strong{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.title small{display:block;color:#adb3bb;font-size:11px;margin-top:2px}
+.back{
+  flex:none;border:1px solid rgba(255,255,255,.18);background:#2d3035;color:#fff;
+  border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:800
+}
+.stage{
+  min-height:0;
+  display:block;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:0;
+  background:#121315;
+}
+.page{
+  position:relative;
+  width:100vw;
+  height:auto;
+  aspect-ratio:1529/2048;
+  margin:0;
+  background:url('album-cartas.jpg') center top/100% auto no-repeat;
+  box-shadow:none;
+}
+.slot{
+  position:absolute;
+  appearance:none;border:0;background:transparent;padding:0;cursor:pointer;
+  transition:transform .16s ease,filter .16s ease;
+}
+.slot:hover{transform:scale(1.018);filter:brightness(1.04);z-index:3}
+.slot img{width:100%;height:100%;display:block;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(0,0,0,.28))}
+.slot-1{left:16.048%;top:21.55%;width:25.75%;height:20.25%}
+.slot-2{left:37.12%;top:21.55%;width:25.75%;height:20.25%}
+.slot-3{left:58.202%;top:21.55%;width:25.75%;height:20.25%}
+.slot-4{left:16.048%;top:43.28%;width:25.75%;height:20.25%}
+.slot-5{left:37.12%;top:43.28%;width:25.75%;height:20.25%}
+.slot-6{left:58.202%;top:43.28%;width:25.75%;height:20.25%}
+.slot-7{left:16.048%;top:65.72%;width:25.75%;height:20.25%}
+.slot-8{left:37.12%;top:65.72%;width:25.75%;height:20.25%}
+.slot-9{left:58.202%;top:65.72%;width:25.75%;height:20.25%}
+.controls{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:8px 14px;background:#202124;border-top:1px solid rgba(255,255,255,.12);z-index:5
+}
+.controls button{
+  min-width:112px;border:1px solid rgba(255,255,255,.18);background:#2d3035;color:#fff;
+  border-radius:8px;padding:10px 13px;cursor:pointer;font-weight:800
+}
+.controls button:disabled{opacity:.35;cursor:default}
+.pageinfo{min-width:120px;text-align:center;font-weight:800;font-size:13px}
+.loading{font-size:14px;color:#b8bec6}
+.card-modal{
+  position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.86);
+  display:none;align-items:center;justify-content:center;padding:24px
+}
+.card-modal.open{display:flex}
+.card-modal img{max-width:min(92vw,640px);max-height:92vh;object-fit:contain;filter:drop-shadow(0 18px 30px rgba(0,0,0,.65))}
+.card-modal button{
+  position:absolute;top:16px;right:16px;border:1px solid rgba(255,255,255,.2);
+  background:#292c30;color:#fff;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer
+}
+@media(max-width:700px){
+  .reader{grid-template-rows:52px minmax(0,1fr) 60px}
+  .toolbar{padding:0 10px}
+  .title small{display:none}
+  .stage{padding:0}
+  .page{
+    width:100vw;
+    height:auto;
+    max-height:none;
+  }
+  .controls{gap:7px;padding:6px 7px}
+  .controls button{min-width:84px;padding:9px 8px}
+  .pageinfo{min-width:94px;font-size:12px}
+}
+}
+
+.toolbar-actions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex:none;
+}
+.toolbtn,.zoom-btn{
+  border:1px solid rgba(255,255,255,.18);
+  background:#2d3035;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:800;
+}
+.toolbtn{padding:9px 12px}
+.zoom-controls{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:3px 5px;
+  border:1px solid rgba(255,255,255,.12);
+  background:#181a1d;
+  border-radius:9px;
+}
+.zoom-btn{
+  width:32px;
+  height:32px;
+  padding:0;
+  font-size:22px;
+  line-height:30px;
+}
+.zoom-icon{font-size:15px;opacity:.82}
+
+.stage{
+  touch-action:none;
+  overscroll-behavior:contain;
+}
+.page-viewport{
+  position:relative;
+  width:100%;
+  transform-origin:top center;
+  will-change:transform;
+}
+.page{
+  transform-origin:top center;
+}
+
+/* Modo ancho: llena horizontalmente y permite scroll vertical */
+body.fit-width .stage{
+  overflow-y:auto;
+  overflow-x:auto;
+}
+body.fit-width .page-viewport{
+  width:100vw;
+}
+body.fit-width .page{
+  width:100vw;
+  height:auto;
+  max-width:none;
+  max-height:none;
+  aspect-ratio:1529/2048;
+}
+
+/* Modo alto: página completa visible en vertical, centrada */
+body.fit-height .stage{
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  overflow:auto;
+  padding:8px;
+}
+body.fit-height .page-viewport{
+  width:auto;
+  height:calc(100dvh - 126px);
+  aspect-ratio:1529/2048;
+}
+body.fit-height .page{
+  width:auto;
+  height:100%;
+  aspect-ratio:1529/2048;
+  max-width:none;
+  max-height:none;
+}
+
+@media(max-width:700px){
+  .toolbar{
+    overflow-x:auto;
+  }
+  .toolbar-actions{
+    gap:5px;
+  }
+  .toolbtn{
+    padding:8px 9px;
+    font-size:12px;
+    white-space:nowrap;
+  }
+  .zoom-controls{gap:2px}
+  .zoom-btn{
+    width:30px;height:30px;font-size:20px;
+  }
+  .back{
+    white-space:nowrap;
+    padding:8px 9px;
+    font-size:12px;
+  }
+  body.fit-height .page-viewport{
+    height:calc(100dvh - 112px);
+  }
+}
+
+
+/* v4 · controles reposicionados */
+.toolbar{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+}
+.toolbar .title{
+  justify-self:start;
+}
+.fit-toggle{
+  justify-self:center;
+  white-space:nowrap;
+}
+.toolbar .back{
+  justify-self:end;
+}
+
+.zoom-floating{
+  position:fixed;
+  right:18px;
+  bottom:82px;
+  z-index:30;
+  box-shadow:0 6px 18px rgba(0,0,0,.42);
+}
+
+@media(max-width:700px){
+  .toolbar{
+    grid-template-columns:minmax(0,1fr) auto auto;
+    gap:6px;
+    overflow:visible;
+  }
+  .toolbar .title strong{
+    max-width:32vw;
+  }
+  .fit-toggle{
+    font-size:11px;
+    padding:7px 8px;
+  }
+  .toolbar .back{
+    font-size:11px;
+    padding:7px 8px;
+  }
+  .zoom-floating{
+    right:10px;
+    bottom:70px;
+  }
+}
+
+
+/* Ajustes exclusivos de la página 2 */
+.album-page-2 .slot-1,
+.album-page-2 .slot-2,
+.album-page-2 .slot-3{top:14.55%}
+
+.album-page-2 .slot-4,
+.album-page-2 .slot-5,
+.album-page-2 .slot-6{top:39.78%}
+
+.album-page-2 .slot-1,
+.album-page-2 .slot-4,
+.album-page-2 .slot-7{left:12.848%}
+
+.album-page-2 .slot-3,
+.album-page-2 .slot-6,
+.album-page-2 .slot-9{left:61.402%}
+
+</style>
+</head>
+<body class="fit-width">
+<div class="reader">
+  <header class="toolbar">
+    <div class="title">
+      <strong>Álbum de cartas · Patxanguilles Antifeixistes</strong>
+      <small id="subtitle">Temporada 26/27</small>
+    </div>
+
+    <button id="fitToggle" class="toolbtn fit-toggle" onclick="toggleFitMode()" title="Cambiar entre ajustar al ancho o al alto">Ajustar vista · Ancho</button>
+
+    <button class="back" onclick="returnToWeb()">← Volver</button>
+  </header>
+
+  <main id="stage" class="stage">
+    <div id="pageViewport" class="page-viewport">
+      <div id="page" class="page"><div class="loading" id="loading">Cargando cartas…</div></div>
+    </div>
+  </main>
+
+  <footer class="controls">
+    <button id="prev" onclick="changePage(-1)">← Anterior</button>
+    <div id="pageInfo" class="pageinfo">Página 1 de 1</div>
+    <button id="next" onclick="changePage(1)">Siguiente →</button>
+  </footer>
+</div>
+
+<div class="zoom-controls zoom-floating" aria-label="Controles de zoom">
+  <button class="zoom-btn" onclick="zoomBy(-0.1)" title="Alejar">−</button>
+  <span class="zoom-icon" aria-hidden="true">🔍</span>
+  <button class="zoom-btn" onclick="zoomBy(0.1)" title="Acercar">+</button>
+</div>
+
+<div id="cardModal" class="card-modal" onclick="modalBackdrop(event)">
+  <button onclick="closeCard()">Cerrar ✕</button>
+  <img id="cardModalImg" alt="Carta de jugador">
+</div>
+
+<script>
+const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
+  auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}
+});
+
+let cards=[],pageIndex=0;
+const PER_PAGE=9;
+const ALBUM_BACKGROUNDS=[
+  'album-cartas.jpg',
+  'pagina album 2.jpg',
+  'pagina album 4.jpg',
+  'album 5.jpg'
+];
+
+function escapeHtml(v){
+  return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function returnToWeb(){
+  if(history.length>1)history.back();
+  else window.location.href='index.html';
+}
+async function loadCards(){
+  const {data,error}=await sb.from('players').select('nickname,card_url').not('card_url','is',null).order('nickname');
+  const loading=document.getElementById('loading');
+  if(error){
+    console.error(error);
+    loading.textContent='No se pudieron cargar las cartas.';
+    return;
+  }
+  cards=(data||[]).filter(x=>x.card_url);
+  document.getElementById('subtitle').textContent=`Temporada 26/27 · ${cards.length} carta${cards.length===1?'':'s'}`;
+  render();
+}
+function render(){
+  const page=document.getElementById('page');
+  const totalPages=Math.max(ALBUM_BACKGROUNDS.length,Math.ceil(cards.length/PER_PAGE),1);
+  pageIndex=Math.max(0,Math.min(pageIndex,totalPages-1));
+  const items=cards.slice(pageIndex*PER_PAGE,pageIndex*PER_PAGE+PER_PAGE);
+  const background=ALBUM_BACKGROUNDS[pageIndex]||ALBUM_BACKGROUNDS[ALBUM_BACKGROUNDS.length-1];
+  page.style.backgroundImage=`url("${background}")`;
+  page.className=`page album-page-${pageIndex+1}`;
+
+  page.innerHTML='';
+  items.forEach((item,i)=>{
+    const b=document.createElement('button');
+    b.className=`slot slot-${i+1}`;
+    b.title=`Ver carta de ${item.nickname}`;
+    b.innerHTML=`<img src="${escapeHtml(item.card_url)}" alt="Carta de ${escapeHtml(item.nickname)}">`;
+    b.onclick=()=>openCard(item.card_url,item.nickname);
+    page.appendChild(b);
+  });
+
+  document.getElementById('pageInfo').textContent=`Página ${pageIndex+1} de ${totalPages}`;
+  document.getElementById('prev').disabled=pageIndex===0;
+  document.getElementById('next').disabled=pageIndex>=totalPages-1;
+}
+function changePage(delta){
+  pageIndex+=delta;
+  render();
+}
+function openCard(url,name){
+  const modal=document.getElementById('cardModal');
+  const img=document.getElementById('cardModalImg');
+  img.src=url;img.alt=`Carta de ${name}`;
+  modal.classList.add('open');
+}
+function closeCard(){document.getElementById('cardModal').classList.remove('open')}
+function modalBackdrop(e){if(e.target.id==='cardModal')closeCard()}
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('cardModal').classList.contains('open')){
+    if(e.key==='Escape')closeCard();
+    return;
+  }
+  if(e.key==='ArrowLeft')changePage(-1);
+  if(e.key==='ArrowRight')changePage(1);
+  if(e.key==='Escape')returnToWeb();
+});
+
+let fitMode='width';
+let zoomLevel=1;
+let pinchStartDistance=0;
+let pinchStartZoom=1;
+
+function applyViewerState(){
+  document.body.classList.toggle('fit-width',fitMode==='width');
+  document.body.classList.toggle('fit-height',fitMode==='height');
+  const viewport=document.getElementById('pageViewport');
+  if(viewport)viewport.style.transform=`scale(${zoomLevel})`;
+  const btn=document.getElementById('fitToggle');
+  if(btn)btn.textContent=`Ajustar vista · ${fitMode==='width'?'Ancho':'Alto'}`;
+}
+
+function toggleFitMode(){
+  fitMode=fitMode==='width'?'height':'width';
+  zoomLevel=1;
+  applyViewerState();
+  const stage=document.getElementById('stage');
+  if(stage){stage.scrollTop=0;stage.scrollLeft=0}
+}
+
+function zoomBy(delta){
+  setZoom(zoomLevel+delta);
+}
+
+function setZoom(value){
+  zoomLevel=Math.min(3,Math.max(0.45,Math.round(value*100)/100));
+  applyViewerState();
+}
+
+function touchDistance(touches){
+  const a=touches[0],b=touches[1];
+  return Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);
+}
+
+const viewerStage=document.getElementById('stage');
+viewerStage.addEventListener('touchstart',e=>{
+  if(e.touches.length===2){
+    pinchStartDistance=touchDistance(e.touches);
+    pinchStartZoom=zoomLevel;
+    e.preventDefault();
+  }
+},{passive:false});
+
+viewerStage.addEventListener('touchmove',e=>{
+  if(e.touches.length===2&&pinchStartDistance>0){
+    const current=touchDistance(e.touches);
+    setZoom(pinchStartZoom*(current/pinchStartDistance));
+    e.preventDefault();
+  }
+},{passive:false});
+
+viewerStage.addEventListener('touchend',e=>{
+  if(e.touches.length<2)pinchStartDistance=0;
+},{passive:true});
+
+applyViewerState();
+
+loadCards();
+</script>
+</body>
+</html>

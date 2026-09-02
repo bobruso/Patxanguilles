@@ -3036,6 +3036,166 @@ body:has(#results.active.adjusting-lineups){
   }
 }
 
+
+/* v101 · Álbum a pantalla grande */
+#seasonContent:has(.card-album-panel){
+  width:100vw !important;
+  max-width:none !important;
+  margin-left:calc(50% - 50vw) !important;
+  margin-right:calc(50% - 50vw) !important;
+  padding:0 18px 26px !important;
+  box-sizing:border-box;
+}
+.card-album-panel{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 auto !important;
+}
+.card-album-book{
+  width:min(94vw,1100px) !important;
+  max-width:none !important;
+  margin:0 auto !important;
+}
+.album-pager{
+  position:relative;
+  z-index:5;
+  margin:18px auto 0 !important;
+  padding-bottom:6px;
+}
+@media(max-width:700px){
+  #seasonContent:has(.card-album-panel){
+    padding-left:8px !important;
+    padding-right:8px !important;
+  }
+  .card-album-book{
+    width:100% !important;
+  }
+}
+
+
+/* v102 · Visor fullscreen del álbum, estilo lector PDF */
+.album-reader{
+  position:fixed;
+  inset:0;
+  z-index:85;
+  display:flex;
+  flex-direction:column;
+  background:#151515;
+  color:#fff;
+  overflow:hidden;
+}
+.album-reader-toolbar{
+  height:58px;
+  flex:0 0 58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:0 18px;
+  background:#202124;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+.album-reader-title{
+  min-width:0;
+}
+.album-reader-title strong{
+  display:block;
+  font-size:15px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.album-reader-title small{
+  display:block;
+  margin-top:2px;
+  color:#aeb4bc;
+  font-size:11px;
+}
+.album-reader-close{
+  flex:none;
+  border:1px solid rgba(255,255,255,.18);
+  background:#2d3035;
+  color:#fff;
+  border-radius:8px;
+  padding:9px 13px;
+  cursor:pointer;
+  font-weight:800;
+}
+.album-reader-stage{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 14px 10px;
+  overflow:auto;
+  background:
+    radial-gradient(circle at center,rgba(255,255,255,.045),transparent 52%),
+    #121315;
+}
+.album-reader .card-album-book{
+  position:relative;
+  width:auto !important;
+  height:min(78vh, calc(100dvh - 142px)) !important;
+  max-width:calc(100vw - 28px) !important;
+  max-height:calc(100dvh - 142px) !important;
+  aspect-ratio:1529 / 2048;
+  margin:auto !important;
+  flex:0 0 auto;
+  background:url('album-cartas.jpg') center/100% 100% no-repeat !important;
+  border-radius:2px !important;
+  box-shadow:0 12px 38px rgba(0,0,0,.6) !important;
+}
+.album-reader-controls{
+  flex:0 0 66px;
+  min-height:66px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:8px 14px;
+  background:#202124;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+.album-reader-controls button{
+  min-width:110px;
+}
+.album-reader .album-page-info{
+  min-width:120px;
+  color:#f3f4f5;
+}
+body.album-reader-open{
+  overflow:hidden !important;
+}
+@media(max-width:700px){
+  .album-reader-toolbar{
+    height:52px;
+    flex-basis:52px;
+    padding:0 10px;
+  }
+  .album-reader-stage{
+    padding:8px 5px;
+  }
+  .album-reader .card-album-book{
+    width:calc(100vw - 10px) !important;
+    height:auto !important;
+    max-height:calc(100dvh - 126px) !important;
+  }
+  .album-reader-controls{
+    min-height:58px;
+    flex-basis:58px;
+    gap:8px;
+    padding:6px 8px;
+  }
+  .album-reader-controls button{
+    min-width:86px;
+    padding-left:9px;
+    padding-right:9px;
+  }
+  .album-reader-title small{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -3051,7 +3211,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v100 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v103 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3241,8 +3401,43 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v100</span>
+    <span class="history-version">VERSIÓN v103</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">60</div>
+      <div class="history-section-content">
+        <h2>Álbum de cartas · lector independiente</h2>
+        <ul>
+          <li>El álbum pasa a abrirse en una página HTML independiente para aprovechar toda la ventana del navegador.</li>
+          <li>La navegación del álbum funciona como un lector de páginas, con controles inferiores y sin el encuadre visual del resto de la web.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">59</div>
+      <div class="history-section-content">
+        <h2>Álbum de cartas · visor a pantalla completa</h2>
+        <ul>
+          <li>El álbum se abre ahora como un lector web a pantalla completa, separado visualmente del resto de paneles de la temporada.</li>
+          <li>La página del álbum ocupa el área central del visor y mantiene las cartas alineadas proporcionalmente con sus huecos.</li>
+          <li>Los controles «Anterior», número de página y «Siguiente» quedan en una barra inferior, con cierre desde la barra superior o la tecla Escape.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">58</div>
+      <div class="history-section-content">
+        <h2>Álbum de cartas · vista ampliada</h2>
+        <ul>
+          <li>La sección del álbum deja de quedar encuadrada dentro del ancho habitual y pasa a mostrarse en gran formato, casi a pantalla completa.</li>
+          <li>Los controles de página se mantienen debajo del álbum.</li>
+          <li>Las cartas conservan sus posiciones proporcionales sobre el fondo al aumentar el tamaño.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">57</div>
       <div class="history-section-content">
@@ -4031,7 +4226,7 @@ body:has(#results.active.adjusting-lineups){
 
 <section id="season" class="screen results"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><button class="primary" onclick="openResultForm()">＋ Añadir resultado</button></div>
-<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn" onclick="seasonTab('cards',this)">Ver álbum de cartas</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
+<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn" onclick="window.location.href='album.html'">Ver álbum de cartas</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
 <div id="seasonContent"></div>
 </div></section>
 
@@ -5551,7 +5746,7 @@ async function saveCurrentLineup(){
 
 function updateSeasonAdminTabs(){document.querySelectorAll('.admin-season-tab').forEach(x=>x.style.display=adminLogged?'':'none')}
 function openSeason(mode){if(!mode){show('seasonMode');return}currentSeasonMode=mode;document.getElementById('seasonTitle').textContent='Temporada 26/27 · '+(mode==='f7'?'Fútbol 7':'Fútbol Sala');updateSeasonAdminTabs();resetClassificationRandomOrder();show('season');seasonTab('classification',document.querySelector('#season .nav-btn'))}
-function seasonTab(tab,btn){document.querySelectorAll('#season .nav-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');const c=document.getElementById('seasonContent');if(tab==='classification')renderClassification(c);if(tab==='calendar')renderCalendar(c);if(tab==='cards'){cardAlbumPage=0;renderCardAlbum(c);}if(tab==='scorers')renderLeaders(c,'goals');if(tab==='assists')renderLeaders(c,'assists')}
+function seasonTab(tab,btn){document.querySelectorAll('#season .nav-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');const c=document.getElementById('seasonContent');if(tab!=='cards')document.body.classList.remove('album-reader-open');if(tab==='classification')renderClassification(c);if(tab==='calendar')renderCalendar(c);if(tab==='cards'){cardAlbumPage=0;renderCardAlbum(c);}if(tab==='scorers')renderLeaders(c,'goals');if(tab==='assists')renderLeaders(c,'assists')}
 function stats(){const s={};const list=currentSeasonMode==='f7'?F7:FS;list.forEach(n=>s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0});db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode&&m.status!=='in_progress').forEach(m=>{const rs=Number(m.redScore),bs=Number(m.blackScore);const outcome=rs===bs?'draw':rs>bs?'red':'black';[...m.red,...m.black].forEach(n=>{if(!s[n])s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0};s[n].played++;const team=m.red.includes(n)?'red':'black';if(outcome==='draw')s[n].draws++;else if(team===outcome)s[n].wins++;else s[n].losses++});(m.goals||[]).forEach(e=>{if(s[e.player])s[e.player].goals+=Number(e.count)||1});(m.assists||[]).forEach(e=>{if(s[e.player])s[e.player].assists+=Number(e.count)||1})});return Object.values(s).map(x=>({...x,winPct:x.played?Math.round(x.wins/x.played*100):0}))}
 function sortedStats(){
   const rows=stats();
@@ -5621,28 +5816,38 @@ function renderCardAlbum(c){
   }).join('');
 
   c.innerHTML=`
-    <div class="panel card-album-panel">
-      <div class="card-album-head">
-        <div>
-          <h3>Álbum de cartas</h3>
-          <div class="subtitle">Temporada 26/27 · ${cards.length} carta${cards.length===1?'':'s'} creada${cards.length===1?'':'s'}.</div>
+    <div class="album-reader" role="dialog" aria-modal="true" aria-label="Álbum de cartas">
+      <div class="album-reader-toolbar">
+        <div class="album-reader-title">
+          <strong>Álbum de cartas · Patxanguilles Antifeixistes</strong>
+          <small>Temporada 26/27 · ${cards.length} carta${cards.length===1?'':'s'} creada${cards.length===1?'':'s'}</small>
+        </div>
+        <button class="album-reader-close" onclick="closeCardAlbumReader()">Cerrar ✕</button>
+      </div>
+      <div class="album-reader-stage">
+        <div class="card-album-book">
+          ${slots}
         </div>
       </div>
-      <div class="card-album-book" aria-label="Álbum de cartas">
-        ${slots}
+      <div class="album-reader-controls">
+        <button class="secondary" onclick="changeCardAlbumPage(-1)" ${cardAlbumPage===0?'disabled':''}>← Anterior</button>
+        <span class="album-page-info">Página ${cardAlbumPage+1} de ${totalPages}</span>
+        <button class="secondary" onclick="changeCardAlbumPage(1)" ${cardAlbumPage===totalPages-1?'disabled':''}>Siguiente →</button>
       </div>
-      ${totalPages>1?`
-        <div class="album-pager">
-          <button class="secondary" onclick="changeCardAlbumPage(-1)" ${cardAlbumPage===0?'disabled':''}>← Anterior</button>
-          <span class="album-page-info">Página ${cardAlbumPage+1} de ${totalPages}</span>
-          <button class="secondary" onclick="changeCardAlbumPage(1)" ${cardAlbumPage===totalPages-1?'disabled':''}>Siguiente →</button>
-        </div>`:''}
     </div>`;
+  document.body.classList.add('album-reader-open');
 }
 function changeCardAlbumPage(delta){
   cardAlbumPage+=Number(delta)||0;
   const c=document.getElementById('seasonContent');
   if(c)renderCardAlbum(c);
+}
+function closeCardAlbumReader(){
+  document.body.classList.remove('album-reader-open');
+  const c=document.getElementById('seasonContent');
+  const firstBtn=document.querySelector('#season .nav-btn');
+  if(firstBtn)seasonTab('classification',firstBtn);
+  else if(c)renderClassification(c);
 }
 
 function renderCalendar(c){
@@ -6460,5 +6665,12 @@ window.addEventListener('DOMContentLoaded',()=>{
 });
 
 
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&document.body.classList.contains('album-reader-open')){
+    e.preventDefault();
+    closeCardAlbumReader();
+  }
+});
 </script>
 </body></html>
