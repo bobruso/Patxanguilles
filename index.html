@@ -2994,7 +2994,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v96 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v97 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3184,8 +3184,19 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v96</span>
+    <span class="history-version">VERSIÓN v97</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">54</div>
+      <div class="history-section-content">
+        <h2>Screenshot de Fútbol Sala · ajuste de posiciones</h2>
+        <ul>
+          <li>El portero negro y el delantero negro suben 20 px en el eje Y.</li>
+          <li>El portero rojo baja 10 px para mejorar su encaje con la portería inferior.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">53</div>
       <div class="history-section-content">
@@ -5363,8 +5374,8 @@ function lineupExportLayout(mode,side,width,height){
     return{roles,points:(side==='top'?top:bottom).map(([x,y])=>[x*sx,y*sy])}
   }
   const roles=['gk','def','mid','mid','fwd'];
-  const top=[[824,315],[824,585],[555,760],[1093,760],[824,925]];
-  const bottom=[[824,1740],[824,1470],[555,1330],[1093,1330],[824,1175]];
+  const top=[[824,295],[824,585],[555,760],[1093,760],[824,905]];
+  const bottom=[[824,1750],[824,1470],[555,1330],[1093,1330],[824,1175]];
   return{roles,points:(side==='top'?top:bottom).map(([x,y])=>[x*sx,y*sy])};
 }
 function drawExportTeam(ctx,list,color,mode,side,shirtImage,width){
