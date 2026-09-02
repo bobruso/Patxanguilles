@@ -2904,7 +2904,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v80 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v81 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3094,8 +3094,20 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v80</span>
+    <span class="history-version">VERSIÓN v81</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">41</div>
+      <div class="history-section-content">
+        <h2>Cartas de jugador · conservar la última al llegar al límite</h2>
+        <ul>
+          <li>Al generar la tercera carta, esa última versión se guarda automáticamente como carta del perfil.</li>
+          <li>Cuando se alcanza el límite de generaciones, el perfil sigue mostrando el botón «Ver carta» siempre que exista una carta guardada.</li>
+          <li>El aviso de límite alcanzado se mantiene, pero ya no deja al jugador sin acceso visual a su última carta.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">40</div>
       <div class="history-section-content">
@@ -5283,7 +5295,7 @@ async function openProfile(name){
       <div class="profile-info">
         <div class="info-item"><small>Apodo</small>${escapeHtml(p.name||name)}</div><div class="info-item"><small>Nombre completo</small>${escapeHtml(p.fullName||name)}</div><div class="info-item"><small>Fecha de nacimiento</small>${formatBirthDate(p.birthDate)}</div><div class="info-item"><small>Edad</small>${p.birthDate?calculateAge(p.birthDate)+' años':'—'}</div><div class="info-item"><small>Pierna</small>${escapeHtml(p.leg||'—')}</div><div class="info-item"><small>Posición</small>${escapeHtml(p.position||'—')}</div>
       </div>
-      <div class="card-create-meta">Generaciones de carta: ${used}/3${remaining>0?' · quedan '+remaining:''}</div>
+      <div class="card-create-meta">Generaciones de carta: ${used}/3${remaining>0?' · quedan '+remaining:used>=3?' · límite alcanzado':''}</div>
     </div>
     <div class="profile-actions">
       <div class="left-actions">${cardButtons}</div>
@@ -5331,7 +5343,27 @@ async function generatePlayerCard(name){
     const fd=new FormData();fd.append('player_id',String(id));fd.append('selfie',file);fd.append('name',playerName);fd.append('nickname',nickname);fd.append('sex',sex);fd.append('height',height);fd.append('weight',weight);fd.append('position',position);
     const r=await fetch(`${SUPABASE_URL}/functions/v1/generate-player-card`,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`},body:fd});
     const data=await r.json();if(!r.ok||!data.ok)throw new Error(data?.error||data?.details||'No se pudo generar la carta');
-    showGeneratedCardPreview(name,data.card_url,Number(data.generation_id),Number(data.remaining));
+    const remaining=Number(data.remaining);
+    const generationId=Number(data.generation_id);
+    if(remaining<=0){
+      const saveFd=new FormData();
+      saveFd.append('action','save');
+      saveFd.append('player_id',String(id));
+      saveFd.append('generation_id',String(generationId));
+      const saveResponse=await fetch(`${SUPABASE_URL}/functions/v1/generate-player-card`,{
+        method:'POST',
+        headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`},
+        body:saveFd
+      });
+      const saveData=await saveResponse.json();
+      if(!saveResponse.ok||!saveData.ok)throw new Error(saveData?.error||'No se pudo guardar la última carta');
+      delete cardGenerationDrafts[name];
+      await loadSupabaseData();
+      await openProfile(name);
+      toast('Última carta guardada automáticamente');
+    }else{
+      showGeneratedCardPreview(name,data.card_url,generationId,remaining);
+    }
   }catch(err){console.error(err);toast(err?.message||'No se pudo generar la carta');await openProfile(name)}finally{clearInterval(timer);loading?.classList.remove('open');if(btn)btn.disabled=false}
 }
 
