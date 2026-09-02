@@ -2930,7 +2930,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v91 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v92 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3120,8 +3120,19 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v91</span>
+    <span class="history-version">VERSIÓN v92</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">49</div>
+      <div class="history-section-content">
+        <h2>Fútbol Sala · corrección de la exportación</h2>
+        <ul>
+          <li>Se corrige el posicionamiento vertical de la captura para que los dos equipos vuelvan a ocupar sus respectivas mitades del campo.</li>
+          <li>Las coordenadas de exportación se adaptan ahora también a la altura real del fondo, evitando desplazamientos al cambiar el formato del archivo.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">48</div>
       <div class="history-section-content">
@@ -5229,21 +5240,22 @@ function lineupPlayersByRole(list,roles){
   roles.forEach((role,i)=>{if(placed[i]||!remaining.length)return;remaining.sort((a,b)=>(distance[role][masterPosition(a)]??3)-(distance[role][masterPosition(b)]??3));placed[i]=remaining.shift()});
   return placed;
 }
-function lineupExportLayout(mode,side,width){
+function lineupExportLayout(mode,side,width,height){
   const sx=(Number(width)||1649)/1649;
+  const sy=(Number(height)||2048)/2048;
   if(mode==='f7'){
     const roles=['gk','def','def','def','mid','mid','fwd'];
     const top=[[824,320],[500,595],[824,595],[1148,595],[650,775],[998,775],[824,945]];
     const bottom=[[824,1850],[500,1610],[824,1610],[1148,1610],[650,1395],[998,1395],[824,1185]];
-    return{roles,points:(side==='top'?top:bottom).map(([x,y])=>[x*sx,y])}
+    return{roles,points:(side==='top'?top:bottom).map(([x,y])=>[x*sx,y*sy])}
   }
   const roles=['gk','def','mid','mid','fwd'];
   const top=[[824,315],[824,585],[555,760],[1093,760],[824,925]];
   const bottom=[[824,1740],[824,1470],[555,1330],[1093,1330],[824,1175]];
-  return{roles,points:(side==='top'?top:bottom).map(([x,y])=>[x*sx,y])};
+  return{roles,points:(side==='top'?top:bottom).map(([x,y])=>[x*sx,y*sy])};
 }
 function drawExportTeam(ctx,list,color,mode,side,shirtImage,width){
-  const {roles,points}=lineupExportLayout(mode,side,width),players=lineupPlayersByRole(list,roles);
+  const {roles,points}=lineupExportLayout(mode,side,width,ctx.canvas.height),players=lineupPlayersByRole(list,roles);
   players.forEach((name,i)=>{if(name)drawExportPlayer(ctx,name,color,points[i][0],points[i][1],shirtImage)})
 }
 function drawExportPlayer(ctx,name,color,x,y,shirtImage){
