@@ -88,7 +88,7 @@ button{font:inherit}
   background-position:center;
   background-size:cover;
   background-repeat:no-repeat;
-  filter:blur(18px) brightness(.42);
+  filter:blur(9px) brightness(.42);
   transform:scale(1.08);
   z-index:-2;
 }
@@ -100,6 +100,7 @@ button{font:inherit}
   z-index:-1;
 }
 .card-modal.open{display:flex}
+body.card-open .zoom-controls{display:none!important}
 .card-modal img{
   position:relative;
   z-index:1;
@@ -424,8 +425,11 @@ function openCard(url,name){
   modal.style.setProperty('--card-modal-bg',`url("${background}")`);
   img.src=url;img.alt=`Carta de ${name}`;
   modal.classList.add('open');
+  document.body.classList.add('card-open');
 }
-function closeCard(){document.getElementById('cardModal').classList.remove('open')}
+function closeCard(){document.getElementById('cardModal').classList.remove('open')
+  document.body.classList.remove('card-open');
+}
 function modalBackdrop(e){if(e.target.id==='cardModal')closeCard()}
 document.addEventListener('keydown',e=>{
   if(document.getElementById('cardModal').classList.contains('open')){
