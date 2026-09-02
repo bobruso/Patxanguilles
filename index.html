@@ -2947,6 +2947,38 @@ body:has(#results.active.adjusting-lineups){
   }
 }
 
+.lineup-time-selects{display:flex;align-items:center;gap:5px}.lineup-time-selects select{min-width:68px;padding:9px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.45);color:#fff;font:inherit;font-weight:800}.lineup-time-colon{font-size:20px;font-weight:900}
+
+/* v95 · Centrado de acciones y Volver aislado */
+.celebration .final-actions{
+  position:relative !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  width:100% !important;
+}
+.celebration .final-main-actions{
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.celebration .final-actions .celebration-back{
+  position:absolute !important;
+  right:0 !important;
+  margin-left:0 !important;
+}
+@media(max-width:760px){
+  .celebration .final-actions{
+    padding-bottom:58px;
+  }
+  .celebration .final-actions .celebration-back{
+    right:0 !important;
+    bottom:0 !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2962,7 +2994,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v93 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v95 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3152,8 +3184,30 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v93</span>
+    <span class="history-version">VERSIÓN v95</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">52</div>
+      <div class="history-section-content">
+        <h2>Que gane el mejor · acciones y screenshot de Fútbol Sala</h2>
+        <ul>
+          <li>Los botones «Copiar alineación», «Screenshot» y «Guardar alineación» vuelven a quedar centrados, mientras «Volver» permanece separado a la derecha.</li>
+          <li>En la exportación de Fútbol Sala aumentan un 150% las camisetas, nombres y la información de cabecera para recuperar la escala visual prevista.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">51</div>
+      <div class="history-section-content">
+        <h2>Que gane el mejor · selector de hora</h2>
+        <ul>
+          <li>La hora se limita a 17, 18, 19, 20, 21 y 22, eliminando las franjas de madrugada y mañana.</li>
+          <li>Los minutos disponibles son únicamente 00, 15, 30 y 45.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">50</div>
       <div class="history-section-content">
@@ -3899,10 +3953,12 @@ body:has(#results.active.adjusting-lineups){
 </div></section>
 </div>
 
-<div id="celebration" class="celebration" style="display:none"><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="lineup-share-details"><label>Día<input id="lineupShareDate" type="date"></label><label>Hora<input id="lineupShareTime" type="time" step="900"></label></div><div class="final-actions">
-  <button class="primary final-action-with-note" onclick="copyFinalAndToast()"><span>Copiar alineación</span><small>Texto</small></button>
-  <button class="secondary final-action-with-note" onclick="copyLineupScreenshot()"><span>Screenshot</span><small>Compartir imagen</small></button>
-  <button class="primary save-lineup-btn" onclick="saveCurrentLineup()"><span>Guardar alineación</span><small>para apuntar el resultado después</small></button>
+<div id="celebration" class="celebration" style="display:none"><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="lineup-share-details"><label>Día<input id="lineupShareDate" type="date"></label><label>Hora<span class="lineup-time-selects"><select id="lineupShareHour" aria-label="Hora"><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20" selected>20</option><option value="21">21</option><option value="22">22</option></select><span class="lineup-time-colon">:</span><select id="lineupShareMinute" aria-label="Minutos"><option value="00">00</option><option value="15">15</option><option value="30" selected>30</option><option value="45">45</option></select></span></label></div><div class="final-actions">
+  <div class="final-main-actions">
+    <button class="primary final-action-with-note" onclick="copyFinalAndToast()"><span>Copiar alineación</span><small>Texto</small></button>
+    <button class="secondary final-action-with-note" onclick="copyLineupScreenshot()"><span>Screenshot</span><small>Compartir imagen</small></button>
+    <button class="primary save-lineup-btn" onclick="saveCurrentLineup()"><span>Guardar alineación</span><small>para apuntar el resultado después</small></button>
+  </div>
   <button class="secondary celebration-back" onclick="closeCelebration()">Volver</button>
 </div>
 </div></div>
@@ -5305,27 +5361,30 @@ function drawExportTeam(ctx,list,color,mode,side,shirtImage,width){
   players.forEach((name,i)=>{if(name)drawExportPlayer(ctx,name,color,points[i][0],points[i][1],shirtImage)})
 }
 function drawExportPlayer(ctx,name,color,x,y,shirtImage){
-  const shirtH=185,shirtW=shirtH*(shirtImage.naturalWidth/shirtImage.naturalHeight);
+  const scale=game==='fs'?1.5:1;
+  const shirtH=185*scale,shirtW=shirtH*(shirtImage.naturalWidth/shirtImage.naturalHeight);
   ctx.save();
-  ctx.shadowColor='rgba(0,0,0,.58)';ctx.shadowBlur=18;ctx.shadowOffsetY=9;
+  ctx.shadowColor='rgba(0,0,0,.58)';ctx.shadowBlur=18*scale;ctx.shadowOffsetY=9*scale;
   ctx.drawImage(shirtImage,x-shirtW/2,y-shirtH/2,shirtW,shirtH);
   ctx.restore();
   const label=String(name||'').toUpperCase();
-  ctx.save();ctx.font='900 32px Arial, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  const labelWidth=Math.min(310,Math.max(145,ctx.measureText(label).width+40));
+  ctx.save();ctx.font=`900 ${32*scale}px Arial, sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+  const labelWidth=Math.min(310*scale,Math.max(145*scale,ctx.measureText(label).width+40*scale));
+  const labelY=y+102*scale,labelH=54*scale;
   ctx.fillStyle=color==='red'?'rgba(150,9,18,.94)':'rgba(5,7,9,.94)';
-  roundLineupRect(ctx,x-labelWidth/2,y+102,labelWidth,54,12);ctx.fill();
-  ctx.strokeStyle='rgba(255,255,255,.58)';ctx.lineWidth=2;ctx.stroke();
-  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,.75)';ctx.shadowBlur=4;
-  ctx.fillText(label,x,y+129,labelWidth-22);ctx.restore();
+  roundLineupRect(ctx,x-labelWidth/2,labelY,labelWidth,labelH,12*scale);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.58)';ctx.lineWidth=2*scale;ctx.stroke();
+  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,.75)';ctx.shadowBlur=4*scale;
+  ctx.fillText(label,x,y+129*scale,labelWidth-22*scale);ctx.restore();
 }
 function roundLineupRect(ctx,x,y,w,h,r){const rr=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+rr,y);ctx.arcTo(x+w,y,x+w,y+h,rr);ctx.arcTo(x+w,y+h,x,y+h,rr);ctx.arcTo(x,y+h,x,y,rr);ctx.arcTo(x,y,x+w,y,rr);ctx.closePath()}
 function drawLineupHeader(ctx,width,crest){
-  const rawDate=document.getElementById('lineupShareDate')?.value||'',time=document.getElementById('lineupShareTime')?.value||'';
+  const rawDate=document.getElementById('lineupShareDate')?.value||'',time=`${document.getElementById('lineupShareHour')?.value||'20'}:${document.getElementById('lineupShareMinute')?.value||'30'}`;
   let dateText='';
   if(rawDate)dateText=new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(rawDate+'T12:00:00')).toUpperCase();
   const method=lineupCreationMethod==='coach'?'MODO ENTRENADOR':'MODO ALGORITMO';
-  const h=142,pad=Math.max(30,width*.03);
+  const scale=game==='fs'?1.5:1;
+  const h=142*scale,pad=Math.max(30,width*.03);
   ctx.save();
   ctx.fillStyle='rgba(5,7,8,.92)';ctx.fillRect(0,0,width,h);
   ctx.textBaseline='middle';ctx.shadowColor='rgba(0,0,0,.65)';ctx.shadowBlur=5;
@@ -5336,20 +5395,20 @@ function drawLineupHeader(ctx,width,crest){
     ctx.fillText('PATXANGUILLES',pad+112,49,width*.25);
     ctx.fillStyle='#ef3340';ctx.fillText('ANTIFEIXISTES',pad+112,88,width*.25);
   }else{
-    ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='900 31px Arial, sans-serif';
-    ctx.fillText('FÚTBOL SALA',pad,49,width*.26);
-    ctx.fillStyle='#ef3340';ctx.fillText('ANTIFA HORTA SUD',pad,88,width*.30);
+    ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font=`900 ${31*scale}px Arial, sans-serif`;
+    ctx.fillText('FÚTBOL SALA',pad,49*scale,width*.26);
+    ctx.fillStyle='#ef3340';ctx.fillText('ANTIFA HORTA SUD',pad,88*scale,width*.30);
   }
 
-  ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='900 31px Arial, sans-serif';
-  ctx.fillText(dateText||'ALINEACIÓN',width/2,49,width*.34);
-  ctx.font='900 36px Arial, sans-serif';ctx.fillStyle='rgba(255,255,255,.96)';
-  ctx.fillText(time?`${time} H`:'',width/2,91,width*.25);
+  ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font=`900 ${31*scale}px Arial, sans-serif`;
+  ctx.fillText(dateText||'ALINEACIÓN',width/2,49*scale,width*.34);
+  ctx.font=`900 ${36*scale}px Arial, sans-serif`;ctx.fillStyle='rgba(255,255,255,.96)';
+  ctx.fillText(time?`${time} H`:'',width/2,91*scale,width*.25);
 
-  ctx.textAlign='right';ctx.font='700 17px Arial, sans-serif';ctx.fillStyle='rgba(255,255,255,.68)';
-  ctx.fillText('ALINEACIÓN GENERADA CON',width-pad,43,width*.25);
-  ctx.font='900 29px Arial, sans-serif';ctx.fillStyle='#e2c45f';
-  ctx.fillText(method,width-pad,84,width*.25);
+  ctx.textAlign='right';ctx.font=`700 ${17*scale}px Arial, sans-serif`;ctx.fillStyle='rgba(255,255,255,.68)';
+  ctx.fillText('ALINEACIÓN GENERADA CON',width-pad,43*scale,width*.25);
+  ctx.font=`900 ${29*scale}px Arial, sans-serif`;ctx.fillStyle='#e2c45f';
+  ctx.fillText(method,width-pad,84*scale,width*.25);
   ctx.restore();
 }
 
