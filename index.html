@@ -2343,47 +2343,104 @@ body.bg-coach-room{
 }
 
 
-/* v63 · Álbum provisional de cartas */
-.card-album-panel{min-height:420px}
-.card-album-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
-  gap:22px;
-  align-items:start;
-  margin-top:20px;
+/* v99 · Álbum de cartas sobre fondo personalizado */
+.card-album-panel{
+  min-height:420px;
+  padding:0 !important;
+  overflow:hidden;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
 }
-.album-card{
+.card-album-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin:0 0 14px;
+  padding:0 4px;
+}
+.card-album-head h3{margin:0}
+.card-album-book{
+  position:relative;
+  width:min(100%,760px);
+  aspect-ratio:1529 / 2048;
+  margin:0 auto;
+  background:url('album-cartas.jpg') center top/100% 100% no-repeat;
+  overflow:hidden;
+  border-radius:10px;
+  box-shadow:0 18px 45px rgba(0,0,0,.38);
+}
+.album-slot{
+  position:absolute;
   appearance:none;
   border:0;
   background:transparent;
-  color:#fff;
   padding:0;
   cursor:pointer;
-  font:inherit;
-  min-width:0;
-  transition:transform .18s ease;
+  transition:transform .18s ease,filter .18s ease;
+  z-index:2;
 }
-.album-card:hover{transform:translateY(-5px) scale(1.02)}
-.album-card img{
+.album-slot:hover{
+  transform:translateY(-3px) scale(1.018);
+  filter:brightness(1.04);
+  z-index:4;
+}
+.album-slot img{
   display:block;
   width:100%;
-  max-width:220px;
-  aspect-ratio:0.714;
+  height:100%;
   object-fit:contain;
-  margin:0 auto;
-  filter:drop-shadow(0 10px 14px rgba(0,0,0,.42));
+  filter:drop-shadow(0 7px 8px rgba(0,0,0,.28));
 }
-.album-card span{
-  display:block;
-  margin-top:8px;
+.album-slot.empty{
+  cursor:default;
+  pointer-events:none;
+}
+.album-slot-1{left:13.85%;top:21.55%;width:25.75%;height:20.25%}
+.album-slot-2{left:37.12%;top:21.55%;width:25.75%;height:20.25%}
+.album-slot-3{left:60.40%;top:21.55%;width:25.75%;height:20.25%}
+.album-slot-4{left:13.85%;top:42.78%;width:25.75%;height:20.25%}
+.album-slot-5{left:37.12%;top:42.78%;width:25.75%;height:20.25%}
+.album-slot-6{left:60.40%;top:42.78%;width:25.75%;height:20.25%}
+.album-slot-7{left:13.85%;top:64.02%;width:25.75%;height:20.25%}
+.album-slot-8{left:37.12%;top:64.02%;width:25.75%;height:20.25%}
+.album-slot-9{left:60.40%;top:64.02%;width:25.75%;height:20.25%}
+.album-pager{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin:14px auto 0;
+}
+.album-pager .secondary{
+  min-width:92px;
+}
+.album-page-info{
+  min-width:118px;
   text-align:center;
-  font-size:12px;
   font-weight:850;
+  font-size:13px;
 }
 @media(max-width:600px){
-  .card-album-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:14px 10px;
+  .card-album-head{
+    align-items:flex-start;
+  }
+  .card-album-head .subtitle{
+    font-size:12px;
+  }
+  .card-album-book{
+    width:100%;
+    border-radius:6px;
+  }
+  .album-pager{
+    margin-top:10px;
+    gap:8px;
+  }
+  .album-pager .secondary{
+    min-width:76px;
+    padding-left:10px;
+    padding-right:10px;
   }
 }
 
@@ -2994,7 +3051,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v98 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v100 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3184,8 +3241,30 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v98</span>
+    <span class="history-version">VERSIÓN v100</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">57</div>
+      <div class="history-section-content">
+        <h2>Álbum de cartas · fondo optimizado</h2>
+        <ul>
+          <li>El fondo personalizado del álbum pasa a utilizar una versión JPG más ligera para acelerar la carga de la sección.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">56</div>
+      <div class="history-section-content">
+        <h2>Álbum de cartas · nuevo diseño</h2>
+        <ul>
+          <li>El álbum utiliza un fondo gráfico personalizado con nueve huecos integrados para colocar las cartas.</li>
+          <li>Las cartas se superponen sobre los huecos del diseño y siguen siendo pulsables para abrir su vista individual.</li>
+          <li>Cuando hay más de nueve cartas, el álbum se organiza automáticamente en páginas de nueve.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">55</div>
       <div class="history-section-content">
@@ -5472,7 +5551,7 @@ async function saveCurrentLineup(){
 
 function updateSeasonAdminTabs(){document.querySelectorAll('.admin-season-tab').forEach(x=>x.style.display=adminLogged?'':'none')}
 function openSeason(mode){if(!mode){show('seasonMode');return}currentSeasonMode=mode;document.getElementById('seasonTitle').textContent='Temporada 26/27 · '+(mode==='f7'?'Fútbol 7':'Fútbol Sala');updateSeasonAdminTabs();resetClassificationRandomOrder();show('season');seasonTab('classification',document.querySelector('#season .nav-btn'))}
-function seasonTab(tab,btn){document.querySelectorAll('#season .nav-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');const c=document.getElementById('seasonContent');if(tab==='classification')renderClassification(c);if(tab==='calendar')renderCalendar(c);if(tab==='cards')renderCardAlbum(c);if(tab==='scorers')renderLeaders(c,'goals');if(tab==='assists')renderLeaders(c,'assists')}
+function seasonTab(tab,btn){document.querySelectorAll('#season .nav-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');const c=document.getElementById('seasonContent');if(tab==='classification')renderClassification(c);if(tab==='calendar')renderCalendar(c);if(tab==='cards'){cardAlbumPage=0;renderCardAlbum(c);}if(tab==='scorers')renderLeaders(c,'goals');if(tab==='assists')renderLeaders(c,'assists')}
 function stats(){const s={};const list=currentSeasonMode==='f7'?F7:FS;list.forEach(n=>s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0});db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode&&m.status!=='in_progress').forEach(m=>{const rs=Number(m.redScore),bs=Number(m.blackScore);const outcome=rs===bs?'draw':rs>bs?'red':'black';[...m.red,...m.black].forEach(n=>{if(!s[n])s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0};s[n].played++;const team=m.red.includes(n)?'red':'black';if(outcome==='draw')s[n].draws++;else if(team===outcome)s[n].wins++;else s[n].losses++});(m.goals||[]).forEach(e=>{if(s[e.player])s[e.player].goals+=Number(e.count)||1});(m.assists||[]).forEach(e=>{if(s[e.player])s[e.player].assists+=Number(e.count)||1})});return Object.values(s).map(x=>({...x,winPct:x.played?Math.round(x.wins/x.played*100):0}))}
 function sortedStats(){
   const rows=stats();
@@ -5522,31 +5601,48 @@ function renderClassification(c){
   c.innerHTML=`<div class="season-grid"><div class="panel"><h3>Clasificación de jugadores</h3><div class="table-wrap"><table class="standings"><thead><tr><th>#</th>${classificationHeader('Jugador','name')}${classificationHeader('PJ','played')}${classificationHeader('G','wins')}${classificationHeader('E','draws')}${classificationHeader('P','losses')}${classificationHeader('% V','winPct')}${adminExtraHeaders}</tr></thead><tbody>${rows.map((s,i)=>`<tr><td class="rank">${i+1}</td><td class="player-link" onclick="openProfile('${escapeJs(s.name)}')"><span class="classification-player">${db.players?.[s.name]?.photo?`<img class="classification-avatar" src="${escapeHtml(db.players[s.name].photo)}" alt="" loading="lazy">`:''}<span>${escapeHtml(s.name)}</span></span></td><td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td><td>${s.winPct}%</td>${adminLogged?`<td>${s.goals}</td><td>${s.assists}</td>`:''}</tr>`).join('')}</tbody></table></div><div class="sort-help">Pulsa en el nombre de una columna para ordenar. Vuelve a pulsar para invertir el orden.</div></div><div class="panel"><h3>Últimos partidos</h3>${matchRows(db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6))}</div></div>`;
 }
 
+let cardAlbumPage=0;
+
 function renderCardAlbum(c){
   const cards=Object.entries(db.players||{})
     .filter(([name,p])=>p&&p.card)
     .sort((a,b)=>a[0].localeCompare(b[0],'es',{sensitivity:'base'}));
 
+  const perPage=9,totalPages=Math.max(1,Math.ceil(cards.length/perPage));
+  cardAlbumPage=Math.max(0,Math.min(cardAlbumPage,totalPages-1));
+  const pageCards=cards.slice(cardAlbumPage*perPage,cardAlbumPage*perPage+perPage);
+  const slots=Array.from({length:9},(_,i)=>{
+    const item=pageCards[i];
+    if(!item)return `<span class="album-slot album-slot-${i+1} empty" aria-hidden="true"></span>`;
+    const [name,p]=item;
+    return `<button class="album-slot album-slot-${i+1}" onclick="openFifaCard('${escapeJs(name)}')" title="Ver carta de ${escapeHtml(name)}">
+      <img src="${escapeHtml(p.card)}" alt="Carta de ${escapeHtml(name)}" loading="lazy">
+    </button>`;
+  }).join('');
+
   c.innerHTML=`
     <div class="panel card-album-panel">
-      <div class="calendar-header">
+      <div class="card-album-head">
         <div>
           <h3>Álbum de cartas</h3>
-          <div class="subtitle">Todas las cartas creadas hasta ahora.</div>
+          <div class="subtitle">Temporada 26/27 · ${cards.length} carta${cards.length===1?'':'s'} creada${cards.length===1?'':'s'}.</div>
         </div>
-        <span class="count">${cards.length} carta${cards.length===1?'':'s'}</span>
       </div>
-      ${cards.length?`
-        <div class="card-album-grid">
-          ${cards.map(([name,p])=>`
-            <button class="album-card" onclick="openFifaCard('${escapeJs(name)}')" title="Ver carta de ${escapeHtml(name)}">
-              <img src="${escapeHtml(p.card)}" alt="Carta de ${escapeHtml(name)}" loading="lazy">
-              <span>${escapeHtml(name)}</span>
-            </button>
-          `).join('')}
-        </div>
-      `:'<div class="empty">Todavía no hay cartas creadas.</div>'}
+      <div class="card-album-book" aria-label="Álbum de cartas">
+        ${slots}
+      </div>
+      ${totalPages>1?`
+        <div class="album-pager">
+          <button class="secondary" onclick="changeCardAlbumPage(-1)" ${cardAlbumPage===0?'disabled':''}>← Anterior</button>
+          <span class="album-page-info">Página ${cardAlbumPage+1} de ${totalPages}</span>
+          <button class="secondary" onclick="changeCardAlbumPage(1)" ${cardAlbumPage===totalPages-1?'disabled':''}>Siguiente →</button>
+        </div>`:''}
     </div>`;
+}
+function changeCardAlbumPage(delta){
+  cardAlbumPage+=Number(delta)||0;
+  const c=document.getElementById('seasonContent');
+  if(c)renderCardAlbum(c);
 }
 
 function renderCalendar(c){
