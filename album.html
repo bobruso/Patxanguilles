@@ -290,7 +290,7 @@ body.fit-height .page{
 
     <button id="fitToggle" class="toolbtn fit-toggle" onclick="toggleFitMode()" title="Cambiar entre ajustar al ancho o al alto">Ajustar vista · Ancho</button>
 
-    <button class="back" onclick="returnToWeb()">← Volver</button>
+    <button class="back" onclick="closeAlbumWindow()">✕ Cerrar álbum</button>
   </header>
 
   <main id="stage" class="stage">
@@ -336,9 +336,14 @@ const ALBUM_BACKGROUNDS=[
 function escapeHtml(v){
   return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function returnToWeb(){
-  if(history.length>1)history.back();
-  else window.location.href='index.html';
+function closeAlbumWindow(){
+  try{
+    if(window.opener&&!window.opener.closed)window.opener.focus();
+  }catch(e){}
+  window.close();
+  setTimeout(()=>{
+    if(!window.closed)window.location.href='index.html';
+  },150);
 }
 async function loadCards(){
   const {data,error}=await sb.from('players').select('nickname,card_url').not('card_url','is',null).order('nickname');
@@ -348,7 +353,12 @@ async function loadCards(){
     loading.textContent='No se pudieron cargar las cartas.';
     return;
   }
-  cards=(data||[]).filter(x=>x.card_url);
+  const uniqueCards=new Map();
+  (data||[]).filter(x=>x.card_url).forEach(x=>{
+    const key=String(x.nickname||'').trim().toLocaleLowerCase('es');
+    if(key&&!uniqueCards.has(key))uniqueCards.set(key,x);
+  });
+  cards=[...uniqueCards.values()];
   document.getElementById('subtitle').textContent=`Temporada 26/27 · ${cards.length} carta${cards.length===1?'':'s'}`;
   render();
 }
@@ -394,7 +404,7 @@ document.addEventListener('keydown',e=>{
   }
   if(e.key==='ArrowLeft')changePage(-1);
   if(e.key==='ArrowRight')changePage(1);
-  if(e.key==='Escape')returnToWeb();
+  if(e.key==='Escape')closeAlbumWindow();
 });
 
 let fitMode='width';
