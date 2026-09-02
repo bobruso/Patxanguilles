@@ -1073,7 +1073,8 @@ body.bg-coach-room{
 }
 .coach-whatsapp-head strong{display:block;font-size:17px;margin-bottom:4px}
 .coach-whatsapp-head span{display:block;font-size:12px;color:#aeb7be;line-height:1.4}
-#coachCallupText{
+#coachCallupText,
+#automaticCallupText{
   width:100%;resize:vertical;min-height:145px;
   padding:14px;border-radius:12px;
   border:1px solid #394139;
@@ -1081,7 +1082,8 @@ body.bg-coach-room{
   font:500 13px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   box-sizing:border-box;
 }
-#coachCallupText:focus{
+#coachCallupText:focus,
+#automaticCallupText:focus{
   outline:none;border-color:#8ea48f;
   box-shadow:0 0 0 3px rgba(142,164,143,.12);
 }
@@ -2868,6 +2870,25 @@ body:has(#coachLobby.active):before{
   height:56px !important;
 }
 
+
+
+/* v80 · permitir desplazamiento al abrir «Ajustar alineaciones» */
+body:has(#results.active.adjusting-lineups){
+  overflow-y:auto !important;
+}
+#results.active.adjusting-lineups{
+  height:auto !important;
+  min-height:calc(100dvh - 40px) !important;
+  align-items:flex-start !important;
+  overflow:visible !important;
+}
+#results.active.adjusting-lineups > .card{
+  max-height:none !important;
+  overflow:visible !important;
+  margin-top:20px !important;
+  margin-bottom:28px !important;
+}
+
 </style>
 </head>
 <body>
@@ -2883,7 +2904,7 @@ body:has(#coachLobby.active):before{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v77 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v80 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3073,8 +3094,43 @@ body:has(#coachLobby.active):before{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v77</span>
+    <span class="history-version">VERSIÓN v80</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">40</div>
+      <div class="history-section-content">
+        <h2>Ajustar alineaciones · desplazamiento vertical</h2>
+        <ul>
+          <li>Al abrir «Ajustar alineaciones», la pantalla permite ahora desplazarse verticalmente para llegar a todos los jugadores.</li>
+          <li>Con el panel cerrado se mantiene el ajuste vertical compacto de la pantalla «¿Qué te parece este partido?».</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">39</div>
+      <div class="history-section-content">
+        <h2>Importar convocatoria · diseño unificado</h2>
+        <ul>
+          <li>El cuadro para copiar y pegar la convocatoria en «Algoritmo automático» utiliza ahora exactamente el mismo diseño visual que en «Modo Entrenador».</li>
+          <li>Se han igualado fondo, borde, tipografía, altura, espaciado y estado de foco.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">38</div>
+      <div class="history-section-content">
+        <h2>Algoritmo automático · importar convocatoria</h2>
+        <ul>
+          <li>La creación automática de equipos incorpora ahora la opción «Copia y pega convocatoria aquí».</li>
+          <li>La web detecta los jugadores del mensaje y los marca automáticamente en el selector.</li>
+          <li>Si falta algún jugador o un nombre no se reconoce, la selección manual permanece disponible justo debajo para corregirlo.</li>
+          <li>Se mantiene intacta la posibilidad de seleccionar toda la convocatoria manualmente sin utilizar el importador.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">37</div>
       <div class="history-section-content">
@@ -3588,6 +3644,24 @@ body:has(#coachLobby.active):before{
 
 <section id="selection" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="selectionTitle">Fútbol 7</h2><div class="subtitle">Selecciona los que juegan hoy.</div></div><div class="count"><b id="selectedCount">0</b> / <span id="neededCount">14</span></div></div>
+
+<div class="coach-whatsapp-import algorithm-callup-import">
+  <div class="coach-whatsapp-head">
+    <div><strong>📋 Copia y pega convocatoria aquí</strong></div>
+  </div>
+  <textarea id="automaticCallupText" rows="7" placeholder=""></textarea>
+  <div class="coach-whatsapp-actions">
+    <button class="secondary" onclick="parseAutomaticCallup()">Detectar convocatoria</button>
+    <button class="ghost" onclick="clearAutomaticCallup()">Limpiar</button>
+  </div>
+  <div id="automaticCallupStatus" class="coach-callup-warning" style="display:none"></div>
+</div>
+
+<div class="coach-manual-label algorithm-manual-label">
+  <strong>O selecciona los jugadores manualmente</strong>
+  <span>También puedes corregir aquí cualquier jugador que falte.</span>
+</div>
+
 <div class="players" id="players"></div>
 <div class="reserve-area"><div class="reserve-toggle" onclick="toggleReserves()"><span>＋ Añadir reservas</span><span id="reserveArrow">▾</span></div><div id="reserveConfig" class="reserve-config"><div class="reserve-config-top"><label for="reserveQty">Cantidad de reservas</label><select id="reserveQty" onchange="buildReserveFields()"><option value="0">0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div><div id="reserveFields" class="reserve-fields"></div><div class="reserve-tag">Las reservas se incorporan como jugadores elegibles.</div></div></div>
 <div class="footerbar"><span class="count">Los jugadores seleccionados se iluminarán.</span><button id="makeTeams" class="primary" disabled onclick="makeTeams()">Hacer equipos</button></div>
@@ -3866,6 +3940,10 @@ function startGame(type){
 }
 function startAutomaticGame(){
   selected=[];reserves=[];pendingSwap=null;
+  const automaticCallupText=document.getElementById('automaticCallupText');
+  if(automaticCallupText)automaticCallupText.value='';
+  const automaticCallupStatus=document.getElementById('automaticCallupStatus');
+  if(automaticCallupStatus){automaticCallupStatus.style.display='none';automaticCallupStatus.textContent=''}
   const list=game==='f7'?F7:FS,needed=game==='f7'?14:10;
   document.getElementById('selectionTitle').textContent=game==='f7'?'Fútbol 7':'Fútbol Sala';
   document.getElementById('neededCount').textContent=needed;
@@ -4592,6 +4670,86 @@ function openCoachFinalLineup(){
   showCelebration();
 }
 
+
+function parseAutomaticCallup(){
+  const text=document.getElementById('automaticCallupText')?.value||'';
+  const needed=game==='f7'?14:10;
+  const roster=game==='f7'?F7:FS;
+  const rawLines=text.split(/\r?\n/);
+  const participantLines=[];
+  let inReserves=false;
+
+  for(const raw of rawLines){
+    const trimmed=String(raw||'').replace(/[⁠ ]/g,' ').trim();
+    if(!trimmed)continue;
+    if(/^\s*reservas?\b/i.test(trimmed)){inReserves=true;continue}
+    if(inReserves)continue;
+
+    if(/^\s*\d{1,2}\s*[\.\)\-:ºª]/.test(trimmed) || /^\s*\d{1,2}\s+[^\d]/.test(trimmed)){
+      const cleaned=cleanCoachCallupLine(trimmed);
+      if(cleaned)participantLines.push(cleaned);
+    }
+  }
+
+  if(!participantLines.length){
+    for(const raw of rawLines){
+      const trimmed=String(raw||'').trim();
+      if(/^\s*reservas?\b/i.test(trimmed))break;
+      const cleaned=cleanCoachCallupLine(trimmed);
+      if(!cleaned)continue;
+      const norm=normalizeCoachCallupName(cleaned);
+      if(roster.some(r=>normalizeCoachCallupName(r)===norm))participantLines.push(cleaned);
+    }
+  }
+
+  const detected=[];
+  const unknown=[];
+  const seen=new Set();
+
+  participantLines.forEach(rawName=>{
+    const norm=normalizeCoachCallupName(rawName);
+    if(!norm||seen.has(norm))return;
+    seen.add(norm);
+
+    const exact=roster.find(r=>normalizeCoachCallupName(r)===norm);
+    if(exact){
+      detected.push(exact);
+      return;
+    }
+
+    const close=closestCoachRosterName(rawName,roster);
+    if(close){
+      unknown.push(`${rawName} → ¿${close.name}?`);
+    }else{
+      unknown.push(rawName);
+    }
+  });
+
+  selected=detected.slice(0,needed);
+  renderPlayerList(roster,needed);
+  document.querySelectorAll('#players .player').forEach(b=>{
+    if(selected.includes(b.textContent))b.classList.add('selected');
+  });
+  updateCount();
+
+  const status=document.getElementById('automaticCallupStatus');
+  if(status){
+    const messages=[`He detectado ${detected.length} de ${needed} jugadores.`];
+    if(detected.length<needed)messages.push(`Faltan ${needed-detected.length}; puedes añadirlos manualmente debajo.`);
+    if(detected.length>needed)messages.push(`Hay ${detected.length-needed} jugadores de más; revisa la convocatoria.`);
+    if(unknown.length)messages.push(`No he seleccionado automáticamente: ${unknown.join(', ')}.`);
+    status.textContent=messages.join(' ');
+    status.style.display='';
+  }
+}
+
+function clearAutomaticCallup(){
+  const textarea=document.getElementById('automaticCallupText');
+  if(textarea)textarea.value='';
+  const status=document.getElementById('automaticCallupStatus');
+  if(status){status.style.display='none';status.textContent=''}
+}
+
 function renderPlayerList(list,needed){const box=document.getElementById('players');box.innerHTML='';[...list,...reserves.map(r=>r.name)].forEach(name=>{const b=document.createElement('button');b.className='player';b.textContent=name;b.onclick=()=>togglePlayer(name,b,needed);box.appendChild(b)})}
 function toggleReserves(){const p=document.getElementById('reserveConfig');p.classList.toggle('open');document.getElementById('reserveArrow').textContent=p.classList.contains('open')?'▴':'▾'}
 function buildReserveFields(){const qty=Number(document.getElementById('reserveQty').value),box=document.getElementById('reserveFields'),previous=reserves.slice();box.innerHTML='';for(let i=0;i<qty;i++){const old=previous[i]||{name:'',level:'medio'};const row=document.createElement('div');row.className='reserve-row';row.innerHTML=`<input id="reserveName${i}" placeholder="Nombre de la reserva ${i+1}" value="${escapeHtml(old.name)}"><select id="reserveLevel${i}"><option value="alto" ${old.level==='alto'?'selected':''}>Alto</option><option value="medio" ${old.level==='medio'?'selected':''}>Medio</option><option value="bajo" ${old.level==='bajo'?'selected':''}>Bajo</option></select>`;box.appendChild(row)}reserves=[];for(let i=0;i<qty;i++){document.getElementById('reserveName'+i).addEventListener('input',syncReserves);document.getElementById('reserveLevel'+i).addEventListener('change',syncReserves)}syncReserves()}
@@ -4768,6 +4926,7 @@ function balancedTeams(players){
   return{red,black};
 }
 function renderResults(){
+  document.getElementById('results')?.classList.remove('adjusting-lineups');
   const mode=game==='f7'?'Fútbol 7':'Fútbol Sala';
   document.getElementById('resultSubtitle').textContent=`${selected.length} jugadores · ${mode}`;
   renderSquad('redSquad',teams.red,'red');
@@ -4819,8 +4978,26 @@ function renderSquad(id,list,color){
 }
 function renderAdjust(){const make=(list,team)=>list.map((p,i)=>`<div class="adjust-player"><span>${escapeHtml(p)}</span><button class="swap" onclick="chooseSwap('${team}',${i})">${pendingSwap?(pendingSwap.team===team&&pendingSwap.index===i?'Seleccionado':'Cambiar'):'Cambiar'}</button></div>`).join('');document.getElementById('adjustRed').innerHTML=make(teams.red,'red');document.getElementById('adjustBlack').innerHTML=make(teams.black,'black')}
 function chooseSwap(team,index){if(!pendingSwap){pendingSwap={team,index};renderAdjust();return}if(pendingSwap.team===team){pendingSwap={team,index};renderAdjust();return}const a=teams[pendingSwap.team][pendingSwap.index],b=teams[team][index];teams[pendingSwap.team][pendingSwap.index]=b;teams[team][index]=a;pendingSwap=null;renderResults();document.getElementById('adjustPanel').classList.add('open')}
-function toggleAdjust(){document.getElementById('adjustPanel').classList.toggle('open');pendingSwap=null;renderAdjust()}
-function newLineup(){pendingSwap=null;teams=balancedTeams(selected);renderResults();document.getElementById('adjustPanel').classList.remove('open');toast('Nueva alineación generada')}
+function toggleAdjust(){
+  const panel=document.getElementById('adjustPanel');
+  const results=document.getElementById('results');
+  panel.classList.toggle('open');
+  const isOpen=panel.classList.contains('open');
+  results?.classList.toggle('adjusting-lineups',isOpen);
+  pendingSwap=null;
+  renderAdjust();
+  if(isOpen){
+    requestAnimationFrame(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}));
+  }
+}
+function newLineup(){
+  pendingSwap=null;
+  teams=balancedTeams(selected);
+  renderResults();
+  document.getElementById('adjustPanel').classList.remove('open');
+  document.getElementById('results')?.classList.remove('adjusting-lineups');
+  toast('Nueva alineación generada')
+}
 
 const patxQuotes=["Que gane el mejor. O el que llegue al balón antes.","Lo importante es no lesionarse. El resultado es secundario.","A estas edades, calentar también cuenta como partido.","Si mañana duele, es que hoy se ha competido.","Prohibido hacer entradas. Permitidas las excusas.","El que diga que no está cansado, miente.","Aquí no hay primas: hay agujetas.","Fair play, salvo que quede un minuto.","La técnica permanece. Las rodillas, veremos.","Hoy se corre. Mañana se explica la lesión.","El árbitro no está comprado. Simplemente se equivoca.","Tercer tiempo confirmado. Primer tiempo, ya veremos.","Que nadie haga un sprint innecesario. Tenemos una edad.","La veteranía es un grado. La velocidad, una anécdota.","El balón no corre más que tú. Simplemente parece que sí.","Tenemos físico de Champions y recuperación de pretemporada.","Si te tiras al suelo, que sea porque te han hecho falta.","El verdadero rival es el día siguiente.","No estamos viejos: estamos estratégicamente cansados.","La calidad está intacta. El cardio está negociando.","Hoy hay fútbol. Mañana habrá ibuprofeno.","Correr hacia atrás sigue siendo correr. Evitémoslo.","El que conserve los isquios, gana.","Nadie ha venido a demostrar nada. Excepto todos.","Patxanga: donde el tercer tiempo dura más que el primero."];
 let finalDisplayTeams={red:[],black:[]};
