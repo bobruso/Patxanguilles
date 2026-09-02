@@ -2994,7 +2994,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v97 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v98 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3184,8 +3184,18 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v97</span>
+    <span class="history-version">VERSIÓN v98</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">55</div>
+      <div class="history-section-content">
+        <h2>Jugadores · cambio de nombre</h2>
+        <ul>
+          <li>El jugador anteriormente mostrado como «Kulturicide» pasa a aparecer como «Cordo».</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">54</div>
       <div class="history-section-content">
@@ -4028,7 +4038,7 @@ body:has(#results.active.adjusting-lineups){
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-const F7=["Álex","Benja","César","Datxu","Dídac","Ernest","Escri","Germán","Guillem","Josete","Jota","Julio","Luís","Marc","Nacho","Nelo","Pau","Rafeta","Raul","Rico","Rosana","Rubén","Toni","Xavi","Duro","Gabal","Kulturicide","Jorgito","Manel","Oskar","Rafa","Santi","Jorge","Erika","Héctor"].sort((a,b)=>a.localeCompare(b,'es'));
+const F7=["Álex","Benja","César","Datxu","Dídac","Ernest","Escri","Germán","Guillem","Josete","Jota","Julio","Luís","Marc","Nacho","Nelo","Pau","Rafeta","Raul","Rico","Rosana","Rubén","Toni","Xavi","Duro","Gabal","Cordo","Jorgito","Manel","Oskar","Rafa","Santi","Jorge","Erika","Héctor"].sort((a,b)=>a.localeCompare(b,'es'));
 const FS=["Pau","Álex","Ángel","Benja","Datxu","Dídac","Guillem","Héctor","Luís","Rafeta","Raul","Rico","Will","Xavi","Cristian","Emilio","Jorge Somnis","Jorge","Miquel","Néstor","Rafa","Rares","Rubenigue","Sami"].sort((a,b)=>a.localeCompare(b,'es'));
 let game=null,selected=[],teams={red:[],black:[]},pendingSwap=null,reserves=[],resultReturn='season',editingMatchId=null,currentSeasonMode='f7',lineupCreationMethod='algorithm';
 
