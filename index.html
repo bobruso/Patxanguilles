@@ -2930,7 +2930,7 @@ body:has(#results.active.adjusting-lineups){
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v90 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v91 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3120,8 +3120,18 @@ body:has(#results.active.adjusting-lineups){
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v90</span>
+    <span class="history-version">VERSIÓN v91</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">48</div>
+      <div class="history-section-content">
+        <h2>Exportación de alineaciones · fondos optimizados</h2>
+        <ul>
+          <li>Los fondos definitivos de Fútbol 7 y Fútbol Sala pasan a utilizar sus versiones JPG optimizadas para reducir el peso de los archivos.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">47</div>
       <div class="history-section-content">
@@ -5178,7 +5188,7 @@ async function copyFinalAndToast(){
   toast(ok?'Alineaciones copiadas al portapapeles':'No se pudo copiar la alineación');
 }
 async function copyLineupScreenshot(){
-  const backgroundFile=game==='f7'?'alineacion-futbol-7.png':'campo futbo sala v2.png';
+  const backgroundFile=game==='f7'?'alineacion-futbol-7 copy.jpg':'campo futbo sala v2 copy.jpg';
   try{
     const [background,blackShirt,redShirt,crest]=await Promise.all([
       loadLineupImage(backgroundFile),
