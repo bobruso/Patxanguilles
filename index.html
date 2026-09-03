@@ -3194,7 +3194,7 @@ body.album-reader-open{
 #siteAccessGate{
   position:fixed; inset:0; z-index:999999;
   display:none; align-items:center; justify-content:center;
-  background:#0a0908 url('acceso-bg.jpg') center center / cover no-repeat;
+  background:#0a0908 url('acceso-bg1(1).jpg') center center / cover no-repeat;
   overflow:hidden;
 }
 #siteAccessGate.active{display:flex}
@@ -3245,6 +3245,95 @@ body.album-reader-open{
   box-shadow:0 0 22px rgba(232,54,40,.50), inset 0 0 28px rgba(255,97,75,.12)!important;
   outline:none;
 }
+
+.access-history-link{
+  display:block;
+  position:absolute;
+  z-index:4;
+  left:40.05%;
+  top:71.55%;
+  width:19.9%;
+  height:4.0%;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  border-radius:4px;
+}
+.access-history-link:hover,
+.access-history-link:focus-visible{
+  background:rgba(255,255,255,.035);
+  box-shadow:0 0 18px rgba(226,48,38,.18);
+  outline:none;
+}
+.access-history-modal{
+  position:fixed;
+  inset:0;
+  z-index:1000001;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background:rgba(7,6,5,.82);
+  backdrop-filter:blur(5px);
+}
+.access-history-modal.open{display:flex}
+.access-history-panel{
+  position:relative;
+  width:min(920px,94vw);
+  max-height:min(84vh,900px);
+  overflow:auto;
+  padding:34px 34px 38px;
+  background:#d9c39a;
+  color:#201711;
+  border:1px solid rgba(78,49,27,.9);
+  box-shadow:0 28px 80px rgba(0,0,0,.7), inset 0 0 0 5px rgba(255,247,222,.16);
+  font-family:Georgia,"Times New Roman",serif;
+}
+.access-history-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.17;
+  background:
+    repeating-linear-gradient(0deg,rgba(50,30,18,.05) 0 1px,transparent 1px 3px),
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.25),transparent 30%);
+}
+.access-history-close{
+  position:sticky;
+  float:right;
+  top:0;
+  z-index:2;
+  width:40px;
+  height:40px;
+  border:1px solid rgba(74,42,25,.65)!important;
+  background:#1d1713!important;
+  color:#efe2c2!important;
+  font:700 20px/1 Arial,sans-serif!important;
+  cursor:pointer;
+}
+.access-history-content{position:relative;z-index:1}
+.access-history-content h2{
+  margin:28px 0 10px;
+  color:#8e1716;
+  font-size:clamp(20px,2.2vw,30px);
+  line-height:1.1;
+  text-transform:uppercase;
+}
+.access-history-content h2:first-child{margin-top:0}
+.access-history-content p{
+  font-size:15px;
+  line-height:1.62;
+  margin:0 0 14px;
+}
+.access-history-content strong{color:#5f1110}
+@media(max-width:600px){
+  .access-history-modal{padding:10px}
+  .access-history-panel{width:100%;max-height:91vh;padding:24px 18px 28px}
+  .access-history-content p{font-size:14px;line-height:1.55}
+  .access-history-close{width:38px;height:38px}
+}
+
 .access-submit:active{
   transform:scale(.992);
   filter:brightness(1.12);
@@ -3258,19 +3347,32 @@ body.album-reader-open{
   text-shadow:0 2px 5px rgba(0,0,0,.85);
   min-height:18px; pointer-events:none;
 }
-@media (max-width:900px){
+@media (max-width:900px) and (orientation:portrait){
   #siteAccessGate{
-    background-size:auto 100%;
+    background-image:url('intro vertical web copy(1).jpg');
+    background-size:cover;
     background-position:center center;
   }
   .access-hotspot{
-    left:34.2%; top:55.95%; width:31.6%; height:5.9%;
+    left:25.0%; top:47.72%; width:43.8%; height:3.55%;
   }
   .access-submit{
-    left:34.2%; top:63.92%; width:31.6%; height:5.55%;
+    left:25.0%; top:52.05%; width:43.8%; height:3.55%;
   }
   #siteAccessError{
-    left:34.2%; top:70.1%; width:31.6%;
+    left:25.0%; top:55.85%; width:43.8%;
+    font-size:11px;
+  }
+  .access-history-link{
+    display:block;
+    left:29.4%; top:56.45%; width:36.0%; height:3.45%;
+  }
+}
+@media (max-width:900px) and (orientation:landscape){
+  #siteAccessGate{
+    background-image:url('acceso-bg1(1).jpg');
+    background-size:cover;
+    background-position:center center;
   }
 }
 
@@ -3286,7 +3388,55 @@ body.album-reader-open{
     </div>
     <button class="access-submit" type="submit" aria-label="Acceder">Acceder</button>
     <div id="siteAccessError" aria-live="polite"></div>
+    <button class="access-history-link" id="accessHistoryLink" type="button" aria-label="Conoce la historia detrás de la foto"></button>
   </form>
+</div>
+
+<div class="access-history-modal" id="accessHistoryModal" aria-hidden="true">
+  <article class="access-history-panel" role="dialog" aria-modal="true" aria-labelledby="accessHistoryTitle">
+    <button class="access-history-close" id="accessHistoryClose" type="button" aria-label="Cerrar">×</button>
+    <div class="access-history-content">
+      <h2 id="accessHistoryTitle">La final que se convirtió en una manifestación — Portugal, 1969</h2>
+      <p>El 22 de junio de 1969, en plena dictadura del Estado Novo portugués, Benfica y Académica de Coimbra disputaron la final de la Copa de Portugal. Pero aquel partido terminó siendo mucho más que una final.</p>
+      <p>Portugal vivía una fuerte movilización estudiantil. La Universidad de Coimbra era uno de sus principales focos y la Académica, cuyo equipo estaba formado en buena parte por estudiantes universitarios, se solidarizó con las protestas. Sus jugadores entraron al campo con las tradicionales capas negras sobre los hombros como señal de luto académico, mientras las gradas se llenaban de pancartas reclamando una <strong>«Universidad libre»</strong>, mejores condiciones educativas y <strong>«Mejor enseñanza, menos policías»</strong>.</p>
+      <p>La dimensión política fue tal que ningún miembro del Gobierno acudió a la final y el partido no fue retransmitido por la televisión pública. Benfica ganó 2-1 en la prórroga con un gol de Eusébio, pero aquella jornada quedó en la historia portuguesa como una de las grandes manifestaciones públicas contra la dictadura antes de la Revolución de los Claveles de 1974.</p>
+
+      <h2>El Madureira en la China de Mao — 1964</h2>
+      <p>En plena Guerra Fría, el modesto Madureira Esporte Clube de Río de Janeiro protagonizó una de las giras más insólitas de la historia del fútbol brasileño.</p>
+      <p>Después de haber visitado Cuba el año anterior, el club emprendió en 1964 una gira que lo llevó hasta la República Popular China. El viaje tenía además una dimensión política extraordinaria: Brasil estaba a punto de entrar en una dictadura militar profundamente anticomunista y las relaciones con países socialistas eran especialmente delicadas.</p>
+      <p>Durante aquella aventura, la delegación del Madureira fue recibida por <strong>Mao Zedong</strong>, máximo dirigente de la República Popular China. El viaje acabaría rodeado de tensiones diplomáticas y posteriormente sería recordado por el propio club como <strong>«A Viagem Proibida»</strong>, la gira prohibida.</p>
+      <p>Una imagen casi surrealista vista hoy: un pequeño club de los suburbios de Río estrechando la mano de uno de los personajes políticos más influyentes del siglo XX.</p>
+
+      <h2>El Che Guevara y el Madureira — Cuba, 1963</h2>
+      <p>En mayo de 1963, apenas cuatro años después de la Revolución cubana, el Madureira Esporte Clube realizó una gira por Cuba. Era el primer club brasileño que visitaba la isla después de la revolución de 1959.</p>
+      <p>El equipo disputó cinco encuentros y ganó los cinco. A uno de los partidos en La Habana acudió <strong>Ernesto «Che» Guevara</strong>, que por entonces era ministro de Industrias del Gobierno cubano. Después del encuentro bajó a saludar a los jugadores brasileños y también se reunió con ellos durante su estancia.</p>
+      <p>La visita dejó una relación tan peculiar entre el pequeño club carioca y el revolucionario argentino que, cincuenta años después, Madureira lanzó una camiseta con la imagen del Che para conmemorar aquella histórica gira.</p>
+      <p>Una de esas historias que parecen inventadas: <strong>un equipo de barrio brasileño, una revolución y el Che unidos por un partido de fútbol.</strong></p>
+
+      <h2>Fidel Castro y Maradona — una amistad más allá del fútbol</h2>
+      <p>La relación entre <strong>Diego Armando Maradona y Fidel Castro</strong> fue mucho más allá de una fotografía protocolaria. Maradona admiraba abiertamente a la Revolución cubana y mantuvo durante años una estrecha relación personal con Fidel.</p>
+      <p>Ambos se conocieron en Cuba en <strong>1987</strong>, pocos meses después de que Maradona conquistara el Mundial de México con Argentina. Con el paso de los años, sus encuentros se hicieron frecuentes y Maradona llegó a describir a Fidel como un segundo padre.</p>
+      <p>Cuba tuvo además una importancia especial en uno de los momentos más difíciles de la vida del futbolista. En el año <strong>2000</strong>, Maradona viajó a la isla para someterse a un tratamiento de rehabilitación y permaneció allí durante largos periodos. Su relación con Fidel se estrechó todavía más durante aquellos años.</p>
+      <p>La identificación política de Maradona con Cuba fue pública y explícita. Llevaba <strong>tatuado a Fidel Castro en una pierna y al Che Guevara en un brazo</strong>, y defendió públicamente durante años sus simpatías por la Revolución cubana y por diferentes movimientos políticos de la izquierda latinoamericana.</p>
+      <p>Cuando Fidel murió el <strong>25 de noviembre de 2016</strong>, Maradona viajó a Cuba para despedirse de él.</p>
+      <p>Hay además una coincidencia histórica extraordinaria: <strong>Maradona murió exactamente cuatro años después, el 25 de noviembre de 2020</strong>.</p>
+      <p>Esta fotografía representa así una de las relaciones más singulares entre fútbol y política del siglo XX: <strong>uno de los mejores futbolistas de la historia y uno de los protagonistas fundamentales de la Revolución cubana unidos por una amistad que duró décadas.</strong></p>
+
+      <h2>Sócrates y la Democracia Corinthiana — Brasil, años 80</h2>
+      <p>Sócrates no fue solamente uno de los futbolistas brasileños más elegantes de su generación. También fue uno de los grandes símbolos políticos de la historia del fútbol.</p>
+      <p>A comienzos de los años ochenta, mientras Brasil continuaba bajo una dictadura militar, jugadores del Corinthians como <strong>Sócrates, Wladimir, Casagrande y Zenon</strong> impulsaron la llamada <strong>Democracia Corinthiana</strong>.</p>
+      <p>El vestuario comenzó a funcionar mediante votaciones: jugadores, cuerpo técnico y otros trabajadores participaban en decisiones relacionadas con el funcionamiento del equipo y los votos tenían el mismo peso. Era una pequeña experiencia democrática dentro de un país que todavía no podía elegir democráticamente a su presidente.</p>
+      <p>El movimiento trascendió el fútbol. El Corinthians llegó a utilizar sus camisetas para difundir mensajes relacionados con la democracia y Sócrates participó públicamente en las movilizaciones que reclamaban elecciones presidenciales directas.</p>
+      <p>Por eso su imagen celebrando con <strong>el puño levantado</strong> terminó trascendiendo al propio futbolista.</p>
+      <p><strong>Para Sócrates, jugar al fútbol y defender la democracia podían formar parte del mismo partido.</strong></p>
+
+      <h2>Eric Cantona y la patada que dio la vuelta al mundo — Inglaterra, 1995</h2>
+      <p>El 25 de enero de 1995, Manchester United visitaba al Crystal Palace en Selhurst Park. Eric Cantona fue expulsado al comienzo de la segunda parte y, mientras abandonaba el terreno de juego, un aficionado del Palace, Matthew Simmons, bajó varias filas de la grada para encararse con él.</p>
+      <p>Cantona reaccionó de una manera que acabaría produciendo una de las fotografías más famosas de la historia de la Premier League: <strong>saltó sobre la valla y lanzó una patada voladora contra el aficionado</strong>, tras la cual continuó el enfrentamiento.</p>
+      <p>La agresión tuvo enormes consecuencias. Cantona fue sancionado durante meses, condenado inicialmente a prisión —pena sustituida posteriormente por trabajos comunitarios— y quedó apartado del fútbol durante buena parte de 1995.</p>
+      <p>El episodio sigue siendo controvertido: una agresión física no deja de serlo por las circunstancias que la rodeen. Pero la fotografía quedó convertida en uno de los símbolos de la personalidad imprevisible y desafiante de Cantona y en <strong>una de las imágenes más reconocibles de la historia del fútbol inglés</strong>.</p>
+    </div>
+  </article>
 </div>
 
 <audio id="bgMusic" preload="auto"></audio>
@@ -3301,7 +3451,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v111 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v113 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3491,8 +3641,32 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v111</span>
+    <span class="history-version">VERSIÓN v113</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">70</div>
+      <div class="history-section-content">
+        <h2>Acceso · historia también en escritorio</h2>
+        <ul>
+          <li>La pantalla horizontal utiliza el nuevo fondo con la llamada “Esto no es solo fútbol · conoce la historia detrás de la foto”.</li>
+          <li>Ese texto funciona también como enlace en escritorio y abre la misma ventana flotante con las historias del collage.</li>
+          <li>Se mantienen sin cambios las posiciones del campo de contraseña y del botón ACCEDER en la versión horizontal.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">69</div>
+      <div class="history-section-content">
+        <h2>Acceso · diseño específico para móvil</h2>
+        <ul>
+          <li>La pantalla de acceso utiliza un fondo vertical específico en móviles en orientación vertical, manteniendo el fondo panorámico en escritorio.</li>
+          <li>El campo de contraseña y el botón ACCEDER tienen coordenadas propias para encajar con el diseño móvil.</li>
+          <li>La frase inferior abre una ventana flotante con las historias relacionadas con las fotografías del collage.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">68</div>
       <div class="history-section-content">
@@ -6879,6 +7053,28 @@ document.addEventListener('keydown',e=>{
   const submit=form?.querySelector('.access-submit');
   const ACCESS_KEY='patxanguilles_access_granted_v1';
 
+  const historyLink=document.getElementById('accessHistoryLink');
+  const historyModal=document.getElementById('accessHistoryModal');
+  const historyClose=document.getElementById('accessHistoryClose');
+
+  function openAccessHistory(){
+    historyModal.classList.add('open');
+    historyModal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeAccessHistory(){
+    historyModal.classList.remove('open');
+    historyModal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+
+  historyLink?.addEventListener('click',openAccessHistory);
+  historyClose?.addEventListener('click',closeAccessHistory);
+  historyModal?.addEventListener('click',(e)=>{
+    if(e.target===historyModal)closeAccessHistory();
+  });
+
+
   function isCoachRoomLink(){
     const h=decodeURIComponent(location.hash||'').toLowerCase();
     return /^#entrenador\/[a-z0-9_-]+/i.test(h);
@@ -6897,6 +7093,11 @@ document.addEventListener('keydown',e=>{
     gate.setAttribute('aria-hidden','false');
     setTimeout(()=>input.focus(),120);
   }
+
+
+  document.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape'&&historyModal?.classList.contains('open'))closeAccessHistory();
+  });
 
   function closeGate(){
     gate.classList.remove('active');
