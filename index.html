@@ -1339,15 +1339,16 @@ body.bg-coach-room{
   letter-spacing:.04em;
 }
 .home-version-link a{
-  color:rgba(220,225,222,.48);
+  color:#000;
   text-decoration:none;
-  border-bottom:1px solid rgba(220,225,222,.18);
+  border-bottom:1px solid rgba(0,0,0,.28);
   padding-bottom:2px;
-  transition:color .18s ease,border-color .18s ease;
+  transition:opacity .18s ease,border-color .18s ease;
 }
 .home-version-link a:hover{
-  color:rgba(255,255,255,.88);
-  border-color:rgba(255,255,255,.55);
+  color:#000;
+  opacity:.72;
+  border-color:rgba(0,0,0,.55);
 }
 @media(max-width:700px){
   .home-version-link{margin-top:14px;font-size:9px}
@@ -3261,8 +3262,8 @@ body.album-reader-open{
 }
 .access-history-link:hover,
 .access-history-link:focus-visible{
-  background:rgba(255,255,255,.035);
-  box-shadow:0 0 18px rgba(226,48,38,.18);
+  background:transparent;
+  box-shadow:none;
   outline:none;
 }
 .access-history-modal{
@@ -3357,7 +3358,9 @@ body.album-reader-open{
     left:25.0%; top:47.72%; width:43.8%; height:3.55%;
   }
   .access-hotspot input{
-    font-size:12px!important;
+    font-size:9px!important;
+    padding-left:10px!important;
+    padding-right:34px!important;
   }
   .access-submit{
     left:25.0%; top:52.05%; width:43.8%; height:3.55%;
@@ -3454,7 +3457,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v114 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v116 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3644,8 +3647,29 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v114</span>
+    <span class="history-version">VERSIÓN v116</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">73</div>
+      <div class="history-section-content">
+        <h2>Acceso móvil · texto de contraseña</h2>
+        <ul>
+          <li>Se reduce notablemente el tamaño del texto “Introduce la contraseña” en móvil para que quepa completo dentro del campo.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">72</div>
+      <div class="history-section-content">
+        <h2>Acceso y Home · ajustes visuales</h2>
+        <ul>
+          <li>La zona clicable de “Esto no es solo fútbol” permanece completamente transparente al pasar el cursor o recibir foco.</li>
+          <li>El enlace de versión e historial situado en la Home pasa a mostrarse en color negro.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">71</div>
       <div class="history-section-content">
