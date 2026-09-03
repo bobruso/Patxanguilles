@@ -3454,6 +3454,58 @@ body.album-reader-open{
   }
 }
 
+
+/* v127 · Home móvil: fondo vertical propio + interfaz más ligera */
+@media(max-width:900px){
+  body{
+    background:#07100b url('background-home-mobile.png') center top/cover no-repeat !important;
+    background-attachment:scroll !important;
+  }
+  body:before{
+    background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.20));
+  }
+  #home{
+    min-height:100svh;
+    align-items:center;
+  }
+  #home .hero{
+    width:min(94vw,560px);
+    padding:14px;
+    border-radius:18px;
+    background:rgba(7,10,9,.30);
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+    box-shadow:0 16px 48px rgba(0,0,0,.22);
+  }
+  #home .home-options{
+    gap:9px;
+  }
+  #home .home-options .mode.home-image-card{
+    min-height:104px;
+    grid-template-columns:43% 57%;
+    border-radius:15px;
+  }
+  #home .home-image-card .home-card-copy{
+    padding:10px 10px;
+  }
+  #home .home-image-card .home-card-copy .icon{
+    font-size:25px;
+    margin-bottom:2px;
+  }
+  #home .home-image-card .home-card-copy strong{
+    font-size:17px;
+    line-height:1.03;
+  }
+  #home .home-image-card .home-card-copy > span:last-child{
+    font-size:10px;
+    line-height:1.16;
+    margin-top:4px;
+  }
+  #home .home-card-image img{
+    min-height:104px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3529,7 +3581,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v126 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v127 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3719,8 +3771,19 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v126</span>
+    <span class="history-version">VERSIÓN v127</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">82</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · nuevo fondo y menú más ligero</h2>
+        <ul>
+          <li>La versión móvil estrena un fondo vertical específico y elimina el fondo fijo para conseguir un scroll más estable.</li>
+          <li>Los accesos principales son más compactos y el panel de cristal reduce notablemente su oscuridad y desenfoque para dejar ver mejor la imagen.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">81</div>
       <div class="history-section-content">
