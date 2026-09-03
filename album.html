@@ -165,7 +165,13 @@ body.card-open .zoom-controls{display:none!important}
 .stage{
   touch-action:none;
   overscroll-behavior:contain;
+  cursor:grab;
+  user-select:none;
+  -webkit-user-select:none;
 }
+.stage.is-dragging{cursor:grabbing}
+.stage button,.stage a,.slot{cursor:pointer}
+.stage img{-webkit-user-drag:none;user-drag:none}
 .page-viewport{
   position:relative;
   width:100%;
@@ -309,7 +315,7 @@ body.fit-height .page{
 
 </style>
 </head>
-<body class="fit-width">
+<body class="fit-height">
 <div class="reader">
   <header class="toolbar">
     <div class="title">
@@ -317,7 +323,7 @@ body.fit-height .page{
       <small id="subtitle">Temporada 26/27</small>
     </div>
 
-    <button id="fitToggle" class="toolbtn fit-toggle" onclick="toggleFitMode()" title="Cambiar entre ajustar al ancho o al alto">Ajustar vista · Ancho</button>
+    <button id="fitToggle" class="toolbtn fit-toggle" onclick="toggleFitMode()" title="Cambiar entre ajustar al ancho o al alto">Ajustar vista · Alto</button>
 
     <button class="back" onclick="closeAlbumWindow()">✕ Cerrar álbum</button>
   </header>
@@ -375,7 +381,7 @@ function closeAlbumWindow(){
   },150);
 }
 async function loadCards(){
-  const {data,error}=await sb.from('players').select('nickname,card_url').not('card_url','is',null).order('nickname');
+  const {data,error}=await sb.from('players').select('nickname,card_url,football7').eq('football7',true).not('card_url','is',null).order('nickname');
   const loading=document.getElementById('loading');
   if(error){
     console.error(error);
@@ -441,16 +447,23 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape')closeAlbumWindow();
 });
 
-let fitMode='width';
+let fitMode='height';
 let zoomLevel=1;
 let pinchStartDistance=0;
 let pinchStartZoom=1;
+let pinchLastMid=null;
+let touchPan=null;
 
 function applyViewerState(){
   document.body.classList.toggle('fit-width',fitMode==='width');
   document.body.classList.toggle('fit-height',fitMode==='height');
   const viewport=document.getElementById('pageViewport');
-  if(viewport)viewport.style.transform=`scale(${zoomLevel})`;
+  if(viewport){
+    viewport.style.transform=`scale(${zoomLevel})`;
+    viewport.style.marginBottom=zoomLevel>1?`${(zoomLevel-1)*viewport.offsetHeight}px`:'0px';
+    viewport.style.marginLeft=zoomLevel>1?`${(zoomLevel-1)*viewport.offsetWidth/2}px`:'0px';
+    viewport.style.marginRight=zoomLevel>1?`${(zoomLevel-1)*viewport.offsetWidth/2}px`:'0px';
+  }
   const btn=document.getElementById('fitToggle');
   if(btn)btn.textContent=`Ajustar vista · ${fitMode==='width'?'Ancho':'Alto'}`;
 }
@@ -476,27 +489,114 @@ function touchDistance(touches){
   const a=touches[0],b=touches[1];
   return Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);
 }
+function touchMidpoint(touches){
+  const a=touches[0],b=touches[1];
+  return {x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2};
+}
 
 const viewerStage=document.getElementById('stage');
+
+// MÓVIL: visor tipo galería. Un dedo arrastra; dos dedos hacen zoom
+// manteniendo como ancla el punto situado entre ambos dedos.
 viewerStage.addEventListener('touchstart',e=>{
   if(e.touches.length===2){
+    const mid=touchMidpoint(e.touches);
     pinchStartDistance=touchDistance(e.touches);
     pinchStartZoom=zoomLevel;
+    pinchLastMid=mid;
+    touchPan=null;
     e.preventDefault();
+  }else if(e.touches.length===1){
+    const t=e.touches[0];
+    touchPan={
+      x:t.clientX,
+      y:t.clientY,
+      left:viewerStage.scrollLeft,
+      top:viewerStage.scrollTop
+    };
   }
 },{passive:false});
 
 viewerStage.addEventListener('touchmove',e=>{
   if(e.touches.length===2&&pinchStartDistance>0){
-    const current=touchDistance(e.touches);
-    setZoom(pinchStartZoom*(current/pinchStartDistance));
     e.preventDefault();
+    const rect=viewerStage.getBoundingClientRect();
+    const currentDistance=touchDistance(e.touches);
+    const currentMid=touchMidpoint(e.touches);
+    const previousZoom=zoomLevel;
+
+    // Punto real del documento que estaba bajo el centro de los dedos.
+    const docX=(viewerStage.scrollLeft + pinchLastMid.x-rect.left)/previousZoom;
+    const docY=(viewerStage.scrollTop + pinchLastMid.y-rect.top)/previousZoom;
+
+    setZoom(previousZoom*(currentDistance/pinchStartDistance));
+
+    // Recolocar scroll para conservar ese punto bajo los dedos.
+    viewerStage.scrollLeft=docX*zoomLevel-(currentMid.x-rect.left);
+    viewerStage.scrollTop=docY*zoomLevel-(currentMid.y-rect.top);
+
+    pinchStartDistance=currentDistance;
+    pinchStartZoom=zoomLevel;
+    pinchLastMid=currentMid;
+  }else if(e.touches.length===1&&touchPan){
+    e.preventDefault();
+    const t=e.touches[0];
+    viewerStage.scrollLeft=touchPan.left-(t.clientX-touchPan.x);
+    viewerStage.scrollTop=touchPan.top-(t.clientY-touchPan.y);
   }
 },{passive:false});
 
 viewerStage.addEventListener('touchend',e=>{
-  if(e.touches.length<2)pinchStartDistance=0;
-},{passive:true});
+  if(e.touches.length===1){
+    const t=e.touches[0];
+    touchPan={
+      x:t.clientX,
+      y:t.clientY,
+      left:viewerStage.scrollLeft,
+      top:viewerStage.scrollTop
+    };
+    pinchStartDistance=0;
+    pinchLastMid=null;
+  }else if(e.touches.length===0){
+    pinchStartDistance=0;
+    pinchLastMid=null;
+    touchPan=null;
+  }
+},{passive:false});
+
+viewerStage.addEventListener('touchcancel',()=>{
+  pinchStartDistance=0;
+  pinchLastMid=null;
+  touchPan=null;
+},{passive:false});
+
+// ESCRITORIO: mano para agarrar y arrastrar la página, como un visor de imagen/mapa.
+let dragging=false;
+let dragStartX=0,dragStartY=0,dragStartLeft=0,dragStartTop=0;
+
+viewerStage.addEventListener('mousedown',e=>{
+  if(e.button!==0) return;
+  if(e.target.closest('button,a,.slot')) return;
+  dragging=true;
+  dragStartX=e.clientX;
+  dragStartY=e.clientY;
+  dragStartLeft=viewerStage.scrollLeft;
+  dragStartTop=viewerStage.scrollTop;
+  viewerStage.classList.add('is-dragging');
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove',e=>{
+  if(!dragging) return;
+  viewerStage.scrollLeft=dragStartLeft-(e.clientX-dragStartX);
+  viewerStage.scrollTop=dragStartTop-(e.clientY-dragStartY);
+});
+
+document.addEventListener('mouseup',()=>{
+  if(!dragging) return;
+  dragging=false;
+  viewerStage.classList.remove('is-dragging');
+});
 
 applyViewerState();
 
