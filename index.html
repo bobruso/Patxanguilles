@@ -3529,7 +3529,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v124 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v126 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3719,8 +3719,18 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v124</span>
+    <span class="history-version">VERSIÓN v126</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">81</div>
+      <div class="history-section-content">
+        <h2>Bienvenida de viernes · carga de imagen más robusta</h2>
+        <ul>
+          <li>Si una fotografía externa de la bienvenida del viernes no puede cargarse, la web utiliza automáticamente una imagen local para evitar que aparezca el espacio de foto en negro.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">80</div>
       <div class="history-section-content">
@@ -6978,7 +6988,6 @@ function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;',
 function escapeJs(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 
 const FRIDAY_FOOTBALL_PHOTOS=[
-  {src:'https://upload.wikimedia.org/wikipedia/commons/5/5e/Pel%C3%A9_goal_1958_WC_final.jpg',alt:'Pelé marca en la final del Mundial de 1958',credit:'Pelé, final de 1958 · dominio público',source:'https://commons.wikimedia.org/wiki/File:Pel%C3%A9_goal_1958_WC_final.jpg'},
   {src:'1.jpg',alt:'Momento histórico de fútbol'},
   {src:'2.jpg',alt:'Momento histórico de fútbol'},
   {src:'3.jpg',alt:'Momento histórico de fútbol'},
