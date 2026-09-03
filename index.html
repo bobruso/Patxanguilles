@@ -92,13 +92,6 @@ button,input,select{font:inherit}.app{width:min(1100px,100%);margin:auto;padding
 }
 
 
-/* Eventos sobre la camiseta en la ficha de partido */
-.shirt-shape.with-events{position:relative;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px}
-.shirt-event-icons{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0;max-width:28px;line-height:1}
-.shirt-event-icons span{display:inline-block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.8))}
-.shirt-event-icons.inside span{font-size:8px}
-.shirt-event-icons.below{max-width:64px;margin-top:-2px;gap:1px}
-.shirt-event-icons.below span{font-size:11px}
 .big-shirt .player-name{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .match-status{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
 .match-status.live{background:#705614;color:#ffe38a;border:1px solid #9b7824}
@@ -3196,9 +3189,106 @@ body.album-reader-open{
   .album-reader-title small{display:none}
 }
 
+
+/* ===== Acceso privado ===== */
+#siteAccessGate{
+  position:fixed; inset:0; z-index:999999;
+  display:none; align-items:center; justify-content:center;
+  background:#0a0908 url('acceso-bg.jpg') center center / cover no-repeat;
+  overflow:hidden;
+}
+#siteAccessGate.active{display:flex}
+#siteAccessGate::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,transparent 0 48%,rgba(0,0,0,.12) 72%,rgba(0,0,0,.38) 100%);
+}
+.access-hotspot{
+  position:absolute; z-index:2;
+  left:38.15%; top:55.95%; width:22.95%; height:5.9%;
+  display:flex; align-items:center;
+}
+.access-hotspot input{
+  width:100%; height:100%;
+  border:0!important; outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:0 48px 0 18px!important;
+  color:#24170f!important;
+  font:700 clamp(13px,1.05vw,22px)/1 Arial,sans-serif!important;
+  letter-spacing:.01em;
+  caret-color:#7d1515;
+}
+.access-hotspot input::placeholder{color:rgba(43,30,19,.58)}
+.access-eye{
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  width:34px; height:34px; border:0; padding:0; margin:0;
+  background:transparent!important; color:#1d1712;
+  display:grid; place-items:center; cursor:pointer; box-shadow:none!important;
+  font-size:19px; opacity:.82;
+}
+.access-submit{
+  position:absolute; z-index:2;
+  left:38.15%; top:63.92%; width:22.95%; height:5.55%;
+  border:0!important; margin:0; padding:0;
+  background:rgba(155,27,24,.03)!important;
+  color:transparent!important;
+  cursor:pointer;
+  border-radius:3px;
+  transition:filter .18s ease, transform .12s ease, box-shadow .18s ease, background .18s ease;
+  box-shadow:none!important;
+}
+.access-submit:hover,
+.access-submit:focus-visible{
+  background:rgba(255,72,54,.10)!important;
+  filter:brightness(1.35) saturate(1.18);
+  transform:scale(1.012);
+  box-shadow:0 0 22px rgba(232,54,40,.50), inset 0 0 28px rgba(255,97,75,.12)!important;
+  outline:none;
+}
+.access-submit:active{
+  transform:scale(.992);
+  filter:brightness(1.12);
+  box-shadow:0 0 12px rgba(232,54,40,.35)!important;
+}
+#siteAccessError{
+  position:absolute; z-index:3;
+  left:38.15%; top:70.1%; width:22.95%;
+  text-align:center; color:#f2ded1;
+  font:700 clamp(11px,.8vw,16px)/1.25 Arial,sans-serif;
+  text-shadow:0 2px 5px rgba(0,0,0,.85);
+  min-height:18px; pointer-events:none;
+}
+@media (max-width:900px){
+  #siteAccessGate{
+    background-size:auto 100%;
+    background-position:center center;
+  }
+  .access-hotspot{
+    left:34.2%; top:55.95%; width:31.6%; height:5.9%;
+  }
+  .access-submit{
+    left:34.2%; top:63.92%; width:31.6%; height:5.55%;
+  }
+  #siteAccessError{
+    left:34.2%; top:70.1%; width:31.6%;
+  }
+}
+
 </style>
 </head>
 <body>
+
+<div id="siteAccessGate" aria-hidden="true">
+  <form id="siteAccessForm" autocomplete="on">
+    <div class="access-hotspot">
+      <input id="siteAccessPassword" type="password" autocomplete="current-password" placeholder="Introduce la contraseña" aria-label="Contraseña de acceso">
+      <button class="access-eye" type="button" id="siteAccessEye" aria-label="Mostrar contraseña">◉</button>
+    </div>
+    <button class="access-submit" type="submit" aria-label="Acceder">Acceder</button>
+    <div id="siteAccessError" aria-live="polite"></div>
+  </form>
+</div>
+
 <audio id="bgMusic" preload="auto"></audio>
 <div class="app">
 
@@ -3211,7 +3301,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v105 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v111 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3401,8 +3491,72 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v105</span>
+    <span class="history-version">VERSIÓN v111</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">68</div>
+      <div class="history-section-content">
+        <h2>Acceso · protección activada</h2>
+        <ul>
+          <li>La pantalla de bienvenida valida ya la contraseña mediante Supabase y recuerda el acceso en el dispositivo después de introducirla correctamente.</li>
+          <li>Los enlaces directos de invitación del Modo Entrenador continúan entrando sin pasar por la pantalla de contraseña.</li>
+          <li>La música puede comenzar desde la propia pantalla de acceso tras la primera interacción del usuario.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">67</div>
+      <div class="history-section-content">
+        <h2>Acceso · microajuste vertical</h2>
+        <ul>
+          <li>El campo de contraseña, el botón de acceso y su mensaje asociado bajan 0,5 puntos porcentuales adicionales.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">66</div>
+      <div class="history-section-content">
+        <h2>Acceso · reajuste vertical</h2>
+        <ul>
+          <li>El input de contraseña, el botón de acceso y su mensaje asociado se bajan 2,2 puntos porcentuales adicionales para encajar mejor con el fondo de acceso.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">65</div>
+      <div class="history-section-content">
+        <h2>Acceso · ajuste de alineación</h2>
+        <ul>
+          <li>El campo de contraseña y el botón de acceso se desplazan ligeramente hacia abajo para encajar mejor con el diseño del fondo.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">64</div>
+      <div class="history-section-content">
+        <h2>Acceso · nueva pantalla de bienvenida</h2>
+        <ul>
+          <li>Se incorpora una pantalla de acceso visual sobre el nuevo collage de Patxanguilles.</li>
+          <li>El campo de contraseña y el botón de acceso quedan integrados sobre el diseño, con respuesta visual al pasar el ratón y pulsar.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">63</div>
+      <div class="history-section-content">
+        <h2>Resultados · camisetas más limpias</h2>
+        <ul>
+          <li>Al abrir un partido, los goles y asistencias dejan de mostrarse con iconos sobre las camisetas.</li>
+          <li>Los eventos del partido se mantienen únicamente en las listas de goles y asistencias situadas debajo.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">62</div>
       <div class="history-section-content">
@@ -6182,14 +6336,6 @@ function launchFifaEffects(){
 }
 
 
-function playerEventIcons(player,goals=[],assists=[]){
-  const g=Math.min(5,goals.filter(e=>e.player===player).reduce((n,e)=>n+(Number(e.count)||1),0));
-  const a=Math.min(5,assists.filter(e=>e.player===player).reduce((n,e)=>n+(Number(e.count)||1),0));
-  const icons=[];
-  for(let i=0;i<g;i++)icons.push('<span title="Gol">⚽</span>');
-  for(let i=0;i<a;i++)icons.push('<span title="Asistencia">👟</span>');
-  return icons.slice(0,5);
-}
 function openMatch(id){
   const m=db.matches.find(x=>String(x.id)===String(id));if(!m)return;syncMatchScoreFromGoals(m);
   const live=m.status==='in_progress';
@@ -6201,8 +6347,8 @@ function openMatch(id){
     <div class="kicker">CALENDARIO · ${formatDate(m.date)} · ${(m.mode||'f7')==='f7'?'FÚTBOL 7':'FÚTBOL SALA'}</div>
     <h2>${title}</h2>
     <div class="final-pitch" style="margin-top:18px"><div class="final-teams">
-      <div class="final-team"><h3>Rojos</h3><div class="final-shirt-grid">${m.red.map(p=>shirtHTML(p,'red',redGoals,redAssists)).join('')}</div></div>
-      <div class="final-team"><h3>Negros</h3><div class="final-shirt-grid">${m.black.map(p=>shirtHTML(p,'black',blackGoals,blackAssists)).join('')}</div></div>
+      <div class="final-team"><h3>Rojos</h3><div class="final-shirt-grid">${m.red.map(p=>shirtHTML(p,'red')).join('')}</div></div>
+      <div class="final-team"><h3>Negros</h3><div class="final-shirt-grid">${m.black.map(p=>shirtHTML(p,'black')).join('')}</div></div>
     </div></div>
     ${live?'<div class="empty" style="margin-top:12px">Alineación guardada · resultado pendiente</div>':`<div class="match-events-grid">${teamEvents(redGoals,redAssists,'red')}${teamEvents(blackGoals,blackAssists,'black')}</div>`}
     ${(m.chronicleTitle||m.chronicleText)?`<section class="match-chronicle-view">${m.chronicleTitle?`<div class="kicker">CRÓNICA DEL PARTIDO</div><h3>${escapeHtml(m.chronicleTitle)}</h3>`:'<div class="kicker">CRÓNICA DEL PARTIDO</div>'}${m.chronicleText?`<div class="chronicle-copy">${escapeHtml(m.chronicleText)}</div>`:''}</section>`:''}
@@ -6217,13 +6363,10 @@ function openMatch(id){
   document.getElementById('matchModal').classList.add('open')
 }
 function eventTeamSummary(a){return a.map(e=>`<div class="leader"><span class="player-link" onclick="openProfile('${escapeJs(e.player)}')">${escapeHtml(e.player)}</span><span class="val">${e.count}</span></div>`).join('')}
-function shirtHTML(p,c,goals=[],assists=[]){
-  const icons=playerEventIcons(p,goals,assists);
-  const inside=icons.length>0&&icons.length<=3;
+function shirtHTML(p,c){
   return`<div class="big-shirt" onclick="openProfile('${escapeJs(p)}')">
-    <span class="shirt-shape ${c} ${inside?'with-events':''}">${inside?`<span class="shirt-event-icons inside">${icons.join('')}</span>`:''}</span>
+    <span class="shirt-shape ${c}"></span>
     <span class="player-name">${escapeHtml(p)}</span>
-    ${icons.length>3?`<span class="shirt-event-icons below">${icons.join('')}</span>`:''}
   </div>`
 }
 function eventSummary(a){return a.map(e=>`<div class="leader"><span class="player-link" onclick="openProfile('${escapeJs(e.player)}')">${escapeHtml(e.player)}</span><span class="count">${e.team==='red'?'Rojo':'Negro'}</span><span class="val">${e.count}</span></div>`).join('')}
@@ -6725,4 +6868,97 @@ document.addEventListener('keydown',e=>{
   }
 });
 </script>
+
+<script>
+(function(){
+  const gate=document.getElementById('siteAccessGate');
+  const form=document.getElementById('siteAccessForm');
+  const input=document.getElementById('siteAccessPassword');
+  const eye=document.getElementById('siteAccessEye');
+  const err=document.getElementById('siteAccessError');
+  const submit=form?.querySelector('.access-submit');
+  const ACCESS_KEY='patxanguilles_access_granted_v1';
+
+  function isCoachRoomLink(){
+    const h=decodeURIComponent(location.hash||'').toLowerCase();
+    return /^#entrenador\/[a-z0-9_-]+/i.test(h);
+  }
+
+  function hasRememberedAccess(){
+    try{return localStorage.getItem(ACCESS_KEY)==='1'}catch(e){return false}
+  }
+
+  function rememberAccess(){
+    try{localStorage.setItem(ACCESS_KEY,'1')}catch(e){}
+  }
+
+  function openGate(){
+    gate.classList.add('active');
+    gate.setAttribute('aria-hidden','false');
+    setTimeout(()=>input.focus(),120);
+  }
+
+  function closeGate(){
+    gate.classList.remove('active');
+    gate.setAttribute('aria-hidden','true');
+    input.value='';
+    err.textContent='';
+  }
+
+  if(!isCoachRoomLink()&&!hasRememberedAccess())openGate();
+
+  // La música puede empezar ya en esta pantalla tras la primera interacción,
+  // que es el momento en que los navegadores permiten reproducir audio con sonido.
+  gate.addEventListener('pointerdown',()=>{
+    if(typeof startMusic==='function'&&!musicStarted)startMusic();
+  },{once:true});
+  input.addEventListener('keydown',()=>{
+    if(typeof startMusic==='function'&&!musicStarted)startMusic();
+  },{once:true});
+
+  eye.addEventListener('click',()=>{
+    const show=input.type==='password';
+    input.type=show?'text':'password';
+    eye.textContent=show?'◎':'◉';
+    eye.setAttribute('aria-label',show?'Ocultar contraseña':'Mostrar contraseña');
+    input.focus();
+  });
+
+  form.addEventListener('submit',async(e)=>{
+    e.preventDefault();
+    const value=input.value.trim();
+    if(!value){
+      err.textContent='Introduce la contraseña';
+      input.focus();
+      return;
+    }
+
+    err.textContent='';
+    submit.disabled=true;
+    submit.style.filter='brightness(1.28)';
+    submit.setAttribute('aria-busy','true');
+
+    try{
+      const {data,error}=await sbPublic.rpc('check_site_gate',{p_value:value});
+      if(error)throw error;
+
+      if(data===true){
+        rememberAccess();
+        closeGate();
+      }else{
+        err.textContent='Contraseña incorrecta';
+        input.select();
+      }
+    }catch(ex){
+      console.error('Error comprobando acceso',ex);
+      err.textContent='No se ha podido comprobar el acceso. Inténtalo de nuevo.';
+    }finally{
+      submit.disabled=false;
+      submit.style.filter='';
+      submit.removeAttribute('aria-busy');
+    }
+  });
+})();
+</script>
+
 </body></html>
