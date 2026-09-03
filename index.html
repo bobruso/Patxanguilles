@@ -3457,7 +3457,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v117 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v118 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3647,8 +3647,20 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v117</span>
+    <span class="history-version">VERSIÓN v118</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">75</div>
+      <div class="history-section-content">
+        <h2>Telegram · avisos de actividad</h2>
+        <ul>
+          <li>Se añaden avisos privados por Telegram cuando un jugador actualiza su ficha, genera una carta o registra/modifica un resultado.</li>
+          <li>Los avisos se envían únicamente cuando la acción se realiza fuera de una sesión de administrador.</li>
+          <li>El token del bot y el chat de destino permanecen guardados como secretos privados en Supabase.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">74</div>
       <div class="history-section-content">
@@ -6350,6 +6362,27 @@ function openCreateCard(name){
     </div>`;
 }
 
+
+async function notifyTelegramEvent(type,entityId,action=''){
+  try{
+    const r=await fetch(`${SUPABASE_URL}/functions/v1/telegram-notify`,{
+      method:'POST',
+      headers:{
+        apikey:SUPABASE_PUBLISHABLE_KEY,
+        Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({type,entity_id:String(entityId),action})
+    });
+    if(!r.ok){
+      const data=await r.json().catch(()=>({}));
+      console.warn('Aviso Telegram no enviado',data?.error||r.status);
+    }
+  }catch(err){
+    console.warn('Aviso Telegram no enviado',err);
+  }
+}
+
 async function generatePlayerCard(name){
   const id=playerIdByName[name],selectedFile=document.getElementById('cardSelfie')?.files?.[0];
   const previous=cardGenerationDrafts[name]||{};
@@ -6367,6 +6400,7 @@ async function generatePlayerCard(name){
     const data=await r.json();if(!r.ok||!data.ok)throw new Error(data?.error||data?.details||'No se pudo generar la carta');
     const remaining=Number(data.remaining);
     const generationId=Number(data.generation_id);
+    if(!adminLogged)void notifyTelegramEvent('card',generationId);
     if(remaining<=0){
       const saveFd=new FormData();
       saveFd.append('action','save');
@@ -6461,6 +6495,7 @@ async function savePlayerProfile(name){
       const {error:cardError}=await sbAuth.from('players').update({card_url:cardUrl}).eq('id',id);
       if(cardError)throw new Error('El perfil se guardó, pero no se pudo actualizar la carta. '+cardError.message);
     }
+    if(!adminLogged)void notifyTelegramEvent('profile',id);
     await loadSupabaseData();openProfile(name);toast(cardFile?'Perfil y carta actualizados':'Perfil actualizado')
   }catch(err){console.error(err);toast(err?.message||'No se pudo actualizar el jugador')}
 }
@@ -6732,6 +6767,8 @@ async function saveResult(){
       if(error)throw error;
     }
 
+    const telegramMatchAction=editingMatchId?'updated':'created';
+    if(!adminLogged)void notifyTelegramEvent('match',matchId,telegramMatchAction);
     editingMatchId=null;window.editingMatchStatus=null;await loadSupabaseData();toast('Resultado confirmado');
     setTimeout(()=>{show('season');seasonTab('calendar',document.querySelectorAll('.nav-btn')[1])},350);
   }catch(err){console.error(err);toast('Error al guardar: '+(err?.message||'revisa Supabase'))}
