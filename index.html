@@ -98,6 +98,68 @@ button,input,select{font:inherit}.app{width:min(1100px,100%);margin:auto;padding
 .match-status.final{background:#173d2a;color:#93e2b5;border:1px solid #2e6848}
 .match-row-actions{display:flex;align-items:center;gap:7px;justify-content:flex-end;flex-wrap:wrap}
 .match-edit-btn{padding:7px 9px;font-size:11px}
+
+/* Vista compacta de "Últimos partidos" */
+.match-row.latest-match{
+  grid-template-columns:115px 1fr auto;
+  grid-template-rows:auto auto;
+  align-items:center;
+  min-height:108px;
+  padding-top:16px;
+  padding-bottom:16px;
+}
+.latest-match .latest-date-block{
+  grid-column:1;
+  grid-row:1 / 3;
+  align-self:stretch;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  min-width:0;
+}
+.latest-match .latest-date-line{
+  display:flex;
+  align-items:baseline;
+  gap:5px;
+  white-space:nowrap;
+  line-height:1.05;
+}
+.latest-match .match-weekday{
+  font-size:9px;
+  color:#65717d;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.latest-match .match-thumb{
+  width:80%;
+  height:46px;
+  margin-top:8px;
+  border-radius:6px;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+  border:1px solid rgba(255,255,255,.10);
+}
+.latest-match .match-teams{
+  grid-column:2;
+  grid-row:1 / 3;
+  padding-left:5px;
+}
+.latest-match .score{
+  grid-column:3;
+  grid-row:1;
+  text-align:right;
+  align-self:end;
+}
+.latest-match .match-row-actions{
+  grid-column:3;
+  grid-row:2;
+  justify-content:flex-end;
+  align-self:start;
+}
+.latest-match .match-status{
+  margin-left:auto;
+}
 .share-result-actions{display:flex;justify-content:flex-end;margin-top:14px;gap:8px}
 .share-result-actions .primary{display:inline-flex;align-items:center;gap:7px}
 .capture-flash{animation:captureFlash .25s ease}
@@ -106,7 +168,17 @@ button,input,select{font:inherit}.app{width:min(1100px,100%);margin:auto;padding
   .match-row{grid-template-columns:88px 1fr;gap:8px}
   .match-row .score,.match-row-actions{grid-column:2}
   .match-row-actions{justify-content:flex-start}
-  .match-status{font-size:9px;padding:4px 7px}
+  .match-status{font-size:7px;padding:2px 5px}
+  .match-row.latest-match{
+    grid-template-columns:88px 1fr auto;
+    grid-template-rows:auto auto;
+  }
+  .latest-match .latest-date-block{grid-column:1;grid-row:1 / 3}
+  .latest-match .match-thumb{width:78%;height:40px}
+  .latest-match .match-teams{grid-column:2;grid-row:1 / 3;padding-left:3px}
+  .latest-match .score{grid-column:3;grid-row:1;font-size:17px}
+  .latest-match .match-row-actions{grid-column:3;grid-row:2;justify-content:flex-end}
+  .latest-match .match-status{margin-left:auto;white-space:nowrap}
   .share-result-actions{justify-content:stretch}
   .share-result-actions button{width:100%}
 }
@@ -3457,7 +3529,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v118 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v124 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3647,8 +3719,61 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v118</span>
+    <span class="history-version">VERSIÓN v124</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">80</div>
+      <div class="history-section-content">
+        <h2>Detalle de partido · cierre con Escape</h2>
+        <ul>
+          <li>La ventana con resultado, alineaciones, crónica y fotografía puede cerrarse directamente con la tecla Escape, sin necesidad de desplazarse hasta el botón inferior.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">79</div>
+      <div class="history-section-content">
+        <h2>Últimos partidos · ajuste de proporciones</h2>
+        <ul>
+          <li>Los bloques ganan un poco más de altura, la miniatura se hace algo más estrecha para mostrar mejor su altura y el indicador “Finalizado” se reduce ligeramente.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">78</div>
+      <div class="history-section-content">
+        <h2>Últimos partidos · estado más compacto</h2>
+        <ul>
+          <li>El indicador “Finalizado” se reduce ligeramente de tamaño para ocupar menos espacio visual.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">77</div>
+      <div class="history-section-content">
+        <h2>Últimos partidos · miniaturas más legibles</h2>
+        <ul>
+          <li>Los bloques de últimos partidos ganan algo de altura para dar más aire a la previsualización fotográfica.</li>
+          <li>La miniatura se hace algo más estrecha y con una proporción más adecuada para que las fotografías horizontales se reconozcan mejor.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">76</div>
+      <div class="history-section-content">
+        <h2>Últimos partidos · previsualización visual</h2>
+        <ul>
+          <li>La columna de últimos partidos muestra una pequeña previsualización de la fotografía adjunta cuando existe, manteniendo el tamaño del bloque y recortando la imagen mediante encuadre cuando es necesario.</li>
+          <li>Se añade junto a la fecha el día de la semana correspondiente.</li>
+          <li>El estado del partido se alinea a la derecha, debajo del resultado.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">75</div>
       <div class="history-section-content">
@@ -4636,7 +4761,7 @@ body.album-reader-open{
 
 <section id="season" class="screen results"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><button class="primary" onclick="openResultForm()">＋ Añadir resultado</button></div>
-<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn" onclick="window.open('album.html','_blank')">Ver álbum de cartas</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
+<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn" id="seasonAlbumBtn" onclick="window.open('album.html','_blank')">Ver álbum de cartas</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
 <div id="seasonContent"></div>
 </div></section>
 
@@ -6155,7 +6280,7 @@ async function saveCurrentLineup(){
 }
 
 function updateSeasonAdminTabs(){document.querySelectorAll('.admin-season-tab').forEach(x=>x.style.display=adminLogged?'':'none')}
-function openSeason(mode){if(!mode){show('seasonMode');return}currentSeasonMode=mode;document.getElementById('seasonTitle').textContent='Temporada 26/27 · '+(mode==='f7'?'Fútbol 7':'Fútbol Sala');updateSeasonAdminTabs();resetClassificationRandomOrder();show('season');seasonTab('classification',document.querySelector('#season .nav-btn'))}
+function openSeason(mode){if(!mode){show('seasonMode');return}currentSeasonMode=mode;document.getElementById('seasonTitle').textContent='Temporada 26/27 · '+(mode==='f7'?'Fútbol 7':'Fútbol Sala');const albumBtn=document.getElementById('seasonAlbumBtn');if(albumBtn)albumBtn.style.display=mode==='f7'?'':'none';updateSeasonAdminTabs();resetClassificationRandomOrder();show('season');seasonTab('classification',document.querySelector('#season .nav-btn'))}
 function seasonTab(tab,btn){document.querySelectorAll('#season .nav-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');const c=document.getElementById('seasonContent');if(tab!=='cards')document.body.classList.remove('album-reader-open');if(tab==='classification')renderClassification(c);if(tab==='calendar')renderCalendar(c);if(tab==='cards'){cardAlbumPage=0;renderCardAlbum(c);}if(tab==='scorers')renderLeaders(c,'goals');if(tab==='assists')renderLeaders(c,'assists')}
 function stats(){const s={};const list=currentSeasonMode==='f7'?F7:FS;list.forEach(n=>s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0});db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode&&m.status!=='in_progress').forEach(m=>{const rs=Number(m.redScore),bs=Number(m.blackScore);const outcome=rs===bs?'draw':rs>bs?'red':'black';[...m.red,...m.black].forEach(n=>{if(!s[n])s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0};s[n].played++;const team=m.red.includes(n)?'red':'black';if(outcome==='draw')s[n].draws++;else if(team===outcome)s[n].wins++;else s[n].losses++});(m.goals||[]).forEach(e=>{if(s[e.player])s[e.player].goals+=Number(e.count)||1});(m.assists||[]).forEach(e=>{if(s[e.player])s[e.player].assists+=Number(e.count)||1})});return Object.values(s).map(x=>({...x,winPct:x.played?Math.round(x.wins/x.played*100):0}))}
 function sortedStats(){
@@ -6264,12 +6389,40 @@ function renderCalendar(c){
   const matches=db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
   c.innerHTML=`<div class="panel"><div class="calendar-header"><h3>Calendario</h3><span class="count">${matches.length} partido${matches.length===1?'':'s'}</span></div>${matches.length?`<div class="match-list">${matches.map(m=>matchRow(m)).join('')}</div>`:'<div class="empty">Todavía no hay partidos registrados.</div>'}</div>`
 }
-function matchRows(arr){
-  return arr.length?`<div class="match-list">${arr.map(m=>matchRow(m)).join('')}</div>`:'<div class="empty">No hay partidos registrados.</div>'
+function matchWeekday(dateString){
+  if(!dateString)return '';
+  const d=new Date(dateString+'T12:00:00');
+  if(Number.isNaN(d.getTime()))return '';
+  return new Intl.DateTimeFormat('es-ES',{weekday:'short'}).format(d).replace('.','');
 }
-function matchRow(m){
+function matchRows(arr){
+  return arr.length?`<div class="match-list">${arr.map(m=>matchRow(m,true)).join('')}</div>`:'<div class="empty">No hay partidos registrados.</div>'
+}
+function matchRow(m,compact=false){
   const live=m.status==='in_progress';
   const score=live?'Partido en juego':`${m.redScore} - ${m.blackScore}`;
+
+  if(compact){
+    const thumb=m.photoUrl
+      ? `<img class="match-thumb" src="${escapeHtml(m.photoUrl)}" alt="" loading="lazy">`
+      : '';
+    return `<div class="match-row latest-match" onclick="openMatch('${m.id}')">
+      <div class="latest-date-block">
+        <div class="latest-date-line">
+          <span class="match-date">${formatDate(m.date)}</span>
+          <span class="match-weekday">${escapeHtml(matchWeekday(m.date))}</span>
+        </div>
+        ${thumb}
+      </div>
+      <div class="match-teams"><span class="redtxt">Rojos</span> vs <span>Negros</span></div>
+      <div class="score">${score}</div>
+      <div class="match-row-actions">
+        <span class="match-status ${live?'live':'final'}">${live?'● En juego':'Finalizado'}</span>
+        ${live?`<button class="secondary match-edit-btn" onclick="event.stopPropagation();editPendingResult('${m.id}')">Editar resultado</button>`:''}
+      </div>
+    </div>`
+  }
+
   return `<div class="match-row" onclick="openMatch('${m.id}')">
     <div class="match-date">${formatDate(m.date)}</div>
     <div class="match-teams"><span class="redtxt">Rojos</span> vs <span>Negros</span></div>
@@ -6907,6 +7060,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     document.getElementById('photoViewer')?.classList.remove('open');
     document.getElementById('fifaModal')?.classList.remove('open');
+    document.getElementById('matchModal')?.classList.remove('open');
   }
 });
 
