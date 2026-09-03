@@ -163,7 +163,7 @@ body.card-open .zoom-controls{display:none!important}
 .zoom-icon{font-size:15px;opacity:.82}
 
 .stage{
-  touch-action:none;
+  touch-action:pan-x pan-y;
   overscroll-behavior:contain;
   cursor:grab;
   user-select:none;
@@ -313,6 +313,17 @@ body.fit-height .page{
 .album-page-2 .slot-6,
 .album-page-2 .slot-9{left:61.402%}
 
+
+/* v20 · Chrome Android: pan nativo con un dedo */
+@media (pointer:coarse){
+  .stage{
+    overflow:auto !important;
+    touch-action:pan-x pan-y !important;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+  }
+}
+
 </style>
 </head>
 <body class="fit-height">
@@ -452,7 +463,6 @@ let zoomLevel=1;
 let pinchStartDistance=0;
 let pinchStartZoom=1;
 let pinchLastMid=null;
-let touchPan=null;
 
 function applyViewerState(){
   document.body.classList.toggle('fit-width',fitMode==='width');
@@ -496,79 +506,51 @@ function touchMidpoint(touches){
 
 const viewerStage=document.getElementById('stage');
 
-// MÓVIL: visor tipo galería. Un dedo arrastra; dos dedos hacen zoom
-// manteniendo como ancla el punto situado entre ambos dedos.
+// MÓVIL: el desplazamiento con un dedo es NATIVO del navegador.
+// JavaScript sólo gestiona el pellizco de dos dedos para no bloquear Chrome Android.
 viewerStage.addEventListener('touchstart',e=>{
   if(e.touches.length===2){
     const mid=touchMidpoint(e.touches);
     pinchStartDistance=touchDistance(e.touches);
     pinchStartZoom=zoomLevel;
     pinchLastMid=mid;
-    touchPan=null;
     e.preventDefault();
-  }else if(e.touches.length===1){
-    const t=e.touches[0];
-    touchPan={
-      x:t.clientX,
-      y:t.clientY,
-      left:viewerStage.scrollLeft,
-      top:viewerStage.scrollTop
-    };
   }
 },{passive:false});
 
 viewerStage.addEventListener('touchmove',e=>{
-  if(e.touches.length===2&&pinchStartDistance>0){
+  if(e.touches.length===2 && pinchStartDistance>0){
     e.preventDefault();
     const rect=viewerStage.getBoundingClientRect();
     const currentDistance=touchDistance(e.touches);
     const currentMid=touchMidpoint(e.touches);
     const previousZoom=zoomLevel;
 
-    // Punto real del documento que estaba bajo el centro de los dedos.
     const docX=(viewerStage.scrollLeft + pinchLastMid.x-rect.left)/previousZoom;
     const docY=(viewerStage.scrollTop + pinchLastMid.y-rect.top)/previousZoom;
 
     setZoom(previousZoom*(currentDistance/pinchStartDistance));
 
-    // Recolocar scroll para conservar ese punto bajo los dedos.
     viewerStage.scrollLeft=docX*zoomLevel-(currentMid.x-rect.left);
     viewerStage.scrollTop=docY*zoomLevel-(currentMid.y-rect.top);
 
     pinchStartDistance=currentDistance;
     pinchStartZoom=zoomLevel;
     pinchLastMid=currentMid;
-  }else if(e.touches.length===1&&touchPan){
-    e.preventDefault();
-    const t=e.touches[0];
-    viewerStage.scrollLeft=touchPan.left-(t.clientX-touchPan.x);
-    viewerStage.scrollTop=touchPan.top-(t.clientY-touchPan.y);
   }
 },{passive:false});
 
 viewerStage.addEventListener('touchend',e=>{
-  if(e.touches.length===1){
-    const t=e.touches[0];
-    touchPan={
-      x:t.clientX,
-      y:t.clientY,
-      left:viewerStage.scrollLeft,
-      top:viewerStage.scrollTop
-    };
+  if(e.touches.length<2){
     pinchStartDistance=0;
     pinchLastMid=null;
-  }else if(e.touches.length===0){
-    pinchStartDistance=0;
-    pinchLastMid=null;
-    touchPan=null;
   }
-},{passive:false});
+},{passive:true});
 
 viewerStage.addEventListener('touchcancel',()=>{
   pinchStartDistance=0;
   pinchLastMid=null;
-  touchPan=null;
-},{passive:false});
+},{passive:true});
 
 // ESCRITORIO: mano para agarrar y arrastrar la página, como un visor de imagen/mapa.
 let dragging=false;
