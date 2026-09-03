@@ -3457,7 +3457,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v116 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v117 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3647,8 +3647,19 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v116</span>
+    <span class="history-version">VERSIÓN v117</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">74</div>
+      <div class="history-section-content">
+        <h2>Administración · borrado masivo eliminado</h2>
+        <ul>
+          <li>Se elimina del panel de administración la opción “Eliminar todos los partidos” para evitar borrados accidentales.</li>
+          <li>Se mantiene únicamente el borrado individual de partidos, con confirmación previa.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">73</div>
       <div class="history-section-content">
@@ -6740,9 +6751,9 @@ async function loginAdmin(){
 }
 function renderAdminPanel(){
   const matches=(db.matches||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)),content=document.getElementById('adminContent');
-  content.innerHTML=`<div class="topbar"><div><div class="kicker">ADMINISTRACIÓN</div><h2>Gestión de resultados</h2></div><button class="secondary" type="button" id="adminCloseBtn">Cerrar</button></div><div class="admin-actions"><button class="secondary" type="button" id="adminLogoutBtn">Cerrar sesión</button><button class="danger" type="button" id="adminClearBtn">Eliminar todos los partidos</button></div><div class="admin-list">${matches.length?matches.map(m=>`<div class="admin-match" data-match-id="${escapeHtml(String(m.id))}"><span class="match-date">${formatDate(m.date)}</span><span><b>${m.mode==='f7'?'Fútbol 7':'Fútbol Sala'}</b><br>Rojos ${m.redScore} — ${m.blackScore} Negros</span><span class="admin-actions"><button class="secondary admin-edit-btn" type="button">Editar</button><button class="danger admin-delete-btn" type="button">Eliminar</button></span></div>`).join(''):'<div class="empty">No hay partidos registrados.</div>'}</div>`;
+  content.innerHTML=`<div class="topbar"><div><div class="kicker">ADMINISTRACIÓN</div><h2>Gestión de resultados</h2></div><button class="secondary" type="button" id="adminCloseBtn">Cerrar</button></div><div class="admin-actions"><button class="secondary" type="button" id="adminLogoutBtn">Cerrar sesión</button></div><div class="admin-list">${matches.length?matches.map(m=>`<div class="admin-match" data-match-id="${escapeHtml(String(m.id))}"><span class="match-date">${formatDate(m.date)}</span><span><b>${m.mode==='f7'?'Fútbol 7':'Fútbol Sala'}</b><br>Rojos ${m.redScore} — ${m.blackScore} Negros</span><span class="admin-actions"><button class="secondary admin-edit-btn" type="button">Editar</button><button class="danger admin-delete-btn" type="button">Eliminar</button></span></div>`).join(''):'<div class="empty">No hay partidos registrados.</div>'}</div>`;
   document.getElementById('adminModal').classList.add('open');
-  document.getElementById('adminCloseBtn').onclick=closeAdmin;document.getElementById('adminLogoutBtn').onclick=adminLogout;document.getElementById('adminClearBtn').onclick=clearAllMatches;
+  document.getElementById('adminCloseBtn').onclick=closeAdmin;document.getElementById('adminLogoutBtn').onclick=adminLogout;
   content.querySelectorAll('.admin-delete-btn').forEach(btn=>{btn.onclick=function(e){e.preventDefault();e.stopPropagation();const row=this.closest('.admin-match');if(row)deleteMatch(row.getAttribute('data-match-id'))}});
   content.querySelectorAll('.admin-edit-btn').forEach(btn=>{btn.onclick=function(e){e.preventDefault();e.stopPropagation();const row=this.closest('.admin-match');if(row)editMatch(row.getAttribute('data-match-id'))}})
 }
@@ -6760,13 +6771,6 @@ async function deleteMatch(id){
   await loadSupabaseData();
   renderAdminPanel();
   toast('Partido eliminado correctamente')
-}
-async function clearAllMatches(){
-  if(!db.matches?.length){alert('No hay partidos guardados.');return}if(!confirm(`¿Eliminar los ${db.matches.length} partidos guardados?\n\nEsta acción no se puede deshacer.`))return;
-  if(!(await verifyAdminSession())){toast('La sesión de administrador ha caducado');return}
-  const {error}=await sbAuth.rpc('admin_delete_all_matches');
-  if(error){console.error(error);toast('No se pudieron eliminar los partidos: '+(error.message||'error de Supabase'));return}
-  await loadSupabaseData();renderAdminPanel();toast('Todos los partidos han sido eliminados')
 }
 async function adminLogout(){await sbAuth.auth.signOut();adminLogged=false;updateSeasonAdminTabs();closeAdmin();toast('Sesión cerrada')}
 function closeAdmin(){document.getElementById('adminModal').classList.remove('open')}
