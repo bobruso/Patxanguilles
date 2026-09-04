@@ -4512,6 +4512,46 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   100%{opacity:0;transform:scale(1.35) rotate(120deg)}
 }
 
+
+/* v164 · fichaje con vídeo/audio cuando el jugador dispone de ellos */
+#coachSigningVideo{
+  display:none;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  opacity:0;
+  transform:scale(.72);
+  object-fit:contain;
+}
+#coachSigningVideo.coach-card-ready{
+  display:block;
+  animation:coachCardReveal .42s cubic-bezier(.18,.88,.28,1.16) both;
+}
+
+
+/* v165 · llamada a la acción para compartir la sala */
+@keyframes coachCopyInvitePulse{
+  0%,100%{
+    transform:scale(1);
+    box-shadow:0 0 0 0 rgba(36,190,84,.48),0 5px 16px rgba(0,0,0,.18);
+  }
+  50%{
+    transform:scale(1.045);
+    box-shadow:0 0 0 9px rgba(36,190,84,0),0 7px 22px rgba(0,0,0,.24);
+  }
+}
+#coachWaiting #coachCopyLinkBtn{
+  background:#24be54!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  border-color:#158c3a!important;
+  font-weight:900!important;
+  animation:coachCopyInvitePulse 1.15s ease-in-out infinite!important;
+}
+#coachWaiting #coachCopyLinkBtn:hover{
+  background:#1aa347!important;
+}
+
 </style>
 </head>
 <body>
@@ -4779,6 +4819,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   <div class="coach-signing-content">
     <div id="coachSigningCardWrap" class="coach-signing-card-wrap">
       <img id="coachSigningCard" alt="">
+            <video id="coachSigningVideo" class="coach-signing-video" playsinline muted preload="auto"></video>
     </div>
     <h2 id="coachSigningText">¡Has fichado a ...!</h2>
   </div>
@@ -4827,8 +4868,18 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v163</span>
+    <span class="history-version">VERSIÓN v165</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">117</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · compartir sala</h2>
+        <ul>
+          <li>El botón «Copiar enlace» se destaca en verde y con una animación pulsante mientras se espera al segundo entrenador.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">116</div>
       <div class="history-section-content">
@@ -6329,7 +6380,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v163 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v165 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -6945,6 +6996,47 @@ let coachSuppressClickUntil=0;
 let coachPreviousMine=false;
 let coachTurnToastTimer=null;
 let coachSigningTimer=null;
+const coachSpecialSigningMedia={
+  'Rafeta':{video:'RAFETA_1.mp4',audio:'rafeta.mp3'}
+};
+const coachMediaPreloadCache=new Map();
+const coachSigningAudio=new Audio();
+coachSigningAudio.preload='auto';
+
+function coachPreloadMedia(url,type){
+  if(!url)return Promise.resolve(false);
+  if(coachMediaPreloadCache.get(url)==='loaded')return Promise.resolve(true);
+  const existing=coachMediaPreloadCache.get(url);
+  if(existing&&existing.then)return existing;
+  const job=new Promise(resolve=>{
+    const el=document.createElement(type==='video'?'video':'audio');
+    el.preload='auto';
+    el.muted=type==='video';
+    const done=()=>{
+      cleanup();
+      coachMediaPreloadCache.set(url,'loaded');
+      resolve(true);
+    };
+    const fail=()=>{
+      cleanup();
+      coachMediaPreloadCache.delete(url);
+      resolve(false);
+    };
+    const cleanup=()=>{
+      el.removeEventListener('canplaythrough',done);
+      el.removeEventListener('loadeddata',done);
+      el.removeEventListener('error',fail);
+    };
+    el.addEventListener('canplaythrough',done,{once:true});
+    el.addEventListener('loadeddata',done,{once:true});
+    el.addEventListener('error',fail,{once:true});
+    el.src=url;
+    el.load();
+  });
+  coachMediaPreloadCache.set(url,job);
+  return job;
+}
+
 const coachCardPreloadCache=new Map();
 let coachCardPreloadRoom=null;
 let coachCardPreloadRun=0;
@@ -6980,6 +7072,14 @@ async function preloadCoachDraftCards(room){
   const run=++coachCardPreloadRun;
   const names=(room.selected_players&&room.selected_players.length)?room.selected_players:coachPlayersForMode(room.mode);
   const queue=names.map(name=>({name,url:db.players?.[name]?.card||''})).filter(x=>x.url);
+
+  // Los medios especiales también se precargan aquí, nunca al abrir la web.
+  names.forEach(name=>{
+    const media=coachSpecialSigningMedia[name];
+    if(!media)return;
+    if(media.video)coachPreloadMedia(media.video,'video').catch(()=>{});
+    if(media.audio)coachPreloadMedia(media.audio,'audio').catch(()=>{});
+  });
 
   // Cola discreta: solo dos descargas simultáneas para no competir con el draft.
   let cursor=0;
@@ -7140,22 +7240,58 @@ function launchCoachSigningScreenFX(){
 function showCoachSigningCelebration(name){
   const overlay=document.getElementById('coachSigningOverlay');
   const img=document.getElementById('coachSigningCard');
+  const video=document.getElementById('coachSigningVideo');
   const wrap=document.getElementById('coachSigningCardWrap');
   const text=document.getElementById('coachSigningText');
-  if(!overlay||!text||!img||!wrap)return;
-  const card=db.players?.[name]?.card||'';
-  clearTimeout(coachSigningTimer);
-  overlay.classList.remove('is-leaving','no-card');
-  text.textContent='¡Has fichado a '+name+'!';
+  if(!overlay||!text||!img||!video||!wrap)return;
 
-  // Nunca dejamos visible la carta del fichaje anterior.
+  const card=db.players?.[name]?.card||'';
+  const special=coachSpecialSigningMedia[name]||null;
+  clearTimeout(coachSigningTimer);
+
+  // Limpieza inmediata: jamás se ve el fichaje anterior.
   img.classList.remove('coach-card-ready');
   img.style.visibility='hidden';
   img.removeAttribute('src');
   img.alt='';
+  video.pause();
+  video.classList.remove('coach-card-ready');
+  video.style.display='none';
+  video.removeAttribute('src');
+  video.load();
+
+  // El audio de fichaje es independiente del reproductor musical.
+  // No pausa, baja ni modifica la música de fondo.
+  coachSigningAudio.pause();
+  coachSigningAudio.removeAttribute('src');
+  coachSigningAudio.load();
+
+  overlay.classList.remove('is-leaving','no-card');
+  text.textContent='¡Has fichado a '+name+'!';
+  wrap.style.display='';
+  overlay.style.display='grid';
+  launchCoachSigningScreenFX();
+  overlay.focus();
+
+  if(special?.audio){
+    coachSigningAudio.src=special.audio;
+    coachSigningAudio.currentTime=0;
+    coachSigningAudio.play().catch(()=>{});
+  }
+
+  if(special?.video){
+    video.src=special.video;
+    video.currentTime=0;
+    video.muted=true;
+    video.style.display='block';
+    video.classList.add('coach-card-ready');
+    video.play().catch(()=>{});
+    // La ventana visual sigue durando exactamente 3 segundos.
+    coachSigningTimer=setTimeout(()=>hideCoachSigningCelebration(),6000);
+    return;
+  }
 
   if(card){
-    wrap.style.display='';
     coachLoadCard(card).then(ok=>{
       if(!ok||overlay.style.display==='none'||text.textContent!=='¡Has fichado a '+name+'!')return;
       img.src=card;
@@ -7170,12 +7306,19 @@ function showCoachSigningCelebration(name){
     overlay.classList.add('no-card');
   }
 
-  overlay.style.display='grid';
-  launchCoachSigningScreenFX();
-  overlay.focus();
   coachSigningTimer=setTimeout(()=>hideCoachSigningCelebration(),3000);
 }
 function hideCoachSigningCelebration(){
+  const signingVideo=document.getElementById('coachSigningVideo');
+  if(signingVideo){
+    signingVideo.pause();
+    signingVideo.classList.remove('coach-card-ready');
+    signingVideo.style.display='none';
+    signingVideo.removeAttribute('src');
+    signingVideo.load();
+  }
+  // El audio no se corta aquí: puede terminar su cross-dissolve aunque la imagen cierre a los 3 s.
+
   const overlay=document.getElementById('coachSigningOverlay');
   if(!overlay||overlay.style.display==='none')return;
   clearTimeout(coachSigningTimer);
