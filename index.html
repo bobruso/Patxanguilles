@@ -3533,9 +3533,22 @@ body.album-reader-open{
   }
 }
 
+
+#mobileFridayVideoBg{display:none}
+@media(max-width:900px){
+ body.mobile-friday-video #mobileFridayVideoBg{display:block;position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none;background:#07100b url('hoy es viernes (0-00-00-00).jpg') center/cover no-repeat}
+ #mobileFridayVideo{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s ease}
+ #mobileFridayVideo.ready{opacity:1}
+ body.mobile-friday-video{background:#07100b url('hoy es viernes (0-00-00-00).jpg') center/cover no-repeat!important;background-attachment:scroll!important}
+}
 </style>
 </head>
 <body>
+<div id="mobileFridayVideoBg" aria-hidden="true">
+  <video id="mobileFridayVideo" playsinline preload="none" poster="hoy es viernes (0-00-00-00).jpg">
+    <source data-src="hoy es viernes_1.mp4" type="video/mp4">
+  </video>
+</div>
 <div id="desktopHomeVideoBg" aria-hidden="true">
   <video id="desktopHomeVideo" muted loop playsinline preload="none" poster="background-home-desktop.jpg">
     <source data-src="background-home-desktop.mp4" type="video/mp4">
@@ -3613,7 +3626,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v130 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v131 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3803,8 +3816,20 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v130</span>
+    <span class="history-version">VERSIÓN v131</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">86</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · vídeo de viernes</h2>
+        <ul>
+          <li>Los viernes, la Home móvil utiliza su vídeo vertical específico con el primer fotograma como imagen de espera.</li>
+          <li>La primera reproducción conserva el ambiente sonoro cuando el navegador lo permite y las siguientes vueltas quedan silenciadas.</li>
+          <li>Si hay una bienvenida especial, el vídeo y la animación de los accesos esperan hasta que se cierre.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">85</div>
       <div class="history-section-content">
@@ -7538,6 +7563,8 @@ document.addEventListener('keydown',e=>{
 (function(){
   const mq=window.matchMedia('(min-width:901px)');
   const video=document.getElementById('desktopHomeVideo');
+  const mobileFridayVideo=document.getElementById('mobileFridayVideo');
+  const isFriday=()=>new Date().getDay()===5;
   let started=false;
   let revealTimer=null;
 
@@ -7557,6 +7584,27 @@ document.addEventListener('keydown',e=>{
       document.body.classList.remove('home-mobile-intro-pending');
       document.body.classList.add('home-mobile-intro-visible');
     }
+  }
+
+  function startMobileFridayVideo(){
+    if(mq.matches||!isFriday()||!mobileFridayVideo)return;
+    document.body.classList.add('mobile-friday-video');
+    const source=mobileFridayVideo.querySelector('source[data-src]');
+    if(source&&!source.getAttribute('src')){source.src=source.dataset.src;mobileFridayVideo.load();}
+    mobileFridayVideo.loop=false;
+    mobileFridayVideo.muted=false;
+    const begin=()=>{
+      mobileFridayVideo.classList.add('ready');
+      const p=mobileFridayVideo.play();
+      if(p&&p.catch)p.catch(()=>{mobileFridayVideo.muted=true;mobileFridayVideo.play().catch(()=>{});});
+    };
+    if(mobileFridayVideo.readyState>=3)begin(); else mobileFridayVideo.addEventListener('canplay',begin,{once:true});
+    mobileFridayVideo.addEventListener('ended',()=>{
+      mobileFridayVideo.muted=true;
+      mobileFridayVideo.loop=true;
+      mobileFridayVideo.currentTime=0;
+      mobileFridayVideo.play().catch(()=>{});
+    },{once:true});
   }
 
   function startDesktopVideo(){
@@ -7582,6 +7630,7 @@ document.addEventListener('keydown',e=>{
 
     // Si estamos en escritorio, el vídeo empieza AHORA, nunca detrás del popup.
     startDesktopVideo();
+    startMobileFridayVideo();
 
     // Tanto en escritorio como en móvil, los accesos aparecen 2 s después.
     revealTimer=setTimeout(revealHome,2000);
@@ -7595,9 +7644,10 @@ document.addEventListener('keydown',e=>{
     if(revealTimer)clearTimeout(revealTimer);
     document.body.classList.remove('desktop-home-video');
     if(video){video.pause();video.classList.remove('ready');}
+    if(mobileFridayVideo){mobileFridayVideo.pause();mobileFridayVideo.classList.remove('ready');document.body.classList.remove('mobile-friday-video');}
     prepareHiddenHome();
     if(started){
-      if(mq.matches)startDesktopVideo();
+      if(mq.matches)startDesktopVideo(); else startMobileFridayVideo();
       revealTimer=setTimeout(revealHome,2000);
     }
   });
