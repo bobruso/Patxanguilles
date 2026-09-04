@@ -3651,6 +3651,61 @@ body.album-reader-open{
   }
 }
 
+
+/* v137 · balón móvil estable + ADMIN/versión */
+.admin-corner{
+  right:10px !important;
+  bottom:10px !important;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+}
+.admin-corner .admin-trigger{align-self:flex-end}
+.admin-corner .home-version-link{
+  position:static !important;
+  left:auto !important;
+  bottom:auto !important;
+  transform:none !important;
+  width:auto !important;
+  margin:0 !important;
+  display:block !important;
+  text-align:right !important;
+  white-space:nowrap;
+}
+.admin-corner .home-version-link a{
+  display:block;
+  padding:6px 9px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:8px;
+  background:rgba(10,13,16,.84);
+  color:rgba(238,242,239,.78);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.025em;
+  text-decoration:none;
+  backdrop-filter:blur(8px);
+}
+.admin-corner .home-version-link a:hover{color:#fff;background:rgba(10,13,16,.94)}
+
+.mobile-home-enter-ball{visibility:hidden}
+body.home-experience-started .mobile-home-enter-ball{visibility:visible}
+body:has(#siteAccessGate.active) .mobile-home-enter-ball,
+body:has(#specialWelcome.open) .mobile-home-enter-ball{visibility:hidden !important}
+@media(max-width:900px) and (orientation:portrait){
+  .mobile-home-enter-ball{
+    position:absolute !important;
+    left:52% !important;
+    top:56svh !important;
+    width:106px !important;
+    height:106px !important;
+    z-index:20 !important;
+    filter:grayscale(1) contrast(1.48) brightness(1.18) drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
+  }
+  .mobile-home-enter-ball .football-pattern{font-size:106px !important}
+  .mobile-home-enter-ball .football-enter-text{background:rgba(255,255,255,.97) !important}
+}
+
 </style>
 </head>
 <body>
@@ -3741,9 +3796,7 @@ body.album-reader-open{
 <button class="mode greenline home-image-card" onclick="show('resultMode')"><span class="home-card-copy"><span class="icon">📝</span><strong>Apuntar resultado</strong><span>Partido ya jugado</span></span><span class="home-card-image"><img src="apuntar resultado.jpg" alt=""></span></button>
 </div>
 </div>
-<div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v136 · Ver historial de cambios</a>
-</div>
+
 </section>
 
 <section id="createMode" class="screen"><div class="card">
@@ -3932,8 +3985,20 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v136</span>
+    <span class="history-version">VERSIÓN v137</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">92</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · balón y controles inferiores</h2>
+        <ul>
+          <li>El balón «Entrar» queda anclado al fondo de la Home para evitar saltos al hacer scroll, se desplaza ligeramente a la derecha y mejora el blanco de su acabado.</li>
+          <li>El balón permanece oculto durante la carga inicial y no aparece antes de los avisos especiales.</li>
+          <li>El acceso ADMIN sube ligeramente y la versión pasa a mostrarse debajo con una caja más visible.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">91</div>
       <div class="history-section-content">
@@ -5138,7 +5203,12 @@ body.album-reader-open{
 
 <div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div></div></div>
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
-<div class="admin-corner"><button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button></div>
+<div class="admin-corner">
+  <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
+  <div class="home-version-link">
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v137 · Ver historial de cambios</a>
+  </div>
+</div>
 <div class="music-controls" title="Música">
   <div class="music-transport">
     <button id="musicPrev" type="button" onclick="previousMusicTrack()" aria-label="Canción anterior" title="Anterior">⏮</button>
@@ -7829,6 +7899,7 @@ document.addEventListener('keydown',e=>{
   window.startHomeExperience=function(){
     if(started)return;
     started=true;
+    document.body.classList.add('home-experience-started');
     prepareHiddenHome();
 
     // Si estamos en escritorio, el vídeo empieza AHORA, nunca detrás del popup.
