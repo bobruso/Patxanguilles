@@ -4052,6 +4052,49 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 }
 @keyframes coachTurnPop{from{opacity:0;transform:translate(-50%,30px) scale(.7)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
 
+
+/* v151 · correcciones de interacción del draft */
+@media(max-width:800px){
+  #coachStartBtn.coach-start-ready{
+    width:calc(100% - 24px)!important;
+    max-width:360px!important;
+    min-width:0!important;
+    min-height:56px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding:12px 14px!important;
+    font-size:17px!important;
+    box-sizing:border-box!important;
+    display:block!important;
+  }
+  #coachTurnCededAlert{
+    padding:14px!important;
+    box-sizing:border-box!important;
+  }
+  #coachTurnCededAlert .coach-special-card{
+    width:calc(100vw - 36px)!important;
+    max-width:430px!important;
+    padding:27px 18px!important;
+    margin:0 auto!important;
+    box-sizing:border-box!important;
+  }
+  #coachTurnCededAlert .coach-special-card h2{
+    font-size:23px!important;
+    line-height:1.12!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+
+/* Las camisetas se pueden ordenar visualmente sin interferir con el clic de FICHAR */
+.coach-token-wrap{
+  cursor:grab;
+}
+.coach-token-wrap:active{cursor:grabbing}
+.coach-token-wrap.coach-dragging{
+  position:relative!important;
+  z-index:90!important;
+}
+
 </style>
 </head>
 <body>
@@ -4367,8 +4410,20 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v150</span>
+    <span class="history-version">VERSIÓN v151</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">106</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · correcciones del draft</h2>
+        <ul>
+          <li>Se corrige el tamaño y centrado móvil del botón COMENZAR y del aviso de primer turno cedido.</li>
+          <li>Se rehace la interacción de arrastre de las camisetas para permitir reorganizarlas con ratón y pantalla táctil.</li>
+          <li>Se corrige la selección de camisetas en escritorio para que vuelva a aparecer FICHAR sin interferir con el arrastre.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">105</div>
       <div class="history-section-content">
@@ -5749,7 +5804,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v150 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v151 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -6385,15 +6440,22 @@ function coachOrderedAvailable(available){
 
 function coachPointerDown(ev,name,wrap){
   if(ev.button!==undefined&&ev.button!==0)return;
-  coachDragState={name,wrap,startX:ev.clientX,startY:ev.clientY,moved:false,pointerId:ev.pointerId};
-  try{wrap.setPointerCapture(ev.pointerId)}catch(_){}
+  coachDragState={
+    name,wrap,startX:ev.clientX,startY:ev.clientY,
+    x:ev.clientX,y:ev.clientY,moved:false,pointerId:ev.pointerId
+  };
 }
 function coachPointerMove(ev){
   if(!coachDragState)return;
   const d=coachDragState;
-  if(Math.hypot(ev.clientX-d.startX,ev.clientY-d.startY)>7)d.moved=true;
+  d.x=ev.clientX; d.y=ev.clientY;
+  if(!d.moved && Math.hypot(ev.clientX-d.startX,ev.clientY-d.startY)>8){
+    d.moved=true;
+    coachSuppressClickUntil=Date.now()+450;
+    d.wrap.classList.add('coach-dragging');
+  }
   if(!d.moved)return;
-  d.wrap.classList.add('coach-dragging');
+  ev.preventDefault();
   document.querySelectorAll('.coach-token-wrap.coach-drag-target').forEach(x=>x.classList.remove('coach-drag-target'));
   const under=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.coach-token-wrap');
   if(under&&under!==d.wrap)under.classList.add('coach-drag-target');
@@ -6404,16 +6466,20 @@ function coachPointerUp(ev){
   d.wrap.classList.remove('coach-dragging');
   const under=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.coach-token-wrap');
   document.querySelectorAll('.coach-token-wrap.coach-drag-target').forEach(x=>x.classList.remove('coach-drag-target'));
-  if(d.moved&&under&&under!==d.wrap){
-    const other=under.dataset.player;
-    const a=coachLocalPlayerOrder.indexOf(d.name),b=coachLocalPlayerOrder.indexOf(other);
-    if(a>=0&&b>=0)[coachLocalPlayerOrder[a],coachLocalPlayerOrder[b]]=[coachLocalPlayerOrder[b],coachLocalPlayerOrder[a]];
-    coachSuppressClickUntil=Date.now()+350;
-    refreshCoachRoom();
+  if(d.moved){
+    coachSuppressClickUntil=Date.now()+450;
+    if(under&&under!==d.wrap){
+      const other=under.dataset.player;
+      const a=coachLocalPlayerOrder.indexOf(d.name),b=coachLocalPlayerOrder.indexOf(other);
+      if(a>=0&&b>=0){
+        [coachLocalPlayerOrder[a],coachLocalPlayerOrder[b]]=[coachLocalPlayerOrder[b],coachLocalPlayerOrder[a]];
+        coachSelectedPlayer=null;
+        refreshCoachRoom();
+      }
+    }
   }
   coachDragState=null;
 }
-
 function showCoachYourTurn(){
   const el=document.getElementById('coachYourTurnToast');
   if(!el)return;
@@ -6488,7 +6554,7 @@ function hideCoachSigningCelebration(){
   setTimeout(()=>{overlay.style.display='none';overlay.classList.remove('is-leaving')},340);
 }
 
-document.addEventListener('pointermove',coachPointerMove,{passive:true});
+document.addEventListener('pointermove',coachPointerMove,{passive:false});
 document.addEventListener('pointerup',coachPointerUp,{passive:true});
 document.addEventListener('pointercancel',()=>{coachDragState=null});
 document.addEventListener('click',ev=>{
@@ -6741,7 +6807,7 @@ function renderCoachDraft(room,picks){
     const b=document.createElement('button');
     b.className='coach-token'+(coachSelectedPlayer===name?' selected':'');
     b.textContent=name;
-    b.disabled=!mine;
+    b.disabled=false;
     b.onclick=(ev)=>{
       ev.stopPropagation();
       if(!mine||Date.now()<coachSuppressClickUntil)return;
