@@ -3851,11 +3851,38 @@ body.change-history-active .mobile-home-enter-ball{
 #mobileDayVideoBg{display:none}
 @media(max-width:900px) and (orientation:portrait){body.mobile-day-video #mobileDayVideoBg{display:block;position:fixed;inset:0;z-index:-4;overflow:hidden;pointer-events:none;background:#07100b}#mobileDayVideo{width:100%;height:100%;object-fit:cover;display:block}}
 
+
+/* v145 · balón PNG de entrada móvil */
+@media(max-width:900px) and (orientation:portrait){
+  .mobile-home-enter-ball{
+    display:none !important;
+    overflow:visible !important;
+    filter:drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
+  }
+  body.mobile-ball-ready:not(.home-entered) .mobile-home-enter-ball{display:flex !important}
+  .mobile-home-enter-ball .football-ball-image{
+    position:absolute !important;inset:0 !important;
+    width:100% !important;height:100% !important;
+    object-fit:contain !important;font-size:0 !important;
+    user-select:none !important;pointer-events:none !important;
+  }
+  .mobile-home-enter-ball .football-enter-text{
+    position:absolute !important;left:50% !important;top:50% !important;
+    transform:translate(-50%,-50%) !important;z-index:2 !important;
+    background:rgba(255,255,255,.97) !important;color:#050505 !important;
+  }
+  .mobile-home-enter-ball.is-leaving{
+    transform:translate(-50%,-50%) scale(0) !important;
+    opacity:0 !important;pointer-events:none !important;
+  }
+  body:has(.special-welcome.open) .mobile-home-enter-ball{display:none !important}
+}
+
 </style>
 </head>
 <body>
 <button id="mobileHomeEnterBall" class="mobile-home-enter-ball" type="button" aria-label="Entrar">
-  <span class="football-pattern" aria-hidden="true">⚽</span>
+  <img class="football-pattern football-ball-image" src="balon.png" alt="" aria-hidden="true">
   <span class="football-enter-text">ENTRAR</span>
 </button>
 <audio id="homeWhistleSfx" preload="auto" src="SILBATO ok.mp3"></audio>
@@ -4131,8 +4158,19 @@ body.change-history-active .mobile-home-enter-ball{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v144</span>
+    <span class="history-version">VERSIÓN v145</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">100</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · nuevo balón de entrada</h2>
+        <ul>
+          <li>El balón gráfico de ENTRAR se sustituye por el PNG personalizado, manteniendo posición, cartel y animación de salida por escala.</li>
+          <li>El balón solo aparece después de cerrar cualquier popup especial de bienvenida.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">99</div>
       <div class="history-section-content">
@@ -5446,7 +5484,7 @@ body.change-history-active .mobile-home-enter-ball{
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v144 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v145 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -8233,6 +8271,7 @@ document.addEventListener('keydown',e=>{
     if(started)return;
     started=true;
     prepareHiddenHome();
+    document.body.classList.add('mobile-ball-ready');
 
     // Si estamos en escritorio, el vídeo empieza AHORA, nunca detrás del popup.
     startDesktopVideo();
