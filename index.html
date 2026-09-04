@@ -3926,6 +3926,24 @@ body.change-history-active .mobile-home-enter-ball{
   }
 }
 
+
+/* v149 · balón móvil blanco/negro y anclado al fondo */
+@media(max-width:900px) and (orientation:portrait){
+  .mobile-home-enter-ball{
+    position:absolute !important;
+    left:53.5% !important;
+    top:56svh !important;
+    filter:grayscale(1) contrast(2.35) brightness(1.12) drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
+  }
+  .mobile-home-enter-ball .football-pattern{
+    filter:grayscale(1) contrast(2.6) brightness(1.08) !important;
+  }
+  .mobile-home-enter-ball .football-enter-text{
+    background:#fff !important;
+    color:#000 !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4206,8 +4224,19 @@ body.change-history-active .mobile-home-enter-ball{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v148</span>
+    <span class="history-version">VERSIÓN v149</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">104</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · balón de entrada</h2>
+        <ul>
+          <li>El balón aumenta su contraste para que los paneles grises pasen a negro y conserve blancos más limpios.</li>
+          <li>El balón deja de estar fijado al viewport y queda anclado al fondo de la Home para evitar saltos de posición al hacer scroll en móvil.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">103</div>
       <div class="history-section-content">
@@ -5562,7 +5591,7 @@ body.change-history-active .mobile-home-enter-ball{
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v148 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v149 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
