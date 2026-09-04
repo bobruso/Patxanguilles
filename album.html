@@ -429,7 +429,7 @@ body.fit-height .page{
   <button class="card-close" onclick="closeCard()">Cerrar ✕</button>
   <div id="cardMedia" class="card-media" onclick="toggleCardMedia(event)" title="Pulsa para alternar carta y vídeo">
     <img id="cardModalImg" alt="Carta de jugador">
-    <video id="cardModalVideo" playsinline preload="metadata"></video>
+    <video id="cardModalVideo" playsinline preload="metadata" muted loop></video>
     <span class="card-shine" aria-hidden="true"></span>
   </div>
 </div>
@@ -558,6 +558,8 @@ function toggleCardMedia(e){
     media.classList.remove('video-active');
   }else{
     if(!video.src)video.src=videoUrl;
+    video.muted=true;
+    video.loop=true;
     media.classList.add('video-active');
     video.currentTime=0;
     video.play().catch(()=>{});
