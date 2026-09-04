@@ -3652,58 +3652,34 @@ body.album-reader-open{
 }
 
 
-/* v137 · balón móvil estable + ADMIN/versión */
-.admin-corner{
-  right:10px !important;
-  bottom:10px !important;
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  gap:6px;
-}
-.admin-corner .admin-trigger{align-self:flex-end}
-.admin-corner .home-version-link{
-  position:static !important;
-  left:auto !important;
-  bottom:auto !important;
-  transform:none !important;
-  width:auto !important;
-  margin:0 !important;
-  display:block !important;
-  text-align:right !important;
-  white-space:nowrap;
-}
-.admin-corner .home-version-link a{
-  display:block;
-  padding:6px 9px;
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:8px;
-  background:rgba(10,13,16,.84);
-  color:rgba(238,242,239,.78);
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:.025em;
-  text-decoration:none;
-  backdrop-filter:blur(8px);
-}
-.admin-corner .home-version-link a:hover{color:#fff;background:rgba(10,13,16,.94)}
+/* v137 · temporada, calendario y resultados */
+.album-special-btn{background:linear-gradient(145deg,#8d6514,#d8ad3d 52%,#896212)!important;color:#fff7cf!important;border:1px solid #e8c65e!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 5px 16px rgba(176,128,20,.20)}
+.album-special-btn:hover{border-color:#ffe184!important;filter:brightness(1.08)}
+.album-special-btn .album-star{color:#ffe36b;text-shadow:0 0 8px rgba(255,222,72,.55);font-size:12px}
+.result-callup-import{margin-bottom:20px}
+#seasonContent .match-row.latest-match{min-height:116px}
+#seasonContent .latest-match .match-thumb{height:54px}
 
-.mobile-home-enter-ball{visibility:hidden}
-body.home-experience-started .mobile-home-enter-ball{visibility:visible}
-body:has(#siteAccessGate.active) .mobile-home-enter-ball,
-body:has(#specialWelcome.open) .mobile-home-enter-ball{visibility:hidden !important}
-@media(max-width:900px) and (orientation:portrait){
-  .mobile-home-enter-ball{
-    position:absolute !important;
-    left:52% !important;
-    top:56svh !important;
-    width:106px !important;
-    height:106px !important;
-    z-index:20 !important;
-    filter:grayscale(1) contrast(1.48) brightness(1.18) drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
+@media(min-width:761px){
+  #matchModal .profile-card{width:min(1040px,calc(100vw - 48px));max-height:92vh}
+  #matchCaptureArea.match-desktop-layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);gap:20px 24px;align-items:start}
+  #matchCaptureArea .match-detail-header{grid-column:1/-1}
+  #matchCaptureArea .match-detail-lineup{grid-column:1;grid-row:2}
+  #matchCaptureArea .match-detail-side{grid-column:2;grid-row:2}
+  #matchCaptureArea .match-chronicle-view{grid-column:1/-1;margin-top:0}
+  #matchCaptureArea .match-detail-side .match-events-grid{grid-template-columns:1fr 1fr;margin-top:0}
+  #matchCaptureArea .match-detail-side .match-photo-view{margin-top:16px}
+  #matchCaptureArea .match-detail-side .match-photo-view img{max-height:430px;object-fit:contain}
+}
+
+
+/* v138 · enlace de historial más compacto en móvil */
+@media(max-width:700px){
+  #home .home-version-link a{
+    font-size:7.5px !important;
+    letter-spacing:.02em !important;
+    padding:2px 1px !important;
   }
-  .mobile-home-enter-ball .football-pattern{font-size:106px !important}
-  .mobile-home-enter-ball .football-enter-text{background:rgba(255,255,255,.97) !important}
 }
 
 </style>
@@ -3796,7 +3772,9 @@ body:has(#specialWelcome.open) .mobile-home-enter-ball{visibility:hidden !import
 <button class="mode greenline home-image-card" onclick="show('resultMode')"><span class="home-card-copy"><span class="icon">📝</span><strong>Apuntar resultado</strong><span>Partido ya jugado</span></span><span class="home-card-image"><img src="apuntar resultado.jpg" alt=""></span></button>
 </div>
 </div>
-
+<div class="home-version-link">
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">v138 - Historial cambios</a>
+</div>
 </section>
 
 <section id="createMode" class="screen"><div class="card">
@@ -3985,16 +3963,28 @@ body:has(#specialWelcome.open) .mobile-home-enter-ball{visibility:hidden !import
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v137</span>
+    <span class="history-version">VERSIÓN v138</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">93</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · historial más compacto</h2>
+        <ul>
+          <li>El enlace del historial se acorta a «v138 - Historial cambios» y reduce ligeramente su tamaño en móvil para evitar que se junte con los controles del reproductor.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">92</div>
       <div class="history-section-content">
-        <h2>Inicio móvil · balón y controles inferiores</h2>
+        <h2>Temporada · calendario y resultados</h2>
         <ul>
-          <li>El balón «Entrar» queda anclado al fondo de la Home para evitar saltos al hacer scroll, se desplaza ligeramente a la derecha y mejora el blanco de su acabado.</li>
-          <li>El balón permanece oculto durante la carga inicial y no aparece antes de los avisos especiales.</li>
-          <li>El acceso ADMIN sube ligeramente y la versión pasa a mostrarse debajo con una caja más visible.</li>
+          <li>El acceso al álbum de cartas pasa a tener un acabado dorado especial con estrellas.</li>
+          <li>Se elimina «Añadir resultado» de Temporada porque ya existe el acceso desde la portada.</li>
+          <li>Calendario muestra día, foto del partido y estado finalizado con la misma presentación enriquecida de «Últimos partidos».</li>
+          <li>En escritorio, el detalle de partido aprovecha el ancho disponible con alineaciones a la izquierda y goles, asistencias y fotografía a la derecha; la crónica queda debajo. En móvil se conserva la distribución vertical.</li>
+          <li>«Apuntar resultado» incorpora el importador de convocatoria por copia y pega y su navegación de vuelta regresa a la portada.</li>
         </ul>
       </div>
     </section>
@@ -5147,7 +5137,16 @@ body:has(#specialWelcome.open) .mobile-home-enter-ball{visibility:hidden !import
 </div></section>
 
 <section id="resultMode" class="screen"><div class="card">
-<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2>Apuntar resultado</h2><div class="subtitle">Selecciona la modalidad del partido.</div></div></div>
+<div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Apuntar resultado</h2><div class="subtitle">Selecciona la modalidad del partido.</div></div></div>
+<div class="coach-whatsapp-import result-callup-import">
+  <div class="coach-whatsapp-head"><div><strong>📋 Copia y pega convocatoria aquí</strong></div></div>
+  <textarea id="resultCallupText" rows="7" placeholder=""></textarea>
+  <div class="coach-whatsapp-actions">
+    <button class="secondary" onclick="parseResultCallup()">Detectar convocatoria</button>
+    <button class="ghost" onclick="clearResultCallup()">Limpiar</button>
+  </div>
+  <div id="resultCallupStatus" class="coach-callup-warning" style="display:none"></div>
+</div>
 <div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="openResultMode('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>Apuntar partido de Fútbol 7</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="openResultMode('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>Apuntar partido de Fútbol Sala</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
@@ -5157,8 +5156,8 @@ body:has(#specialWelcome.open) .mobile-home-enter-ball{visibility:hidden !import
 </div></section>
 
 <section id="season" class="screen results"><div class="card">
-<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><button class="primary" onclick="openResultForm()">＋ Añadir resultado</button></div>
-<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn" id="seasonAlbumBtn" onclick="window.open('album.html','_blank')">Ver álbum de cartas</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div></div>
+<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn album-special-btn" id="seasonAlbumBtn" onclick="window.open('album.html','_blank')"><span class="album-star">★</span> Ver álbum de cartas <span class="album-star">★</span></button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
 <div id="seasonContent"></div>
 </div></section>
 
@@ -5203,12 +5202,7 @@ body:has(#specialWelcome.open) .mobile-home-enter-ball{visibility:hidden !import
 
 <div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div></div></div>
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
-<div class="admin-corner">
-  <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
-  <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v137 · Ver historial de cambios</a>
-  </div>
-</div>
+<div class="admin-corner"><button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button></div>
 <div class="music-controls" title="Música">
   <div class="music-transport">
     <button id="musicPrev" type="button" onclick="previousMusicTrack()" aria-label="Canción anterior" title="Anterior">⏮</button>
@@ -6789,7 +6783,7 @@ function closeCardAlbumReader(){
 
 function renderCalendar(c){
   const matches=db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
-  c.innerHTML=`<div class="panel"><div class="calendar-header"><h3>Calendario</h3><span class="count">${matches.length} partido${matches.length===1?'':'s'}</span></div>${matches.length?`<div class="match-list">${matches.map(m=>matchRow(m)).join('')}</div>`:'<div class="empty">Todavía no hay partidos registrados.</div>'}</div>`
+  c.innerHTML=`<div class="panel"><div class="calendar-header"><h3>Calendario</h3><span class="count">${matches.length} partido${matches.length===1?'':'s'}</span></div>${matches.length?`<div class="match-list">${matches.map(m=>matchRow(m,true)).join('')}</div>`:'<div class="empty">Todavía no hay partidos registrados.</div>'}</div>`
 }
 function matchWeekday(dateString){
   if(!dateString)return '';
@@ -7156,16 +7150,18 @@ function openMatch(id){
   const redAssists=(m.assists||[]).filter(e=>e.team==='red'),blackAssists=(m.assists||[]).filter(e=>e.team==='black');
   const teamEvents=(goals,assists,color)=>`<div class="match-events-box"><h4 class="${color==='red'?'redtxt':'blacktxt'}">${color==='red'?'Rojos':'Negros'}</h4>${goals.length?`<div style="font-size:11px;color:#87919d;text-transform:uppercase;margin-bottom:3px">Goles</div>${eventTeamSummary(goals)}`:'<div class="empty" style="padding:7px">Sin goles registrados</div>'}${assists.length?`<div style="font-size:11px;color:#87919d;text-transform:uppercase;margin:10px 0 3px">Asistencias</div>${eventTeamSummary(assists)}`:''}</div>`;
   const title=live?'Partido en juego':`Rojos ${m.redScore} — ${m.blackScore} Negros`;
-  document.getElementById('matchContent').innerHTML=`<div class="profile-body" id="matchCaptureArea">
-    <div class="kicker">CALENDARIO · ${formatDate(m.date)} · ${(m.mode||'f7')==='f7'?'FÚTBOL 7':'FÚTBOL SALA'}</div>
-    <h2>${title}</h2>
-    <div class="final-pitch" style="margin-top:18px"><div class="final-teams">
+  document.getElementById('matchContent').innerHTML=`<div class="profile-body match-desktop-layout" id="matchCaptureArea">
+    <div class="match-detail-header"><div class="kicker">CALENDARIO · ${formatDate(m.date)} · ${(m.mode||'f7')==='f7'?'FÚTBOL 7':'FÚTBOL SALA'}</div>
+    <h2>${title}</h2></div>
+    <div class="match-detail-lineup"><div class="final-pitch" style="margin-top:18px"><div class="final-teams">
       <div class="final-team"><h3>Rojos</h3><div class="final-shirt-grid">${m.red.map(p=>shirtHTML(p,'red')).join('')}</div></div>
       <div class="final-team"><h3>Negros</h3><div class="final-shirt-grid">${m.black.map(p=>shirtHTML(p,'black')).join('')}</div></div>
-    </div></div>
-    ${live?'<div class="empty" style="margin-top:12px">Alineación guardada · resultado pendiente</div>':`<div class="match-events-grid">${teamEvents(redGoals,redAssists,'red')}${teamEvents(blackGoals,blackAssists,'black')}</div>`}
+    </div></div></div>
+    <div class="match-detail-side">
+      ${live?'<div class="empty" style="margin-top:12px">Alineación guardada · resultado pendiente</div>':`<div class="match-events-grid">${teamEvents(redGoals,redAssists,'red')}${teamEvents(blackGoals,blackAssists,'black')}</div>`}
+      ${m.photoUrl?`<div class="match-photo-view"><img src="${escapeHtml(m.photoUrl)}" alt="Foto del partido" crossorigin="anonymous"></div>`:''}
+    </div>
     ${(m.chronicleTitle||m.chronicleText)?`<section class="match-chronicle-view">${m.chronicleTitle?`<div class="kicker">CRÓNICA DEL PARTIDO</div><h3>${escapeHtml(m.chronicleTitle)}</h3>`:'<div class="kicker">CRÓNICA DEL PARTIDO</div>'}${m.chronicleText?`<div class="chronicle-copy">${escapeHtml(m.chronicleText)}</div>`:''}</section>`:''}
-    ${m.photoUrl?`<div class="match-photo-view"><img src="${escapeHtml(m.photoUrl)}" alt="Foto del partido" crossorigin="anonymous"></div>`:''}
   </div>
   <div class="profile-body" style="padding-top:0">
     <div class="share-result-actions">
@@ -7211,6 +7207,61 @@ function editPendingResult(id){
   currentSeasonMode=m.mode||'f7';closeMatch();openResultForm(m.red,m.black,m)
 }
 
+
+let pendingResultCallupNames=[];
+
+function parseResultCallup(){
+  const text=document.getElementById('resultCallupText')?.value||'';
+  const rawLines=text.split(/\r?\n/),participantLines=[];
+  let inReserves=false;
+  for(const raw of rawLines){
+    const trimmed=String(raw||'').replace(/[⁠ ]/g,' ').trim();
+    if(!trimmed)continue;
+    if(/^\s*reservas?\b/i.test(trimmed)){inReserves=true;continue}
+    if(inReserves)continue;
+    if(/^\s*\d{1,2}\s*[\.\)\-:ºª]/.test(trimmed)||/^\s*\d{1,2}\s+[^\d]/.test(trimmed)){
+      const cleaned=cleanCoachCallupLine(trimmed);
+      if(cleaned)participantLines.push(cleaned);
+    }
+  }
+  if(!participantLines.length){
+    for(const raw of rawLines){
+      const trimmed=String(raw||'').trim();
+      if(/^\s*reservas?\b/i.test(trimmed))break;
+      const cleaned=cleanCoachCallupLine(trimmed);
+      if(cleaned)participantLines.push(cleaned);
+    }
+  }
+  pendingResultCallupNames=[...new Set(participantLines.map(n=>normalizeCoachCallupName(n)).filter(Boolean))];
+  const status=document.getElementById('resultCallupStatus');
+  if(status){
+    status.style.display='';
+    status.textContent=pendingResultCallupNames.length
+      ? `He detectado ${pendingResultCallupNames.length} jugadores. Elige ahora Fútbol 7 o Fútbol Sala.`
+      : 'No he detectado jugadores. Revisa el formato de la convocatoria.';
+  }
+}
+
+function clearResultCallup(){
+  const t=document.getElementById('resultCallupText'),s=document.getElementById('resultCallupStatus');
+  if(t)t.value='';
+  if(s){s.style.display='none';s.textContent=''}
+  pendingResultCallupNames=[];
+}
+
+function applyResultCallupToChecks(){
+  if(!pendingResultCallupNames.length)return;
+  const pool=currentSeasonMode==='f7'?F7:FS;
+  const detected=[];
+  for(const norm of pendingResultCallupNames){
+    const exact=pool.find(r=>normalizeCoachCallupName(r)===norm);
+    if(exact&&!detected.includes(exact))detected.push(exact);
+  }
+  const half=Math.ceil(detected.length/2);
+  renderChecks('redChecks',detected.slice(0,half),'red');
+  renderChecks('blackChecks',detected.slice(half),'black');
+}
+
 function openResultMode(mode){
   currentSeasonMode=mode;
   game=mode;
@@ -7229,6 +7280,7 @@ function openResultForm(red=null,black=null,match=null){
   document.getElementById('blackScore').value=Number(match?.blackScore)||0;
   renderChecks('redChecks',presetRed,'red');
   renderChecks('blackChecks',presetBlack,'black');
+  if(!match && resultReturn==='resultMode')applyResultCallupToChecks();
   document.getElementById('goalEvents').innerHTML='';
   document.getElementById('assistEvents').innerHTML='';
   document.getElementById('matchPhoto').value='';
@@ -7369,7 +7421,7 @@ function closeAdmin(){document.getElementById('adminModal').classList.remove('op
 
 function cancelResultForm(){
   if(resultReturn==='results'){show('results');return}
-  if(resultReturn==='resultMode'){show('resultMode');return}
+  if(resultReturn==='resultMode'){show('home');return}
   if(resultReturn==='season'){openSeason();return}
   show('home');
 }
@@ -7899,7 +7951,6 @@ document.addEventListener('keydown',e=>{
   window.startHomeExperience=function(){
     if(started)return;
     started=true;
-    document.body.classList.add('home-experience-started');
     prepareHiddenHome();
 
     // Si estamos en escritorio, el vídeo empieza AHORA, nunca detrás del popup.
