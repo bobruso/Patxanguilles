@@ -3506,9 +3506,41 @@ body.album-reader-open{
   }
 }
 
+
+#desktopHomeVideoBg{display:none}
+@media(min-width:901px){
+  #desktopHomeVideoBg{display:block;position:fixed;inset:0;z-index:-3;overflow:hidden;background:#07100b url('background-home-desktop.jpg') center/cover no-repeat;opacity:0;pointer-events:none;transition:opacity .25s ease}
+  body.desktop-home-video #desktopHomeVideoBg{opacity:1}
+  #desktopHomeVideo{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s ease}
+  #desktopHomeVideo.ready{opacity:1}
+  body.desktop-home-video{background:#07100b url('background-home-desktop.jpg') center/cover fixed no-repeat!important}
+  body.home-intro-pending #home .hero{opacity:0;transform:translateY(18px) scale(.985);pointer-events:none}
+  body.home-intro-visible #home .hero{opacity:1;transform:none;transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.25,1)}
+}
+
+
+/* v129 · Entrada de los botones de Home también en móvil */
+@media(max-width:900px){
+  body.home-mobile-intro-pending #home .hero{
+    opacity:0;
+    transform:translateY(18px) scale(.985);
+    pointer-events:none;
+  }
+  body.home-mobile-intro-visible #home .hero{
+    opacity:1;
+    transform:none;
+    transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.25,1);
+  }
+}
+
 </style>
 </head>
 <body>
+<div id="desktopHomeVideoBg" aria-hidden="true">
+  <video id="desktopHomeVideo" muted loop playsinline preload="none" poster="background-home-desktop.jpg">
+    <source data-src="background-home-desktop.mp4" type="video/mp4">
+  </video>
+</div>
 
 <div id="siteAccessGate" aria-hidden="true">
   <form id="siteAccessForm" autocomplete="on">
@@ -3581,7 +3613,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v127 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v130 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3771,8 +3803,40 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v127</span>
+    <span class="history-version">VERSIÓN v130</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">85</div>
+      <div class="history-section-content">
+        <h2>Bienvenidas especiales · inicio coordinado</h2>
+        <ul>
+          <li>Si aparece una bienvenida especial, la animación de la Home espera hasta que se cierre.</li>
+          <li>En escritorio, el vídeo de fondo tampoco comienza hasta ese momento; después, los accesos aparecen dos segundos más tarde.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">84</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · entrada animada</h2>
+        <ul>
+          <li>En móvil se mantiene el fondo vertical actual y los accesos de la Home aparecen con una animación suave dos segundos después de entrar.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">83</div>
+      <div class="history-section-content">
+        <h2>Inicio de escritorio · fondo de vídeo</h2>
+        <ul>
+          <li>La Home de escritorio incorpora un fondo de vídeo en bucle con el primer fotograma como imagen de espera durante la carga.</li>
+          <li>Los accesos aparecen con una animación suave dos segundos después de entrar.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">82</div>
       <div class="history-section-content">
@@ -7109,7 +7173,12 @@ function specialFireworksHTML(){return'<div class="special-fireworks"><i class="
 function showNextSpecialWelcome(){
   const overlay=document.getElementById('specialWelcome'),content=document.getElementById('specialWelcomeContent');
   const item=specialWelcomeQueue.shift();
-  if(!item){overlay.classList.remove('open');content.innerHTML='';return}
+  if(!item){
+    overlay.classList.remove('open');
+    content.innerHTML='';
+    window.startHomeExperience?.();
+    return;
+  }
   if(item.type==='birthday'){
     const p=item.player,image=p.card||p.photo||'',initial=escapeHtml(String(p.name||'?').charAt(0).toUpperCase());
     content.innerHTML=`${specialFireworksHTML()}<div class="special-card-inner"><div class="special-kicker">Hoy es el cumpleaños de</div><h3>${escapeHtml(p.name)}</h3><div class="birthday-cake" aria-hidden="true">🎂</div>${image?`<img class="special-player-card" src="${escapeHtml(image)}" alt="Carta de ${escapeHtml(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="special-player-fallback" style="display:none">${initial}</div>`:`<div class="special-player-fallback">${initial}</div>`}<button class="primary special-continue" onclick="showNextSpecialWelcome()">Continuar</button></div>`;
@@ -7465,6 +7534,75 @@ document.addEventListener('keydown',e=>{
     }
   });
 })();
+
+(function(){
+  const mq=window.matchMedia('(min-width:901px)');
+  const video=document.getElementById('desktopHomeVideo');
+  let started=false;
+  let revealTimer=null;
+
+  function prepareHiddenHome(){
+    document.body.classList.remove(
+      'home-intro-visible','home-mobile-intro-visible',
+      'home-intro-pending','home-mobile-intro-pending'
+    );
+    document.body.classList.add(mq.matches?'home-intro-pending':'home-mobile-intro-pending');
+  }
+
+  function revealHome(){
+    if(mq.matches){
+      document.body.classList.remove('home-intro-pending');
+      document.body.classList.add('home-intro-visible');
+    }else{
+      document.body.classList.remove('home-mobile-intro-pending');
+      document.body.classList.add('home-mobile-intro-visible');
+    }
+  }
+
+  function startDesktopVideo(){
+    if(!mq.matches||!video)return;
+    document.body.classList.add('desktop-home-video');
+    const source=video.querySelector('source[data-src]');
+    if(source&&!source.getAttribute('src')){
+      source.src=source.dataset.src;
+      video.load();
+    }
+    const ready=()=>{
+      video.classList.add('ready');
+      video.play().catch(()=>{});
+    };
+    if(video.readyState>=3)ready();
+    else video.addEventListener('canplay',ready,{once:true});
+  }
+
+  window.startHomeExperience=function(){
+    if(started)return;
+    started=true;
+    prepareHiddenHome();
+
+    // Si estamos en escritorio, el vídeo empieza AHORA, nunca detrás del popup.
+    startDesktopVideo();
+
+    // Tanto en escritorio como en móvil, los accesos aparecen 2 s después.
+    revealTimer=setTimeout(revealHome,2000);
+  };
+
+  // Desde el primer instante los botones permanecen ocultos.
+  // initApp() llamará startHomeExperience() cuando no quede ningún popup especial.
+  prepareHiddenHome();
+
+  mq.addEventListener?.('change',()=>{
+    if(revealTimer)clearTimeout(revealTimer);
+    document.body.classList.remove('desktop-home-video');
+    if(video){video.pause();video.classList.remove('ready');}
+    prepareHiddenHome();
+    if(started){
+      if(mq.matches)startDesktopVideo();
+      revealTimer=setTimeout(revealHome,2000);
+    }
+  });
+})();
+
 </script>
 
 </body></html>
