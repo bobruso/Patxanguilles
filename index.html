@@ -3944,6 +3944,114 @@ body.change-history-active .mobile-home-enter-ball{
   }
 }
 
+
+/* v150 · mejoras del draft */
+@keyframes coachReadyPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(38,210,92,.55);filter:brightness(1)}
+  50%{box-shadow:0 0 0 10px rgba(38,210,92,0);filter:brightness(1.22)}
+}
+#coachConfirmCallupBtn.coach-ready-create,
+#coachCreateRoomBtn.coach-ready-create,
+#coachStartBtn.coach-start-ready{
+  background:linear-gradient(145deg,#138b3b,#22c55e)!important;
+  border-color:#52e47f!important;color:#fff!important;
+  animation:coachReadyPulse 1.05s infinite!important;
+  font-weight:1000!important;
+}
+#coachStartBtn.coach-start-ready{font-size:20px!important;min-width:min(420px,90vw)!important;min-height:64px!important}
+
+/* En enlaces de invitación no aparece el balón de ENTRAR de la Home */
+body:has(#coachLobby.active) .mobile-home-enter-ball,
+body:has(#coachIdentity.active) .mobile-home-enter-ball,
+body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
+
+/* FICHAR justo debajo de la camiseta también en escritorio */
+.coach-inline-pick{
+  left:50%!important;
+  top:calc(100% + 4px)!important;
+  transform:translateX(-50%)!important;
+}
+
+/* Arrastre/reordenación local de camisetas */
+.coach-token-wrap{touch-action:none;user-select:none;-webkit-user-select:none}
+.coach-token-wrap.coach-dragging{z-index:80;opacity:.92;transform:scale(1.08)}
+.coach-token-wrap.coach-drag-target .coach-token{outline:3px solid rgba(255,255,255,.82);outline-offset:3px}
+
+/* Números de fichajes dentro de camisetas del color correspondiente */
+.coach-picked-token span{
+  width:30px!important;height:34px!important;border-radius:5px 5px 9px 9px!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  clip-path:polygon(20% 0,36% 9%,64% 9%,80% 0,100% 18%,86% 35%,86% 100%,14% 100%,14% 35%,0 18%)!important;
+  font-weight:1000!important;color:#fff!important;flex:0 0 30px!important;
+  text-shadow:0 1px 2px #000!important;
+}
+.coach-picked-token.red-pick span{background:#c91f2a!important}
+.coach-picked-token.black-pick span{background:#080808!important;border:1px solid rgba(255,255,255,.35)!important}
+@media(max-width:800px){
+  .coach-picked-token span{display:inline-flex!important;width:25px!important;height:29px!important;flex-basis:25px!important;font-size:9px!important}
+}
+
+/* Popups especiales de turno */
+.coach-special-overlay{
+  position:fixed;inset:0;z-index:10030;background:rgba(0,0,0,.82);
+  backdrop-filter:blur(8px);display:grid;place-items:center;padding:18px
+}
+.coach-special-card{
+  width:min(560px,94vw);position:relative;text-align:center;padding:34px 26px;
+  border-radius:24px;background:linear-gradient(160deg,#151918,#080a09);
+  border:1px solid rgba(255,255,255,.16);box-shadow:0 24px 80px rgba(0,0,0,.65)
+}
+.coach-special-icon{font-size:54px}
+.coach-special-card h2{font-size:30px;margin:10px 0}
+.coach-special-card p{color:#c7cfca;line-height:1.5}
+.coach-special-actions{display:grid;gap:10px;margin-top:22px}
+.coach-special-x,.coach-signing-close{
+  position:absolute;right:14px;top:12px;z-index:4;width:38px;height:38px;border:0;border-radius:50%;
+  background:rgba(0,0,0,.72);color:#fff;font-size:25px;cursor:pointer
+}
+.coach-green-action{background:linear-gradient(145deg,#11863a,#24c660)!important;border-color:#4ee27d!important}
+
+/* Celebración del fichaje */
+.coach-signing-overlay{
+  position:fixed;inset:0;z-index:10040;overflow:hidden;
+  background:radial-gradient(circle at 50% 44%,rgba(185,145,32,.38),rgba(5,8,7,.96) 58%);
+  backdrop-filter:blur(9px);display:grid;place-items:center;padding:18px
+}
+.coach-signing-overlay::before,.coach-signing-overlay::after{
+  content:"";position:absolute;inset:-35%;pointer-events:none;
+  background:conic-gradient(from 0deg,transparent 0 12deg,rgba(255,216,91,.16) 13deg 15deg,transparent 16deg 34deg);
+  animation:coachSigningSpin 5s linear infinite
+}
+.coach-signing-overlay::after{animation-direction:reverse;animation-duration:7s;opacity:.55}
+@keyframes coachSigningSpin{to{transform:rotate(360deg)}}
+.coach-signing-content{position:relative;z-index:2;text-align:center;animation:coachSigningIn .48s cubic-bezier(.2,.9,.2,1.18)}
+@keyframes coachSigningIn{from{opacity:0;transform:scale(.45) translateY(50px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.coach-signing-overlay.is-leaving .coach-signing-content{animation:coachSigningOut .36s ease forwards}
+@keyframes coachSigningOut{to{opacity:0;transform:scale(.55) translateY(-40px)}}
+.coach-signing-card-wrap{height:min(62vh,650px);display:flex;justify-content:center;align-items:center}
+#coachSigningCard{max-height:100%;max-width:min(82vw,470px);object-fit:contain;filter:drop-shadow(0 18px 40px rgba(0,0,0,.7))}
+#coachSigningText{font-size:clamp(27px,5vw,48px);margin:8px 0 0;text-shadow:0 4px 20px #000}
+.coach-signing-overlay.no-card .coach-signing-card-wrap{display:none}
+.coach-signing-overlay.no-card #coachSigningText{
+  font-size:clamp(38px,8vw,78px);max-width:900px;margin:auto;line-height:1.05
+}
+.coach-signing-fx::before,.coach-signing-fx::after{
+  content:"✦  ✧  ★  ✦  ✧  ★  ✦";position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);font-size:clamp(30px,7vw,90px);color:#f6d56c;
+  letter-spacing:2vw;text-shadow:0 0 18px #e8b83e;animation:coachFxBurst 1.4s ease-out infinite
+}
+.coach-signing-fx::after{animation-delay:.65s;transform:translate(-50%,-50%) rotate(25deg)}
+@keyframes coachFxBurst{0%{opacity:0;scale:.45}25%{opacity:1}100%{opacity:0;scale:1.7}}
+
+/* Aviso breve de nuevo turno */
+.coach-your-turn-toast{
+  position:fixed;z-index:10020;left:50%;bottom:24px;transform:translateX(-50%);
+  padding:15px 28px;border-radius:999px;background:#1aaa4c;color:#fff;border:2px solid #70ee98;
+  box-shadow:0 10px 35px rgba(0,0,0,.55),0 0 28px rgba(40,220,95,.35);
+  font-size:22px;font-weight:1000;letter-spacing:.04em;animation:coachTurnPop .45s cubic-bezier(.2,.9,.2,1.2)
+}
+@keyframes coachTurnPop{from{opacity:0;transform:translate(-50%,30px) scale(.7)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+
 </style>
 </head>
 <body>
@@ -4150,14 +4258,14 @@ body.change-history-active .mobile-home-enter-ball{
     <span id="coachRoomMode">Fútbol 7</span>
     <strong>Modo Entrenador</strong>
   </div>
-  <div class="coach-room-code">Sala <b id="coachRoomCode">------</b></div>
+  <div id="coachRoomCodeWrap" class="coach-room-code">Sala <b id="coachRoomCode">------</b></div>
 </div>
 
 <div id="coachWaiting" class="coach-waiting">
   <div class="coach-status-dot"></div>
   <h3 id="coachWaitingTitle">Esperando al segundo entrenador…</h3>
   <p id="coachWaitingText">Comparte este enlace para que entre el otro entrenador.</p>
-  <div class="coach-share-row">
+  <div id="coachShareRow" class="coach-share-row">
     <input id="coachShareLink" readonly>
     <button class="secondary" onclick="copyCoachLink()">Copiar enlace</button>
   </div>
@@ -4182,6 +4290,41 @@ body.change-history-active .mobile-home-enter-ball{
     <button class="primary" onclick="hideCoachOpponentAlert()">Perfecto</button>
   </div>
 </div>
+
+
+<div id="coachFirstTurnAlert" class="coach-special-overlay" style="display:none">
+  <div class="coach-special-card">
+    <button class="coach-special-x" onclick="continueCoachFirstTurn()" aria-label="Cerrar">×</button>
+    <div class="coach-special-icon">🪙</div>
+    <h2>¡Has ganado el primer turno!</h2>
+    <p>Puedes empezar el draft o ceder el primer fichaje al otro entrenador.</p>
+    <div class="coach-special-actions">
+      <button class="primary coach-green-action" onclick="continueCoachFirstTurn()">⚽ CONTINUAR</button>
+      <button class="secondary" onclick="cedeCoachFirstTurn()">Ceder primer turno al otro entrenador</button>
+    </div>
+  </div>
+</div>
+
+<div id="coachTurnCededAlert" class="coach-special-overlay" style="display:none">
+  <div class="coach-special-card">
+    <div class="coach-special-icon">🤝</div>
+    <h2>¡El otro entrenador te ha cedido su primer turno!</h2>
+    <button class="primary coach-green-action" onclick="hideCoachTurnCededAlert()">⚽ EMPEZAR</button>
+  </div>
+</div>
+
+<div id="coachSigningOverlay" class="coach-signing-overlay" style="display:none" tabindex="-1">
+  <button class="coach-signing-close" onclick="hideCoachSigningCelebration()" aria-label="Cerrar">×</button>
+  <div class="coach-signing-fx" aria-hidden="true"></div>
+  <div class="coach-signing-content">
+    <div id="coachSigningCardWrap" class="coach-signing-card-wrap">
+      <img id="coachSigningCard" alt="">
+    </div>
+    <h2 id="coachSigningText">¡Has fichado a ...!</h2>
+  </div>
+</div>
+
+<div id="coachYourTurnToast" class="coach-your-turn-toast" style="display:none">⚽ ¡TE TOCA!</div>
 
 <div id="coachDraft" class="coach-draft coach-draft-board" style="display:none">
   <div class="coach-turn-banner" id="coachTurnBanner">Esperando…</div>
@@ -4224,8 +4367,23 @@ body.change-history-active .mobile-home-enter-ball{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v149</span>
+    <span class="history-version">VERSIÓN v150</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">105</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · mejoras del draft</h2>
+        <ul>
+          <li>Se refuerzan visualmente los botones para crear y comenzar sala cuando están listos, con fondo verde, animación y balón.</li>
+          <li>El segundo entrenador entra con una sala simplificada, sin enlace ni código de sala, y el acceso por invitación ya no muestra el balón de entrada de la Home.</li>
+          <li>El ganador del sorteo puede conservar o ceder el primer turno, con avisos específicos para ambos entrenadores.</li>
+          <li>Las camisetas disponibles pueden reorganizarse mediante arrastre en escritorio y móvil, y el botón FICHAR aparece pegado a la camiseta seleccionada.</li>
+          <li>Cada fichaje muestra una celebración temporal con la carta del jugador cuando está disponible, además de avisos breves cuando vuelve a tocar elegir.</li>
+          <li>La numeración de los jugadores fichados se representa sobre camisetas del color de cada equipo.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">104</div>
       <div class="history-section-content">
@@ -5591,7 +5749,7 @@ body.change-history-active .mobile-home-enter-ball{
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v149 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v150 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -6048,8 +6206,9 @@ function parseCoachCallup(){
 
   // Si hay exactamente los jugadores necesarios, Crear sala queda listo.
   // Si faltan/sobran, se obliga a modificar/corregir antes.
-  confirm.textContent='Crear sala';
+  confirm.textContent='⚽ Crear sala';
   confirm.disabled=parsed.length!==needed;
+  confirm.classList.toggle('coach-ready-create',parsed.length===needed);
 }
 
 
@@ -6139,7 +6298,7 @@ function clearCoachCallup(){
   const review=document.getElementById('coachCallupReview');
   if(review)review.style.display='none';
   const btn=document.getElementById('coachConfirmCallupBtn');
-  if(btn){btn.textContent='Crear sala';btn.disabled=false}
+  if(btn){btn.textContent='Crear sala';btn.disabled=false;btn.classList.remove('coach-ready-create')}
   renderCoachSetupPlayers();
 }
 
@@ -6161,7 +6320,12 @@ function renderCoachSetupPlayers(){
   const count=document.getElementById('coachSetupCount');
   if(count)count.textContent=coachSelectedParticipants.length;
   const create=document.getElementById('coachCreateRoomBtn');
-  if(create)create.disabled=coachSelectedParticipants.length!==needed;
+  if(create){
+    const ready=coachSelectedParticipants.length===needed;
+    create.disabled=!ready;
+    create.textContent=ready?'⚽ Crear sala':'Crear sala';
+    create.classList.toggle('coach-ready-create',ready);
+  }
 }
 function toggleCoachSetupPlayer(name){
   const needed=game==='f7'?14:10;
@@ -6193,6 +6357,152 @@ function leaveCoachView(){
   resetCoachLocalView(false);
   if(history.length>1)history.back();else show('creationMethod');
 }
+
+
+let coachLocalPlayerOrder=[];
+let coachDragState=null;
+let coachSuppressClickUntil=0;
+let coachPreviousMine=false;
+let coachTurnToastTimer=null;
+let coachSigningTimer=null;
+let coachFirstTurnPromptRoom=null;
+
+function coachIsCreator(){return coachTeam==='red'}
+
+function setCoachWaitingOwnership(){
+  const share=document.getElementById('coachShareRow');
+  const code=document.getElementById('coachRoomCodeWrap');
+  if(share)share.style.display=coachIsCreator()?'':'none';
+  if(code)code.style.display=coachIsCreator()?'':'none';
+}
+
+function coachOrderedAvailable(available){
+  const live=new Set(available);
+  coachLocalPlayerOrder=coachLocalPlayerOrder.filter(n=>live.has(n));
+  available.forEach(n=>{if(!coachLocalPlayerOrder.includes(n))coachLocalPlayerOrder.push(n)});
+  return coachLocalPlayerOrder.filter(n=>live.has(n));
+}
+
+function coachPointerDown(ev,name,wrap){
+  if(ev.button!==undefined&&ev.button!==0)return;
+  coachDragState={name,wrap,startX:ev.clientX,startY:ev.clientY,moved:false,pointerId:ev.pointerId};
+  try{wrap.setPointerCapture(ev.pointerId)}catch(_){}
+}
+function coachPointerMove(ev){
+  if(!coachDragState)return;
+  const d=coachDragState;
+  if(Math.hypot(ev.clientX-d.startX,ev.clientY-d.startY)>7)d.moved=true;
+  if(!d.moved)return;
+  d.wrap.classList.add('coach-dragging');
+  document.querySelectorAll('.coach-token-wrap.coach-drag-target').forEach(x=>x.classList.remove('coach-drag-target'));
+  const under=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.coach-token-wrap');
+  if(under&&under!==d.wrap)under.classList.add('coach-drag-target');
+}
+function coachPointerUp(ev){
+  if(!coachDragState)return;
+  const d=coachDragState;
+  d.wrap.classList.remove('coach-dragging');
+  const under=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.coach-token-wrap');
+  document.querySelectorAll('.coach-token-wrap.coach-drag-target').forEach(x=>x.classList.remove('coach-drag-target'));
+  if(d.moved&&under&&under!==d.wrap){
+    const other=under.dataset.player;
+    const a=coachLocalPlayerOrder.indexOf(d.name),b=coachLocalPlayerOrder.indexOf(other);
+    if(a>=0&&b>=0)[coachLocalPlayerOrder[a],coachLocalPlayerOrder[b]]=[coachLocalPlayerOrder[b],coachLocalPlayerOrder[a]];
+    coachSuppressClickUntil=Date.now()+350;
+    refreshCoachRoom();
+  }
+  coachDragState=null;
+}
+
+function showCoachYourTurn(){
+  const el=document.getElementById('coachYourTurnToast');
+  if(!el)return;
+  clearTimeout(coachTurnToastTimer);
+  el.style.display='block';
+  coachTurnToastTimer=setTimeout(()=>{el.style.display='none'},3000);
+}
+
+function continueCoachFirstTurn(){
+  const el=document.getElementById('coachFirstTurnAlert');
+  if(el)el.style.display='none';
+}
+async function cedeCoachFirstTurn(){
+  const el=document.getElementById('coachFirstTurnAlert');
+  const btn=el?.querySelector('.secondary');
+  if(btn){btn.disabled=true;btn.textContent='Cediendo turno…'}
+  try{
+    const {error}=await sbPublic.rpc('transfer_coach_first_turn',{p_code:coachRoomCode,p_token:coachToken});
+    if(error)throw error;
+    continueCoachFirstTurn();
+    await refreshCoachRoom();
+  }catch(e){
+    alert(e.message||'No se ha podido ceder el primer turno.');
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Ceder primer turno al otro entrenador'}
+  }
+}
+function hideCoachTurnCededAlert(){
+  const el=document.getElementById('coachTurnCededAlert');
+  if(el)el.style.display='none';
+}
+function maybeShowCoachFirstTurn(room,picks){
+  if(room.status!=='drafting'||picks.length!==0||coachCoinAnimating)return;
+  if(room.first_turn_ceded_to===coachTeam){
+    const key='coach_ceded_notice_'+room.id+'_'+coachTeam;
+    if(!sessionStorage.getItem(key)){
+      sessionStorage.setItem(key,'1');
+      document.getElementById('coachTurnCededAlert').style.display='grid';
+    }
+    return;
+  }
+  if(room.first_turn===coachTeam&&!room.first_turn_ceded_to&&coachFirstTurnPromptRoom!==room.id){
+    coachFirstTurnPromptRoom=room.id;
+    document.getElementById('coachFirstTurnAlert').style.display='grid';
+  }
+}
+
+function showCoachSigningCelebration(name){
+  const overlay=document.getElementById('coachSigningOverlay');
+  const img=document.getElementById('coachSigningCard');
+  const wrap=document.getElementById('coachSigningCardWrap');
+  const text=document.getElementById('coachSigningText');
+  if(!overlay||!text)return;
+  const card=db.players?.[name]?.card||'';
+  clearTimeout(coachSigningTimer);
+  overlay.classList.remove('is-leaving','no-card');
+  text.textContent='¡Has fichado a '+name+'!';
+  if(card){
+    img.src=card;img.alt='Carta de '+name;wrap.style.display='';
+  }else{
+    img.removeAttribute('src');overlay.classList.add('no-card');
+  }
+  overlay.style.display='grid';
+  overlay.focus();
+  coachSigningTimer=setTimeout(()=>hideCoachSigningCelebration(),4000);
+}
+function hideCoachSigningCelebration(){
+  const overlay=document.getElementById('coachSigningOverlay');
+  if(!overlay||overlay.style.display==='none')return;
+  clearTimeout(coachSigningTimer);
+  overlay.classList.add('is-leaving');
+  setTimeout(()=>{overlay.style.display='none';overlay.classList.remove('is-leaving')},340);
+}
+
+document.addEventListener('pointermove',coachPointerMove,{passive:true});
+document.addEventListener('pointerup',coachPointerUp,{passive:true});
+document.addEventListener('pointercancel',()=>{coachDragState=null});
+document.addEventListener('click',ev=>{
+  if(!document.getElementById('coachRoom')?.classList.contains('active'))return;
+  if(ev.target.closest('.coach-token-wrap'))return;
+  if(ev.target.closest('.coach-special-overlay,.coach-signing-overlay'))return;
+  if(coachSelectedPlayer){coachSelectedPlayer=null;refreshCoachRoom()}
+});
+document.addEventListener('keydown',ev=>{
+  if(ev.key==='Escape'){
+    if(document.getElementById('coachSigningOverlay')?.style.display!=='none')hideCoachSigningCelebration();
+    if(document.getElementById('coachFirstTurnAlert')?.style.display!=='none')continueCoachFirstTurn();
+  }
+});
 
 async function createCoachRoom(){
   const needed=game==='f7'?14:10;
@@ -6263,6 +6573,7 @@ function coachInviteCodeFromHash(){
 
 async function prepareCoachInvite(code){
   lineupCreationMethod='coach';
+  document.body.classList.remove('mobile-ball-ready','home-mobile-intro-pending','home-mobile-intro-visible');
   coachRoomCode=String(code||'').toUpperCase();
   const saved=localStorage.getItem(coachStorageKey(coachRoomCode));
   if(saved){
@@ -6311,6 +6622,7 @@ async function enterCoachRoom(){
   document.getElementById('coachRoomCode').textContent=coachRoomCode;
   document.getElementById('coachRoomMode').textContent=coachModeLabel(game);
   document.getElementById('coachShareLink').value=location.origin+location.pathname+'#entrenador/'+coachRoomCode;
+  setCoachWaitingOwnership();
   history.replaceState(screenHistoryState('coachRoom'),'','#entrenador/'+coachRoomCode);
   show('coachRoom',{fromHistory:true});
   subscribeCoachRoom();
@@ -6333,7 +6645,7 @@ function subscribeCoachRoom(){
 async function refreshCoachRoom(){
   if(!coachRoomId)return;
   const [{data:room,error:roomError},{data:picks,error:picksError}]=await Promise.all([
-    sbPublic.from('coach_rooms').select('id,code,mode,status,black_token_hash,current_turn,first_turn,started_at,selected_players').eq('id',coachRoomId).single(),
+    sbPublic.from('coach_rooms').select('id,code,mode,status,black_token_hash,current_turn,first_turn,first_turn_ceded_to,started_at,selected_players').eq('id',coachRoomId).single(),
     sbPublic.from('coach_room_picks').select('player_name,team,pick_order').eq('room_id',coachRoomId).order('pick_order')
   ]);
   if(roomError||!room)return;
@@ -6351,6 +6663,7 @@ function renderCoachRoom(room,picks){
   document.getElementById('coachRoomCode').textContent=room.code;
   document.getElementById('coachRoomMode').textContent=coachModeLabel(room.mode);
   document.getElementById('coachShareLink').value=location.origin+location.pathname+'#entrenador/'+room.code;
+  setCoachWaitingOwnership();
 
   const secondReady=!!room.black_token_hash;
   if(secondReady&&!coachHadSecond&&coachTeam==='red'&&room.status==='waiting'){
@@ -6358,10 +6671,13 @@ function renderCoachRoom(room,picks){
   }
   coachHadSecond=secondReady;
   document.getElementById('coachWaitingTitle').textContent=secondReady?'¡El otro entrenador ya está aquí!':'Esperando al segundo entrenador…';
-  document.getElementById('coachWaitingText').textContent=secondReady?'Ya podéis comenzar. La moneda decidirá quién ficha primero.':'Comparte este enlace para que entre el otro entrenador.';
+  document.getElementById('coachWaitingText').textContent=secondReady
+    ?'Ya podéis comenzar. La moneda decidirá quién ficha primero.'
+    :(coachIsCreator()?'Comparte este enlace para que entre el otro entrenador.':'Esperando a que el otro entrenador esté preparado.');
   const startBtn=document.getElementById('coachStartBtn');
   startBtn.disabled=!secondReady;
-  startBtn.textContent=secondReady?'COMENZAR':'ESPERANDO AL RIVAL…';
+  startBtn.textContent=secondReady?'⚽ COMENZAR':'ESPERANDO AL RIVAL…';
+  startBtn.classList.toggle('coach-start-ready',secondReady);
 
   if(room.status==='waiting'){
     waiting.style.display='';
@@ -6405,25 +6721,31 @@ function renderCoachDraft(room,picks){
   const displayBlack=picks.filter(p=>coachDisplayTeam(p.team,room.code)==='black');
   const picked=new Set(picks.map(p=>p.player_name));
   const all=(room.selected_players&&room.selected_players.length)?room.selected_players:coachPlayersForMode(room.mode);
-  const available=all.filter(n=>!picked.has(n));
+  const available=coachOrderedAvailable(all.filter(n=>!picked.has(n)));
   if(coachSelectedPlayer&&picked.has(coachSelectedPlayer))coachSelectedPlayer=null;
 
   document.getElementById('coachRedPicks').innerHTML=displayRed.map((p,i)=>`<div class="coach-picked-token red-pick"><span>${i+1}</span>${escapeHtml(p.player_name)}</div>`).join('');
   document.getElementById('coachBlackPicks').innerHTML=displayBlack.map((p,i)=>`<div class="coach-picked-token black-pick"><span>${i+1}</span>${escapeHtml(p.player_name)}</div>`).join('');
 
   const mine=room.current_turn===coachTeam&&room.status==='drafting';
+  if(mine&&!coachPreviousMine&&picks.length>0)showCoachYourTurn();
+  coachPreviousMine=mine;
+  maybeShowCoachFirstTurn(room,picks);
   const box=document.getElementById('coachAvailablePlayers');
   box.innerHTML='';
   available.forEach(name=>{
     const wrap=document.createElement('div');
     wrap.className='coach-token-wrap'+(coachSelectedPlayer===name?' selected':'');
+    wrap.dataset.player=name;
+    wrap.onpointerdown=(ev)=>coachPointerDown(ev,name,wrap);
     const b=document.createElement('button');
     b.className='coach-token'+(coachSelectedPlayer===name?' selected':'');
     b.textContent=name;
     b.disabled=!mine;
-    b.onclick=()=>{
-      if(!mine)return;
-      coachSelectedPlayer=name;
+    b.onclick=(ev)=>{
+      ev.stopPropagation();
+      if(!mine||Date.now()<coachSuppressClickUntil)return;
+      coachSelectedPlayer=coachSelectedPlayer===name?null:name;
       renderCoachDraft(room,picks);
     };
     wrap.appendChild(b);
@@ -6509,6 +6831,7 @@ function animateCoachCoin(firstTurn,onDone){
     document.getElementById('coachDraft').style.display='grid';
     coachCoinAnimating=false;
     if(onDone)onDone();
+    refreshCoachRoom();
   },3500);
 }
 
@@ -6519,6 +6842,7 @@ async function confirmCoachPick(){
     const {error}=await sbPublic.rpc('pick_coach_player',{p_code:coachRoomCode,p_token:coachToken,p_player_name:name});
     if(error)throw error;
     coachSelectedPlayer=null;
+    showCoachSigningCelebration(name);
     await refreshCoachRoom();
   }catch(e){
     alert(e.message||'No se ha podido fichar al jugador.');
