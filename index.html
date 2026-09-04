@@ -3631,6 +3631,26 @@ body.album-reader-open{
   opacity:1 !important;
 }
 
+
+/* v136 · Ajuste del balón de entrada móvil */
+@media(max-width:900px) and (orientation:portrait){
+  .mobile-home-enter-ball{
+    width:106px !important;
+    height:106px !important;
+    top:56% !important;
+    z-index:20 !important;
+    filter:grayscale(1) contrast(1.65) brightness(.72) drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
+  }
+  .mobile-home-enter-ball .football-pattern{
+    font-size:106px !important;
+  }
+  .mobile-home-enter-ball .football-enter-text{
+    background:rgba(245,245,245,.94) !important;
+    color:#050505 !important;
+    font-size:12px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3722,7 +3742,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v135 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v136 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3912,8 +3932,19 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v135</span>
+    <span class="history-version">VERSIÓN v136</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">91</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · ajustes de entrada</h2>
+        <ul>
+          <li>El balón «Entrar» queda detrás de los avisos especiales, es algo más pequeño, más bajo y con acabado negro y blanco.</li>
+          <li>El aviso especial de los viernes elimina el texto «Patxanguilles presenta».</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">90</div>
       <div class="history-section-content">
@@ -7349,7 +7380,7 @@ function showNextSpecialWelcome(){
   }else{
     const fridayPhoto=fridayPhotoForToday();
     const fridayCredit=fridayPhoto.source?`<a class="special-photo-credit" href="${fridayPhoto.source}" target="_blank" rel="noopener">${escapeHtml(fridayPhoto.credit)}</a>`:'';
-    content.innerHTML=`<img class="special-football-photo" src="${fridayPhoto.src}" alt="${escapeHtml(fridayPhoto.alt)}">${fridayCredit}<div class="special-card-inner"><div class="special-kicker">Patxanguilles presenta</div><h2>¡Por fin es viernes!</h2><div style="margin-top:-10px;margin-bottom:18px;font-size:13px;font-style:italic;opacity:.72">— Rafeta dixit</div><button class="primary special-continue" onclick="showNextSpecialWelcome()">Entrar</button></div>`;
+    content.innerHTML=`<img class="special-football-photo" src="${fridayPhoto.src}" alt="${escapeHtml(fridayPhoto.alt)}">${fridayCredit}<div class="special-card-inner"><div class="special-kicker"></div><h2>¡Por fin es viernes!</h2><div style="margin-top:-10px;margin-bottom:18px;font-size:13px;font-style:italic;opacity:.72">— Rafeta dixit</div><button class="primary special-continue" onclick="showNextSpecialWelcome()">Entrar</button></div>`;
   }
   overlay.classList.add('open');
 }
