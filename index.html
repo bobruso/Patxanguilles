@@ -3844,6 +3844,13 @@ body.change-history-active .mobile-home-enter-ball{
   }
 }
 
+
+/* v144 · Calendario rojo + fondos móviles por día */
+#season .season-calendar-btn{background:linear-gradient(145deg,#7f1117,#b51f28)!important;color:#fff!important;border-color:#d84a52!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 12px rgba(90,0,5,.22)!important}
+#season .season-calendar-btn:hover{background:linear-gradient(145deg,#94151c,#ca2731)!important;border-color:#ef6269!important}
+#mobileDayVideoBg{display:none}
+@media(max-width:900px) and (orientation:portrait){body.mobile-day-video #mobileDayVideoBg{display:block;position:fixed;inset:0;z-index:-4;overflow:hidden;pointer-events:none;background:#07100b}#mobileDayVideo{width:100%;height:100%;object-fit:cover;display:block}}
+
 </style>
 </head>
 <body>
@@ -3858,6 +3865,7 @@ body.change-history-active .mobile-home-enter-ball{
     <source data-src="hoy es viernes_1.mp4" type="video/mp4">
   </video>
 </div>
+<div id="mobileDayVideoBg" aria-hidden="true"><video id="mobileDayVideo" muted loop playsinline preload="none"></video></div>
 <div id="desktopHomeVideoBg" aria-hidden="true">
   <video id="desktopHomeVideo" muted loop playsinline preload="none" poster="background-home-desktop.jpg">
     <source data-src="background-home-desktop.mp4" type="video/mp4">
@@ -4123,8 +4131,19 @@ body.change-history-active .mobile-home-enter-ball{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v143</span>
+    <span class="history-version">VERSIÓN v144</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">99</div>
+      <div class="history-section-content">
+        <h2>Temporada y fondos móviles por día</h2>
+        <ul>
+          <li>El botón Calendario pasa a fondo rojo e incorpora el icono 📅.</li>
+          <li>La versión vertical móvil incorpora fondos de vídeo específicos para lunes, martes, miércoles, jueves, sábado y domingo, manteniendo el tratamiento especial existente para el viernes.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">98</div>
       <div class="history-section-content">
@@ -5361,7 +5380,7 @@ body.change-history-active .mobile-home-enter-ball{
 
 <section id="season" class="screen results"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div></div>
-<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn" onclick="seasonTab('calendar',this)">Calendario</button><button class="nav-btn album-special-btn" id="seasonAlbumBtn" onclick="window.open('album.html','_blank')"><span class="album-star">★</span> Ver álbum de cartas <span class="album-star">★</span></button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
+<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn season-calendar-btn" onclick="seasonTab('calendar',this)">📅 Calendario</button><button class="nav-btn album-special-btn" id="seasonAlbumBtn" onclick="window.open('album.html','_blank')"><span class="album-star">★</span> Ver álbum de cartas <span class="album-star">★</span></button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
 <div id="seasonContent"></div>
 </div></section>
 
@@ -5427,7 +5446,7 @@ body.change-history-active .mobile-home-enter-ball{
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v143 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v144 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -5467,7 +5486,20 @@ body.change-history-active .mobile-home-enter-ball{
   <div id="specialWelcomeContent" class="special-card"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+function setupMobileDayBackground(){
+  const video=document.getElementById('mobileDayVideo');
+  if(!video)return;
+  const files={0:'domingo.mp4',1:'lunes.mp4',2:'martes.mp4',3:'miercoles.mp4',4:'jueves.mp4',6:'sabado.mp4'};
+  const src=files[new Date().getDay()]||'';
+  if(!src){document.body.classList.remove('mobile-day-video');video.pause();video.removeAttribute('src');return;}
+  video.src=src; video.muted=true; video.loop=true;
+  document.body.classList.add('mobile-day-video');
+  video.play().catch(()=>{});
+}
+window.addEventListener('DOMContentLoaded',setupMobileDayBackground);
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 const F7=["Álex","Benja","César","Datxu","Dídac","Ernest","Escri","Germán","Guillem","Josete","Jota","Julio","Luís","Marc","Nacho","Nelo","Pau","Rafeta","Raul","Rico","Rosana","Rubén","Toni","Xavi","Duro","Gabal","Cordo","Jorgito","Manel","Oskar","Rafa","Santi","Jorge","Erika","Héctor"].sort((a,b)=>a.localeCompare(b,'es'));
