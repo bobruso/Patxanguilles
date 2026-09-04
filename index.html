@@ -4095,6 +4095,138 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   z-index:90!important;
 }
 
+
+/* v152 · ajuste fino del draft en móvil */
+@media(max-width:800px){
+  /* Botón de comienzo: más compacto y centrado dentro del panel */
+  #coachStartBtn.coach-start-ready{
+    width:82%!important;
+    max-width:300px!important;
+    min-width:0!important;
+    min-height:50px!important;
+    margin:12px auto 0!important;
+    padding:10px 12px!important;
+    font-size:15px!important;
+    line-height:1.1!important;
+    display:block!important;
+    box-sizing:border-box!important;
+  }
+
+  /* Popups de primer turno: tarjeta claramente contenida en el viewport */
+  #coachFirstTurnAlert,
+  #coachTurnCededAlert{
+    padding:12px!important;
+    background:transparent!important;
+    backdrop-filter:none!important;
+    align-items:center!important;
+    justify-items:center!important;
+    box-sizing:border-box!important;
+  }
+  #coachFirstTurnAlert .coach-special-card,
+  #coachTurnCededAlert .coach-special-card{
+    width:calc(100vw - 44px)!important;
+    max-width:360px!important;
+    margin:0 auto!important;
+    padding:24px 16px 18px!important;
+    box-sizing:border-box!important;
+    border-radius:18px!important;
+  }
+  #coachFirstTurnAlert .coach-special-icon,
+  #coachTurnCededAlert .coach-special-icon{font-size:40px!important}
+  #coachFirstTurnAlert .coach-special-card h2,
+  #coachTurnCededAlert .coach-special-card h2{
+    font-size:21px!important;
+    line-height:1.12!important;
+    margin:7px 0!important;
+    overflow-wrap:anywhere!important;
+  }
+  #coachFirstTurnAlert .coach-special-card p,
+  #coachTurnCededAlert .coach-special-card p{
+    font-size:13px!important;
+    line-height:1.35!important;
+  }
+  #coachFirstTurnAlert .coach-special-actions{margin-top:15px!important}
+  #coachFirstTurnAlert .coach-special-actions button,
+  #coachTurnCededAlert .coach-special-card button.primary{
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    font-size:13px!important;
+    padding:10px!important;
+  }
+
+  /* Celebración: sin velo/fondo oscuro; solo carta, FX y mensaje */
+  #coachSigningOverlay{
+    background:transparent!important;
+    backdrop-filter:none!important;
+    pointer-events:none!important;
+  }
+  #coachSigningOverlay .coach-signing-content,
+  #coachSigningOverlay .coach-signing-close{
+    pointer-events:auto!important;
+  }
+  #coachSigningOverlay::before,
+  #coachSigningOverlay::after{opacity:.45!important}
+  #coachSigningCardWrap{height:min(58vh,520px)!important}
+  #coachSigningCard{max-width:72vw!important}
+
+  /* Columnas de fichajes: más estrechas y algo más interiores */
+  .coach-picked-side{
+    width:25%!important;
+    max-width:25%!important;
+  }
+  .coach-picked-side.left{
+    left:1.5%!important;
+  }
+  .coach-picked-side.right{
+    right:4.5%!important;
+  }
+  .coach-picked-token{
+    width:100%!important;
+    min-width:0!important;
+    padding:3px 4px!important;
+    gap:3px!important;
+    font-size:8.5px!important;
+    line-height:1.05!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  .coach-picked-token span{
+    width:21px!important;
+    height:25px!important;
+    flex:0 0 21px!important;
+    font-size:8px!important;
+  }
+  .coach-picked-token b,
+  .coach-picked-token strong{
+    min-width:0!important;
+    max-width:calc(100% - 24px)!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:8.5px!important;
+  }
+}
+
+
+/* v153 · posición móvil del aviso TE TOCA */
+@media(max-width:800px){
+  #coachYourTurnToast.coach-your-turn-toast{
+    left:50%!important;
+    right:auto!important;
+    bottom:92px!important;
+    width:max-content!important;
+    max-width:calc(100vw - 40px)!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+    text-align:center!important;
+    transform:translateX(-50%)!important;
+  }
+  @keyframes coachTurnPop{
+    from{opacity:0;transform:translate(-50%,24px) scale(.7)}
+    to{opacity:1;transform:translate(-50%,0) scale(1)}
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4410,8 +4542,31 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v151</span>
+    <span class="history-version">VERSIÓN v153</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">108</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · aviso de turno móvil</h2>
+        <ul>
+          <li>El aviso «TE TOCA» se desplaza hacia arriba y se centra correctamente en pantallas móviles.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">107</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · ajuste móvil del draft</h2>
+        <ul>
+          <li>El botón COMENZAR se reduce y centra para quedar contenido en pantallas móviles.</li>
+          <li>Los avisos de primer turno se adaptan al ancho móvil y dejan de oscurecer toda la pantalla.</li>
+          <li>La celebración de fichaje elimina el fondo oscuro en móvil para destacar únicamente carta, efectos y mensaje.</li>
+          <li>Las listas laterales de fichajes se compactan y la columna derecha se desplaza hacia el interior para evitar cortes y dejar más libre el tablero central.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">106</div>
       <div class="history-section-content">
@@ -5804,7 +5959,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v151 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v153 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
