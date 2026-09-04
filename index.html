@@ -3693,6 +3693,68 @@ body.album-reader-open{
   text-align:right !important;
 }
 
+
+/* v140 · importador de convocatoria dentro de Añadir resultado */
+#resultForm .result-callup-import{margin:16px 0 10px}
+#resultForm .algorithm-manual-label{margin-bottom:14px}
+
+
+/* v141 · ADMIN e historial de cambios en Home */
+.admin-corner{
+  right:10px !important;
+  bottom:14px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-end !important;
+  gap:5px !important;
+}
+.admin-corner .admin-trigger{
+  align-self:flex-end !important;
+  margin-bottom:1px !important;
+}
+.admin-corner .home-version-link{
+  position:static !important;
+  width:auto !important;
+  margin:0 !important;
+  transform:none !important;
+  align-self:flex-end !important;
+  text-align:right !important;
+}
+.admin-corner .home-version-link a{
+  display:block !important;
+  width:auto !important;
+  text-align:right !important;
+  background:rgba(10,13,16,.92) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  padding:5px 8px !important;
+  border-radius:7px !important;
+  color:rgba(245,247,246,.88) !important;
+}
+@media(max-width:700px){
+  .admin-corner{
+    right:8px !important;
+    bottom:12px !important;
+    gap:4px !important;
+  }
+  .admin-corner .home-version-link a{
+    font-size:7.5px !important;
+    padding:4px 6px !important;
+    white-space:nowrap !important;
+  }
+}
+
+
+/* v142 · balón ENTRAR móvil */
+@media(max-width:900px) and (orientation:portrait){
+  .mobile-home-enter-ball{
+    left:53.5% !important;
+    filter:grayscale(1) contrast(1.42) brightness(1.30) drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
+  }
+  .mobile-home-enter-ball .football-enter-text{
+    background:rgba(255,255,255,.99) !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3784,7 +3846,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">v139 - Historial cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">v142 - Historial cambios</a>
 </div>
 </section>
 
@@ -3974,8 +4036,39 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v139</span>
+    <span class="history-version">VERSIÓN v142</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">97</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · balón de entrada</h2>
+        <ul>
+          <li>El balón de entrada se desplaza ligeramente hacia la derecha y aumenta la luminosidad de sus zonas blancas.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">96</div>
+      <div class="history-section-content">
+        <h2>Home · ADMIN e historial</h2>
+        <ul>
+          <li>El enlace del historial queda alineado a la derecha bajo ADMIN, con una caja ligeramente más opaca para mejorar su lectura y más espacio respecto al reproductor.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">95</div>
+      <div class="history-section-content">
+        <h2>Apuntar resultado · importar convocatoria</h2>
+        <ul>
+          <li>El importador «Copia y pega convocatoria aquí» se mueve al formulario de Añadir resultado, después de elegir Fútbol 7 o Fútbol Sala.</li>
+          <li>Su funcionamiento y presentación siguen el mismo sistema del importador existente en Crear alineación, manteniendo debajo la selección manual para corregir jugadores.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">94</div>
       <div class="history-section-content">
@@ -5159,15 +5252,6 @@ body.album-reader-open{
 
 <section id="resultMode" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="show('home')">← Volver</button><h2>Apuntar resultado</h2><div class="subtitle">Selecciona la modalidad del partido.</div></div></div>
-<div class="coach-whatsapp-import result-callup-import">
-  <div class="coach-whatsapp-head"><div><strong>📋 Copia y pega convocatoria aquí</strong></div></div>
-  <textarea id="resultCallupText" rows="7" placeholder=""></textarea>
-  <div class="coach-whatsapp-actions">
-    <button class="secondary" onclick="parseResultCallup()">Detectar convocatoria</button>
-    <button class="ghost" onclick="clearResultCallup()">Limpiar</button>
-  </div>
-  <div id="resultCallupStatus" class="coach-callup-warning" style="display:none"></div>
-</div>
 <div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="openResultMode('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>Apuntar partido de Fútbol 7</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="openResultMode('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>Apuntar partido de Fútbol Sala</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
@@ -5184,6 +5268,24 @@ body.album-reader-open{
 
 <section id="resultForm" class="screen results"><div class="card result-form-card">
 <div class="topbar"><div><button class="back" onclick="cancelResultForm()">← Volver</button><h2>Añadir resultado</h2><div class="subtitle">Guarda el partido en el histórico de la temporada.</div></div></div>
+
+<div class="coach-whatsapp-import algorithm-callup-import result-callup-import">
+  <div class="coach-whatsapp-head">
+    <div><strong>📋 Copia y pega convocatoria aquí</strong></div>
+  </div>
+  <textarea id="resultCallupText" rows="7" placeholder=""></textarea>
+  <div class="coach-whatsapp-actions">
+    <button class="secondary" onclick="parseResultCallup()">Detectar convocatoria</button>
+    <button class="ghost" onclick="clearResultCallup()">Limpiar</button>
+  </div>
+  <div id="resultCallupStatus" class="coach-callup-warning" style="display:none"></div>
+</div>
+
+<div class="coach-manual-label algorithm-manual-label">
+  <strong>O selecciona los jugadores manualmente</strong>
+  <span>También puedes corregir aquí cualquier jugador que falte.</span>
+</div>
+
 <div class="result-top-row">
   <div class="field result-date-field"><label>Fecha</label><input id="matchDate" type="date"></div>
   <div class="match-extra-actions result-top-actions">
@@ -7233,8 +7335,12 @@ let pendingResultCallupNames=[];
 
 function parseResultCallup(){
   const text=document.getElementById('resultCallupText')?.value||'';
-  const rawLines=text.split(/\r?\n/),participantLines=[];
+  const needed=currentSeasonMode==='f7'?14:10;
+  const roster=currentSeasonMode==='f7'?F7:FS;
+  const rawLines=text.split(/\r?\n/);
+  const participantLines=[];
   let inReserves=false;
+
   for(const raw of rawLines){
     const trimmed=String(raw||'').replace(/[⁠ ]/g,' ').trim();
     if(!trimmed)continue;
@@ -7245,42 +7351,53 @@ function parseResultCallup(){
       if(cleaned)participantLines.push(cleaned);
     }
   }
+
   if(!participantLines.length){
     for(const raw of rawLines){
       const trimmed=String(raw||'').trim();
       if(/^\s*reservas?\b/i.test(trimmed))break;
       const cleaned=cleanCoachCallupLine(trimmed);
-      if(cleaned)participantLines.push(cleaned);
+      if(!cleaned)continue;
+      const norm=normalizeCoachCallupName(cleaned);
+      if(roster.some(r=>normalizeCoachCallupName(r)===norm))participantLines.push(cleaned);
     }
   }
-  pendingResultCallupNames=[...new Set(participantLines.map(n=>normalizeCoachCallupName(n)).filter(Boolean))];
+
+  const detected=[],unknown=[],seen=new Set();
+  participantLines.forEach(rawName=>{
+    const norm=normalizeCoachCallupName(rawName);
+    if(!norm||seen.has(norm))return;
+    seen.add(norm);
+    const exact=roster.find(r=>normalizeCoachCallupName(r)===norm);
+    if(exact){detected.push(exact);return}
+    const close=closestCoachRosterName(rawName,roster);
+    unknown.push(close?`${rawName} → ¿${close.name}?`:rawName);
+  });
+
+  pendingResultCallupNames=detected.slice(0,needed);
+  renderChecks('redChecks',pendingResultCallupNames,'red');
+  renderChecks('blackChecks',pendingResultCallupNames,'black');
+
   const status=document.getElementById('resultCallupStatus');
   if(status){
+    const messages=[`He detectado ${detected.length} de ${needed} jugadores.`];
+    if(detected.length<needed)messages.push(`Faltan ${needed-detected.length}; puedes añadirlos manualmente debajo.`);
+    if(detected.length>needed)messages.push(`Hay ${detected.length-needed} jugadores de más; revisa la convocatoria.`);
+    if(unknown.length)messages.push(`No he seleccionado automáticamente: ${unknown.join(', ')}.`);
+    messages.push('Ahora marca qué jugadores fueron Rojos y cuáles Negros.');
+    status.textContent=messages.join(' ');
     status.style.display='';
-    status.textContent=pendingResultCallupNames.length
-      ? `He detectado ${pendingResultCallupNames.length} jugadores. Elige ahora Fútbol 7 o Fútbol Sala.`
-      : 'No he detectado jugadores. Revisa el formato de la convocatoria.';
   }
 }
 
 function clearResultCallup(){
-  const t=document.getElementById('resultCallupText'),s=document.getElementById('resultCallupStatus');
-  if(t)t.value='';
-  if(s){s.style.display='none';s.textContent=''}
+  const textarea=document.getElementById('resultCallupText');
+  if(textarea)textarea.value='';
+  const status=document.getElementById('resultCallupStatus');
+  if(status){status.style.display='none';status.textContent=''}
   pendingResultCallupNames=[];
-}
-
-function applyResultCallupToChecks(){
-  if(!pendingResultCallupNames.length)return;
-  const pool=currentSeasonMode==='f7'?F7:FS;
-  const detected=[];
-  for(const norm of pendingResultCallupNames){
-    const exact=pool.find(r=>normalizeCoachCallupName(r)===norm);
-    if(exact&&!detected.includes(exact))detected.push(exact);
-  }
-  const half=Math.ceil(detected.length/2);
-  renderChecks('redChecks',detected.slice(0,half),'red');
-  renderChecks('blackChecks',detected.slice(half),'black');
+  renderChecks('redChecks',[],'red');
+  renderChecks('blackChecks',[],'black');
 }
 
 function openResultMode(mode){
@@ -7289,6 +7406,13 @@ function openResultMode(mode){
   openResultForm();
 }
 function openResultForm(red=null,black=null,match=null){
+  if(!match){
+    pendingResultCallupNames=[];
+    const callupText=document.getElementById('resultCallupText');
+    const callupStatus=document.getElementById('resultCallupStatus');
+    if(callupText)callupText.value='';
+    if(callupStatus){callupStatus.style.display='none';callupStatus.textContent=''}
+  }
   if(game)currentSeasonMode=game;
   const activeScreen=document.querySelector('.screen.active')?.id||'home';
   resultReturn=activeScreen==='results'?'results':activeScreen==='resultMode'?'resultMode':activeScreen==='season'?'season':'home';
@@ -7301,7 +7425,6 @@ function openResultForm(red=null,black=null,match=null){
   document.getElementById('blackScore').value=Number(match?.blackScore)||0;
   renderChecks('redChecks',presetRed,'red');
   renderChecks('blackChecks',presetBlack,'black');
-  if(!match && resultReturn==='resultMode')applyResultCallupToChecks();
   document.getElementById('goalEvents').innerHTML='';
   document.getElementById('assistEvents').innerHTML='';
   document.getElementById('matchPhoto').value='';
