@@ -4342,6 +4342,176 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   }
 }
 
+
+/* v158 · ajustes de espera y llegada del segundo entrenador en móvil */
+@media(max-width:800px){
+  /* Texto de espera/compartir: negro para ganar contraste sobre el fondo claro. */
+  #coachRoom.active #coachWaiting,
+  #coachRoom.active #coachWaiting h1,
+  #coachRoom.active #coachWaiting h2,
+  #coachRoom.active #coachWaiting h3,
+  #coachRoom.active #coachWaiting p,
+  #coachRoom.active #coachWaiting .coach-waiting-text,
+  #coachRoom.active #coachWaiting .coach-share-text,
+  #coachRoom.active #coachWaiting .coach-room-code{
+    color:#000!important;
+    -webkit-text-fill-color:#000!important;
+    text-shadow:none!important;
+  }
+
+  /* Popup de llegada: lo situamos mucho más arriba del documento.
+     top:25% equivale a subirlo desde el centro hacia el 75% superior. */
+  #coachArrivalAlert{
+    align-items:flex-start!important;
+    padding-top:25dvh!important;
+    box-sizing:border-box!important;
+  }
+  #coachArrivalAlert .coach-special-card{
+    margin-top:0!important;
+  }
+}
+
+
+/* v159 · en espera móvil solo las dos frases van en negro */
+@media(max-width:800px){
+  #coachRoom.active #coachWaiting .coach-room-code,
+  #coachRoom.active #coachWaiting .coach-room-code *,
+  #coachRoom.active #coachWaiting .coach-share-row,
+  #coachRoom.active #coachWaiting .coach-share-row *,
+  #coachRoom.active #coachWaiting input,
+  #coachRoom.active #coachWaiting button{
+    -webkit-text-fill-color:initial!important;
+    text-shadow:initial;
+  }
+
+  /* Solo estas dos frases conservan el negro forzado. */
+  #coachRoom.active #coachWaitingTitle,
+  #coachRoom.active #coachWaitingText{
+    color:#000!important;
+    -webkit-text-fill-color:#000!important;
+    text-shadow:none!important;
+  }
+}
+
+
+/* v160 · subir realmente el popup 👀 del segundo entrenador en móvil */
+@media(max-width:800px){
+  #coachOpponentAlert{
+    align-items:flex-start!important;
+    justify-content:center!important;
+    padding-top:25dvh!important;
+    box-sizing:border-box!important;
+  }
+  #coachOpponentAlert .coach-opponent-alert-card{
+    margin:0 auto!important;
+    transform:none!important;
+  }
+}
+
+
+/* v162 · carga suave de cartas y celebración */
+#coachSigningCard{
+  opacity:0;
+  transform:scale(.72);
+}
+#coachSigningCard.coach-card-ready{
+  animation:coachCardReveal .42s cubic-bezier(.18,.88,.28,1.16) both;
+}
+@keyframes coachCardReveal{
+  from{opacity:0;transform:scale(.72)}
+  to{opacity:1;transform:scale(1)}
+}
+.coach-signing-fx{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  overflow:hidden;
+}
+.coach-signing-fx::before,.coach-signing-fx::after{
+  z-index:3;
+}
+.coach-signing-close{z-index:5!important}
+
+
+/* v163 · celebración de fichaje a pantalla completa */
+#coachSigningOverlay{
+  overflow:hidden!important;
+}
+#coachSigningOverlay .coach-signing-fx{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100dvh!important;
+  z-index:6!important;
+  pointer-events:none!important;
+  overflow:hidden!important;
+}
+#coachSigningOverlay .coach-signing-content{
+  position:relative;
+  z-index:4;
+}
+.coach-firework{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  opacity:0;
+  transform:translate(-50%,-50%);
+  animation:coachFireworkBurst 1.05s ease-out forwards;
+}
+.coach-firework::before,
+.coach-firework::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:
+    0 -58px 0 0 #ffd76a,
+    41px -41px 0 0 #fff1a8,
+    58px 0 0 0 #ffb13b,
+    41px 41px 0 0 #ffd76a,
+    0 58px 0 0 #fff1a8,
+    -41px 41px 0 0 #ffb13b,
+    -58px 0 0 0 #ffd76a,
+    -41px -41px 0 0 #fff1a8,
+    20px -52px 0 0 #fff,
+    52px -20px 0 0 #ffd76a,
+    52px 20px 0 0 #fff,
+    20px 52px 0 0 #ffb13b,
+    -20px 52px 0 0 #fff,
+    -52px 20px 0 0 #ffd76a,
+    -52px -20px 0 0 #fff,
+    -20px -52px 0 0 #ffb13b;
+}
+.coach-firework::after{
+  transform:translate(-50%,-50%) rotate(22.5deg) scale(.72);
+  opacity:.8;
+}
+@keyframes coachFireworkBurst{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}
+  15%{opacity:1}
+  70%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.28)}
+}
+.coach-screen-star{
+  position:absolute;
+  font-size:clamp(12px,3vw,25px);
+  line-height:1;
+  opacity:0;
+  animation:coachScreenStar 1.35s ease-out forwards;
+  filter:drop-shadow(0 0 5px rgba(255,220,100,.75));
+}
+@keyframes coachScreenStar{
+  0%{opacity:0;transform:scale(.25) rotate(0deg)}
+  20%{opacity:1}
+  100%{opacity:0;transform:scale(1.35) rotate(120deg)}
+}
+
 </style>
 </head>
 <body>
@@ -4657,8 +4827,59 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v157</span>
+    <span class="history-version">VERSIÓN v163</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">116</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · celebración de fichajes</h2>
+        <ul>
+          <li>La celebración de cada fichaje reparte las estrellas por toda la pantalla e incorpora fuegos artificiales delante de la carta, también en móvil.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">115</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · duración del fichaje</h2>
+        <ul>
+          <li>La celebración «¡Has fichado a…!» con carta o sin ella reduce su duración automática de 4 a 3 segundos.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">114</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · posición del aviso de llegada</h2>
+        <ul>
+          <li>El popup «¡Ha llegado el otro entrenador!» se desplaza al cuarto superior de la pantalla móvil para aparecer visible sin desplazamiento.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">113</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · contraste de espera móvil</h2>
+        <ul>
+          <li>En la espera móvil el negro se limita a «Esperando al segundo entrenador» y «Comparte este enlace…», manteniendo el enlace, su caja y el botón de copiar con su estilo original.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">112</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · espera móvil</h2>
+        <ul>
+          <li>El texto de espera y de compartir la invitación pasa a negro en móvil para mejorar su lectura sobre el fondo claro.</li>
+          <li>El aviso de llegada del segundo entrenador se coloca más arriba en la pantalla para que aparezca visible sin necesidad de desplazarse.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">111</div>
       <div class="history-section-content">
@@ -6108,7 +6329,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v157 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v163 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -6724,6 +6945,53 @@ let coachSuppressClickUntil=0;
 let coachPreviousMine=false;
 let coachTurnToastTimer=null;
 let coachSigningTimer=null;
+const coachCardPreloadCache=new Map();
+let coachCardPreloadRoom=null;
+let coachCardPreloadRun=0;
+
+function coachLoadCard(url){
+  if(!url)return Promise.resolve(false);
+  if(coachCardPreloadCache.get(url)==='loaded')return Promise.resolve(true);
+  const existing=coachCardPreloadCache.get(url);
+  if(existing&&existing.then)return existing;
+  const job=new Promise(resolve=>{
+    const im=new Image();
+    im.decoding='async';
+    im.onload=()=>{
+      coachCardPreloadCache.set(url,'loaded');
+      if(im.decode)im.decode().catch(()=>{}).finally(()=>resolve(true));
+      else resolve(true);
+    };
+    im.onerror=()=>{
+      coachCardPreloadCache.delete(url);
+      resolve(false);
+    };
+    im.src=url;
+  });
+  coachCardPreloadCache.set(url,job);
+  return job;
+}
+
+async function preloadCoachDraftCards(room){
+  if(!room?.id||room.status!=='drafting')return;
+  const roomKey=String(room.id);
+  if(coachCardPreloadRoom===roomKey)return;
+  coachCardPreloadRoom=roomKey;
+  const run=++coachCardPreloadRun;
+  const names=(room.selected_players&&room.selected_players.length)?room.selected_players:coachPlayersForMode(room.mode);
+  const queue=names.map(name=>({name,url:db.players?.[name]?.card||''})).filter(x=>x.url);
+
+  // Cola discreta: solo dos descargas simultáneas para no competir con el draft.
+  let cursor=0;
+  async function worker(){
+    while(run===coachCardPreloadRun){
+      const item=queue[cursor++];
+      if(!item)return;
+      await coachLoadCard(item.url);
+    }
+  }
+  await Promise.all([worker(),worker()]);
+}
 let coachFirstTurnPromptRoom=null;
 
 function coachIsCreator(){return coachTeam==='red'}
@@ -6831,24 +7099,81 @@ function maybeShowCoachFirstTurn(room,picks){
   }
 }
 
+function launchCoachSigningScreenFX(){
+  const overlay=document.getElementById('coachSigningOverlay');
+  if(!overlay)return;
+  let fx=overlay.querySelector('.coach-signing-fx');
+  if(!fx){
+    fx=document.createElement('div');
+    fx.className='coach-signing-fx';
+    overlay.appendChild(fx);
+  }
+  fx.innerHTML='';
+
+  // Estrellas repartidas por todo el viewport, no concentradas en la carta.
+  for(let i=0;i<34;i++){
+    const s=document.createElement('span');
+    s.className='coach-screen-star';
+    s.textContent=(i%3===0?'✦':i%3===1?'★':'✧');
+    s.style.left=(3+Math.random()*94)+'%';
+    s.style.top=(4+Math.random()*90)+'%';
+    s.style.animationDelay=(Math.random()*.45)+'s';
+    fx.appendChild(s);
+  }
+
+  // Varias explosiones en zonas distintas de la pantalla.
+  const spots=[
+    [18,18],[78,16],[50,27],[12,48],[87,46],[28,70],[72,68],[50,84]
+  ];
+  spots.forEach(([x,y],i)=>{
+    const f=document.createElement('span');
+    f.className='coach-firework';
+    f.style.left=x+'%';
+    f.style.top=y+'%';
+    f.style.animationDelay=(i*.10)+'s';
+    fx.appendChild(f);
+  });
+
+  setTimeout(()=>{ if(fx)fx.innerHTML=''; },1800);
+}
+
 function showCoachSigningCelebration(name){
   const overlay=document.getElementById('coachSigningOverlay');
   const img=document.getElementById('coachSigningCard');
   const wrap=document.getElementById('coachSigningCardWrap');
   const text=document.getElementById('coachSigningText');
-  if(!overlay||!text)return;
+  if(!overlay||!text||!img||!wrap)return;
   const card=db.players?.[name]?.card||'';
   clearTimeout(coachSigningTimer);
   overlay.classList.remove('is-leaving','no-card');
   text.textContent='¡Has fichado a '+name+'!';
+
+  // Nunca dejamos visible la carta del fichaje anterior.
+  img.classList.remove('coach-card-ready');
+  img.style.visibility='hidden';
+  img.removeAttribute('src');
+  img.alt='';
+
   if(card){
-    img.src=card;img.alt='Carta de '+name;wrap.style.display='';
+    wrap.style.display='';
+    coachLoadCard(card).then(ok=>{
+      if(!ok||overlay.style.display==='none'||text.textContent!=='¡Has fichado a '+name+'!')return;
+      img.src=card;
+      img.alt='Carta de '+name;
+      requestAnimationFrame(()=>{
+        img.style.visibility='visible';
+        void img.offsetWidth;
+        img.classList.add('coach-card-ready');
+      });
+    });
   }else{
-    img.removeAttribute('src');overlay.classList.add('no-card');
+    overlay.classList.add('no-card');
   }
+
   overlay.style.display='grid';
+  launchCoachSigningScreenFX();
   overlay.focus();
-  coachSigningTimer=setTimeout(()=>hideCoachSigningCelebration(),4000);
+  coachSigningTimer=setTimeout(()=>hideCoachSigningCelebration(),3000);
 }
 function hideCoachSigningCelebration(){
   const overlay=document.getElementById('coachSigningOverlay');
@@ -7087,6 +7412,8 @@ function hideCoachOpponentAlert(){
 }
 
 function renderCoachDraft(room,picks){
+  // Empieza después de llegar al tablero; no ralentiza la entrada a la sala.
+  preloadCoachDraftCards(room).catch(()=>{});
   const displayRed=picks.filter(p=>coachDisplayTeam(p.team,room.code)==='red');
   const displayBlack=picks.filter(p=>coachDisplayTeam(p.team,room.code)==='black');
   const picked=new Set(picks.map(p=>p.player_name));
