@@ -3755,6 +3755,95 @@ body.album-reader-open{
   }
 }
 
+
+/* v143 · corrección definitiva ADMIN/historial + fondo del historial */
+.admin-corner{
+  right:10px !important;
+  bottom:10px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-end !important;
+  gap:6px !important;
+}
+.admin-corner .admin-trigger{
+  position:static !important;
+  align-self:flex-end !important;
+  margin:0 !important;
+}
+.admin-corner .home-version-link{
+  position:static !important;
+  left:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  transform:none !important;
+  width:auto !important;
+  margin:0 !important;
+  display:block !important;
+  align-self:flex-end !important;
+  text-align:right !important;
+  white-space:nowrap !important;
+}
+.admin-corner .home-version-link a{
+  display:block !important;
+  text-align:right !important;
+  background:rgba(10,13,16,.94) !important;
+  border:1px solid rgba(255,255,255,.24) !important;
+  border-radius:8px !important;
+  padding:6px 9px !important;
+  color:rgba(245,247,246,.90) !important;
+  text-decoration:none !important;
+}
+body:has(#changeHistory.active){
+  background:#07100b url('background-home-desktop.jpg') center center / cover fixed no-repeat !important;
+}
+body:has(#changeHistory.active) #desktopHomeVideoBg,
+body:has(#changeHistory.active) #mobileFridayVideoBg{
+  display:none !important;
+}
+body:has(#changeHistory.active) .mobile-home-enter-ball{
+  display:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+@media(max-width:700px){
+  .admin-corner{
+    right:8px !important;
+    bottom:8px !important;
+    gap:5px !important;
+  }
+  .admin-corner .home-version-link a{
+    font-size:7.5px !important;
+    letter-spacing:.02em !important;
+    padding:5px 7px !important;
+  }
+  body:has(#changeHistory.active){
+    background-image:url('background-home-desktop.jpg') !important;
+    background-position:center center !important;
+    background-size:cover !important;
+    background-attachment:scroll !important;
+  }
+}
+
+
+body.change-history-active{
+  background:#07100b url('background-home-desktop.jpg') center center / cover fixed no-repeat !important;
+}
+body.change-history-active #desktopHomeVideoBg,
+body.change-history-active #mobileFridayVideoBg,
+body.change-history-active .mobile-home-enter-ball{
+  display:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+@media(max-width:700px){
+  body.change-history-active{
+    background-image:url('background-home-desktop.jpg') !important;
+    background-position:center center !important;
+    background-size:cover !important;
+    background-attachment:scroll !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3845,9 +3934,7 @@ body.album-reader-open{
 <button class="mode greenline home-image-card" onclick="show('resultMode')"><span class="home-card-copy"><span class="icon">📝</span><strong>Apuntar resultado</strong><span>Partido ya jugado</span></span><span class="home-card-image"><img src="apuntar resultado.jpg" alt=""></span></button>
 </div>
 </div>
-<div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">v142 - Historial cambios</a>
-</div>
+
 </section>
 
 <section id="createMode" class="screen"><div class="card">
@@ -4036,8 +4123,20 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v142</span>
+    <span class="history-version">VERSIÓN v143</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">98</div>
+      <div class="history-section-content">
+        <h2>Historial · acceso y fondo</h2>
+        <ul>
+          <li>El acceso al historial se coloca físicamente dentro del bloque ADMIN, alineado a la derecha y debajo del botón.</li>
+          <li>La página del historial deja de utilizar el fondo de vídeo y muestra como fondo fijo el primer frame de la landing.</li>
+          <li>El balón «ENTRAR» queda oculto mientras se consulta el historial de cambios.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">97</div>
       <div class="history-section-content">
@@ -5325,7 +5424,12 @@ body.album-reader-open{
 
 <div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div></div></div>
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
-<div class="admin-corner"><button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button></div>
+<div class="admin-corner">
+  <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
+  <div class="home-version-link">
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v143 - Historial cambios</a>
+  </div>
+</div>
 <div class="music-controls" title="Música">
   <div class="music-transport">
     <button id="musicPrev" type="button" onclick="previousMusicTrack()" aria-label="Canción anterior" title="Anterior">⏮</button>
@@ -5469,6 +5573,7 @@ function show(id,opts={}){
   const target=document.getElementById(id);
   if(!target)return;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.body.classList.toggle('change-history-active',id==='changeHistory');
   target.classList.add('active');
 
   /* Background específico por sección */
