@@ -4270,6 +4270,78 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   }
 }
 
+
+/* v157 · Modo Entrenador móvil: la pizarra pasa a ser el contenedor principal */
+@media(max-width:800px){
+  /* En móvil no necesitamos Salir / Fútbol 7 / Modo Entrenador dentro de la sala. */
+  #coachRoom.active .coach-room-header{
+    display:none!important;
+  }
+
+  /* Eliminamos el gran marco exterior: el contenido de la sala usa todo el ancho. */
+  #coachRoom.active{
+    width:100%!important;
+    max-width:none!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    margin:0!important;
+  }
+  #coachRoom.active > .coach-room-card{
+    width:100%!important;
+    max-width:none!important;
+    min-height:100dvh!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    background:transparent!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+  }
+
+  /* Durante el draft, la propia imagen de la pizarra ocupa directamente
+     el ancho del contenedor/pantalla, sin una caja intermedia. */
+  #coachRoom.active #coachDraft.coach-draft-board{
+    width:100%!important;
+    max-width:none!important;
+    min-height:100dvh!important;
+    margin:0!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    box-sizing:border-box!important;
+    background:
+      linear-gradient(rgba(0,0,0,.12),rgba(0,0,0,.12)),
+      url('background-modo-entrenador.png') center center/cover no-repeat!important;
+  }
+
+  /* La espera/sorteo también aprovechan el ancho disponible al desaparecer
+     la cabecera y el marco exterior. */
+  #coachRoom.active #coachWaiting,
+  #coachRoom.active #coachCoinOverlay{
+    width:calc(100% - 28px)!important;
+    max-width:680px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    box-sizing:border-box!important;
+  }
+
+  /* Ganamos margen real para las listas laterales del tablero. */
+  #coachRoom.active .coach-field-zone{
+    width:36%!important;
+  }
+  #coachRoom.active .coach-field-red{
+    left:1%!important;
+  }
+  #coachRoom.active .coach-field-black{
+    right:1%!important;
+  }
+  #coachRoom.active .coach-waiting-zone{
+    width:27%!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4585,8 +4657,21 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v156</span>
+    <span class="history-version">VERSIÓN v157</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">111</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · pizarra a ancho completo en móvil</h2>
+        <ul>
+          <li>En móvil se elimina la cabecera de la sala con «Salir», modalidad y «Modo Entrenador» para liberar espacio.</li>
+          <li>Se elimina el marco exterior del draft y la imagen de la pizarra pasa a ocupar directamente todo el ancho disponible.</li>
+          <li>Las zonas laterales de fichajes aprovechan los nuevos márgenes para reducir cortes de nombres.</li>
+          <li>La versión de escritorio permanece sin cambios.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">110</div>
       <div class="history-section-content">
@@ -6023,7 +6108,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v156 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v157 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
