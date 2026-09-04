@@ -4227,6 +4227,76 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   }
 }
 
+
+/* v154 · draft móvil a ancho útil completo
+   Escritorio queda intacto. */
+@media(max-width:800px){
+  /* Quitamos el efecto de "marco dentro de marco" únicamente durante el draft. */
+  #coachRoom.active .coach-room-shell,
+  #coachRoom.active .coach-draft-shell,
+  #coachRoom.active .coach-draft-board-wrap{
+    width:100%!important;
+    max-width:none!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    border-left:0!important;
+    border-right:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+
+  /* El tablero aprovecha prácticamente todo el viewport. */
+  #coachRoom.active .coach-draft-board{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    border-radius:0!important;
+    box-sizing:border-box!important;
+  }
+
+  /* Si el contenedor general añade margen lateral, lo compensamos sólo
+     en el tablero para llevar el fondo hasta los bordes de pantalla. */
+  #coachRoom.active .coach-draft-stage{
+    width:100vw!important;
+    max-width:100vw!important;
+    margin-left:calc(50% - 50vw)!important;
+    margin-right:calc(50% - 50vw)!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    border-radius:0!important;
+    box-sizing:border-box!important;
+  }
+}
+
+
+/* v155 · movimiento LIBRE real de las camisetas disponibles */
+.coach-tokens-center{
+  position:relative!important;
+  display:block!important;
+  overflow:visible!important;
+}
+.coach-tokens-center .coach-token-wrap{
+  position:absolute!important;
+  width:auto!important;
+  display:inline-flex!important;
+  justify-content:center!important;
+  margin:0!important;
+  z-index:10;
+  touch-action:none!important;
+  cursor:grab!important;
+}
+.coach-tokens-center .coach-token-wrap.coach-dragging{
+  z-index:100!important;
+  cursor:grabbing!important;
+  opacity:.96!important;
+  transform:scale(1.08)!important;
+}
+.coach-tokens-center .coach-token-wrap.coach-drag-target .coach-token{
+  outline:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -4542,8 +4612,30 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v153</span>
+    <span class="history-version">VERSIÓN v155</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">110</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · movimiento libre de camisetas</h2>
+        <ul>
+          <li>Las camisetas disponibles dejan de estar limitadas a una rejilla: ahora pueden cogerse y arrastrarse libremente por su zona del tablero con ratón o dedo.</li>
+          <li>La posición elegida se conserva localmente durante el draft y el clic normal sigue sirviendo para mostrar FICHAR.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">109</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · tablero móvil ampliado</h2>
+        <ul>
+          <li>Durante el draft en móvil se eliminan marcos y márgenes laterales innecesarios para que el tablero aproveche el ancho disponible de la pantalla.</li>
+          <li>El diseño de escritorio se mantiene sin cambios.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">108</div>
       <div class="history-section-content">
@@ -5959,7 +6051,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v153 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v155 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -6570,6 +6662,7 @@ function leaveCoachView(){
 
 
 let coachLocalPlayerOrder=[];
+let coachFreePlayerPositions={};
 let coachDragState=null;
 let coachSuppressClickUntil=0;
 let coachPreviousMine=false;
@@ -6588,6 +6681,7 @@ function setCoachWaitingOwnership(){
 
 function coachOrderedAvailable(available){
   const live=new Set(available);
+  Object.keys(coachFreePlayerPositions).forEach(n=>{if(!live.has(n))delete coachFreePlayerPositions[n]});
   coachLocalPlayerOrder=coachLocalPlayerOrder.filter(n=>live.has(n));
   available.forEach(n=>{if(!coachLocalPlayerOrder.includes(n))coachLocalPlayerOrder.push(n)});
   return coachLocalPlayerOrder.filter(n=>live.has(n));
@@ -6595,44 +6689,45 @@ function coachOrderedAvailable(available){
 
 function coachPointerDown(ev,name,wrap){
   if(ev.button!==undefined&&ev.button!==0)return;
+  const area=document.getElementById('coachAvailablePlayers');
+  if(!area)return;
+  const wr=wrap.getBoundingClientRect();
   coachDragState={
-    name,wrap,startX:ev.clientX,startY:ev.clientY,
-    x:ev.clientX,y:ev.clientY,moved:false,pointerId:ev.pointerId
+    name,wrap,area,
+    startX:ev.clientX,startY:ev.clientY,
+    startLeft:wrap.offsetLeft,startTop:wrap.offsetTop,
+    moved:false,pointerId:ev.pointerId
   };
+  try{wrap.setPointerCapture(ev.pointerId)}catch(_){}
 }
 function coachPointerMove(ev){
   if(!coachDragState)return;
   const d=coachDragState;
-  d.x=ev.clientX; d.y=ev.clientY;
-  if(!d.moved && Math.hypot(ev.clientX-d.startX,ev.clientY-d.startY)>8){
+  const dx=ev.clientX-d.startX,dy=ev.clientY-d.startY;
+  if(!d.moved&&Math.hypot(dx,dy)>6){
     d.moved=true;
-    coachSuppressClickUntil=Date.now()+450;
+    coachSuppressClickUntil=Date.now()+500;
     d.wrap.classList.add('coach-dragging');
   }
   if(!d.moved)return;
   ev.preventDefault();
-  document.querySelectorAll('.coach-token-wrap.coach-drag-target').forEach(x=>x.classList.remove('coach-drag-target'));
-  const under=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.coach-token-wrap');
-  if(under&&under!==d.wrap)under.classList.add('coach-drag-target');
+  const maxX=Math.max(0,d.area.clientWidth-d.wrap.offsetWidth);
+  const maxY=Math.max(0,d.area.clientHeight-d.wrap.offsetHeight);
+  const x=Math.max(0,Math.min(maxX,d.startLeft+dx));
+  const y=Math.max(0,Math.min(maxY,d.startTop+dy));
+  d.wrap.style.left=x+'px';
+  d.wrap.style.top=y+'px';
+  coachFreePlayerPositions[d.name]={
+    x:maxX?x/maxX:0,
+    y:maxY?y/maxY:0
+  };
 }
 function coachPointerUp(ev){
   if(!coachDragState)return;
   const d=coachDragState;
+  if(d.moved)coachSuppressClickUntil=Date.now()+500;
   d.wrap.classList.remove('coach-dragging');
-  const under=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.coach-token-wrap');
-  document.querySelectorAll('.coach-token-wrap.coach-drag-target').forEach(x=>x.classList.remove('coach-drag-target'));
-  if(d.moved){
-    coachSuppressClickUntil=Date.now()+450;
-    if(under&&under!==d.wrap){
-      const other=under.dataset.player;
-      const a=coachLocalPlayerOrder.indexOf(d.name),b=coachLocalPlayerOrder.indexOf(other);
-      if(a>=0&&b>=0){
-        [coachLocalPlayerOrder[a],coachLocalPlayerOrder[b]]=[coachLocalPlayerOrder[b],coachLocalPlayerOrder[a]];
-        coachSelectedPlayer=null;
-        refreshCoachRoom();
-      }
-    }
-  }
+  try{d.wrap.releasePointerCapture(d.pointerId)}catch(_){}
   coachDragState=null;
 }
 function showCoachYourTurn(){
@@ -6975,10 +7070,35 @@ function renderCoachDraft(room,picks){
       const pick=document.createElement('button');
       pick.className='coach-inline-pick';
       pick.textContent='FICHAR';
+      pick.onpointerdown=(ev)=>ev.stopPropagation();
       pick.onclick=(ev)=>{ev.stopPropagation();confirmCoachPick()};
       wrap.appendChild(pick);
     }
     box.appendChild(wrap);
+  });
+
+  /* Posición libre local: primera vez se distribuyen en una rejilla visual;
+     después cada camiseta conserva donde el entrenador la haya dejado. */
+  requestAnimationFrame(()=>{
+    const wraps=[...box.querySelectorAll('.coach-token-wrap')];
+    const cols=3;
+    const rows=Math.max(1,Math.ceil(wraps.length/cols));
+    wraps.forEach((wrap,i)=>{
+      const name=wrap.dataset.player;
+      let pos=coachFreePlayerPositions[name];
+      if(!pos){
+        const col=i%cols,row=Math.floor(i/cols);
+        pos={
+          x:cols>1?col/(cols-1):.5,
+          y:rows>1?row/(rows-1):.5
+        };
+        coachFreePlayerPositions[name]=pos;
+      }
+      const maxX=Math.max(0,box.clientWidth-wrap.offsetWidth);
+      const maxY=Math.max(0,box.clientHeight-wrap.offsetHeight);
+      wrap.style.left=Math.round(pos.x*maxX)+'px';
+      wrap.style.top=Math.round(pos.y*maxY)+'px';
+    });
   });
 
   const banner=document.getElementById('coachTurnBanner');
