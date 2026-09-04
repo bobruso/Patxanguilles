@@ -3541,6 +3541,31 @@ body.album-reader-open{
  #mobileFridayVideo.ready{opacity:1}
  body.mobile-friday-video{background:#07100b url('hoy es viernes (0-00-00-00).jpg') center/cover no-repeat!important;background-attachment:scroll!important}
 }
+
+/* v133 · Fondo móvil estable al hacer scroll en Chrome Android */
+@media(max-width:900px){
+  body.mobile-friday-video #mobileFridayVideoBg{
+    position:absolute !important;
+    top:0 !important;
+    left:0 !important;
+    width:100% !important;
+    height:100svh !important;
+    min-height:100% !important;
+    inset:auto !important;
+  }
+  #mobileFridayVideo{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+    object-position:center center !important;
+  }
+  body.mobile-friday-video{
+    background-attachment:scroll !important;
+    background-position:center top !important;
+    background-size:cover !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3626,7 +3651,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v131 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v133 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3816,8 +3841,29 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v131</span>
+    <span class="history-version">VERSIÓN v133</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">88</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · fondo estable durante el scroll</h2>
+        <ul>
+          <li>El vídeo vertical deja de reajustarse al aparecer y desaparecer las barras del navegador durante el desplazamiento en móvil.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">87</div>
+      <div class="history-section-content">
+        <h2>Reproductor · nuevas canciones y aleatorio sin repeticiones</h2>
+        <ul>
+          <li>Se incorporan veinte nuevas canciones al reproductor.</li>
+          <li>La reproducción aleatoria recorre ahora toda la lista antes de repetir una canción y evita repetir la última al comenzar una nueva ronda.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">86</div>
       <div class="history-section-content">
@@ -7257,7 +7303,27 @@ const musicPlaylist=[
   {file:'Kaos Urbano Como Cantona.m4a',title:'Kaos Urbano Como Cantona',artist:''},
   {file:'Oliver y Benji Campeones Intro Espana.m4a',title:'Oliver y Benji Campeones Intro Espana',artist:''},
   {file:'Oliver y Benji Campeones.m4a',title:'Oliver y Benji Campeones',artist:''}
-];
+,
+  {file:'Coldplay Viva La Vida(1).m4a',title:'Coldplay Viva La Vida(1)',artist:''},
+  {file:'Dr. Calypso himne del F.C. Barcelona al Camp Nou(1).m4a',title:'Dr. Calypso himne del F.C. Barcelona al Camp Nou(1)',artist:''},
+  {file:'El futbol Sonora Santanera(1).m4a',title:'El futbol Sonora Santanera(1)',artist:''},
+  {file:'El hincha X Vamos Devuelta Rock.m4a',title:'El hincha X Vamos Devuelta Rock',artist:''},
+  {file:'Encara Messi Swing Lynn(2).m4a',title:'Encara Messi Swing Lynn(2)',artist:''},
+  {file:'Forte Forte de Lacoste Pra Comecar o Final de Seman(2).m4a',title:'Forte Forte de Lacoste Pra Comecar o Final de Seman(2)',artist:''},
+  {file:'Joao Bosco Vinicius Chora Me Liga(2).m4a',title:'Joao Bosco Vinicius Chora Me Liga(2)',artist:''},
+  {file:'LOS LEALES CON EL KUN AGUERO(2).m4a',title:'LOS LEALES CON EL KUN AGUERO(2)',artist:''},
+  {file:'La Roja Baila Himno Oficial de la Seleccion Espanola(2).m4a',title:'La Roja Baila Himno Oficial de la Seleccion Espanola(2)',artist:''},
+  {file:'Loko Tropkillaz(2).m4a',title:'Loko Tropkillaz(2)',artist:''},
+  {file:'Los Calzones Rotos Levanten Las Copas(2).m4a',title:'Los Calzones Rotos Levanten Las Copas(2)',artist:''},
+  {file:'Los Miserables El Crack(2).m4a',title:'Los Miserables El Crack(2)',artist:''},
+  {file:'MANU CHAO La vida es una tombola El Pibe(2).m4a',title:'MANU CHAO La vida es una tombola El Pibe(2)',artist:''},
+  {file:'Mancha de Rolando Arde la ciudad(2).m4a',title:'Mancha de Rolando Arde la ciudad(2)',artist:''},
+  {file:'Mas Que Nada Sergio Mendes(2).m4a',title:'Mas Que Nada Sergio Mendes(2)',artist:''},
+  {file:'Melendi Me gusta el futbol Videoclip Oficial(1).m4a',title:'Melendi Me gusta el futbol Videoclip Oficial(1)',artist:''},
+  {file:'Rey Kamikaze FT Guty Edc America de Cali en la puta casa(2).m4a',title:'Rey Kamikaze FT Guty Edc America de Cali en la puta casa(2)',artist:''},
+  {file:'SKA P himno del RAYO VALLECANO(2).m4a',title:'SKA P himno del RAYO VALLECANO(2)',artist:''},
+  {file:'TANTA GLORIA TANTO FUTBOL(2).m4a',title:'TANTA GLORIA TANTO FUTBOL(2)',artist:''},
+  {file:'The Black Keys Lonely Boy Official Music Video(1).m4a',title:'The Black Keys Lonely Boy Official Music Video(1)',artist:''}];
 let musicHistory=[];
 let musicHistoryPos=-1;
 let musicStarted=false;
@@ -7271,13 +7337,26 @@ function updateNowPlaying(){
   if(artist)artist.textContent=track?.artist||'';
 }
 
-function chooseRandomTrack(avoidCurrent=true){
+let musicShuffleBag=[];
+
+function refillMusicShuffleBag(){
+  musicShuffleBag=musicPlaylist.map((_,i)=>i);
+  for(let i=musicShuffleBag.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [musicShuffleBag[i],musicShuffleBag[j]]=[musicShuffleBag[j],musicShuffleBag[i]];
+  }
+  // Al empezar una nueva ronda, evitar que la última canción de la anterior
+  // vuelva a ser la primera de la siguiente.
+  if(musicShuffleBag.length>1 && musicShuffleBag[0]===currentTrackIndex){
+    const swapWith=1+Math.floor(Math.random()*(musicShuffleBag.length-1));
+    [musicShuffleBag[0],musicShuffleBag[swapWith]]=[musicShuffleBag[swapWith],musicShuffleBag[0]];
+  }
+}
+
+function chooseRandomTrack(){
   if(!musicPlaylist.length)return -1;
-  if(musicPlaylist.length===1)return 0;
-  let next;
-  do{next=Math.floor(Math.random()*musicPlaylist.length)}
-  while(avoidCurrent&&next===currentTrackIndex);
-  return next;
+  if(!musicShuffleBag.length)refillMusicShuffleBag();
+  return musicShuffleBag.shift();
 }
 
 function rememberMusicTrack(index){
@@ -7309,7 +7388,7 @@ function playLoadedTrack(){
 }
 
 function nextMusicTrack(){
-  const next=chooseRandomTrack(true);
+  const next=chooseRandomTrack();
   if(next<0)return;
   loadTrack(next,true);
   playLoadedTrack();
@@ -7359,7 +7438,7 @@ music.volume=.20;
 music.addEventListener('play',updateMusicButton);
 music.addEventListener('pause',updateMusicButton);
 music.addEventListener('ended',()=>{
-  const next=chooseRandomTrack(true);
+  const next=chooseRandomTrack();
   loadTrack(next,true);
   if(musicStarted)music.play().catch(()=>{});
 });
