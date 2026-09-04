@@ -3566,9 +3566,80 @@ body.album-reader-open{
   }
 }
 
+
+/* v135 · Entrada interactiva de la Home en móvil vertical */
+.mobile-home-enter-ball{display:none}
+@media(max-width:900px) and (orientation:portrait){
+  .mobile-home-enter-ball{
+    display:flex;
+    position:fixed;
+    left:50%;
+    top:50%;
+    width:122px;
+    height:122px;
+    transform:translate(-50%,-50%) scale(1);
+    align-items:center;
+    justify-content:center;
+    border:0;
+    padding:0;
+    border-radius:50%;
+    background:transparent;
+    cursor:pointer;
+    z-index:9998;
+    -webkit-tap-highlight-color:transparent;
+    filter:drop-shadow(0 8px 16px rgba(0,0,0,.38));
+    transition:transform .42s cubic-bezier(.55,.02,.75,.35),opacity .32s ease;
+  }
+  .mobile-home-enter-ball .football-pattern{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:122px;
+    line-height:1;
+    user-select:none;
+    pointer-events:none;
+  }
+  .mobile-home-enter-ball .football-enter-text{
+    position:relative;
+    z-index:1;
+    padding:5px 9px;
+    border-radius:999px;
+    background:rgba(255,255,255,.88);
+    color:#050505;
+    font:900 13px/1 Arial,sans-serif;
+    letter-spacing:.7px;
+    box-shadow:0 2px 7px rgba(0,0,0,.28);
+    pointer-events:none;
+  }
+  .mobile-home-enter-ball.is-leaving{
+    transform:translate(-50%,-50%) scale(0);
+    opacity:0;
+    pointer-events:none;
+  }
+  body.home-entered .mobile-home-enter-ball{display:none}
+}
+
+/* Contraseña: etiqueta/placeholder y texto introducido en negro, escritorio y móvil */
+.access-hotspot,
+.access-hotspot input{
+  color:#000 !important;
+}
+.access-hotspot input::placeholder{
+  color:#000 !important;
+  opacity:1 !important;
+}
+
 </style>
 </head>
 <body>
+<button id="mobileHomeEnterBall" class="mobile-home-enter-ball" type="button" aria-label="Entrar">
+  <span class="football-pattern" aria-hidden="true">⚽</span>
+  <span class="football-enter-text">ENTRAR</span>
+</button>
+<audio id="homeWhistleSfx" preload="auto" src="SILBATO ok.mp3"></audio>
+
 <div id="mobileFridayVideoBg" aria-hidden="true">
   <video id="mobileFridayVideo" playsinline preload="none" poster="hoy es viernes (0-00-00-00).jpg">
     <source data-src="hoy es viernes_1.mp4" type="video/mp4">
@@ -3651,7 +3722,7 @@ body.album-reader-open{
 </div>
 </div>
 <div class="home-version-link">
-  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v133 · Ver historial de cambios</a>
+  <a href="#" onclick="event.preventDefault();show('changeHistory')">Versión v135 · Ver historial de cambios</a>
 </div>
 </section>
 
@@ -3841,8 +3912,30 @@ body.album-reader-open{
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v133</span>
+    <span class="history-version">VERSIÓN v135</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">90</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · nueva entrada interactiva</h2>
+        <ul>
+          <li>En móvil vertical, la Home muestra un balón «Entrar» antes de desplegar sus accesos.</li>
+          <li>Al pulsarlo suena el silbato de inicio, el balón desaparece por escala y aparecen los accesos con su animación.</li>
+          <li>El texto de introducción de contraseña y la contraseña escrita pasan a color negro.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">89</div>
+      <div class="history-section-content">
+        <h2>Reproductor · corrección de archivos de audio</h2>
+        <ul>
+          <li>Se ajustan los nombres de las nuevas canciones para que coincidan exactamente con los archivos publicados y puedan reproducirse correctamente.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">88</div>
       <div class="history-section-content">
@@ -7304,26 +7397,26 @@ const musicPlaylist=[
   {file:'Oliver y Benji Campeones Intro Espana.m4a',title:'Oliver y Benji Campeones Intro Espana',artist:''},
   {file:'Oliver y Benji Campeones.m4a',title:'Oliver y Benji Campeones',artist:''}
 ,
-  {file:'Coldplay Viva La Vida(1).m4a',title:'Coldplay Viva La Vida(1)',artist:''},
-  {file:'Dr. Calypso himne del F.C. Barcelona al Camp Nou(1).m4a',title:'Dr. Calypso himne del F.C. Barcelona al Camp Nou(1)',artist:''},
-  {file:'El futbol Sonora Santanera(1).m4a',title:'El futbol Sonora Santanera(1)',artist:''},
+  {file:'Coldplay Viva La Vida.m4a',title:'Coldplay Viva La Vida(1)',artist:''},
+  {file:'Dr. Calypso himne del F.C. Barcelona al Camp Nou.m4a',title:'Dr. Calypso himne del F.C. Barcelona al Camp Nou(1)',artist:''},
+  {file:'El futbol Sonora Santanera.m4a',title:'El futbol Sonora Santanera(1)',artist:''},
   {file:'El hincha X Vamos Devuelta Rock.m4a',title:'El hincha X Vamos Devuelta Rock',artist:''},
-  {file:'Encara Messi Swing Lynn(2).m4a',title:'Encara Messi Swing Lynn(2)',artist:''},
-  {file:'Forte Forte de Lacoste Pra Comecar o Final de Seman(2).m4a',title:'Forte Forte de Lacoste Pra Comecar o Final de Seman(2)',artist:''},
-  {file:'Joao Bosco Vinicius Chora Me Liga(2).m4a',title:'Joao Bosco Vinicius Chora Me Liga(2)',artist:''},
-  {file:'LOS LEALES CON EL KUN AGUERO(2).m4a',title:'LOS LEALES CON EL KUN AGUERO(2)',artist:''},
-  {file:'La Roja Baila Himno Oficial de la Seleccion Espanola(2).m4a',title:'La Roja Baila Himno Oficial de la Seleccion Espanola(2)',artist:''},
-  {file:'Loko Tropkillaz(2).m4a',title:'Loko Tropkillaz(2)',artist:''},
-  {file:'Los Calzones Rotos Levanten Las Copas(2).m4a',title:'Los Calzones Rotos Levanten Las Copas(2)',artist:''},
-  {file:'Los Miserables El Crack(2).m4a',title:'Los Miserables El Crack(2)',artist:''},
-  {file:'MANU CHAO La vida es una tombola El Pibe(2).m4a',title:'MANU CHAO La vida es una tombola El Pibe(2)',artist:''},
-  {file:'Mancha de Rolando Arde la ciudad(2).m4a',title:'Mancha de Rolando Arde la ciudad(2)',artist:''},
-  {file:'Mas Que Nada Sergio Mendes(2).m4a',title:'Mas Que Nada Sergio Mendes(2)',artist:''},
-  {file:'Melendi Me gusta el futbol Videoclip Oficial(1).m4a',title:'Melendi Me gusta el futbol Videoclip Oficial(1)',artist:''},
-  {file:'Rey Kamikaze FT Guty Edc America de Cali en la puta casa(2).m4a',title:'Rey Kamikaze FT Guty Edc America de Cali en la puta casa(2)',artist:''},
-  {file:'SKA P himno del RAYO VALLECANO(2).m4a',title:'SKA P himno del RAYO VALLECANO(2)',artist:''},
-  {file:'TANTA GLORIA TANTO FUTBOL(2).m4a',title:'TANTA GLORIA TANTO FUTBOL(2)',artist:''},
-  {file:'The Black Keys Lonely Boy Official Music Video(1).m4a',title:'The Black Keys Lonely Boy Official Music Video(1)',artist:''}];
+  {file:'Encara Messi Swing Lynn.m4a',title:'Encara Messi Swing Lynn(2)',artist:''},
+  {file:'Forte Forte de Lacoste Pra Comecar o Final de Seman.m4a',title:'Forte Forte de Lacoste Pra Comecar o Final de Seman(2)',artist:''},
+  {file:'Joao Bosco Vinicius Chora Me Liga.m4a',title:'Joao Bosco Vinicius Chora Me Liga(2)',artist:''},
+  {file:'LOS LEALES CON EL KUN AGUERO.m4a',title:'LOS LEALES CON EL KUN AGUERO(2)',artist:''},
+  {file:'La Roja Baila Himno Oficial de la Seleccion Espanola.m4a',title:'La Roja Baila Himno Oficial de la Seleccion Espanola(2)',artist:''},
+  {file:'Loko Tropkillaz.m4a',title:'Loko Tropkillaz(2)',artist:''},
+  {file:'Los Calzones Rotos Levanten Las Copas.m4a',title:'Los Calzones Rotos Levanten Las Copas(2)',artist:''},
+  {file:'Los Miserables El Crack.m4a',title:'Los Miserables El Crack(2)',artist:''},
+  {file:'MANU CHAO La vida es una tombola El Pibe.m4a',title:'MANU CHAO La vida es una tombola El Pibe(2)',artist:''},
+  {file:'Mancha de Rolando Arde la ciudad.m4a',title:'Mancha de Rolando Arde la ciudad(2)',artist:''},
+  {file:'Mas Que Nada Sergio Mendes.m4a',title:'Mas Que Nada Sergio Mendes(2)',artist:''},
+  {file:'Melendi Me gusta el futbol Videoclip Oficial.m4a',title:'Melendi Me gusta el futbol Videoclip Oficial(1)',artist:''},
+  {file:'Rey Kamikaze FT Guty Edc America de Cali en la puta casa.m4a',title:'Rey Kamikaze FT Guty Edc America de Cali en la puta casa(2)',artist:''},
+  {file:'SKA P himno del RAYO VALLECANO.m4a',title:'SKA P himno del RAYO VALLECANO(2)',artist:''},
+  {file:'TANTA GLORIA TANTO FUTBOL.m4a',title:'TANTA GLORIA TANTO FUTBOL(2)',artist:''},
+  {file:'The Black Keys Lonely Boy Official Music Video.m4a',title:'The Black Keys Lonely Boy Official Music Video(1)',artist:''}];
 let musicHistory=[];
 let musicHistoryPos=-1;
 let musicStarted=false;
@@ -7734,4 +7827,55 @@ document.addEventListener('keydown',e=>{
 
 </script>
 
+<script>
+/* v135 · Control de entrada móvil vertical con balón */
+(()=>{
+  const isMobilePortrait=()=>window.matchMedia('(max-width:900px) and (orientation:portrait)').matches;
+  const ball=document.getElementById('mobileHomeEnterBall');
+  const whistle=document.getElementById('homeWhistleSfx');
+  let entered=false;
+
+  function keepHomeButtonsHidden(){
+    if(!isMobilePortrait() || entered)return;
+    document.body.classList.remove('home-mobile-intro-visible');
+    document.body.classList.add('home-mobile-intro-pending');
+  }
+
+  // La lógica previa puede intentar mostrarlos a los 2 s: en vertical los mantenemos ocultos
+  // hasta el gesto explícito de ENTRAR.
+  const observer=new MutationObserver(()=>{
+    if(isMobilePortrait() && !entered &&
+       document.body.classList.contains('home-mobile-intro-visible')){
+      keepHomeButtonsHidden();
+    }
+  });
+  observer.observe(document.body,{attributes:true,attributeFilter:['class']});
+  keepHomeButtonsHidden();
+
+  ball?.addEventListener('click',()=>{
+    if(entered)return;
+    entered=true;
+
+    try{
+      whistle.currentTime=0;
+      whistle.volume=1;
+      whistle.play().catch(()=>{});
+    }catch(_){}
+
+    ball.classList.add('is-leaving');
+
+    // Tras iniciar la reducción del balón, reutilizamos la animación actual de entrada.
+    setTimeout(()=>{
+      document.body.classList.remove('home-mobile-intro-pending');
+      document.body.classList.add('home-mobile-intro-visible','home-entered');
+    },260);
+  });
+
+  window.addEventListener('orientationchange',()=>{
+    setTimeout(()=>{
+      if(!entered)keepHomeButtonsHidden();
+    },100);
+  });
+})();
+</script>
 </body></html>
