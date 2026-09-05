@@ -4884,8 +4884,18 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v173</span>
+    <span class="history-version">VERSIÓN v174</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">126</div>
+      <div class="history-section-content">
+        <h2>Modo entrenador · fichajes especiales</h2>
+        <ul>
+          <li>Añadido un nuevo vídeo y audio especial para la celebración de fichaje de Gabal.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">125</div>
       <div class="history-section-content">
@@ -6482,7 +6492,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v173 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v174 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -7099,7 +7109,8 @@ let coachPreviousMine=false;
 let coachTurnToastTimer=null;
 let coachSigningTimer=null;
 const coachSpecialSigningMedia={
-  'Rafeta':{video:'RAFETA_1.mp4',audio:'rafeta.mp3'}
+  'Rafeta':{video:'RAFETA_1.mp4',audio:'rafeta.mp3'},
+  'Gabal':{video:'GABAL_1.mp4',audio:'gabal fichaje.mp3'}
 };
 const coachMediaPreloadCache=new Map();
 const coachSigningAudio=new Audio();
