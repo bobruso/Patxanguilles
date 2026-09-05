@@ -4552,6 +4552,14 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   background:#1aa347!important;
 }
 
+
+/* v166 · edición comunitaria de datos posteriores al partido */
+#resultForm input:disabled,
+#resultForm select:disabled{
+  opacity:.72;
+  cursor:not-allowed;
+}
+
 </style>
 </head>
 <body>
@@ -4868,8 +4876,19 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v165</span>
+    <span class="history-version">VERSIÓN v166</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">118</div>
+      <div class="history-section-content">
+        <h2>Partidos jugados · edición posterior</h2>
+        <ul>
+          <li>Los partidos finalizados permiten a cualquier miembro completar o corregir los goleadores, añadir o sustituir la fotografía y crear o editar la crónica.</li>
+          <li>El marcador permanece bloqueado para la edición pública y solo puede modificarse desde administración.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">117</div>
       <div class="history-section-content">
@@ -6380,7 +6399,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v165 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v166 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -8734,7 +8753,7 @@ function openMatch(id){
   </div>
   <div class="profile-body" style="padding-top:0">
     <div class="share-result-actions">
-      ${live||adminLogged?`<button class="secondary" onclick="editPendingResult('${m.id}')">Editar resultado</button>`:''}
+      ${adminLogged||live?`<button class="secondary" onclick="editPendingResult('${m.id}')">Editar resultado</button>`:`<button class="secondary" onclick="editFinalMatchPublic('${m.id}')">⚽ Editar goles · foto · crónica</button>`}
       <button class="primary" onclick="shareMatchResult('${m.id}')">📋 Compartir resultado</button>
     </div>
   </div>`;
@@ -8771,12 +8790,20 @@ async function shareMatchResult(id){
   }
 }
 function closeMatch(){document.getElementById('matchModal').classList.remove('open')}
+function editFinalMatchPublic(id){
+  const m=db.matches.find(x=>String(x.id)===String(id));if(!m)return;
+  publicFinalMatchEdit=!adminLogged && m.status!=='in_progress';
+  currentSeasonMode=m.mode||'f7';
+  closeMatch();
+  openResultForm(m.red,m.black,m);
+}
 function editPendingResult(id){
   const m=db.matches.find(x=>String(x.id)===String(id));if(!m)return;
   currentSeasonMode=m.mode||'f7';closeMatch();openResultForm(m.red,m.black,m)
 }
 
 
+let publicFinalMatchEdit=false;
 let pendingResultCallupNames=[];
 
 function parseResultCallup(){
@@ -8852,6 +8879,7 @@ function openResultMode(mode){
   openResultForm();
 }
 function openResultForm(red=null,black=null,match=null){
+  if(!match || adminLogged || match?.status==='in_progress')publicFinalMatchEdit=false;
   if(!match){
     pendingResultCallupNames=[];
     const callupText=document.getElementById('resultCallupText');
@@ -8891,6 +8919,20 @@ function openResultForm(red=null,black=null,match=null){
   const saveBtn=document.querySelector('#resultForm .controls .primary');if(saveBtn)saveBtn.textContent=match?.status==='in_progress'?'Confirmar resultado':'Guardar resultado';
   (match?.goals||[]).forEach(e=>addEventRow('goalEvents','goal',e));
   (match?.assists||[]).forEach(e=>addEventRow('assistEvents','assist',e));
+  const publicLocked=publicFinalMatchEdit && !!match && match.status!=='in_progress' && !adminLogged;
+  const dateInput=document.getElementById('matchDate');
+  const redScoreInput=document.getElementById('redScore');
+  const blackScoreInput=document.getElementById('blackScore');
+  if(dateInput)dateInput.disabled=publicLocked;
+  if(redScoreInput)redScoreInput.disabled=publicLocked;
+  if(blackScoreInput)blackScoreInput.disabled=publicLocked;
+  document.querySelectorAll('#redChecks input,#blackChecks input').forEach(x=>x.disabled=publicLocked);
+  document.querySelectorAll('#resultForm .player-filter').forEach(x=>x.disabled=publicLocked);
+  const assistBox=document.getElementById('assistEvents')?.closest('.event-panel')||document.getElementById('assistEvents')?.parentElement;
+  if(assistBox)assistBox.style.display=publicLocked?'none':'';
+  const importBox=document.querySelector('#resultForm .result-callup-import');
+  if(importBox)importBox.style.display=publicLocked?'none':'';
+  if(saveBtn)saveBtn.textContent=publicLocked?'Guardar goles, foto y crónica':(match?.status==='in_progress'?'Confirmar resultado':'Guardar resultado');
   show('resultForm');
 }
 function toggleMatchChronicle(){
@@ -8922,7 +8964,7 @@ async function saveResult(){
   if(matchPhotoFile&&!['image/jpeg','image/png','image/webp'].includes(matchPhotoFile.type)){toast('La foto debe ser JPG, PNG o WebP');return}
   if(!date||!red.length||!black.length){toast('Faltan fecha o alineaciones');return}
   const redGoals=goals.filter(e=>e.team==='red').reduce((n,e)=>n+e.count,0),blackGoals=goals.filter(e=>e.team==='black').reduce((n,e)=>n+e.count,0);
-  if(goals.length&&(redGoals!==redScore||blackGoals!==blackScore)){toast(`Los goles no coinciden con el resultado: Rojos ${redGoals}, Negros ${blackGoals}`);return}
+  if(!publicFinalMatchEdit&&goals.length&&(redGoals!==redScore||blackGoals!==blackScore)){toast(`Los goles no coinciden con el resultado: Rojos ${redGoals}, Negros ${blackGoals}`);return}
   if(goals.some(e=>(e.team==='red'&&!red.includes(e.player))||(e.team==='black'&&!black.includes(e.player)))){toast('Hay un goleador que no está en su alineación');return}
   if(assists.some(e=>(e.team==='red'&&!red.includes(e.player))||(e.team==='black'&&!black.includes(e.player)))){toast('Hay un asistente que no está en su alineación');return}
 
@@ -8930,6 +8972,43 @@ async function saveResult(){
   const isPending=existing?.status==='in_progress';
   const client=sbPublic;
   try{
+    if(publicFinalMatchEdit && existing && !adminLogged){
+      const matchId=editingMatchId;
+
+      // En edición pública de un partido final SOLO se tocan goleadores, foto y crónica.
+      // Marcador, fecha, modalidad, alineaciones, estado y asistencias permanecen intactos.
+      const delGoals=await client.from('match_events').delete().eq('match_id',matchId).eq('event_type','goal');
+      if(delGoals.error)throw delGoals.error;
+      const goalRows=goals.map(e=>({match_id:matchId,player_id:playerIdByName[e.player],team:e.team,event_type:'goal',quantity:e.count}));
+      if(goalRows.length){
+        const insGoals=await client.from('match_events').insert(goalRows);
+        if(insGoals.error)throw insGoals.error;
+      }
+
+      let photoUrl=existing.photoUrl||'';
+      if(matchPhotoFile){
+        const ext=(matchPhotoFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+        const path=`matches/${matchId}/${Date.now()}.${ext}`;
+        const upload=await sbPublic.storage.from('player-photos').upload(path,matchPhotoFile,{upsert:false,contentType:matchPhotoFile.type});
+        if(upload.error)throw upload.error;
+        photoUrl=sbPublic.storage.from('player-photos').getPublicUrl(path).data.publicUrl;
+      }
+
+      const upd=await client.from('matches').update({
+        chronicle_title:chronicleTitle||null,
+        chronicle_text:chronicleText||null,
+        photo_url:photoUrl||null
+      }).eq('id',matchId);
+      if(upd.error)throw upd.error;
+
+      void notifyTelegramEvent('match',matchId,'updated');
+      publicFinalMatchEdit=false;
+      editingMatchId=null;window.editingMatchStatus=null;
+      await loadSupabaseData();
+      toast('Goles, foto y crónica actualizados');
+      setTimeout(()=>{show('season');seasonTab('calendar',document.querySelectorAll('.nav-btn')[1])},350);
+      return;
+    }
     await ensurePlayersPublic([...red,...black]);
     const competition=currentSeasonMode==='f7'?'football7':'football5';let matchId=editingMatchId;
 
