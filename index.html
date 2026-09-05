@@ -4582,7 +4582,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <source data-src="hoy es viernes_1.mp4" type="video/mp4">
   </video>
 </div>
-<div id="mobileDayVideoBg" aria-hidden="true"><video id="mobileDayVideo" muted loop playsinline preload="none"></video></div>
+<div id="mobileDayVideoBg" aria-hidden="true"><video id="mobileDayVideo" muted loop playsinline preload="none" poster="background-home-mobile.png"></video></div>
 <div id="desktopHomeVideoBg" aria-hidden="true">
   <video id="desktopHomeVideo" muted loop playsinline preload="none" poster="background-home-desktop.jpg">
     <source data-src="background-home-desktop.mp4" type="video/mp4">
@@ -4884,8 +4884,20 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v176</span>
+    <span class="history-version">VERSIÓN v177</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">129</div>
+      <div class="history-section-content">
+        <h2>Inicio móvil · fondos de vídeo por día</h2>
+        <ul>
+          <li>Reactivados los fondos de vídeo diarios de la Home en móvil vertical para lunes, martes, miércoles, jueves, sábado y domingo.</li>
+          <li>La imagen estática móvil se mantiene como poster mientras carga el vídeo, evitando un fondo vacío durante la carga.</li>
+          <li>Se conserva sin cambios el tratamiento especial del viernes.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">128</div>
       <div class="history-section-content">
@@ -6512,7 +6524,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v176 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v177 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -6552,7 +6564,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   <div id="specialWelcomeContent" class="special-card"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 function setupMobileDayBackground(){
   const video=document.getElementById('mobileDayVideo');
   if(!video)return;
