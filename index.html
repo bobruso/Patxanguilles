@@ -4884,8 +4884,28 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v174</span>
+    <span class="history-version">VERSIÓN v176</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">128</div>
+      <div class="history-section-content">
+        <h2>Partidos · edición de eventos</h2>
+        <ul>
+          <li>Corregido el guardado posterior de goles y asistencias utilizando los campos reales de la base de datos.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">127</div>
+      <div class="history-section-content">
+        <h2>Partidos · guardado de goles y asistencias</h2>
+        <ul>
+          <li>Corregido el guardado de goleadores y asistencias para adaptarlo a la estructura real de los eventos del partido.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">126</div>
       <div class="history-section-content">
@@ -6492,7 +6512,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v174 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v176 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -6575,7 +6595,7 @@ function defaultPlayer(name){return {name,fullName:name,birthDate:"",age:"",phot
 function saveDB(){}
 function allPlayers(){return Object.keys(db.players).sort((a,b)=>a.localeCompare(b,'es'))}
 function ensurePlayers(list){list.forEach(n=>{if(!db.players[n])db.players[n]=defaultPlayer(n)})}
-function mapPlayerRow(p){return{name:p.nickname,fullName:p.full_name||p.nickname,birthDate:p.birth_date||"",age:calculateAge(p.birth_date),photo:p.photo_url||"",card:p.card_url||"",leg:p.leg||"",palmares:"",position:p.position||"",number:"",football7:!!p.football7,football5:!!p.football5}}
+function mapPlayerRow(p){return{id:p.id,name:p.nickname,fullName:p.full_name||p.nickname,birthDate:p.birth_date||"",age:calculateAge(p.birth_date),photo:p.photo_url||"",card:p.card_url||"",leg:p.leg||"",palmares:"",position:p.position||"",number:"",football7:!!p.football7,football5:!!p.football5}}
 async function loadSupabaseData(){
   const [playersRes,matchesRes,lineupsRes,eventsRes,photosRes]=await Promise.all([
     sbPublic.from('players').select('*').order('nickname'),
@@ -9130,14 +9150,18 @@ async function saveResult(){
     if(publicFinalMatchEdit && existing && !adminLogged){
       const matchId=editingMatchId;
       const section=publicFinalMatchSection||'goals';
+      const playerIdByName={};
+      Object.values(db.players).forEach(p=>{if(p?.name&&p?.id!=null)playerIdByName[p.name]=p.id});
       if(section==='goals'){
+        const unresolved=[...goals,...assists].filter(e=>!playerIdByName[e.player]);
+        if(unresolved.length){throw new Error('No se pudo identificar a: '+[...new Set(unresolved.map(e=>e.player))].join(', '))}
         const delGoals=await client.from('match_events').delete().eq('match_id',matchId).eq('event_type','goal');
         if(delGoals.error)throw delGoals.error;
         const delAssists=await client.from('match_events').delete().eq('match_id',matchId).eq('event_type','assist');
         if(delAssists.error)throw delAssists.error;
         const eventRows=[
-          ...goals.map(e=>({match_id:matchId,event_type:'goal',player_nickname:e.player,team:e.team,count:e.count})),
-          ...assists.map(e=>({match_id:matchId,event_type:'assist',player_nickname:e.player,team:e.team,count:e.count}))
+          ...goals.map(e=>({match_id:matchId,player_id:playerIdByName[e.player],team:e.team,event_type:'goal',quantity:Math.max(1,Number(e.count)||1)})),
+          ...assists.map(e=>({match_id:matchId,player_id:playerIdByName[e.player],team:e.team,event_type:'assist',quantity:Math.max(1,Number(e.count)||1)}))
         ];
         if(eventRows.length){
           const insEvents=await client.from('match_events').insert(eventRows);if(insEvents.error)throw insEvents.error;
