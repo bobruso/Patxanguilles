@@ -5,13 +5,13 @@ const finite=v=>Number.isFinite(Number(v));
 const fmtKm=m=>finite(m)?(Number(m)/1000).toFixed(2)+' km':'—';
 const fmtKmh=v=>finite(v)?Number(v).toFixed(1)+' km/h':'—';
 const fmtTime=s=>{if(!finite(s))return'—';const n=Math.max(0,Math.round(Number(s))),m=Math.floor(n/60),sec=n%60;return m+'m '+String(sec).padStart(2,'0')+'s'};
-const pct=v=>Math.round((Number(v)||0)*100)+'%';
 
 export function playerGpsPanelHtml(a,{playerName='',showSave=false,showBack=false}={}){
-  const d=a?.analysisDetail||{},pos=d.positional||{},speed=d.speed||{},hr=d.heartRate||{},work=d.workload||{},role=pos.role||null,thirds=pos.thirds||[],sides=pos.sides||[],hasHr=!!a?.hasHr;
+  const d=a?.analysisDetail||{},pos=d.positional||{},speed=d.speed||{},hr=d.heartRate||{},work=d.workload||{},role=pos.role||null,thirds=pos.thirds||[],sides=pos.sides||[],hasHr=!!a?.hasHr,reliable=!!pos.orientationReliable;
+  const thirdLabels=reliable?['Tercio defensivo','Tercio medio','Tercio atacante']:['Tercio A','Tercio central','Tercio B'];
   return `<section class="patx-gps-panel patx-gps-report" data-patx-gps-panel>
     <div class="patx-gps-head">
-      <div class="patx-gps-title-row">${showBack?'<button type="button" class="patx-gps-back" data-gps-back>← Partido</button>':''}<div><div class="patx-gps-kicker">ANÁLISIS GPS DEL PARTIDO</div><h3>${esc(playerName||'Jugador')}</h3>${role?`<div class="patx-gps-role-pill"><b>${esc(role.top)}</b><span>${role.confidence}% confianza${role.orientationReliable?'':' · provisional'}</span></div>`:''}</div></div>
+      <div class="patx-gps-title-row">${showBack?'<button type="button" class="patx-gps-back" data-gps-back>← Partido</button>':''}<div><div class="patx-gps-kicker">ANÁLISIS GPS DEL PARTIDO</div><h3>${esc(playerName||'Jugador')}</h3>${role?`<div class="patx-gps-role-pill"><b>${reliable?esc(role.top):'Perfil provisional'}</b><span>${role.confidence}% confianza${reliable?'':' · campo sin calibrar'}</span></div>`:''}</div></div>
       <div class="patx-gps-head-actions">${showSave?'<button type="button" class="patx-gps-save" data-gps-save>Guardar datos</button>':''}</div>
     </div>
 
@@ -34,13 +34,14 @@ export function playerGpsPanelHtml(a,{playerName='',showSave=false,showBack=fals
 
     <div class="patx-gps-breakdown-grid">
       <section class="patx-gps-section"><div class="patx-gps-section-head"><span>POSICIÓN</span><h4>Ocupación del campo</h4></div>
-        <div class="patx-gps-bars">${bar('Tercio defensivo',thirds[0])}${bar('Tercio medio',thirds[1])}${bar('Tercio atacante',thirds[2])}</div>
+        <div class="patx-gps-bars">${bar(thirdLabels[0],thirds[0])}${bar(thirdLabels[1],thirds[1])}${bar(thirdLabels[2],thirds[2])}</div>
         <div class="patx-gps-subtitle">Distribución lateral</div><div class="patx-gps-bars compact">${bar('Izquierda',sides[0])}${bar('Centro',sides[1])}${bar('Derecha',sides[2])}</div>
-        ${!pos.orientationReliable?'<p class="patx-gps-note">La orientación ataque/defensa es provisional hasta calibrar las cuatro esquinas del campo.</p>':''}
+        ${!reliable?'<p class="patx-gps-note">Todavía no asignamos “defensivo” y “atacante” a los extremos del campo. Al calibrar las cuatro esquinas podremos orientar el mapa correctamente y convertir Tercio A/B en defensa/ataque.</p>':''}
       </section>
 
-      <section class="patx-gps-section"><div class="patx-gps-section-head"><span>PERFIL</span><h4>Posición estimada</h4></div>
-        ${role?`<div class="patx-gps-role-main"><strong>${esc(role.top)}</strong><b>${role.confidence}%</b></div>${role.ranked?.length?`<div class="patx-gps-role-ranking">${role.ranked.map((r,i)=>`<div><span>${i+1}. ${esc(r.role)}</span><b>${Number(r.score).toFixed(2)}</b></div>`).join('')}</div>`:''}${role.notes?.length?`<ul class="patx-gps-notes">${role.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}`:'<p class="patx-gps-note">No hay GPS suficiente para estimar posición.</p>'}
+      <section class="patx-gps-section"><div class="patx-gps-section-head"><span>PERFIL</span><h4>${reliable?'Posición estimada':'Lectura provisional del rol'}</h4></div>
+        ${role?`<div class="patx-gps-role-main"><strong>${reliable?esc(role.top):'Orientación pendiente'}</strong><b>${role.confidence}%</b></div>${role.ranked?.length?`<div class="patx-gps-role-ranking">${role.ranked.map((r,i)=>`<div><span>${i+1}. ${esc(r.role)}</span><b>${Number(r.score).toFixed(2)}</b></div>`).join('')}</div>`:''}${role.notes?.length?`<ul class="patx-gps-notes">${role.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}`:'<p class="patx-gps-note">No hay GPS suficiente para estimar posición.</p>'}
+        ${!reliable?'<p class="patx-gps-note"><b>No mostramos todavía una posición como definitiva</b>: invertir el eje del campo puede intercambiar un perfil defensivo por uno ofensivo.</p>':''}
       </section>
     </div>
 
