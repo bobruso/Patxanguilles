@@ -1,0 +1,49 @@
+name: GPS branch index patch
+
+on:
+  push:
+    branches:
+      - feature/gps-fit-mvp
+    paths:
+      - .github/workflows/gps-branch-index-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GPS branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/gps-fit-mvp
+          fetch-depth: 0
+
+      - name: Add GPS integration module to index
+        shell: python
+        run: |
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '<script type="module" src="./gps/index-integration.js"></script>'
+          if marker in text:
+              print('GPS integration already present; no change needed.')
+          else:
+              if '</body>' not in text:
+                  raise SystemExit('Could not find </body> in index.html')
+              text = text.replace('</body>', marker + '\n</body>', 1)
+              path.write_text(text, encoding='utf-8')
+              print('GPS integration module inserted before </body>.')
+
+      - name: Commit minimal index change
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No index change required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Wire GPS module into match detail"
+          git push origin HEAD:feature/gps-fit-mvp
