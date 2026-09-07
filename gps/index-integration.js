@@ -1,0 +1,145 @@
+import{drawHeatmap}from'./pitch-maps.js';
+import{fromSupabaseRow}from'./fit-analysis.js';
+
+const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
+const SUPABASE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
+let sb=null;
+let playerNameToId=null;
+
+function ensureCss(){
+  if(document.querySelector('link[data-patx-gps-css]'))return;
+  const link=document.createElement('link');
+  link.rel='stylesheet';
+  link.href='./gps/gps-panel.css';
+  link.dataset.patxGpsCss='1';
+  document.head.appendChild(link);
+}
+
+function client(){
+  if(sb)return sb;
+  if(!window.supabase?.createClient)throw new Error('Supabase no está disponible');
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false}});
+  return sb;
+}
+
+async function loadPlayerMap(){
+  if(playerNameToId)return playerNameToId;
+  const{data,error}=await client().from('players').select('id,nickname');
+  if(error)throw error;
+  playerNameToId=new Map((data||[]).map(p=>[String(p.nickname||'').trim(),String(p.id)]));
+  return playerNameToId;
+}
+
+async function loadMatchGps(matchId){
+  const{data,error}=await client().from('match_player_gps').select('*').eq('match_id',matchId);
+  if(error)throw error;
+  return new Map((data||[]).map(row=>[String(row.player_id),row]));
+}
+
+const fmtKm=m=>Number.isFinite(Number(m))?(Number(m)/1000).toFixed(2)+' km':'—';
+const fmtKmh=v=>Number.isFinite(Number(v))?Number(v).toFixed(1)+' km/h':'—';
+
+function gpsIconSvg(){
+  return`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path></svg>`;
+}
+
+function decorateShirt(shirt,row,{matchId,playerId,playerName}){
+  if(!shirt||shirt.dataset.gpsDecorated==='1')return;
+  shirt.dataset.gpsDecorated='1';
+  shirt.classList.add('patx-match-player-has-gps');
+  const name=shirt.querySelector('.player-name');
+  if(!name)return;
+  name.classList.add('patx-match-gps-name');
+  name.setAttribute('tabindex','0');
+  name.setAttribute('aria-label',playerName+' · previsualizar mapa de calor');
+  name.insertAdjacentHTML('beforeend',`<span class="patx-match-gps-hover" data-gps-hover><canvas aria-label="Mapa de calor de ${playerName.replace(/[&<>\"]/g,'')}"></canvas><small>Mapa de calor · previsualización</small></span>`);
+
+  const icon=document.createElement('button');
+  icon.type='button';
+  icon.className='patx-gps-icon-btn patx-match-gps-icon';
+  icon.title='Abrir análisis GPS';
+  icon.setAttribute('aria-label','Abrir análisis GPS de '+playerName);
+  icon.innerHTML=gpsIconSvg();
+  name.insertAdjacentElement('afterend',icon);
+
+  const stats=document.createElement('span');
+  stats.className='patx-gps-mini-stats patx-match-gps-mini-stats';
+  stats.innerHTML=`<b>${fmtKm(row.distance_m)}</b><span>${fmtKmh(row.top_speed_kmh)} máx.</span><span>${fmtKmh(row.avg_speed_kmh)} media</span>`;
+  icon.insertAdjacentElement('afterend',stats);
+
+  const canvas=name.querySelector('[data-gps-hover] canvas');
+  if(canvas)requestAnimationFrame(()=>drawHeatmap(canvas,fromSupabaseRow(row)));
+
+  icon.addEventListener('click',e=>{
+    e.preventDefault();e.stopPropagation();
+    location.href=`gps-report.html?match=${encodeURIComponent(matchId)}&player=${encodeURIComponent(playerId)}`;
+  });
+
+  name.addEventListener('click',e=>{
+    if(!window.matchMedia('(hover:none)').matches)return;
+    e.preventDefault();e.stopPropagation();
+    const open=name.classList.toggle('patx-gps-preview-open');
+    document.querySelectorAll('.patx-match-gps-name.patx-gps-preview-open').forEach(el=>{if(el!==name)el.classList.remove('patx-gps-preview-open')});
+    if(open)requestAnimationFrame(()=>canvas&&drawHeatmap(canvas,fromSupabaseRow(row)));
+  });
+  name.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();name.classList.toggle('patx-gps-preview-open')}
+  });
+}
+
+function addUploadButton(matchId){
+  const actions=document.querySelector('#matchContent .share-result-actions');
+  if(!actions||actions.querySelector('[data-gps-upload-match]'))return;
+  const btn=document.createElement('button');
+  btn.type='button';
+  btn.className='secondary patx-match-gps-upload';
+  btn.dataset.gpsUploadMatch='1';
+  btn.textContent='🛰️ Añadir datos GPS';
+  btn.addEventListener('click',e=>{
+    e.preventDefault();e.stopPropagation();
+    location.href=`gps-upload.html?match=${encodeURIComponent(matchId)}`;
+  });
+  actions.insertBefore(btn,actions.lastElementChild||null);
+}
+
+export async function enhanceOpenMatchGps(matchId){
+  ensureCss();
+  const content=document.getElementById('matchContent');
+  if(!content)return;
+  addUploadButton(matchId);
+  try{
+    const[nameMap,gpsMap]=await Promise.all([loadPlayerMap(),loadMatchGps(matchId)]);
+    if(!gpsMap.size)return;
+    content.querySelectorAll('.big-shirt').forEach(shirt=>{
+      const nameEl=shirt.querySelector('.player-name');
+      const playerName=String(nameEl?.childNodes?.[0]?.textContent||nameEl?.textContent||'').trim();
+      const playerId=nameMap.get(playerName);
+      const row=playerId?gpsMap.get(String(playerId)):null;
+      if(row)decorateShirt(shirt,row,{matchId,playerId,playerName});
+    });
+  }catch(err){
+    console.warn('[Patx GPS] No se pudo cargar la previsualización GPS',err);
+  }
+}
+
+function install(){
+  ensureCss();
+  const original=window.openMatch;
+  if(typeof original!=='function'||original.__patxGpsWrapped)return false;
+  function wrappedOpenMatch(id){
+    const result=original.apply(this,arguments);
+    Promise.resolve(result).finally(()=>setTimeout(()=>enhanceOpenMatchGps(id),0));
+    return result;
+  }
+  wrappedOpenMatch.__patxGpsWrapped=true;
+  wrappedOpenMatch.__patxGpsOriginal=original;
+  window.openMatch=wrappedOpenMatch;
+  return true;
+}
+
+if(!install()){
+  let attempts=0;
+  const timer=setInterval(()=>{attempts++;if(install()||attempts>80)clearInterval(timer)},50);
+}
+
+window.PatxGpsIndexIntegration={enhanceOpenMatchGps};
