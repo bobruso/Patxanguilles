@@ -4722,8 +4722,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <section id="home" class="screen active">
 <div class="card hero">
 <div class="home-options">
-<button class="mode redline home-image-card" onclick="openCreateGame()"><span class="home-card-copy"><span class="icon">⚽</span><strong>Crear alineaciones</strong><span>Generación de equipos automágica</span></span><span class="home-card-image"><img src="crear alineacion.jpg" alt=""></span></button>
-<button class="mode greenline home-image-card" onclick="openSeason()"><span class="home-card-copy"><span class="icon">🏆</span><strong>Temporada 26/27</strong><span>Clasificación, calendario y jugadores</span></span><span class="home-card-image"><img src="temporada.jpg" alt=""></span></button>
+<button class="mode redline home-image-card" onclick="openCreateGame()"><span class="home-card-copy"><span class="icon">⚽</span><strong>Crear alineaciones</strong><span>Nuevo partido</span></span><span class="home-card-image"><img src="crear alineacion.jpg" alt=""></span></button>
+<button class="mode greenline home-image-card" onclick="openSeason()"><span class="home-card-copy"><span class="icon">🏆</span><strong>Temporada 26/27</strong><span>Clasificación y calendario</span></span><span class="home-card-image"><img src="temporada.jpg" alt=""></span></button>
 <button class="mode greenline home-image-card" onclick="show('resultMode')"><span class="home-card-copy"><span class="icon">📝</span><strong>Apuntar resultado</strong><span>Partido ya jugado</span></span><span class="home-card-image"><img src="apuntar resultado.jpg" alt=""></span></button>
 </div>
 </div>
@@ -4732,7 +4732,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 
 <section id="createMode" class="screen"><div class="card">
 <div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2>Crear equipos</h2><div class="subtitle">Elige la modalidad para generar las alineaciones.</div></div></div>
-<div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="startGame('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong><span>14 jugadores.</span></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="startGame('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong><span>10 jugadores.</span></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
+<div class="home-options mode-photo-options"><button class="mode redline home-image-card mode-photo-card" onclick="startGame('f7')"><span class="home-card-copy"><span class="icon">⚽</span><strong>Fútbol 7</strong></span><span class="home-card-image"><img src="futbol-7.jpg" alt="Fútbol 7"></span></button><button class="mode greenline home-image-card mode-photo-card" onclick="startGame('fs')"><span class="home-card-copy"><span class="icon">🥅</span><strong>Fútbol Sala</strong></span><span class="home-card-image"><img src="futbol-sala.jpg" alt="Fútbol Sala"></span></button></div>
 </div></section>
 
 <section id="creationMethod" class="screen"><div class="card">
@@ -4751,7 +4751,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <span class="coach-method-overlay"></span>
     <span class="coach-method-copy">
       <strong>Modo Entrenador</strong>
-      <span>Dos entrenadores crean los equipos por turnos en una sala compartida.</span>
+      <span>Dos entrador@s crean los equipos por turnos en una sala compartida.</span>
     </span>
   </button>
 </div>
@@ -4771,8 +4771,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   <div class="coach-draft-intro">
     <div class="coach-draft-intro-icon">🧠</div>
     <div>
-      <strong>Draft de entrenadores</strong>
-      <span>Dos personas, un turno cada una. Cuando estéis los dos, una moneda decidirá quién ficha primero.</span>
+      <strong>Draft de entrador@s</strong>
+      <span>Dos personas, un turno cada una. Cuando estéis list@s, una moneda decidirá quién ficha primero.</span>
     </div>
   </div>
 
@@ -4804,13 +4804,13 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   </div>
 
   <div class="coach-manual-label">
-    <strong>O selecciona los jugadores manualmente</strong>
-    <span>También puedes corregir aquí cualquier jugador que falte.</span>
+    <strong>O selecciona l@s jugador@s manualmente</strong>
+    <span>También puedes corregir aquí cualquier jugador/a que falte.</span>
   </div>
   <div class="players" id="coachSetupPlayers"></div>
 
   <div class="footerbar coach-setup-footer">
-    <span class="count">Selecciona exactamente <b id="coachSetupNeededText">14</b> jugadores.</span>
+    <span class="count">Selecciona exactamente <b id="coachSetupNeededText">14</b> jugador@s.</span>
     <button id="coachCreateRoomBtn" class="primary" disabled onclick="createCoachRoom()">Crear sala</button>
   </div>
 </div>
@@ -4952,8 +4952,19 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v188</span>
+    <span class="history-version">VERSIÓN v189</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">141</div>
+      <div class="history-section-content">
+        <h2>Textos y lenguaje de la interfaz</h2>
+        <ul>
+          <li>Se actualizan textos de Home, clasificación y creación de alineaciones para hacerlos más claros y compactos.</li>
+          <li>Se adapta el lenguaje visible del Modo Entrenador y la denominación de los equipos a formas inclusivas.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">140</div>
       <div class="history-section-content">
@@ -6022,7 +6033,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
           <li>Nuevo fondo definitivo de Fútbol Sala y recolocación de los jugadores para ocupar mejor cada mitad del campo.</li>
           <li>Las camisetas y los nombres aumentan aproximadamente un 20% de tamaño.</li>
           <li>Se reajustan porteros y defensas para evitar solapes y aprovechar mejor las áreas de juego.</li>
-          <li>La cabecera gana tamaño de lectura, centra fecha y hora y elimina el texto «Rojos vs Negros».</li>
+          <li>La cabecera gana tamaño de lectura, centra fecha y hora y elimina el texto «Roj@s vs Negr@s».</li>
           <li>En Fútbol 7, «Patxanguilles Antifeixistes» se presenta en dos líneas junto al escudo.</li>
         </ul>
       </div>
@@ -6615,8 +6626,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 </div>
 
 <div class="coach-manual-label algorithm-manual-label">
-  <strong>O selecciona los jugadores manualmente</strong>
-  <span>También puedes corregir aquí cualquier jugador que falte.</span>
+  <strong>O selecciona l@s jugador@s manualmente</strong>
+  <span>También puedes corregir aquí cualquier jugador/a que falte.</span>
 </div>
 
 <div class="players" id="players"></div>
@@ -6672,8 +6683,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 </div>
 
 <div class="coach-manual-label algorithm-manual-label">
-  <strong>O selecciona los jugadores manualmente</strong>
-  <span>También puedes corregir aquí cualquier jugador que falte.</span>
+  <strong>O selecciona l@s jugador@s manualmente</strong>
+  <span>También puedes corregir aquí cualquier jugador/a que falte.</span>
 </div>
 
 <div class="result-top-row">
@@ -6731,7 +6742,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v188 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v189 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -8759,7 +8770,7 @@ function classificationHeader(label,key){
 function renderClassification(c){
   const rows=sortedStats();
   const adminExtraHeaders=adminLogged?`${classificationHeader('GL','goals')}${classificationHeader('AS','assists')}`:'';
-  c.innerHTML=`<div class="season-grid"><div class="panel"><h3>Clasificación de jugadores</h3><div class="table-wrap"><table class="standings"><thead><tr><th>#</th>${classificationHeader('Jugador','name')}${classificationHeader('PJ','played')}${classificationHeader('G','wins')}${classificationHeader('E','draws')}${classificationHeader('P','losses')}${classificationHeader('% V','winPct')}${adminExtraHeaders}</tr></thead><tbody>${rows.map((s,i)=>`<tr><td class="rank">${i+1}</td><td class="player-link" onclick="openProfile('${escapeJs(s.name)}')"><span class="classification-player">${db.players?.[s.name]?.photo?`<img class="classification-avatar" src="${escapeHtml(db.players[s.name].photo)}" alt="" loading="lazy">`:''}<span>${escapeHtml(s.name)}</span></span></td><td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td><td>${s.winPct}%</td>${adminLogged?`<td>${s.goals}</td><td>${s.assists}</td>`:''}</tr>`).join('')}</tbody></table></div><div class="sort-help">Pulsa en el nombre de una columna para ordenar. Vuelve a pulsar para invertir el orden.</div></div><div class="panel"><h3>Últimos partidos</h3>${matchRows(db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6))}</div></div>`;
+  c.innerHTML=`<div class="season-grid"><div class="panel"><h3>Clasificación de jugadores/as</h3><div class="table-wrap"><table class="standings"><thead><tr><th>#</th>${classificationHeader('Jugador','name')}${classificationHeader('PJ','played')}${classificationHeader('G','wins')}${classificationHeader('E','draws')}${classificationHeader('P','losses')}${classificationHeader('% V','winPct')}${adminExtraHeaders}</tr></thead><tbody>${rows.map((s,i)=>`<tr><td class="rank">${i+1}</td><td class="player-link" onclick="openProfile('${escapeJs(s.name)}')"><span class="classification-player">${db.players?.[s.name]?.photo?`<img class="classification-avatar" src="${escapeHtml(db.players[s.name].photo)}" alt="" loading="lazy">`:''}<span>${escapeHtml(s.name)}</span></span></td><td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td><td>${s.winPct}%</td>${adminLogged?`<td>${s.goals}</td><td>${s.assists}</td>`:''}</tr>`).join('')}</tbody></table></div><div class="sort-help">Pulsa en el nombre de una columna para ordenar. Vuelve a pulsar para invertir el orden.</div></div><div class="panel"><h3>Últimos partidos</h3>${matchRows(db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6))}</div></div>`;
 }
 
 let cardAlbumPage=0;
