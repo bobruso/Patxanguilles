@@ -3511,7 +3511,7 @@ body.album-reader-open{
 @media(min-width:901px){
   #desktopHomeVideoBg{display:block;position:fixed;inset:0;z-index:-3;overflow:hidden;background:#07100b url('background-home-desktop.jpg') center/cover no-repeat;opacity:0;pointer-events:none;transition:opacity .25s ease}
   body.desktop-home-video #desktopHomeVideoBg{opacity:1}
-  #desktopHomeVideo{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s ease}
+  #desktopHomeVideo{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .45s ease}
   #desktopHomeVideo.ready{opacity:1}
   body.desktop-home-video{background:#07100b url('background-home-desktop.jpg') center/cover fixed no-repeat!important}
   body.home-intro-pending #home .hero{opacity:0;transform:translateY(18px) scale(.985);pointer-events:none}
@@ -4516,9 +4516,10 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 /* v164 · fichaje con vídeo/audio cuando el jugador dispone de ellos */
 #coachSigningVideo{
   display:none;
-  width:100%;
-  max-width:100%;
-  height:auto;
+  width:auto;
+  height:100%;
+  max-width:min(82vw,470px);
+  max-height:100%;
   opacity:0;
   transform:scale(.72);
   object-fit:contain;
@@ -4567,6 +4568,62 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 .match-photo-item{position:relative}
 .match-photo-delete{width:100%;margin-top:6px;font-size:12px;padding:7px 9px}
 @media(max-width:800px){.match-photo-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
+
+
+
+/* v178 · enlace de sala y presentación final del Modo Entrenador */
+@keyframes coachShareBluePulse{0%,100%{box-shadow:0 0 0 0 rgba(45,137,255,.65);filter:brightness(1)}50%{box-shadow:0 0 0 11px rgba(45,137,255,0);filter:brightness(1.22)}}
+#coachShareCopyBtn.coach-share-unread{background:linear-gradient(145deg,#1266d6,#2d89ff)!important;border-color:#70adff!important;color:#fff!important;animation:coachShareBluePulse 1.05s infinite!important;font-weight:1000!important}
+#coachShareCopyBtn.coach-share-copied{background:#30363d!important;border-color:#454d56!important;color:#c9d0d7!important;animation:none!important}
+
+@media(min-width:901px){
+  .celebration{background:#07100b!important}
+  .celebration>.celebration-desktop-bg{display:block!important;position:fixed;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+  .celebration:before{z-index:1!important}
+  .celebration>.firework,.celebration>.celebration-card{z-index:2}
+}
+.celebration-desktop-bg{display:none}
+
+.coach-lineup-presentation{position:fixed;inset:0;z-index:10040;background:#000;display:none;overflow:hidden}
+.coach-lineup-presentation.open{display:block}
+.coach-lineup-master{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+.coach-lineup-overlay{position:absolute;inset:0;z-index:2;pointer-events:none}
+.coach-lineup-title{position:absolute;left:50%;top:15%;transform:translateX(-50%);width:90%;text-align:center;font-size:clamp(30px,4vw,68px);font-weight:1000;letter-spacing:.055em;text-transform:uppercase;text-shadow:0 5px 24px #000;opacity:0;transition:opacity .65s ease}
+.coach-lineup-title.visible{opacity:1}
+.coach-lineup-title::before,.coach-lineup-title::after{content:'★';color:#ffd83d;font-size:.72em;vertical-align:.08em;text-shadow:0 0 12px rgba(255,216,61,.75),0 3px 10px #000;margin:0 .38em}
+.coach-lineup-cards{position:absolute;left:50%;top:52%;width:min(94vw,1580px);height:min(70vh,720px);transform:translate(-50%,-50%)}
+.coach-lineup-card{position:absolute;left:50%;top:50%;width:clamp(125px,11.5vw,205px);height:clamp(190px,31vh,330px);transform:translate(-50%,-50%) scale(.45);opacity:0;filter:blur(8px);transition:opacity .65s ease,transform .8s cubic-bezier(.18,.9,.22,1),filter .65s ease;display:flex;align-items:center;justify-content:center;isolation:isolate}
+.coach-lineup-card::after{content:'';position:absolute;left:12%;right:12%;bottom:-8%;height:12%;border-radius:50%;background:rgba(0,0,0,.32);filter:blur(11px);transform:scaleX(.82);z-index:-1;opacity:0;transition:opacity .7s ease}
+.coach-lineup-card.revealed{opacity:1;filter:none;transform:translate(-50%,-50%) scale(1)}
+.coach-lineup-card.revealed::after{opacity:.62}
+.coach-lineup-card img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 18px 25px rgba(0,0,0,.58))}
+.coach-lineup-card video{display:block;width:auto!important;height:100%!important;max-width:100%!important;object-fit:contain!important;filter:drop-shadow(0 18px 25px rgba(0,0,0,.58));border-radius:16px}
+.coach-lineup-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.coach-lineup-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 7px 2px rgba(255,255,255,.65);opacity:0;animation:coachSpark 3.4s ease-in-out infinite}
+@keyframes coachSpark{0%,100%{opacity:0;transform:scale(.35)}35%{opacity:.22}50%{opacity:.9;transform:scale(1.8)}65%{opacity:.18}}
+
+.coach-lineup-card.pos-0{left:50%;top:51%;z-index:7}
+.coach-lineup-card.pos-1{left:36%;top:50%;z-index:6}.coach-lineup-card.pos-2{left:64%;top:50%;z-index:6}
+.coach-lineup-card.pos-3{left:22%;top:49%;z-index:5}.coach-lineup-card.pos-4{left:78%;top:49%;z-index:5}
+.coach-lineup-card.pos-5{left:8%;top:48%;z-index:4}.coach-lineup-card.pos-6{left:92%;top:48%;z-index:4}
+.coach-lineup-presentation-actions{position:absolute;z-index:4;left:50%;bottom:5%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;opacity:0;pointer-events:none;transition:opacity .5s ease}
+.coach-lineup-presentation-actions.visible{opacity:1;pointer-events:auto}
+@keyframes coachFinalSharePulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,255,255,.45)}50%{transform:scale(1.045);box-shadow:0 0 0 12px rgba(255,255,255,0)}}
+.coach-lineup-share-btn{font-size:20px!important;min-width:280px;background:#1f9d55!important;border-color:#1f9d55!important;color:#fff!important;animation:coachFinalSharePulse 1.1s infinite;box-shadow:0 0 0 rgba(31,157,85,0)}
+.coach-lineup-share-btn:hover{background:#188347!important;border-color:#188347!important}
+@keyframes coachFinalSharePulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(31,157,85,.5)}50%{transform:scale(1.045);box-shadow:0 0 0 11px rgba(31,157,85,0)}}
+@media(max-width:900px){
+  .coach-lineup-title{top:12%;width:92%;font-size:clamp(20px,5.2vw,34px);letter-spacing:.035em;line-height:1.08}
+  .coach-lineup-title::before,.coach-lineup-title::after{margin:0 .22em}
+  .coach-lineup-cards{left:0;top:0;width:100%;height:100%;transform:none}
+  .coach-lineup-card{width:26.4vw;height:36vw;max-width:202px;max-height:278px;min-width:98px;min-height:137px}
+  .coach-lineup-card.pos-0{left:50%;top:49%;z-index:7}
+  .coach-lineup-card.pos-1{left:14%;top:49%;z-index:6}.coach-lineup-card.pos-2{left:86%;top:49%;z-index:6}
+  .coach-lineup-card.pos-3{left:32%;top:27%;z-index:5}.coach-lineup-card.pos-4{left:68%;top:27%;z-index:5}
+  .coach-lineup-card.pos-5{left:32%;top:71%;z-index:4}.coach-lineup-card.pos-6{left:68%;top:71%;z-index:4}
+  .coach-lineup-presentation-actions{bottom:7%;width:90%}
+  .coach-lineup-share-btn{font-size:17px!important;min-width:min(280px,86vw)}
+}
 
 </style>
 </head>
@@ -4783,7 +4840,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   <p id="coachWaitingText">Comparte este enlace para que entre el otro entrenador.</p>
   <div id="coachShareRow" class="coach-share-row">
     <input id="coachShareLink" readonly>
-    <button class="secondary" onclick="copyCoachLink()">Copiar enlace</button>
+    <button id="coachShareCopyBtn" class="secondary" onclick="copyCoachLink()">Copiar enlace</button>
   </div>
   <button id="coachStartBtn" class="primary coach-big-btn" disabled onclick="startCoachDraft()">COMENZAR</button>
 </div>
@@ -4884,8 +4941,110 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v177</span>
+    <span class="history-version">VERSIÓN v186</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">138</div>
+      <div class="history-section-content">
+        <h2>Modo entrenador · ajuste de presentación móvil</h2>
+        <ul>
+          <li>Las siete cartas móviles aumentan un 20% y se redistribuyen con separación uniforme para evitar contactos o solapamientos entre filas.</li>
+          <li>El titular «Este es tu equipo de gala» y el botón «Compartir alineación» se desplazan ligeramente hacia arriba.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">137</div>
+      <div class="history-section-content">
+        <h2>Modo entrenador · presentación de gala móvil</h2>
+        <ul>
+          <li>Incorporado el master vertical 1080×1920 para la presentación final en móvil, con una composición propia de siete cartas basada en la referencia vertical.</li>
+          <li>La aparición móvil sigue una secuencia centro → pareja lateral → pareja superior → pareja inferior, manteniendo las cartas estáticas después de su entrada.</li>
+          <li>Escritorio conserva sin cambios su master, posiciones y timings actuales.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">136</div>
+      <div class="history-section-content">
+        <h2>Modo entrenador · cartas de fichaje y presentación de gala</h2>
+        <ul>
+          <li>Los fichajes individuales muestran temporalmente solo la carta estática de cada jugador; los vídeos y audios especiales quedan conservados pero desactivados para reactivarlos más adelante.</li>
+          <li>El titular «Este es tu equipo de gala» se ha desplazado ligeramente hacia abajo.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">135</div>
+      <div class="history-section-content">
+        <h2>Modo entrenador · presentación de gala</h2>
+        <ul>
+          <li>La presentación final utiliza temporalmente solo las cartas estáticas de imagen para mantener un acabado uniforme; el soporte para videocartas queda preparado para reactivarlo más adelante.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">134</div>
+      <div class="history-section-content">
+        <h2>Modo entrenador · presentación de gala</h2>
+        <ul>
+          <li>Las cartas permanecen estáticas tras su entrada, sin movimiento flotante.</li>
+          <li>Los vídeos especiales de fichaje se ajustan al mismo espacio visual que las cartas, manteniendo sus proporciones.</li>
+          <li>El titular «Este es tu equipo de gala» aparece después de que las siete cartas hayan terminado de mostrarse.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">133</div>
+      <div class="history-section-content">
+        <h2>Modo entrenador · presentación de gala</h2>
+        <ul>
+          <li>Retirada la opción «Guardar vídeo» y la grabación de pantalla asociada.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">132</div>
+      <div class="history-section-content">
+        <h2>Modo entrenador · presentación de gala</h2>
+        <ul>
+          <li>Ajustados los vídeos especiales al mismo alto visual que las cartas y añadidos movimiento flotante, sombra y partículas sutiles.</li>
+          <li>Renovados el titular y el botón de compartir alineación.</li>
+          <li>Añadida la exportación de la presentación final como vídeo mediante la grabación de la propia pestaña.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">131</div>
+      <div class="history-section-content">
+        <h2>Home · carga del fondo de escritorio</h2>
+        <ul>
+          <li>El fondo inicial utiliza ahora el primer fotograma exacto del vídeo y permanece visible hasta que el vídeo está suficientemente cargado para reproducirse.</li>
+          <li>La transición de imagen a vídeo se realiza mediante un fundido suave para evitar saltos visuales o mostrar el vídeo a medias en conexiones lentas.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">130</div>
+      <div class="history-section-content">
+        <h2>Modo Entrenador · presentación final</h2>
+        <ul>
+          <li>El enlace de invitación se destaca en azul hasta copiarlo por primera vez.</li>
+          <li>En escritorio, al cerrar el draft se estrena una presentación a pantalla completa del equipo propio con siete cartas en orden aleatorio sobre vídeo.</li>
+          <li>El vídeo de presentación se precarga al quedar seis jugadores por seleccionar y coordina su audio con una bajada y recuperación progresiva de la música.</li>
+          <li>La pantalla final de compartir alineaciones utiliza en escritorio el vídeo de fondo de la Home.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">129</div>
       <div class="history-section-content">
@@ -6509,7 +6668,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 </div></section>
 </div>
 
-<div id="celebration" class="celebration" style="display:none"><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="lineup-share-details"><label>Día<input id="lineupShareDate" type="date"></label><label>Hora<span class="lineup-time-selects"><select id="lineupShareHour" aria-label="Hora"><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20" selected>20</option><option value="21">21</option><option value="22">22</option></select><span class="lineup-time-colon">:</span><select id="lineupShareMinute" aria-label="Minutos"><option value="00">00</option><option value="15">15</option><option value="30" selected>30</option><option value="45">45</option></select></span></label></div><div class="final-actions">
+<div id="celebration" class="celebration" style="display:none"><video class="celebration-desktop-bg" muted loop playsinline preload="none" poster="background-home-desktop.jpg"><source data-src="background-home-desktop.mp4" type="video/mp4"></video><div class="firework f1"></div><div class="firework f2"></div><div class="firework f3"></div><div class="firework f4"></div><div class="firework f5"></div><div class="firework f6"></div><div class="firework f7"></div><div class="firework f8"></div><div class="celebration-card"><button class="secondary celebration-home" onclick="closeCelebration();show('home')">Home</button><div class="celebration-title"><div class="kicker">Patxanguilles Antifeixistes presenta</div><h2>Que gane el mejor</h2><p id="celebrationMode"></p></div><div id="finalPitchCapture" class="final-pitch"><div class="final-teams"><div class="final-team"><h3>Rojos</h3><div id="finalRed" class="final-shirt-grid"></div></div><div class="final-team"><h3>Negros</h3><div id="finalBlack" class="final-shirt-grid"></div></div></div></div><div id="patxQuote" class="patx-quote"></div><div class="lineup-share-details"><label>Día<input id="lineupShareDate" type="date"></label><label>Hora<span class="lineup-time-selects"><select id="lineupShareHour" aria-label="Hora"><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20" selected>20</option><option value="21">21</option><option value="22">22</option></select><span class="lineup-time-colon">:</span><select id="lineupShareMinute" aria-label="Minutos"><option value="00">00</option><option value="15">15</option><option value="30" selected>30</option><option value="45">45</option></select></span></label></div><div class="final-actions">
   <div class="final-main-actions">
     <button class="primary final-action-with-note" onclick="copyFinalAndToast()"><span>Copiar alineación</span><small>Texto</small></button>
     <button class="secondary final-action-with-note" onclick="copyLineupScreenshot()"><span>Screenshot</span><small>Compartir imagen</small></button>
@@ -6519,12 +6678,25 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 </div>
 </div></div>
 
+<div id="coachLineupPresentation" class="coach-lineup-presentation" aria-hidden="true">
+  <video id="coachLineupMaster" class="coach-lineup-master" playsinline preload="auto" src="PRESEN ALINEACION WEB_ook.mp4"></video>
+  <div class="coach-lineup-overlay">
+    <div id="coachLineupParticles" class="coach-lineup-particles"></div>
+    <div id="coachLineupTitle" class="coach-lineup-title">ESTE ES TU EQUIPO DE GALA</div>
+    <div id="coachLineupCards" class="coach-lineup-cards"></div>
+  </div>
+  <div id="coachLineupPresentationActions" class="coach-lineup-presentation-actions">
+    <button class="primary coach-lineup-share-btn" onclick="finishCoachLineupPresentation()">⚽ Compartir alineación</button>
+
+  </div>
+</div>
+
 <div id="profileModal" class="profile-modal"><div class="profile-card"><div id="profileContent"></div></div></div>
 <div id="matchModal" class="match-modal"><div class="profile-card"><div id="matchContent"></div><div class="profile-close"><button class="secondary" onclick="closeMatch()">Cerrar</button></div></div></div>
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v177 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v182 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -6780,6 +6952,105 @@ let coachParsedCallup=[];
 let coachCallupConfirmed=false;
 let coachHadSecond=false;
 let coachPollTimer=null;
+
+const COACH_LINEUP_MASTER_VIDEO='PRESEN ALINEACION WEB_ook.mp4';
+const COACH_LINEUP_MASTER_VIDEO_MOBILE='PRESEN ALINEACION WEB_ook_vertical_1080.mp4';
+let coachLineupMasterPreloaded=false;
+let coachLineupRevealTimers=[];
+let coachMusicVolumeBeforePresentation=null;
+let coachPresentationTeam=[];
+
+function coachShareCopyStorageKey(code=coachRoomCode){return 'patx_coach_share_copied_'+String(code||'').toUpperCase()}
+function updateCoachShareCopyState(){
+  const btn=document.getElementById('coachShareCopyBtn');
+  if(!btn)return;
+  const copied=localStorage.getItem(coachShareCopyStorageKey())==='1';
+  btn.classList.toggle('coach-share-unread',!copied);
+  btn.classList.toggle('coach-share-copied',copied);
+}
+function coachLineupIsMobile(){return window.matchMedia('(max-width:900px)').matches}
+function coachLineupMasterSrc(){return coachLineupIsMobile()?COACH_LINEUP_MASTER_VIDEO_MOBILE:COACH_LINEUP_MASTER_VIDEO}
+function preloadCoachLineupMaster(){
+  const v=document.getElementById('coachLineupMaster');
+  if(!v)return;
+  const src=coachLineupMasterSrc();
+  if(v.getAttribute('src')!==src){v.setAttribute('src',src);v.load()}
+  if(coachLineupMasterPreloaded)return;
+  coachLineupMasterPreloaded=true;
+  v.preload='auto';v.load();
+}
+function clearCoachLineupRevealTimers(){coachLineupRevealTimers.forEach(clearTimeout);coachLineupRevealTimers=[]}
+function shuffleCoachPresentation(list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const COACH_LINEUP_USE_VIDEO_CARDS=false; // Reactivar cuando todas las videocartas estén disponibles.
+const COACH_SIGNING_USE_SPECIAL_MEDIA=false; // Reactivar más adelante: por ahora todos los fichajes muestran carta estática.
+function coachPresentationMedia(name){
+  const special=coachSpecialSigningMedia[name];
+  if(COACH_LINEUP_USE_VIDEO_CARDS&&special?.video)return {type:'video',src:special.video};
+  const card=db.players?.[name]?.card||'';
+  return card?{type:'image',src:card}:null;
+}
+function fadeMusicTo(target,duration=700){
+  if(!music)return;
+  const start=music.volume,steps=20,delta=(target-start)/steps;
+  let i=0;
+  const timer=setInterval(()=>{i++;music.volume=Math.max(0,Math.min(1,start+delta*i));if(i>=steps)clearInterval(timer)},duration/steps);
+}
+function restoreMusicAfterCoachPresentation(){
+  if(coachMusicVolumeBeforePresentation==null)return;
+  const target=coachMusicVolumeBeforePresentation;
+  coachMusicVolumeBeforePresentation=null;
+  fadeMusicTo(target,900);
+}
+function buildCoachLineupParticles(){
+  const box=document.getElementById('coachLineupParticles');if(!box)return;
+  box.innerHTML=Array.from({length:34},(_,i)=>{
+    const left=7+Math.random()*86,top=23+Math.random()*58,delay=(Math.random()*3.4).toFixed(2),dur=(2.5+Math.random()*2.2).toFixed(2);
+    return `<i class="coach-lineup-spark" style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%;animation-delay:-${delay}s;animation-duration:${dur}s"></i>`;
+  }).join('');
+}
+function revealCoachLineupCard(i){
+  const el=document.querySelector('#coachLineupCards .coach-lineup-card[data-index="'+i+'"]');
+  if(!el)return;
+  el.classList.add('revealed');
+  const v=el.querySelector('video');if(v){v.currentTime=0;v.play().catch(()=>{})}
+}
+function showCoachLineupPresentation(team,preserveOrder=false){
+  const wrap=document.getElementById('coachLineupPresentation');
+  const master=document.getElementById('coachLineupMaster');
+  const cards=document.getElementById('coachLineupCards');
+  const title=document.getElementById('coachLineupTitle');
+  const actions=document.getElementById('coachLineupPresentationActions');
+  if(!wrap||!master||!cards)return showCelebration();
+  clearCoachLineupRevealTimers();
+  buildCoachLineupParticles();
+  coachPresentationTeam=(preserveOrder?[...team]:shuffleCoachPresentation(team)).slice(0,7);
+  cards.innerHTML=coachPresentationTeam.map((name,i)=>{
+    const media=coachPresentationMedia(name);
+    const inner=!media?`<div style="font-weight:1000;text-align:center;text-shadow:0 3px 12px #000">${escapeHtml(name)}</div>`:(media.type==='video'?`<video muted loop playsinline preload="auto" src="${escapeHtml(media.src)}"></video>`:`<img src="${escapeHtml(media.src)}" alt="${escapeHtml(name)}">`);
+    return `<div class="coach-lineup-card pos-${i}" data-index="${i}">${inner}</div>`;
+  }).join('');
+  title.classList.remove('visible');actions.classList.remove('visible');
+  wrap.classList.add('open');wrap.setAttribute('aria-hidden','false');
+  const mobilePresentation=coachLineupIsMobile();
+  const masterSrc=coachLineupMasterSrc();
+  if(master.getAttribute('src')!==masterSrc){master.setAttribute('src',masterSrc);master.load()}
+  if(music&&!music.paused){coachMusicVolumeBeforePresentation=music.volume;fadeMusicTo(0,700)}else coachMusicVolumeBeforePresentation=null;
+  master.muted=false;master.currentTime=0;
+  const p=master.play();if(p&&p.catch)p.catch(()=>{master.muted=true;master.play().catch(()=>{})});
+  coachLineupRevealTimers.push(setTimeout(()=>title.classList.add('visible'),11900));
+  // Escritorio conserva su timing; móvil replica la referencia vertical: centro, pareja lateral, pareja superior y pareja inferior.
+  const revealAt=mobilePresentation?[7800,8600,8600,9200,9200,9800,9800]:[7000,8200,8200,9600,9600,11000,11000];
+  revealAt.forEach((ms,i)=>coachLineupRevealTimers.push(setTimeout(()=>revealCoachLineupCard(i),ms)));
+  master.onended=()=>{actions.classList.add('visible');restoreMusicAfterCoachPresentation()};
+}
+function finishCoachLineupPresentation(){
+  const wrap=document.getElementById('coachLineupPresentation');
+  const master=document.getElementById('coachLineupMaster');
+  clearCoachLineupRevealTimers();if(master)master.pause();if(wrap){wrap.classList.remove('open');wrap.setAttribute('aria-hidden','true')}
+  restoreMusicAfterCoachPresentation();
+  showCelebration();
+}
+
 
 function coachStorageKey(code){return 'patx_coach_'+String(code||'').toUpperCase()}
 function coachColorsSwapped(code=coachRoomCode){
@@ -7220,7 +7491,7 @@ async function preloadCoachDraftCards(room){
   const queue=names.map(name=>({name,url:db.players?.[name]?.card||''})).filter(x=>x.url);
 
   // Los medios especiales también se precargan aquí, nunca al abrir la web.
-  names.forEach(name=>{
+  if(COACH_SIGNING_USE_SPECIAL_MEDIA)names.forEach(name=>{
     const media=coachSpecialSigningMedia[name];
     if(!media)return;
     if(media.video)coachPreloadMedia(media.video,'video').catch(()=>{});
@@ -7419,13 +7690,13 @@ function showCoachSigningCelebration(name){
   launchCoachSigningScreenFX();
   overlay.focus();
 
-  if(special?.audio){
+  if(COACH_SIGNING_USE_SPECIAL_MEDIA&&special?.audio){
     coachSigningAudio.src=special.audio;
     coachSigningAudio.currentTime=0;
     coachSigningAudio.play().catch(()=>{});
   }
 
-  if(special?.video){
+  if(COACH_SIGNING_USE_SPECIAL_MEDIA&&special?.video){
     video.src=special.video;
     video.currentTime=0;
     video.muted=true;
@@ -7648,6 +7919,7 @@ function renderCoachRoom(room,picks){
   document.getElementById('coachRoomMode').textContent=coachModeLabel(room.mode);
   document.getElementById('coachShareLink').value=location.origin+location.pathname+'#entrenador/'+room.code;
   setCoachWaitingOwnership();
+  updateCoachShareCopyState();
 
   const secondReady=!!room.black_token_hash;
   if(secondReady&&!coachHadSecond&&coachTeam==='red'&&room.status==='waiting'){
@@ -7708,6 +7980,7 @@ function renderCoachDraft(room,picks){
   const picked=new Set(picks.map(p=>p.player_name));
   const all=(room.selected_players&&room.selected_players.length)?room.selected_players:coachPlayersForMode(room.mode);
   const available=coachOrderedAvailable(all.filter(n=>!picked.has(n)));
+  if(available.length<=6)preloadCoachLineupMaster();
   if(coachSelectedPlayer&&picked.has(coachSelectedPlayer))coachSelectedPlayer=null;
 
   document.getElementById('coachRedPicks').innerHTML=displayRed.map((p,i)=>`<div class="coach-picked-token red-pick"><span>${i+1}</span>${escapeHtml(p.player_name)}</div>`).join('');
@@ -7847,6 +8120,8 @@ async function copyCoachLink(){
     document.execCommand('copy');
     toast('Enlace copiado ✓');
   }
+  localStorage.setItem(coachShareCopyStorageKey(),'1');
+  updateCoachShareCopyState();
 }
 
 function openCoachFinalLineup(){
@@ -7855,7 +8130,9 @@ function openCoachFinalLineup(){
   const black=[...document.querySelectorAll('#coachBlackPicks .coach-picked-token')].map(x=>x.childNodes[x.childNodes.length-1].textContent.trim());
   teams={red,black};
   renderResults();
-  showCelebration();
+  const myDisplayTeam=coachDisplayTeam(coachTeam,coachRoomCode);
+  const myTeam=myDisplayTeam==='red'?red:black;
+  showCoachLineupPresentation(myTeam);
 }
 
 
@@ -8217,10 +8494,18 @@ function showCelebration(){
   const dateInput=document.getElementById('lineupShareDate');
   if(dateInput&&!dateInput.value)dateInput.value=new Date().toISOString().slice(0,10);
   document.getElementById('celebration').style.display='block';
+  if(window.matchMedia('(min-width:901px)').matches){
+    const bg=celebration.querySelector('.celebration-desktop-bg');
+    const source=bg?.querySelector('source[data-src]');
+    if(bg&&source&&!source.getAttribute('src')){source.src=source.dataset.src;bg.load()}
+    bg?.play().catch(()=>{});
+  }
 }
 function renderFinalTeam(id,list,color){document.getElementById(id).innerHTML=list.map(p=>`<div class="big-shirt"><span class="shirt-shape ${color}"></span><span>${escapeHtml(p)}</span></div>`).join('')}
 function closeCelebration(){
-  document.getElementById('celebration').style.display='none';
+  const c=document.getElementById('celebration');
+  c.style.display='none';
+  c.querySelector('.celebration-desktop-bg')?.pause();
 }
 async function copyTextRobust(text){
   try{
@@ -9784,12 +10069,21 @@ document.addEventListener('keydown',e=>{
       source.src=source.dataset.src;
       video.load();
     }
-    const ready=()=>{
-      video.classList.add('ready');
-      video.play().catch(()=>{});
+    let revealed=false;
+    const revealVideo=()=>{
+      if(revealed)return;
+      revealed=true;
+      const p=video.play();
+      if(p&&p.then){
+        p.then(()=>requestAnimationFrame(()=>video.classList.add('ready'))).catch(()=>{});
+      }else{
+        requestAnimationFrame(()=>video.classList.add('ready'));
+      }
     };
-    if(video.readyState>=3)ready();
-    else video.addEventListener('canplay',ready,{once:true});
+    // Mientras descarga permanece visible el primer frame estático.
+    // En conexiones lentas esperamos a canplaythrough para no enseñar un vídeo a medias.
+    if(video.readyState>=4)revealVideo();
+    else video.addEventListener('canplaythrough',revealVideo,{once:true});
   }
 
   window.startHomeExperience=function(){
