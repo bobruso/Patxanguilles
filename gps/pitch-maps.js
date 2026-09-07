@@ -37,11 +37,18 @@ function drawPitchBase(ctx,w,h,margin){
   ctx.strokeRect(margin+pw-goalW,margin+(ph-goalH)/2,goalW,goalH);
 }
 
-function drawDirection(ctx,w,h,margin){
+function orientationReliable(analysis){return !!analysis?.analysisDetail?.positional?.orientationReliable}
+function drawDirection(ctx,w,h,margin,analysis){
   ctx.font='700 11px system-ui';
   ctx.fillStyle='rgba(255,255,255,.78)';
-  ctx.textAlign='left';ctx.fillText('◀ DEFENSA',margin+5,h-4);
-  ctx.textAlign='right';ctx.fillText('ATAQUE ▶',w-margin-5,h-4);
+  if(orientationReliable(analysis)){
+    ctx.textAlign='left';ctx.fillText('◀ DEFENSA',margin+5,h-4);
+    ctx.textAlign='right';ctx.fillText('ATAQUE ▶',w-margin-5,h-4);
+  }else{
+    ctx.textAlign='center';
+    ctx.fillStyle='rgba(255,255,255,.56)';
+    ctx.fillText('ORIENTACIÓN DEL CAMPO SIN CALIBRAR',w/2,h-4);
+  }
 }
 
 function heatColor(t){
@@ -69,7 +76,7 @@ export function drawHeatmap(canvas,analysis){
   for(let i=0;i<d.length;i+=4){const a=d[i+3]/255;if(a<=.02){d[i+3]=0;continue}const c=heatColor(a);d[i]=c[0];d[i+1]=c[1];d[i+2]=c[2];d[i+3]=Math.min(235,a*235)}
   lctx.putImageData(img,0,0);ctx.drawImage(layer,0,0,w,h);
   if(analysis.avgPosition){const p=map(analysis.avgPosition.u,analysis.avgPosition.v);ctx.beginPath();ctx.fillStyle='#fff';ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='800 10px system-ui';ctx.textAlign='center';ctx.fillText('AVG',p.x,p.y-11)}
-  drawDirection(ctx,w,h,margin);
+  drawDirection(ctx,w,h,margin,analysis);
 }
 
 function timeColor(t){return[Math.round(137+(255-137)*t),Math.round(88+(149-88)*t),Math.round(248+(28-248)*t)]}
@@ -87,7 +94,7 @@ export function drawMovementTrail(canvas,analysis){
   }
   const start=map(pts[0].u,pts[0].v),end=map(pts.at(-1).u,pts.at(-1).v);
   for(const[p,label,fill]of[[start,'I','#fff'],[end,'F','#ffb01e']]){ctx.beginPath();ctx.fillStyle=fill;ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='800 9px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,p.x,p.y+.5)}
-  drawDirection(ctx,w,h,margin);
+  drawDirection(ctx,w,h,margin,analysis);
 }
 
 export function drawZoneOccupancy(canvas,analysis){
@@ -102,7 +109,7 @@ export function drawZoneOccupancy(canvas,analysis){
     ctx.strokeStyle='rgba(255,255,255,.27)';ctx.lineWidth=1;ctx.strokeRect(px,py,cw,ch);
     ctx.fillStyle=pct<.01?'rgba(255,255,255,.42)':'#fff';ctx.font=`800 ${font}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(Math.round(pct*100)+'%',px+cw/2,py+ch/2);
   }
-  drawDirection(ctx,w,h,margin);
+  drawDirection(ctx,w,h,margin,analysis);
 }
 
 function drawNoGps(canvas,message){
