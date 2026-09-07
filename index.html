@@ -3673,6 +3673,17 @@ body.album-reader-open{
 }
 
 
+/* v188 · perfil compacto y botón de carta dorado */
+.profile-top{position:relative}
+.profile-played-badge{margin-left:auto;align-self:flex-start;text-align:right;color:#fff;padding:4px 2px 0 12px;white-space:nowrap}
+.profile-played-badge b{display:block;font-size:24px;line-height:1;font-weight:950}
+.profile-played-badge span{display:block;margin-top:4px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+.profile-body{padding-top:16px}
+.profile-card-view-btn{background:linear-gradient(145deg,#8d6514,#d8ad3d 52%,#896212)!important;color:#fff7cf!important;border:1px solid #e8c65e!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 5px 16px rgba(176,128,20,.20)}
+.profile-card-view-btn:hover{border-color:#ffe184!important;filter:brightness(1.08)}
+.profile-card-view-btn .album-star{color:#ffe36b;text-shadow:0 0 8px rgba(255,222,72,.55);font-size:12px}
+@media(max-width:700px){.profile-played-badge b{font-size:20px}.profile-played-badge span{font-size:8px}.profile-body{padding-top:12px}}
+
 /* v138 · enlace de historial más compacto en móvil */
 @media(max-width:700px){
   #home .home-version-link a{
@@ -4941,8 +4952,32 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v186</span>
+    <span class="history-version">VERSIÓN v188</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">140</div>
+      <div class="history-section-content">
+        <h2>Cartas y perfiles de jugador</h2>
+        <ul>
+          <li>La altura y el peso son realmente opcionales también en el generador: si faltan, la carta se crea sin mostrar esos datos.</li>
+          <li>La primera carta generada pasa a ser visible automáticamente en el perfil; las siguientes generaciones permiten sustituir la carta actual.</li>
+          <li>El perfil se compacta: los partidos jugados pasan a la esquina superior derecha, «Editar jugador» se simplifica a «Editar» y «Ver carta» adopta el estilo dorado del álbum.</li>
+          <li>El perfil público mantiene ocultos porcentaje de victorias, goles y asistencias.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">139</div>
+      <div class="history-section-content">
+        <h2>Cartas y perfiles de jugador</h2>
+        <ul>
+          <li>La altura y el peso pasan a ser datos opcionales al crear una carta; si se dejan vacíos, no se envían para incorporarlos a la carta.</li>
+          <li>El perfil público simplifica sus estadísticas y muestra únicamente los partidos jugados, ocultando porcentaje de victorias, goles y asistencias.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">138</div>
       <div class="history-section-content">
@@ -6696,7 +6731,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v182 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v188 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -8866,16 +8901,14 @@ async function openProfile(name){
   const used=Number(usage.attempts_used||0),remaining=Math.max(0,Number(usage.remaining??(3-used))),processing=!!usage.processing;
   const photo=p.photo?escapeHtml(p.photo):'';
   const avatarHtml=photo?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`:initials(name);
-  const cardButtons=`${p.card?`<button class="primary" onclick="openFifaCard('${escapeJs(name)}')">Ver carta</button>`:''}<button class="${p.card?'secondary':'primary'}" ${remaining<=0||processing?'disabled':''} onclick="openCreateCard('${escapeJs(name)}')">${processing?'Generando…':remaining<=0?'Límite alcanzado':'Crear carta'}</button>${adminLogged?`<button class="secondary" onclick="openCardEditor('${escapeJs(name)}')">Editar carta</button>`:''}`;
+  const cardButtons=`${p.card?`<button class="secondary profile-card-view-btn" onclick="openFifaCard('${escapeJs(name)}')"><span class="album-star">★</span> Ver carta <span class="album-star">★</span></button>`:''}<button class="${p.card?'secondary':'primary'}" ${remaining<=0||processing?'disabled':''} onclick="openCreateCard('${escapeJs(name)}')">${processing?'Generando…':remaining<=0?'Límite alcanzado':'Crear carta'}</button>${adminLogged?`<button class="secondary" onclick="openCardEditor('${escapeJs(name)}')">Editar carta</button>`:''}`;
   document.getElementById('profileContent').innerHTML=`
     <div class="profile-top">
       <div class="avatar ${photo?'clickable':''}" ${photo?`onclick="openPhotoViewer('${escapeJs(p.photo)}')"`:''}>${avatarHtml}</div>
       <div><h2>${escapeHtml(p.fullName||name)}</h2><p>${escapeHtml(p.position||'Jugador')}</p></div>
+      <div class="profile-played-badge"><b>${s.played}</b><span>Partidos jugados</span></div>
     </div>
     <div class="profile-body">
-      <div class="profile-stats">
-        <div class="pstat"><b>${s.played}</b><span>Partidos</span></div><div class="pstat"><b>${s.winPct}%</b><span>Porcentaje de victorias</span></div><div class="pstat"><b>${s.goals}</b><span>Goles</span></div><div class="pstat"><b>${s.assists}</b><span>Asistencias</span></div>
-      </div>
       <div class="profile-info">
         <div class="info-item"><small>Apodo</small>${escapeHtml(p.name||name)}</div><div class="info-item"><small>Nombre completo</small>${escapeHtml(p.fullName||name)}</div><div class="info-item"><small>Fecha de nacimiento</small>${formatBirthDate(p.birthDate)}</div><div class="info-item"><small>Edad</small>${p.birthDate?calculateAge(p.birthDate)+' años':'—'}</div><div class="info-item"><small>Pierna</small>${escapeHtml(p.leg||'—')}</div><div class="info-item"><small>Posición</small>${escapeHtml(p.position||'—')}</div>
       </div>
@@ -8883,7 +8916,7 @@ async function openProfile(name){
     </div>
     <div class="profile-actions">
       <div class="left-actions">${cardButtons}</div>
-      <div class="right-actions"><button class="secondary" onclick="openPlayerEditor('${escapeJs(name)}')">Editar jugador</button><button class="secondary" onclick="closeProfile()">Cerrar</button></div>
+      <div class="right-actions"><button class="secondary" onclick="openPlayerEditor('${escapeJs(name)}')">Editar</button><button class="secondary" onclick="closeProfile()">Cerrar</button></div>
     </div>`;
   document.getElementById('profileModal').classList.add('open')
 }
@@ -8903,8 +8936,8 @@ function openCreateCard(name){
         <label class="full">Selfie *<input id="cardSelfie" type="file" accept="image/jpeg,image/png,image/webp"><small>${selfieReady?'Selfie preparada: '+escapeHtml(saved.file.name)+' · puedes cambiarla si quieres':'JPG, PNG o WebP · máximo 5 MB'}</small></label>
         <label>Nombre *<input id="cardName" value="${escapeHtml(saved.playerName??(p.fullName||name))}" maxlength="60"></label>
         <label>Apodo<input id="cardNickname" value="${escapeHtml(saved.nickname??defaultNickname)}" maxlength="50" placeholder="Opcional"></label>
-        <label>Altura (cm) *<input id="cardHeight" type="number" min="120" max="230" inputmode="numeric" value="${escapeHtml(saved.height||'')}" placeholder="173"></label>
-        <label>Peso (kg) *<input id="cardWeight" type="number" min="35" max="200" inputmode="numeric" value="${escapeHtml(saved.weight||'')}" placeholder="75"></label>
+        <label>Altura (cm) · opcional<input id="cardHeight" type="number" min="120" max="230" inputmode="numeric" value="${escapeHtml(saved.height||'')}" placeholder="173"></label>
+        <label>Peso (kg) · opcional<input id="cardWeight" type="number" min="35" max="200" inputmode="numeric" value="${escapeHtml(saved.weight||'')}" placeholder="75"></label>
         <label>Posición *<select id="cardPosition"><option value="">Selecciona…</option>${['Portero','Defensa central','Lateral derecho','Lateral izquierdo','Carrilero derecho','Carrilero izquierdo','Centrocampista','Mediocentro defensivo','Mediocentro ofensivo','Mediapunta','Extremo derecho','Extremo izquierdo','Segundo delantero','Delantero','Delantero centro'].map(x=>`<option ${saved.position===x?'selected':''}>${x}</option>`).join('')}</select></label>
       </div>
       <div class="controls"><button id="generateCardBtn" class="primary" onclick="generatePlayerCard('${escapeJs(name)}')">Generar carta</button><button class="secondary" onclick="openProfile('${escapeJs(name)}')">Cancelar</button></div>
@@ -8937,20 +8970,21 @@ async function generatePlayerCard(name){
   const previous=cardGenerationDrafts[name]||{};
   const file=selectedFile||previous.file;
   const playerName=document.getElementById('cardName')?.value.trim()||'',nickname=document.getElementById('cardNickname')?.value.trim()||'',height=document.getElementById('cardHeight')?.value||'',weight=document.getElementById('cardWeight')?.value||'',position=document.getElementById('cardPosition')?.value||'';
-  if(!file){toast('Selecciona una selfie');return}if(file.size>5*1024*1024){toast('La selfie no puede superar 5 MB');return}if(!playerName||!height||!weight||!position){toast('Completa todos los campos obligatorios');return}
+  if(!file){toast('Selecciona una selfie');return}if(file.size>5*1024*1024){toast('La selfie no puede superar 5 MB');return}if(!playerName||!position){toast('Completa todos los campos obligatorios');return}
   cardGenerationDrafts[name]={file,playerName,nickname,height,weight,position};
   const btn=document.getElementById('generateCardBtn'),loading=document.getElementById('cardGenLoading'),phrase=document.getElementById('cardGenPhrase');
   if(btn?.disabled)return;btn.disabled=true;loading?.classList.add('open');
   const phrases=['Convenciendo al míster.','Negociando una prima absurda.','Buscando unas botas de 1998.','Planchando la camiseta rojinegra.','Preparando el contrato en una servilleta.','Comprobando que no ficha por el rival.','Encendiendo los focos del estadio.'];let pi=0;
   const timer=setInterval(()=>{pi=(pi+1)%phrases.length;if(phrase)phrase.textContent=phrases[pi]},1800);
   try{
-    const fd=new FormData();fd.append('player_id',String(id));fd.append('selfie',file);fd.append('name',playerName);fd.append('nickname',nickname);fd.append('height',height);fd.append('weight',weight);fd.append('position',position);
+    const fd=new FormData();fd.append('player_id',String(id));fd.append('selfie',file);fd.append('name',playerName);fd.append('nickname',nickname);if(height)fd.append('height',height);if(weight)fd.append('weight',weight);fd.append('position',position);
     const r=await fetch(`${SUPABASE_URL}/functions/v1/generate-player-card`,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`},body:fd});
     const data=await r.json();if(!r.ok||!data.ok)throw new Error(data?.error||data?.details||'No se pudo generar la carta');
     const remaining=Number(data.remaining);
     const generationId=Number(data.generation_id);
     if(!adminLogged)void notifyTelegramEvent('card',generationId);
-    if(remaining<=0){
+    const attemptsUsed=Number(data.attempts_used||0);
+    if(attemptsUsed===1){
       const saveFd=new FormData();
       saveFd.append('action','save');
       saveFd.append('player_id',String(id));
@@ -8961,19 +8995,18 @@ async function generatePlayerCard(name){
         body:saveFd
       });
       const saveData=await saveResponse.json();
-      if(!saveResponse.ok||!saveData.ok)throw new Error(saveData?.error||'No se pudo guardar la última carta');
-      delete cardGenerationDrafts[name];
+      if(!saveResponse.ok||!saveData.ok)throw new Error(saveData?.error||'No se pudo hacer visible la primera carta');
       await loadSupabaseData();
-      await openProfile(name);
-      toast('Última carta guardada automáticamente');
+      showGeneratedCardPreview(name,data.card_url,generationId,remaining,attemptsUsed);
     }else{
-      showGeneratedCardPreview(name,data.card_url,generationId,remaining);
+      showGeneratedCardPreview(name,data.card_url,generationId,remaining,attemptsUsed);
     }
   }catch(err){console.error(err);toast(err?.message||'No se pudo generar la carta');await openProfile(name)}finally{clearInterval(timer);loading?.classList.remove('open');if(btn)btn.disabled=false}
 }
 
-function showGeneratedCardPreview(name,cardUrl,generationId,remaining){
+function showGeneratedCardPreview(name,cardUrl,generationId,remaining,attemptsUsed){
   const canRetry=remaining>0;
+  const canChoose=Number(attemptsUsed)>1;
   document.getElementById('profileContent').innerHTML=`
     <div class="profile-body">
       <div class="kicker">CARTA GENERADA</div>
@@ -8982,9 +9015,9 @@ function showGeneratedCardPreview(name,cardUrl,generationId,remaining){
         <img src="${escapeHtml(cardUrl)}" alt="Carta generada de ${escapeHtml(name)}" style="display:block;width:min(100%,430px);height:auto;border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.28)">
       </div>
       <div class="card-create-meta">Intentos restantes: <b>${remaining}</b> de 3</div>
-      <p class="subtitle" style="text-align:center;margin-top:10px">Esta versión todavía no es la carta oficial del perfil.</p>
+      <p class="subtitle" style="text-align:center;margin-top:10px">${canChoose?'Esta es una nueva versión. Si la prefieres, pulsa «Guardar carta» para sustituir la carta actual.':'Esta primera carta ya está visible en tu perfil.'}</p>
       <div class="controls" style="justify-content:center;flex-wrap:wrap">
-        <button class="primary" onclick="saveGeneratedCard('${escapeJs(name)}',${generationId})">Guardar carta</button>
+        ${canChoose?`<button class="primary" onclick="saveGeneratedCard('${escapeJs(name)}',${generationId})">Guardar carta</button>`:''}
         <button class="secondary" ${canRetry?'':"disabled"} onclick="openCreateCard('${escapeJs(name)}')">${canRetry?'Generar otra vez':'Sin intentos restantes'}</button>
       </div>
     </div>`;
