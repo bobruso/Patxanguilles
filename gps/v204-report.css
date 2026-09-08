@@ -1,0 +1,27 @@
+/* v204 · refinamientos informe + comparar + PDF */
+.patx-v204-rico-original-note{display:none!important}
+.patx-v204-rico-note{display:block;margin-top:8px;color:#9ea9a2;font-size:11px;line-height:1.45;white-space:normal;overflow-wrap:anywhere}
+.patx-v204-player-photo-wrap{flex:none;width:58px;height:58px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,.22);background:#111a15;box-shadow:0 7px 18px rgba(0,0,0,.28);align-self:flex-start}
+.patx-v204-player-photo{width:100%;height:100%;object-fit:cover;display:block}
+.patx-v204-player-photo-fallback{width:100%;height:100%;display:grid;place-items:center;font-size:22px;font-weight:900}
+.patx-v204-compare-btn{appearance:none;cursor:pointer;background:#1769d2!important;border-color:#3886e8!important;color:#fff!important;font:inherit}
+.patx-v204-compare-btn:hover{filter:brightness(1.08)}
+.patx-v204-highlight-minute{font-size:13px!important;opacity:.82}
+.patx-v204-highlight-label{display:block;color:#fff;font-size:13px;font-weight:750;margin-bottom:2px}
+.patx-v204-highlight-value{display:block;color:#61d77b;font-size:23px;line-height:1.05;font-weight:950;letter-spacing:-.03em}
+.patx-v204-highlight-row div>b{display:block!important}
+.patx-v204-alt-label{margin:10px 0 5px;color:#89958e;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.patx-v204-save-zone{display:flex;justify-content:center;width:100%;margin:26px 0 4px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09)}
+.patx-v204-save-pdf{border:1px solid rgba(255,255,255,.18);border-radius:11px;padding:12px 18px;background:#f4f6f5;color:#0b100d;font-weight:900;cursor:pointer}
+.patx-v204-save-pdf:disabled{opacity:.55;cursor:wait}
+@media(max-width:700px){
+  .patx-v204-rico-mobile-block{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0 0 22px!important}
+  .patx-v204-rico-mobile-block .patx-gps-orientation{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;box-sizing:border-box!important}
+  .patx-v204-rico-mobile-block .patx-v204-rico-note{width:100%!important;box-sizing:border-box!important;margin:8px 0 0!important;padding:9px 11px!important;border:1px solid rgba(255,255,255,.10)!important;border-radius:10px!important;background:rgba(8,14,11,.68)!important}
+  .patx-v204-player-photo-wrap{width:48px;height:48px}
+  .patx-v204-highlight-minute{font-size:11px!important}
+  .patx-v204-highlight-value{font-size:21px}
+}
+@media print{
+  [data-html2canvas-ignore],.patx-gps-back,.patx-v204-compare-btn,.patx-gps-orientation button,.patx-gps-admin-zone,.patx-v204-save-zone{display:none!important}
+}

@@ -1,0 +1,95 @@
+/* v205 · refinamientos móviles del informe */
+
+.patx-v205-name-photo-row{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+  flex-wrap:nowrap;
+}
+
+.patx-v205-name-photo-row h3{
+  margin:0!important;
+  min-width:0;
+}
+
+.patx-v205-name-photo-row .patx-v204-player-photo-wrap{
+  width:42px!important;
+  height:42px!important;
+  flex:none!important;
+  align-self:center!important;
+}
+
+/* Evita que cualquier ORIGEN FIT residual reaparezca visualmente */
+.patx-gps-context-badge{
+  /* sin cambios generales */
+}
+.patx-gps-context-badge[data-v205-origin-hidden]{
+  display:none!important;
+}
+
+@media(max-width:700px){
+  /* Jorge y su información a la izquierda; Partido a la derecha */
+  .patx-gps-title-row.patx-v205-mobile-title-row{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    grid-template-areas:"info back"!important;
+    align-items:start!important;
+    gap:10px!important;
+    width:100%!important;
+  }
+
+  .patx-gps-title-row.patx-v205-mobile-title-row > div{
+    grid-area:info!important;
+    min-width:0!important;
+    justify-self:start!important;
+    text-align:left!important;
+  }
+
+  .patx-gps-title-row.patx-v205-mobile-title-row > .patx-gps-back{
+    grid-area:back!important;
+    justify-self:end!important;
+    align-self:start!important;
+    margin:0!important;
+    white-space:nowrap!important;
+  }
+
+  /* La foto va justo después del nombre */
+  .patx-v205-name-photo-row{
+    justify-content:flex-start!important;
+  }
+
+  .patx-v205-name-photo-row .patx-v204-player-photo-wrap{
+    width:38px!important;
+    height:38px!important;
+  }
+
+  /* Ocultar solo el rótulo rojo LEY RICO */
+  .patx-v204-rico-mobile-block .patx-v205-rico-label,
+  .patx-v203-rico-mobile-block .patx-v205-rico-label{
+    display:none!important;
+  }
+
+  /* Quitar hueco muerto antes de los mapas */
+  .patx-v204-rico-mobile-block{
+    margin-bottom:0!important;
+    padding-bottom:0!important;
+  }
+
+  .patx-v204-rico-mobile-block .patx-v204-rico-note{
+    margin-bottom:0!important;
+  }
+
+  .patx-gps-top-grid:has(.patx-v204-rico-mobile-block){
+    margin-bottom:8px!important;
+    padding-bottom:0!important;
+  }
+
+  .patx-gps-top-grid + .patx-gps-map-grid{
+    margin-top:0!important;
+  }
+
+  .patx-gps-map-grid{
+    margin-top:0!important;
+  }
+}

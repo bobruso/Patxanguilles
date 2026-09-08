@@ -9,7 +9,7 @@ export function buildMatchSummary(analysis,speed={}){
   const d=analysis?.analysisDetail||{},pos=d.positional||{},role=pos.role||{},spatial=buildSprintSpatial(analysis,speed),fatigue=buildFatigueProfile(speed,analysis?.durationS),distance=km(analysis?.distanceM),top=kmh(analysis?.topSpeedKmh),sprints=Number(analysis?.sprintCount)||speed?.sprints?.length||0;
   const headline=[];
   if(role?.top)headline.push(role.top);
-  if(distance)headline.push(`${distance} km`);
+  if(distance)headline.push(`${distance} km distancia total recorrida`);
   if(top)headline.push(`punta de ${top} km/h`);
   const title=headline.length?headline.join(' · '):'Resumen del partido';
 
