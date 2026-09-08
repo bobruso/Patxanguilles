@@ -1,6 +1,3 @@
-import{drawHeatmap}from'./pitch-maps.js';
-import{fromSupabaseRow}from'./fit-analysis.js';
-
 const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
 const SUPABASE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
 let sb=null;
@@ -9,12 +6,20 @@ let currentMatchId=null;
 let refreshSeq=0;
 
 function ensureCss(){
-  if(document.querySelector('link[data-patx-gps-css]'))return;
-  const link=document.createElement('link');
-  link.rel='stylesheet';
-  link.href='./gps/gps-panel.css';
-  link.dataset.patxGpsCss='1';
-  document.head.appendChild(link);
+  if(!document.querySelector('link[data-patx-gps-css]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='./gps/gps-panel.css';
+    link.dataset.patxGpsCss='1';
+    document.head.appendChild(link);
+  }
+  if(!document.querySelector('link[data-patx-v196-css]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='./gps/v196-overrides.css';
+    link.dataset.patxV196Css='1';
+    document.head.appendChild(link);
+  }
 }
 
 function client(){
@@ -33,77 +38,59 @@ async function loadPlayerMap(){
 }
 
 async function loadMatchGps(matchId){
-  const{data,error}=await client().from('match_player_gps').select('*').eq('match_id',matchId);
+  const{data,error}=await client().from('match_player_gps').select('player_id').eq('match_id',matchId);
   if(error)throw error;
-  return new Map((data||[]).map(row=>[String(row.player_id),row]));
+  return new Set((data||[]).map(row=>String(row.player_id)));
 }
 
-const fmtKm=m=>Number.isFinite(Number(m))?(Number(m)/1000).toFixed(2)+' km':'—';
-const fmtKmh=v=>Number.isFinite(Number(v))?Number(v).toFixed(1)+' km/h':'—';
-
-function gpsIconSvg(){return '<span aria-hidden="true">⌚</span>';}
-
-
-function clearGpsDecorations(content){
+function clearGpsUi(content){
   if(!content)return;
+  content.querySelectorAll('.patx-match-gps-table-wrap,.patx-gps-match-legend').forEach(el=>el.remove());
   content.querySelectorAll('.big-shirt').forEach(shirt=>{
     shirt.classList.remove('patx-match-player-has-gps');
-    delete shirt.dataset.gpsDecorated;
-    shirt.querySelectorAll('.patx-match-gps-icon,.patx-match-gps-mini-stats').forEach(el=>el.remove());
+    shirt.querySelectorAll('.patx-match-gps-icon,.patx-match-gps-mini-stats,[data-gps-hover]').forEach(el=>el.remove());
     const name=shirt.querySelector('.player-name');
-    if(!name)return;
-    name.classList.remove('patx-match-gps-name','patx-gps-preview-open');
-    name.removeAttribute('tabindex');
-    name.removeAttribute('aria-label');
-    name.querySelectorAll('[data-gps-hover]').forEach(el=>el.remove());
+    if(name){
+      name.classList.remove('patx-match-gps-name','patx-gps-preview-open');
+      name.removeAttribute('tabindex');
+      name.removeAttribute('aria-label');
+    }
   });
 }
 
-function decorateShirt(shirt,row,{matchId,playerId,playerName}){
-  if(!shirt||shirt.dataset.gpsDecorated==='1')return;
-  shirt.dataset.gpsDecorated='1';
-  shirt.classList.add('patx-match-player-has-gps');
-  const name=shirt.querySelector('.player-name');
-  if(!name)return;
-  name.classList.add('patx-match-gps-name');
-  name.setAttribute('tabindex','0');
-  name.setAttribute('aria-label',playerName+' · previsualizar mapa de calor');
-  name.insertAdjacentHTML('beforeend',`<span class="patx-match-gps-hover" data-gps-hover><canvas aria-label="Mapa de calor de ${playerName.replace(/[&<>\"]/g,'')}"></canvas><small>Mapa de calor · previsualización</small></span>`);
+function openGpsReport(matchId,playerId){
+  const url=`gps-report.html?match=${encodeURIComponent(matchId)}&player=${encodeURIComponent(playerId)}`;
+  window.open(url,'_blank','noopener');
+}
 
+function addGpsIcon(shirt,{matchId,playerId,playerName}){
+  if(!shirt||shirt.querySelector('.patx-match-gps-icon'))return;
+  shirt.classList.add('patx-match-player-has-gps');
   const icon=document.createElement('button');
   icon.type='button';
-  icon.className='patx-gps-icon-btn patx-match-gps-icon';
-  icon.title='Abrir análisis GPS';
-  icon.setAttribute('aria-label','Abrir análisis GPS de '+playerName);
-  icon.innerHTML=gpsIconSvg();
-  name.insertAdjacentElement('afterend',icon);
-
-  const stats=document.createElement('span');
-  stats.className='patx-gps-mini-stats patx-match-gps-mini-stats';
-  stats.innerHTML=`<b>${fmtKm(row.distance_m)}</b><span>${fmtKmh(row.top_speed_kmh)} máx.</span><span>${fmtKmh(row.avg_speed_kmh)} media</span>`;
-  icon.insertAdjacentElement('afterend',stats);
-
-  const canvas=name.querySelector('[data-gps-hover] canvas');
-  if(canvas)requestAnimationFrame(()=>drawHeatmap(canvas,fromSupabaseRow(row)));
-
+  icon.className='patx-match-gps-icon';
+  icon.innerHTML='<span aria-hidden="true">⌚</span>';
+  icon.title=`Ver datos GPS de ${playerName}`;
+  icon.setAttribute('aria-label',`Ver datos GPS de ${playerName}`);
   icon.addEventListener('click',e=>{
-    e.preventDefault();e.stopPropagation();
-    location.href=`gps-report.html?match=${encodeURIComponent(matchId)}&player=${encodeURIComponent(playerId)}`;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    openGpsReport(matchId,playerId);
   });
-
-  name.addEventListener('click',e=>{
-    if(!window.matchMedia('(hover:none)').matches)return;
-    e.preventDefault();e.stopPropagation();
-    const open=name.classList.toggle('patx-gps-preview-open');
-    document.querySelectorAll('.patx-match-gps-name.patx-gps-preview-open').forEach(el=>{if(el!==name)el.classList.remove('patx-gps-preview-open')});
-    if(open)requestAnimationFrame(()=>canvas&&drawHeatmap(canvas,fromSupabaseRow(row)));
-  });
-  name.addEventListener('keydown',e=>{
-    if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();name.classList.toggle('patx-gps-preview-open')}
-  });
+  shirt.appendChild(icon);
 }
 
-function renderGpsTable(content,gpsMap,{matchId,nameMap}){content.querySelectorAll('.patx-match-gps-table-wrap').forEach(x=>x.remove());if(!gpsMap?.size)return;const byId=new Map([...nameMap.entries()].map(([name,id])=>[String(id),name]));const rows=[...gpsMap.entries()].map(([playerId,row])=>{const detail=row.analysis_detail||{},speed=detail.speed||{},top=Number(speed.rawTopSpeedKmh)||Number(row.top_speed_kmh)||0,hi=speed.highIntensityRunCount??speed.highIntensityRuns?.length??'—',name=byId.get(String(playerId))||'Jugador';return `<div class="patx-match-gps-row"><div class="patx-match-gps-player"><strong>${name}</strong><small>Distancia recorrida: ${fmtKm(row.distance_m)}</small><small>Velocidad máxima: ${fmtKmh(top)}</small><small>Carreras de alta intensidad: ${hi}</small></div><span class="patx-match-watch" aria-hidden="true">⌚</span><button type="button" data-gps-table-open="${playerId}">Ver datos</button></div>`}).join('');const section=document.createElement('section');section.className='patx-match-gps-table-wrap';section.innerHTML=`<h4>Datos GPS</h4><div class="patx-match-gps-table">${rows}</div>`;const actions=content.querySelector('.share-result-actions');if(actions)actions.parentNode.insertBefore(section,actions);else content.appendChild(section);section.querySelectorAll('[data-gps-table-open]').forEach(btn=>btn.onclick=e=>{e.preventDefault();e.stopPropagation();location.href=`gps-report.html?match=${encodeURIComponent(matchId)}&player=${encodeURIComponent(btn.dataset.gpsTableOpen)}`})}
+function addLegend(content){
+  const side=content.querySelector('.match-detail-side');
+  if(!side)return;
+  const legend=document.createElement('div');
+  legend.className='patx-gps-match-legend';
+  legend.innerHTML='<strong>DATOS GPS</strong><span>=</span><span class="patx-gps-legend-watch" aria-hidden="true">⌚</span>';
+  const events=side.querySelector('.match-events-grid');
+  if(events)events.insertAdjacentElement('afterend',legend);
+  else side.prepend(legend);
+}
 
 function addUploadButton(matchId){
   const actions=document.querySelector('#matchContent .share-result-actions');
@@ -119,7 +106,8 @@ function addUploadButton(matchId){
   }
   btn.dataset.matchId=String(matchId);
   btn.onclick=e=>{
-    e.preventDefault();e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     location.href=`gps-upload.html?match=${encodeURIComponent(matchId)}`;
   };
 }
@@ -131,41 +119,45 @@ export async function enhanceOpenMatchGps(matchId){
   if(!content)return;
   content.dataset.gpsMatchId=String(matchId);
   const seq=++refreshSeq;
-  clearGpsDecorations(content);
+  clearGpsUi(content);
   addUploadButton(matchId);
   try{
-    const[nameMap,gpsMap]=await Promise.all([loadPlayerMap(),loadMatchGps(matchId)]);
+    const[nameMap,gpsIds]=await Promise.all([loadPlayerMap(),loadMatchGps(matchId)]);
     if(seq!==refreshSeq||String(content.dataset.gpsMatchId)!==String(matchId))return;
-    renderGpsTable(content,gpsMap,{matchId,nameMap});
+
+    for(const shirt of content.querySelectorAll('.big-shirt')){
+      const name=String(shirt.querySelector('.player-name')?.textContent||'').trim();
+      const playerId=nameMap.get(name);
+      if(playerId&&gpsIds.has(String(playerId))){
+        addGpsIcon(shirt,{matchId,playerId,playerName:name});
+      }
+    }
+    addLegend(content);
   }catch(err){
-    console.warn('[Patx GPS] No se pudo cargar la previsualización GPS',err);
+    console.warn('[Patx GPS] No se pudo cargar la integración GPS del partido',err);
   }
 }
 
 function refreshCurrentMatchGps(){
-  let requested=null;try{requested=sessionStorage.getItem('patx:gps:refresh-match')}catch{}
-  if(requested!=null&&currentMatchId!=null&&String(requested)===String(currentMatchId)){try{sessionStorage.removeItem('patx:gps:refresh-match')}catch{}}
-  const target=currentMatchId??requested;
-  if(target==null)return;
   const modal=document.getElementById('matchModal');
   const content=document.getElementById('matchContent');
-  if(!modal?.classList.contains('open')||!content)return;
-  currentMatchId=target;
-  setTimeout(()=>enhanceOpenMatchGps(target),0);
+  if(!modal?.classList.contains('open')||!content||currentMatchId==null)return;
+  setTimeout(()=>enhanceOpenMatchGps(currentMatchId),0);
 }
 
 function install(){
   ensureCss();
   const original=window.openMatch;
-  if(typeof original!=='function'||original.__patxGpsWrapped)return false;
+  if(typeof original!=='function'||original.__patxGpsCleanWrapped)return false;
+  const base=original.__patxGpsOriginal||original;
   function wrappedOpenMatch(id){
     currentMatchId=id;
-    const result=original.apply(this,arguments);
+    const result=base.apply(this,arguments);
     Promise.resolve(result).finally(()=>setTimeout(()=>enhanceOpenMatchGps(id),0));
     return result;
   }
-  wrappedOpenMatch.__patxGpsWrapped=true;
-  wrappedOpenMatch.__patxGpsOriginal=original;
+  wrappedOpenMatch.__patxGpsCleanWrapped=true;
+  wrappedOpenMatch.__patxGpsOriginal=base;
   window.openMatch=wrappedOpenMatch;
   return true;
 }

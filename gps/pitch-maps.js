@@ -45,10 +45,47 @@ function drawDirection(ctx,w,h,margin,analysis){
   else{ctx.textAlign='left';ctx.fillText('◀ ATAQUE',margin+5,h-4);ctx.textAlign='right';ctx.fillText('DEFENSA ▶',w-margin-5,h-4)}
 }
 
+function sprintDirectionVector(analysis,tSec){
+  const track=Array.isArray(analysis?.trail)?analysis.trail:[],target=Number(tSec);
+  if(!track.length||!Number.isFinite(target))return null;
+  let before=null,after=null,bestBefore=Infinity,bestAfter=Infinity;
+  for(const pt of track){
+    const t=Number(pt?.tSec),u=Number(pt?.u),v=Number(pt?.v);
+    if(!Number.isFinite(t)||!Number.isFinite(u)||!Number.isFinite(v))continue;
+    const dt=t-target;
+    if(dt<=0&&Math.abs(dt)<=4&&Math.abs(dt)<bestBefore){before={t,u,v};bestBefore=Math.abs(dt)}
+    if(dt>=0&&dt<=4&&dt<bestAfter){after={t,u,v};bestAfter=dt}
+  }
+  if(!before||!after)return null;
+  const du=after.u-before.u,dv=after.v-before.v,len=Math.hypot(du,dv);
+  if(len<0.008)return null;
+  return{du:du/len,dv:dv/len};
+}
+function drawSprintArrow(ctx,p,r,vec){
+  if(!vec)return;
+  const len=Math.max(12,r*2.2),sx=p.x-vec.du*len*.15,sy=p.y-vec.dv*len*.15,ex=p.x+vec.du*len,ey=p.y+vec.dv*len;
+  const ang=Math.atan2(ey-sy,ex-sx),head=Math.max(5,r*.9);
+  ctx.save();
+  ctx.strokeStyle='#111';
+  ctx.fillStyle='#fff';
+  ctx.lineWidth=Math.max(2,r*.32);
+  ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(ex,ey);ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(ex,ey);
+  ctx.lineTo(ex-Math.cos(ang-Math.PI/6)*head,ey-Math.sin(ang-Math.PI/6)*head);
+  ctx.lineTo(ex-Math.cos(ang+Math.PI/6)*head,ey-Math.sin(ang+Math.PI/6)*head);
+  ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.restore();
+}
 function drawSprintPoints(ctx,w,h,margin,analysis){
   const spatial=buildSprintSpatial(analysis);if(!spatial.count)return;
   const{map}=pitchMapper(w,h,margin),robust=Number(analysis?.analysisDetail?.speed?.robustTopKmh)||1;
-  for(const sp of spatial.points){const p=map(sp.u,sp.v),ratio=Math.max(.75,Math.min(1.25,(Number(sp.peakSpeedKmh)||robust)/robust)),r=Math.max(4,Math.min(8,w/150))*ratio;ctx.beginPath();ctx.fillStyle='rgba(255,176,30,.92)';ctx.strokeStyle='rgba(17,17,17,.92)';ctx.lineWidth=1.5;ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fill();ctx.stroke()}
+  for(const sp of spatial.points){
+    const p=map(sp.u,sp.v),ratio=Math.max(.75,Math.min(1.25,(Number(sp.peakSpeedKmh)||robust)/robust)),r=Math.max(4,Math.min(8,w/150))*ratio;
+    ctx.beginPath();ctx.fillStyle='rgba(255,176,30,.92)';ctx.strokeStyle='rgba(17,17,17,.92)';ctx.lineWidth=1.5;ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+    drawSprintArrow(ctx,p,r,sprintDirectionVector(analysis,sp.tSec));
+  }
 }
 function heatColor(t){
   const stops=[[0,[28,62,199]],[.35,[36,190,200]],[.55,[70,210,90]],[.75,[244,218,42]],[1,[231,43,38]]];
@@ -74,7 +111,7 @@ export function drawHeatmap(canvas,analysis){
   const img=lctx.getImageData(0,0,Math.round(w),Math.round(h)),d=img.data;
   for(let i=0;i<d.length;i+=4){const a=d[i+3]/255;if(a<=.02){d[i+3]=0;continue}const c=heatColor(a);d[i]=c[0];d[i+1]=c[1];d[i+2]=c[2];d[i+3]=Math.min(235,a*235)}
   lctx.putImageData(img,0,0);ctx.drawImage(layer,0,0,w,h);
-  if(analysis.avgPosition){const p=map(analysis.avgPosition.u,analysis.avgPosition.v);ctx.beginPath();ctx.fillStyle='#fff';ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='800 10px system-ui';ctx.textAlign='center';ctx.fillText('AVG',p.x,p.y-11)}
+  if(analysis.avgPosition){const p=map(analysis.avgPosition.u,analysis.avgPosition.v);ctx.beginPath();ctx.fillStyle='#fff';ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='800 10px system-ui';ctx.textAlign='center';ctx.fillText('POSICIÓN PROMEDIO',p.x,p.y-13)}
   drawSprintPoints(ctx,w,h,margin,analysis);
   drawDirection(ctx,w,h,margin,analysis);
 }

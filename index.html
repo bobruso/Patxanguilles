@@ -4992,9 +4992,17 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v195</span>
+    <span class="history-version">VERSIÓN v196</span>
   </header>
-    <section class="history-change-section">
+        <section class="history-change-section">
+      <div class="history-section-number">148</div>
+      <div class="history-section-content">
+        <h2>GPS · informe y ficha de partido</h2>
+        <ul><li>Datos GPS recolocados bajo los goles, tipografía y cifras más legibles.</li><li>Resumen e Highlights en dos columnas, bloque más activo como intervalo y mejoras del mapa de calor.</li><li>El informe GPS se abre sobre la web sin detener la música. Ajustes específicos de móvil para botones y Ley Rico.</li></ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
       <div class="history-section-number">147</div>
       <div class="history-section-content">
         <h2>Datos GPS de partido</h2>
@@ -6850,7 +6858,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v195 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v196 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -10339,4 +10347,6 @@ document.addEventListener('keydown',e=>{
 })();
 </script>
 <script type="module" src="./gps/index-integration.js"></script>
+<link rel="stylesheet" href="./gps/v196-overrides.css">
+<script src="./gps/v196-overrides.js"></script>
 </body></html>
