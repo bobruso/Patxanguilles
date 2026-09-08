@@ -17,6 +17,7 @@ Módulo independiente de minijuegos diarios. Requiere una cuenta Patxanguilles v
 11. `goalkeeper` — Portero — más paradas gana.
 12. `top-bins` — A la escuadra — más puntos gana.
 13. `var-offside` — VAR — más decisiones correctas gana.
+14. `football-trivia` — Trivial futbolero — cinco preguntas, puntuación calculada por el servidor.
 
 Todos los juegos tienen 2 intentos diarios por defecto. El intento se consume en servidor al pulsar JUGAR; cerrar o recargar la página no lo restaura.
 
@@ -37,6 +38,7 @@ El modo demo no consume intentos ni guarda resultados:
 - `/retos/?demo=goalkeeper`
 - `/retos/?demo=top-bins`
 - `/retos/?demo=var-offside`
+- `/retos/?demo=football-trivia`
 
 ## Clasificaciones
 
@@ -65,15 +67,35 @@ La pantalla muestra:
 - último reto anterior;
 - historial de retos con ganador, participantes y resultado personal.
 
+## Trivial editable
+
+El banco se administra en `/retos/admin-trivia.html` y exige rol `admin`.
+
+Cada pregunta contiene:
+
+- enunciado;
+- cuatro respuestas;
+- respuesta correcta;
+- categoría;
+- dificultad;
+- explicación opcional;
+- activa/inactiva.
+
+El navegador del jugador no recibe `correct_index`. Cuando el trivial sale como reto diario, Supabase fija cinco IDs de preguntas en `daily_challenges.config.question_ids`; por tanto todos los jugadores reciben el mismo conjunto. La puntuación se calcula en `finish_trivia_game_attempt`, no en el navegador.
+
+Puntuación por pregunta correcta: hasta 1000 puntos, bajando con el tiempo de respuesta hasta un mínimo de 200. Respuesta incorrecta o sin respuesta: 0.
+
 ## Arquitectura
 
 - `js/core/game-registry.js`: registro/fábrica de juegos.
 - `js/services/challenge-service.js`: acceso a RPC de Supabase.
 - `js/games/*.js`: implementación independiente de cada juego.
+- `admin-trivia.html` + `js/trivia-admin.js`: gestión del banco de preguntas.
 - `game_definitions`: catálogo y configuración.
 - `daily_challenges`: juego asignado a cada fecha.
 - `game_attempts`: intentos iniciados/completados/inválidos.
 - `game_seasons`: temporadas mensuales.
+- `trivia_questions`: banco editable de preguntas.
 
 Los resultados reales se validan y guardan mediante RPC de Supabase; el navegador no inserta intentos directamente.
 
