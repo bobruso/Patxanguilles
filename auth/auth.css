@@ -1,38 +1,65 @@
 :root{
-  --bg:#07100b;
-  --panel:rgba(10,14,18,.84);
-  --panel2:#151b22;
+  --bg:#090b10;
+  --panel:rgba(14,17,23,.90);
+  --panel2:#171b23;
   --text:#f4f6f8;
   --muted:#98a2ad;
-  --line:#2b343e;
+  --line:#303744;
   --red:#e3262e;
   --green:#53d769;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
+html{min-height:100%;background:var(--bg)}
 body{
   margin:0;
   min-height:100vh;
   color:var(--text);
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:#07100b url('../background-home.jpg') center/cover fixed no-repeat;
+  background:
+    radial-gradient(circle at 15% 12%,rgba(96,112,151,.20),transparent 34%),
+    radial-gradient(circle at 88% 82%,rgba(71,92,82,.16),transparent 38%),
+    radial-gradient(circle at 72% 8%,rgba(255,255,255,.055),transparent 24%),
+    linear-gradient(145deg,#11151d 0%,#090b10 48%,#10131a 100%);
+  background-attachment:fixed;
 }
 body:before{
   content:"";
   position:fixed;
   inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.72));
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.55),transparent 82%);
   pointer-events:none;
 }
 button,input,select{font:inherit}
 button{color:inherit}
 .shell{
   position:relative;
+  z-index:1;
   width:min(860px,100%);
+  min-height:100vh;
   margin:0 auto;
-  padding:30px 18px 60px;
+  padding:34px 18px 54px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
-.brand{margin-bottom:22px}
-.back-link{color:#cfd5dc;text-decoration:none;font-size:14px}
+.brand{
+  width:min(560px,100%);
+  margin:0 auto 22px;
+  text-align:center;
+}
+.back-link{
+  display:inline-block;
+  color:#cfd5dc;
+  text-decoration:none;
+  font-size:14px;
+  opacity:.82;
+}
+.back-link:hover{opacity:1}
 .eyebrow{
   margin-top:24px;
   color:#d7ddd9;
@@ -43,33 +70,51 @@ button{color:inherit}
 }
 .eyebrow.no-margin{margin-top:0}
 h1,h2{letter-spacing:-.045em;margin:0}
-h1{font-size:clamp(42px,9vw,72px);line-height:.95;margin-top:6px}
+h1{font-size:clamp(42px,9vw,66px);line-height:.95;margin-top:8px}
 h2{font-size:clamp(28px,6vw,42px)}
 .lead,.muted{color:var(--muted);line-height:1.55}
-.lead{max-width:680px;font-size:16px}
+.lead{max-width:560px;margin:14px auto 0;font-size:16px}
 .panel{
-  background:linear-gradient(145deg,rgba(12,17,14,.92),rgba(7,10,9,.94));
-  border:1px solid rgba(255,255,255,.14);
+  width:100%;
+  background:linear-gradient(145deg,rgba(20,24,31,.94),rgba(11,14,19,.94));
+  border:1px solid rgba(255,255,255,.12);
   border-radius:24px;
   padding:24px;
-  box-shadow:0 24px 70px rgba(0,0,0,.42);
-  backdrop-filter:blur(9px);
+  box-shadow:0 26px 80px rgba(0,0,0,.42);
+  backdrop-filter:blur(16px);
 }
-.auth-panel{max-width:560px}
+.auth-panel{
+  width:min(520px,100%);
+  margin:0 auto;
+}
+#statusBanner{
+  width:min(520px,100%);
+  margin-left:auto;
+  margin-right:auto;
+}
+#unlinkedView{
+  width:min(560px,100%);
+  margin:0 auto;
+  text-align:center;
+}
+#accountView{
+  width:min(760px,100%);
+  margin:0 auto;
+}
 .tabs{display:flex;gap:8px;margin-bottom:22px}
 .tab{
   flex:1;
   border:1px solid var(--line);
   border-radius:12px;
   padding:12px;
-  background:#151b22;
+  background:#171b23;
   cursor:pointer;
   font-weight:850;
 }
 .tab.active{background:#f3f5f7;color:#0b0d10;border-color:#fff}
 .form-stack{display:grid;gap:16px}
-.form-stack.compact{margin-top:18px;max-width:520px}
-label{display:block;margin-bottom:7px;color:#d8dde3;font-size:13px;font-weight:800}
+.form-stack.compact{margin:18px auto 0;max-width:420px}
+label{display:block;margin-bottom:7px;color:#d8dde3;font-size:13px;font-weight:800;text-align:left}
 input,select{
   width:100%;
   border:1px solid #35404b;
@@ -80,7 +125,7 @@ input,select{
   outline:none;
 }
 input:focus,select:focus{border-color:#83909e;box-shadow:0 0 0 3px rgba(255,255,255,.07)}
-.field-help{margin-top:7px;color:#77828d;font-size:11px;line-height:1.45}
+.field-help{margin-top:7px;color:#77828d;font-size:11px;line-height:1.45;text-align:left}
 .primary,.secondary{
   border:0;
   border-radius:12px;
@@ -102,18 +147,19 @@ input:focus,select:focus{border-color:#83909e;box-shadow:0 0 0 3px rgba(255,255,
   line-height:1.45;
   font-size:13px;
 }
-.status-banner{margin-bottom:16px}
+.status-banner{margin-bottom:16px;text-align:center}
 .status-banner.success{border-color:rgba(83,215,105,.45);background:rgba(83,215,105,.1)}
 .status-banner.error{border-color:rgba(227,38,46,.55);background:rgba(227,38,46,.12)}
 .code-step{
   display:grid;
   gap:15px;
   padding-top:2px;
+  text-align:center;
 }
-.code-step[hidden]{display:none}
 .code-step-icon{
   width:52px;
   height:52px;
+  margin:0 auto;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -171,7 +217,8 @@ input:focus,select:focus{border-color:#83909e;box-shadow:0 0 0 3px rgba(255,255,
 }
 .account-state-badge.active{color:#a9efb4;border-color:rgba(83,215,105,.34);background:rgba(83,215,105,.08)}
 @media(max-width:640px){
-  .shell{padding-top:22px}
+  .shell{padding:24px 14px 36px;justify-content:flex-start}
+  .brand{margin-top:8px;margin-bottom:18px}
   .panel{padding:19px;border-radius:20px}
   .account-card{grid-template-columns:1fr;text-align:center}
   .account-photo-wrap{margin:auto;width:128px;height:128px}
