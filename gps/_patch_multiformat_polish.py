@@ -20,3 +20,4 @@ new="  const pitchContext=`<div class=\"patx-gps-context-row\"><span class=\"pat
 if old not in s: raise SystemExit('pitch context target missing')
 s=s.replace(old,new,1)
 p.write_text(s)
+# trigger
