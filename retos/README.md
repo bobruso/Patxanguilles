@@ -112,3 +112,22 @@ Los resultados reales se validan y guardan mediante RPC de Supabase; el navegado
 Los juegos genéricos cubren timing, reflejos, velocidad, lógica y memoria.
 
 Los juegos futboleros incluyen física simple (`Que no caiga`), portería interactiva (`Penaltis`, `Portero`, `A la escuadra`), decisiones (`VAR`), conocimiento (`Trivial futbolero`), memoria espacial (`Spot the Ball`) y Canvas con trayectorias (`Pase perfecto`, `Falta directa`). `VAR` es una simplificación deliberada del fuera de juego para convertirlo en un reto corto, no un simulador completo del reglamento IFAB.
+
+## Pendiente — Patxanguilles Heads
+
+Crear más adelante un juego permanente separado de `Reto del día`, inspirado en el concepto de fútbol arcade 1v1 de cabezones, pero con diseño, físicas, HUD y assets propios de Patxanguilles.
+
+Objetivo inicial:
+
+- `/juegos/cabezones/` o nombre equivalente;
+- 1 jugador vs CPU;
+- 2 jugadores locales;
+- cabezas PNG recortadas de los jugadores de Patxanguilles sobre cuerpos comunes rojo/negro;
+- movimiento izquierda/derecha, salto y golpeo;
+- física de balón, suelo, porterías, larguero, cuerpo y cabeza;
+- controles PC y móvil;
+- marcador y tiempo de partido;
+- cuenta autenticada para cargar automáticamente el jugador correspondiente;
+- posible clasificación arcade separada del rendimiento futbolístico real.
+
+Fase posterior, solo si el prototipo local resulta divertido: salas privadas 1v1 online mediante enlace/código, revancha, estadísticas, liga y torneos.
