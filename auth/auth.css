@@ -141,6 +141,7 @@ input:focus,select:focus{border-color:#83909e;box-shadow:0 0 0 3px rgba(255,255,
 .admin-panel{margin-top:18px}
 .section-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:5px}
 .section-heading .eyebrow{margin-top:0}
+.admin-heading-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .admin-list{display:grid;gap:9px;margin-top:18px}
 .admin-row{
   display:grid;
@@ -175,6 +176,9 @@ input:focus,select:focus{border-color:#83909e;box-shadow:0 0 0 3px rgba(255,255,
   .account-card{grid-template-columns:1fr;text-align:center}
   .account-photo-wrap{margin:auto;width:128px;height:128px}
   .account-actions{justify-content:center}
+  .section-heading{align-items:flex-start;flex-direction:column}
+  .admin-heading-actions{width:100%}
+  .admin-heading-actions .secondary{flex:1}
   .admin-row{grid-template-columns:44px 1fr}
   .admin-avatar{width:44px;height:44px}
   .account-state-badge{grid-column:1/-1;width:100%}
