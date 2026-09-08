@@ -34,5 +34,5 @@ export function buildMatchSummary(analysis,speed={}){
 
 export function matchSummaryHtml(analysis,speed={}){
   const s=buildMatchSummary(analysis,speed);if(!s.title&&!s.text)return'';
-  return `<section class="patx-gps-summary"><div class="patx-gps-summary-kicker">RESUMEN AUTOMÁTICO</div><h4>${s.title}</h4>${s.text?`<p>${s.text}</p>`:''}</section>`;
+  return `<section class="patx-gps-summary"><div class="patx-gps-summary-kicker">RESUMEN</div><h4>${s.title}</h4>${s.text?`<p>${s.text}</p>`:''}</section>`;
 }

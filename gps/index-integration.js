@@ -41,9 +41,8 @@ async function loadMatchGps(matchId){
 const fmtKm=m=>Number.isFinite(Number(m))?(Number(m)/1000).toFixed(2)+' km':'—';
 const fmtKmh=v=>Number.isFinite(Number(v))?Number(v).toFixed(1)+' km/h':'—';
 
-function gpsIconSvg(){
-  return`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path></svg>`;
-}
+function gpsIconSvg(){return '<span aria-hidden="true">⌚</span>';}
+
 
 function clearGpsDecorations(content){
   if(!content)return;
@@ -104,6 +103,8 @@ function decorateShirt(shirt,row,{matchId,playerId,playerName}){
   });
 }
 
+function renderGpsTable(content,gpsMap,{matchId,nameMap}){content.querySelectorAll('.patx-match-gps-table-wrap').forEach(x=>x.remove());if(!gpsMap?.size)return;const byId=new Map([...nameMap.entries()].map(([name,id])=>[String(id),name]));const rows=[...gpsMap.entries()].map(([playerId,row])=>{const detail=row.analysis_detail||{},speed=detail.speed||{},top=Number(speed.rawTopSpeedKmh)||Number(row.top_speed_kmh)||0,hi=speed.highIntensityRunCount??speed.highIntensityRuns?.length??'—',name=byId.get(String(playerId))||'Jugador';return `<div class="patx-match-gps-row"><div class="patx-match-gps-player"><strong>${name}</strong><small>Distancia recorrida: ${fmtKm(row.distance_m)}</small><small>Velocidad máxima: ${fmtKmh(top)}</small><small>Carreras de alta intensidad: ${hi}</small></div><span class="patx-match-watch" aria-hidden="true">⌚</span><button type="button" data-gps-table-open="${playerId}">Ver datos</button></div>`}).join('');const section=document.createElement('section');section.className='patx-match-gps-table-wrap';section.innerHTML=`<h4>Datos GPS</h4><div class="patx-match-gps-table">${rows}</div>`;const actions=content.querySelector('.share-result-actions');if(actions)actions.parentNode.insertBefore(section,actions);else content.appendChild(section);section.querySelectorAll('[data-gps-table-open]').forEach(btn=>btn.onclick=e=>{e.preventDefault();e.stopPropagation();location.href=`gps-report.html?match=${encodeURIComponent(matchId)}&player=${encodeURIComponent(btn.dataset.gpsTableOpen)}`})}
+
 function addUploadButton(matchId){
   const actions=document.querySelector('#matchContent .share-result-actions');
   if(!actions)return;
@@ -113,7 +114,7 @@ function addUploadButton(matchId){
     btn.type='button';
     btn.className='secondary patx-match-gps-upload';
     btn.dataset.gpsUploadMatch='1';
-    btn.textContent='🛰️ Añadir datos GPS';
+    btn.textContent='⌚ Añadir datos GPS';
     actions.insertBefore(btn,actions.lastElementChild||null);
   }
   btn.dataset.matchId=String(matchId);
@@ -135,13 +136,7 @@ export async function enhanceOpenMatchGps(matchId){
   try{
     const[nameMap,gpsMap]=await Promise.all([loadPlayerMap(),loadMatchGps(matchId)]);
     if(seq!==refreshSeq||String(content.dataset.gpsMatchId)!==String(matchId))return;
-    content.querySelectorAll('.big-shirt').forEach(shirt=>{
-      const nameEl=shirt.querySelector('.player-name');
-      const playerName=String(nameEl?.childNodes?.[0]?.textContent||nameEl?.textContent||'').trim();
-      const playerId=nameMap.get(playerName);
-      const row=playerId?gpsMap.get(String(playerId)):null;
-      if(row)decorateShirt(shirt,row,{matchId,playerId,playerName});
-    });
+    renderGpsTable(content,gpsMap,{matchId,nameMap});
   }catch(err){
     console.warn('[Patx GPS] No se pudo cargar la previsualización GPS',err);
   }
