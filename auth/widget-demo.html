@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07100b">
+  <title>Demo cuenta · Patxanguilles</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="./account-widget.css">
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#07100b url('../background-home.jpg') center/cover fixed no-repeat;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}body:before{content:"";position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.7));z-index:-1}.demo-shell{width:min(1100px,100%);margin:auto;padding:24px 18px}.demo-topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 0 30px}.demo-brand{font-size:15px;font-weight:900;letter-spacing:.03em}.demo-card{margin-top:10vh;background:rgba(8,12,10,.78);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:30px;max-width:680px;box-shadow:0 28px 80px rgba(0,0,0,.45);backdrop-filter:blur(9px)}.demo-card h1{font-size:clamp(34px,7vw,64px);line-height:.95;margin:8px 0 18px;letter-spacing:-.045em}.demo-card p{color:#b8c0bb;line-height:1.65}.eyebrow{font-size:11px;letter-spacing:.2em;color:#e3262e;font-weight:900}.demo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.demo-actions a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:11px 14px;background:rgba(255,255,255,.05);font-weight:800;font-size:13px}
+  </style>
+</head>
+<body>
+  <main class="demo-shell">
+    <div class="demo-topbar">
+      <div class="demo-brand">PATXANGUILLES</div>
+      <div class="patx-account-slot" data-patx-account-widget></div>
+    </div>
+
+    <section class="demo-card">
+      <div class="eyebrow">PRUEBA AISLADA</div>
+      <h1>Cuenta opcional en la Home</h1>
+      <p>Este archivo no modifica el index principal. Sirve para probar exactamente cómo se verá la esquina superior: <strong>SIGN IN</strong> cuando no hay sesión y el nombre del jugador cuando sí la hay.</p>
+      <div class="demo-actions">
+        <a href="./">Abrir página de cuenta</a>
+        <a href="../retos/">Probar zona protegida</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+  <script src="./auth-service.js"></script>
+  <script src="./account-widget.js"></script>
+</body>
+</html>
