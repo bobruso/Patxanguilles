@@ -14,7 +14,7 @@
       <a class="back-link" href="../">← Volver a Patxanguilles</a>
       <div class="eyebrow">PATXANGUILLES ANTIFEIXISTES</div>
       <h1>Tu cuenta</h1>
-      <p class="lead">Identifícate para que la web sepa quién juega, quién edita y quién registra cada acción.</p>
+      <p class="lead">Identifícate con tu jugador. No necesitas email.</p>
     </header>
 
     <section id="statusBanner" class="status-banner" hidden></section>
@@ -27,57 +27,65 @@
 
       <form id="loginForm" class="form-stack">
         <div>
-          <label for="loginEmail">Email</label>
-          <input id="loginEmail" type="email" autocomplete="email" required placeholder="tu@email.com">
+          <label for="loginPlayer">Jugador</label>
+          <select id="loginPlayer" required>
+            <option value="">Cargando cuentas…</option>
+          </select>
         </div>
         <div>
           <label for="loginPassword">Contraseña</label>
-          <input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="••••••••">
+          <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Tu contraseña">
         </div>
         <button id="loginButton" class="primary" type="submit">Entrar</button>
       </form>
 
-      <form id="registerForm" class="form-stack" hidden>
-        <div class="notice">
-          Para crear una cuenta necesitas un código de invitación generado por el administrador para tu ficha de jugador.
-        </div>
-        <div>
-          <label for="registerPlayer">Jugador</label>
-          <select id="registerPlayer" required>
-            <option value="">Cargando jugadores disponibles…</option>
-          </select>
-        </div>
-        <div>
-          <label for="inviteCode">Código de invitación</label>
-          <input id="inviteCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required placeholder="000000">
-        </div>
-        <div>
-          <label for="registerEmail">Email</label>
-          <input id="registerEmail" type="email" autocomplete="email" required placeholder="tu@email.com">
-        </div>
-        <div>
-          <label for="registerPassword">Contraseña</label>
-          <input id="registerPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="Mínimo 6 caracteres">
-        </div>
-        <button id="registerButton" class="primary" type="submit">Crear mi cuenta</button>
-      </form>
+      <div id="registerFlow" hidden>
+        <form id="registerRequestForm" class="form-stack">
+          <div class="notice">
+            Selecciona quién eres y elige tu contraseña. El administrador recibirá un aviso por Telegram con un código para comprobar que nadie está intentando quedarse con la identidad de otro jugador.
+          </div>
+          <div>
+            <label for="registerPlayer">¿Quién eres?</label>
+            <select id="registerPlayer" required>
+              <option value="">Cargando jugadores disponibles…</option>
+            </select>
+          </div>
+          <div>
+            <label for="registerPassword">Contraseña</label>
+            <input id="registerPassword" type="password" autocomplete="new-password" required placeholder="La que quieras">
+            <div class="field-help">Sin requisitos de longitud, números, símbolos ni mayúsculas.</div>
+          </div>
+          <div>
+            <label for="registerPasswordRepeat">Repite la contraseña</label>
+            <input id="registerPasswordRepeat" type="password" autocomplete="new-password" required placeholder="Repítela para evitar errores">
+          </div>
+          <button id="requestRegistrationButton" class="primary" type="submit">Solicitar registro</button>
+        </form>
+
+        <section id="codeStep" class="code-step" hidden>
+          <div class="code-step-icon">🔐</div>
+          <div class="eyebrow no-margin">VERIFICACIÓN</div>
+          <h2>Pide el código al administrador</h2>
+          <p id="codeStepCopy" class="muted"></p>
+          <div class="notice telegram-notice">
+            El administrador acaba de recibir por Telegram el nombre del jugador que estás intentando registrar y un código de 6 cifras. Pídeselo e introdúcelo aquí.
+          </div>
+          <form id="completeRegistrationForm" class="form-stack compact">
+            <div>
+              <label for="registrationCode">Código</label>
+              <input id="registrationCode" class="big-code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required placeholder="000000">
+            </div>
+            <button id="completeRegistrationButton" class="primary" type="submit">Completar registro</button>
+          </form>
+          <button id="restartRegistration" class="secondary restart-button" type="button">Cambiar jugador o contraseña</button>
+        </section>
+      </div>
     </section>
 
     <section id="unlinkedView" class="panel" hidden>
-      <div class="eyebrow">CUENTA CREADA</div>
-      <h2>Vincula tu jugador</h2>
-      <p class="muted">La sesión está activa, pero esta cuenta todavía no está asociada a una ficha de Patxanguilles.</p>
-      <form id="claimForm" class="form-stack compact">
-        <div>
-          <label for="claimPlayer">Jugador</label>
-          <select id="claimPlayer" required></select>
-        </div>
-        <div>
-          <label for="claimCode">Código de invitación</label>
-          <input id="claimCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required>
-        </div>
-        <button class="primary" type="submit">Vincular jugador</button>
-      </form>
+      <div class="eyebrow">CUENTA INCOMPLETA</div>
+      <h2>Esta cuenta no tiene jugador</h2>
+      <p class="muted">Es una cuenta creada durante las pruebas anteriores. Cierra sesión y utiliza el nuevo registro verificado.</p>
       <button id="unlinkedLogout" class="secondary" type="button">Cerrar sesión</button>
     </section>
 
@@ -102,11 +110,11 @@
         <div class="section-heading">
           <div>
             <div class="eyebrow">ADMIN</div>
-            <h2>Invitaciones de cuentas</h2>
+            <h2>Estado de cuentas</h2>
           </div>
           <button id="refreshAdmin" class="secondary small" type="button">Actualizar</button>
         </div>
-        <p class="muted">Genera un código de seis cifras y envíaselo al jugador. El código caduca a los 7 días y deja de servir cuando se usa.</p>
+        <p class="muted">Ya no tienes que generar invitaciones manualmente. Cuando alguien solicite una cuenta te llegará el código automáticamente por Telegram.</p>
         <div id="adminPlayers" class="admin-list"></div>
       </section>
     </section>
