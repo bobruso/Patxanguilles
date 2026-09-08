@@ -1,0 +1,62 @@
+name: GPS smoke tests
+
+on:
+  push:
+    branches:
+      - feature/gps-fit-mvp
+    paths:
+      - 'gps/**'
+      - 'gps-*.html'
+      - '.github/workflows/gps-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript module syntax
+        run: |
+          for file in gps/*.js; do
+            echo "Checking $file"
+            node --check "$file"
+          done
+      - name: Check inline module scripts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          pages=['gps-upload.html','gps-report.html','gps-calibrate.html','gps-fit-test.html']
+          for page in pages:
+              text=Path(page).read_text(encoding='utf-8')
+              blocks=re.findall(r'<script\s+type=["\']module["\'][^>]*>(.*?)</script>',text,re.S|re.I)
+              for i,block in enumerate(blocks):
+                  path=Path(tempfile.gettempdir())/f'{Path(page).stem}-{i}.mjs'
+                  path.write_text(block,encoding='utf-8')
+                  print('Checking',page,'module',i)
+                  subprocess.run(['node','--check',str(path)],check=True)
+          PY
+      - name: Test calibrated pitch homography
+        run: |
+          cp gps/field-transform.js /tmp/field-transform.mjs
+          node --input-type=module <<'JS'
+          import {buildFieldTransform} from 'file:///tmp/field-transform.mjs';
+          const corners=[
+            {lat:39.47000,lon:-0.37700},
+            {lat:39.47070,lon:-0.37700},
+            {lat:39.47070,lon:-0.37645},
+            {lat:39.47000,lon:-0.37645}
+          ];
+          const tf=buildFieldTransform(corners);
+          if(!tf)throw new Error('Homography was not created');
+          const expected=[[0,0],[1,0],[1,1],[0,1]];
+          corners.forEach((c,i)=>{
+            const p=tf.project(c.lat,c.lon),e=expected[i];
+            if(Math.abs(p.u-e[0])>1e-5||Math.abs(p.v-e[1])>1e-5)throw new Error(`Corner ${i} projection mismatch: ${JSON.stringify(p)}`);
+          });
+          if(!(tf.lengthM>50&&tf.lengthM<100))throw new Error('Unexpected pitch length '+tf.lengthM);
+          if(!(tf.widthM>30&&tf.widthM<70))throw new Error('Unexpected pitch width '+tf.widthM);
+          console.log('Homography OK',tf.lengthM.toFixed(1)+'m x '+tf.widthM.toFixed(1)+'m');
+          JS
