@@ -12,6 +12,11 @@ Módulo independiente de minijuegos diarios. Requiere una cuenta Patxanguilles v
 6. `quick-maths` — Quick Maths — más puntos gana.
 7. `grid-memory` — Grid Memory — mayor nivel gana.
 8. `sequence` — Secuencia — mayor nivel gana.
+9. `keep-up` — Que no caiga — más toques gana.
+10. `penalties` — Penaltis — más puntos gana.
+11. `goalkeeper` — Portero — más paradas gana.
+12. `top-bins` — A la escuadra — más puntos gana.
+13. `var-offside` — VAR — más decisiones correctas gana.
 
 Todos los juegos tienen 2 intentos diarios por defecto. El intento se consume en servidor al pulsar JUGAR; cerrar o recargar la página no lo restaura.
 
@@ -27,6 +32,11 @@ El modo demo no consume intentos ni guarda resultados:
 - `/retos/?demo=quick-maths`
 - `/retos/?demo=grid-memory`
 - `/retos/?demo=sequence`
+- `/retos/?demo=keep-up`
+- `/retos/?demo=penalties`
+- `/retos/?demo=goalkeeper`
+- `/retos/?demo=top-bins`
+- `/retos/?demo=var-offside`
 
 ## Clasificaciones
 
@@ -66,3 +76,7 @@ La pantalla muestra:
 - `game_seasons`: temporadas mensuales.
 
 Los resultados reales se validan y guardan mediante RPC de Supabase; el navegador no inserta intentos directamente.
+
+## Juegos de fútbol
+
+`Que no caiga` usa física simple en tiempo real y Pointer Events. `Penaltis`, `Portero` y `A la escuadra` trabajan sobre una portería interactiva común. `VAR` es una simplificación deliberada del fuera de juego para convertirlo en un reto corto de decisión rápida, no un simulador completo del reglamento IFAB.
