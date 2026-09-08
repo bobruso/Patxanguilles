@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07100b">
+  <title>Reto del día · Patxanguilles</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#07100b url('../background-home.jpg') center/cover fixed no-repeat;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}body:before{content:"";position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,.75));z-index:-1}.shell{width:min(760px,100%);margin:auto;padding:22px 16px 48px}.top{display:flex;justify-content:space-between;align-items:center;gap:18px}.back{color:#c5cdc8;text-decoration:none;font-size:13px}.identity{font-size:12px;font-weight:900;color:#dfe5e1}.card{margin-top:13vh;background:rgba(8,12,10,.82);border:1px solid rgba(255,255,255,.16);border-radius:26px;padding:32px;box-shadow:0 28px 90px rgba(0,0,0,.5);backdrop-filter:blur(10px)}.eyebrow{font-size:11px;letter-spacing:.2em;color:#e3262e;font-weight:900}.card h1{font-size:clamp(40px,9vw,74px);line-height:.92;letter-spacing:-.05em;margin:10px 0 18px}.muted{color:#aeb7b1;line-height:1.6}.status{margin-top:22px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11)}.pill{display:inline-flex;margin-top:18px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 11px;color:#ccd3ce;font-size:11px;font-weight:850;letter-spacing:.08em}.loading{opacity:.7}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <a class="back" href="../">← Patxanguilles</a>
+      <div id="identity" class="identity">Comprobando cuenta…</div>
+    </header>
+
+    <section id="content" class="card loading">
+      <div class="eyebrow">ZONA PROTEGIDA · PRUEBA</div>
+      <h1>Reto del día</h1>
+      <p class="muted">Todavía no hay un minijuego aquí. Esta pantalla sirve para probar el requisito que hemos decidido: para competir en el reto del día tienes que estar identificado con una cuenta vinculada a un jugador.</p>
+      <div id="status" class="status">Validando sesión…</div>
+      <div class="pill">LOGIN OBLIGATORIO SOLO PARA RETOS</div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth/config.js"></script>
+  <script src="../auth/auth-service.js"></script>
+  <script>
+    (async () => {
+      const content = document.getElementById('content');
+      const identity = document.getElementById('identity');
+      const status = document.getElementById('status');
+
+      try {
+        const state = await window.PatxAuth.requireAccount({ returnTo: window.location.href });
+        if (!state) return;
+
+        identity.textContent = `👤 ${state.nickname || 'Jugador'}`;
+        status.innerHTML = `<strong>Acceso correcto.</strong><br>Estás jugando como ${String(state.nickname || 'Jugador').replaceAll('<','&lt;').replaceAll('>','&gt;')}. Cuando construyamos los minijuegos, todos los intentos y resultados quedarán ligados a tu player_id (${state.playerId}).`;
+        content.classList.remove('loading');
+      } catch (error) {
+        console.error(error);
+        status.textContent = 'No se ha podido validar la cuenta.';
+      }
+    })();
+  </script>
+</body>
+</html>
