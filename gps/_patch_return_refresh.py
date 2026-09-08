@@ -15,3 +15,4 @@ new="function refreshCurrentMatchGps(){\n  let requested=null;try{requested=sess
 if old not in s: raise SystemExit('index refresh target missing')
 s=s.replace(old,new,1)
 p.write_text(s)
+# trigger
