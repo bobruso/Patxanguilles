@@ -148,11 +148,15 @@ export async function enhanceOpenMatchGps(matchId){
 }
 
 function refreshCurrentMatchGps(){
-  if(currentMatchId==null)return;
+  let requested=null;try{requested=sessionStorage.getItem('patx:gps:refresh-match')}catch{}
+  if(requested!=null&&currentMatchId!=null&&String(requested)===String(currentMatchId)){try{sessionStorage.removeItem('patx:gps:refresh-match')}catch{}}
+  const target=currentMatchId??requested;
+  if(target==null)return;
   const modal=document.getElementById('matchModal');
   const content=document.getElementById('matchContent');
   if(!modal?.classList.contains('open')||!content)return;
-  setTimeout(()=>enhanceOpenMatchGps(currentMatchId),0);
+  currentMatchId=target;
+  setTimeout(()=>enhanceOpenMatchGps(target),0);
 }
 
 function install(){
