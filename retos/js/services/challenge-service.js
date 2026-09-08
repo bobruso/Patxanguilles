@@ -47,10 +47,33 @@
     return Array.isArray(data) ? data : [];
   }
 
+  async function getLeaderboardForDate(date) {
+    const data = await rpc('get_game_leaderboard_for_date', { p_date: date });
+    return Array.isArray(data) ? data : [];
+  }
+
+  async function getSeason() {
+    return firstRow(await rpc('get_current_game_season'));
+  }
+
+  async function getSeasonLeaderboard() {
+    const data = await rpc('get_season_leaderboard');
+    return Array.isArray(data) ? data : [];
+  }
+
+  async function getHistory(limit = 14) {
+    const data = await rpc('get_challenge_history', { p_limit: Math.max(1, Math.min(60, Number(limit) || 14)) });
+    return Array.isArray(data) ? data : [];
+  }
+
   window.PatxChallengeService = Object.freeze({
     getToday,
     startAttempt,
     finishAttempt,
-    getLeaderboard
+    getLeaderboard,
+    getLeaderboardForDate,
+    getSeason,
+    getSeasonLeaderboard,
+    getHistory
   });
 })();
