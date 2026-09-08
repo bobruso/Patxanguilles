@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#080a0e">
+  <title>Admin trivial · Patxanguilles</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="./css/trivia-admin.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="back" href="./">← Reto del día</a>
+      <div id="identity" class="identity">Comprobando admin…</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">ADMIN · TRIVIAL</div>
+      <h1>Banco de preguntas</h1>
+      <p class="lead">Crea y edita preguntas del trivial de fútbol. Las preguntas inactivas se conservan pero no se usarán en el juego diario.</p>
+    </section>
+
+    <div class="grid">
+      <section class="panel editor">
+        <h2>Pregunta</h2>
+        <form id="triviaForm">
+          <input id="questionId" type="hidden">
+          <div class="field">
+            <label for="question">Enunciado</label>
+            <textarea id="question" maxlength="500" required placeholder="¿Quién marcó...? "></textarea>
+          </div>
+
+          <div class="field">
+            <label>Respuestas · marca la correcta</label>
+            <div class="answers">
+              <div class="answer-row"><input id="correct0" type="radio" name="correct" value="0" checked><input id="answer0" required placeholder="Respuesta A"></div>
+              <div class="answer-row"><input id="correct1" type="radio" name="correct" value="1"><input id="answer1" required placeholder="Respuesta B"></div>
+              <div class="answer-row"><input id="correct2" type="radio" name="correct" value="2"><input id="answer2" required placeholder="Respuesta C"></div>
+              <div class="answer-row"><input id="correct3" type="radio" name="correct" value="3"><input id="answer3" required placeholder="Respuesta D"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field"><label for="category">Categoría</label><input id="category" list="categoryOptions" value="Fútbol internacional"><datalist id="categoryOptions"><option>Fútbol internacional</option><option>Liga española</option><option>Champions</option><option>Mundiales</option><option>Historia</option><option>Reglamento</option><option>Fútbol valenciano</option><option>Patxanguilles</option><option>Cultura futbolera</option></datalist></div>
+            <div class="field"><label for="difficulty">Dificultad</label><select id="difficulty"><option value="facil">Fácil</option><option value="media" selected>Media</option><option value="dificil">Difícil</option></select></div>
+          </div>
+
+          <div class="field"><label for="explanation">Explicación opcional</label><textarea id="explanation" placeholder="Dato que se mostrará después de responder"></textarea></div>
+          <label class="check"><input id="active" type="checkbox" checked> Pregunta activa</label>
+
+          <div class="actions">
+            <button id="saveButton" class="primary" type="submit">GUARDAR PREGUNTA</button>
+            <button id="resetButton" class="secondary" type="button">NUEVA / LIMPIAR</button>
+            <button id="deleteButton" class="danger" type="button" hidden>ELIMINAR</button>
+          </div>
+          <div id="status" class="status" hidden></div>
+        </form>
+      </section>
+
+      <section class="panel library">
+        <div class="q-top"><h2>Preguntas guardadas</h2><div id="counter" class="q-meta"></div></div>
+        <div class="toolbar"><input id="search" type="search" placeholder="Buscar pregunta o categoría"><select id="filterCategory"><option value="">Todas las categorías</option></select></div>
+        <div id="questionList" class="question-list"><div class="empty">Cargando…</div></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth/config.js"></script>
+  <script src="../auth/auth-service.js"></script>
+  <script src="./js/trivia-admin.js"></script>
+</body>
+</html>
