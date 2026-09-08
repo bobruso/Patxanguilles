@@ -1,0 +1,12 @@
+@media print{
+  .patx-gps-head,.patx-gps-top-grid,.patx-gps-summary,.patx-gps-highlights,
+  .patx-gps-map-card,.patx-gps-stats,.patx-gps-breakdown-grid,.patx-gps-section,.patx-v198-terrain{
+    break-inside:avoid!important;page-break-inside:avoid!important
+  }
+  .patx-v204-save-zone,.patx-gps-admin-zone,.patx-gps-back,.patx-v204-compare-btn,.patx-v201-timeline{display:none!important}
+}
+html.patx-v207-pdf-exporting .patx-v204-save-zone,
+html.patx-v207-pdf-exporting .patx-gps-admin-zone,
+html.patx-v207-pdf-exporting .patx-gps-back,
+html.patx-v207-pdf-exporting .patx-v204-compare-btn,
+html.patx-v207-pdf-exporting .patx-v201-timeline{visibility:hidden!important}
