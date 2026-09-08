@@ -3,7 +3,7 @@
 
   window.PatxGameRegistry.register('grid-memory', ({ container, config = {}, seed = 1, onFinish }) => {
     const startCells = Number(config.start_cells || 3);
-    const maxLevel = Number(config.max_level || 15);
+    const maxLevel = Math.min(Number(config.max_level || 8), 8);
     let state = Number(seed) || 1;
     let level = 0;
     let target = [];
