@@ -5,6 +5,8 @@ const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
 const SUPABASE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
 let sb=null;
 let playerNameToId=null;
+let currentMatchId=null;
+let refreshSeq=0;
 
 function ensureCss(){
   if(document.querySelector('link[data-patx-gps-css]'))return;
@@ -41,6 +43,21 @@ const fmtKmh=v=>Number.isFinite(Number(v))?Number(v).toFixed(1)+' km/h':'—';
 
 function gpsIconSvg(){
   return`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path></svg>`;
+}
+
+function clearGpsDecorations(content){
+  if(!content)return;
+  content.querySelectorAll('.big-shirt').forEach(shirt=>{
+    shirt.classList.remove('patx-match-player-has-gps');
+    delete shirt.dataset.gpsDecorated;
+    shirt.querySelectorAll('.patx-match-gps-icon,.patx-match-gps-mini-stats').forEach(el=>el.remove());
+    const name=shirt.querySelector('.player-name');
+    if(!name)return;
+    name.classList.remove('patx-match-gps-name','patx-gps-preview-open');
+    name.removeAttribute('tabindex');
+    name.removeAttribute('aria-label');
+    name.querySelectorAll('[data-gps-hover]').forEach(el=>el.remove());
+  });
 }
 
 function decorateShirt(shirt,row,{matchId,playerId,playerName}){
@@ -89,27 +106,35 @@ function decorateShirt(shirt,row,{matchId,playerId,playerName}){
 
 function addUploadButton(matchId){
   const actions=document.querySelector('#matchContent .share-result-actions');
-  if(!actions||actions.querySelector('[data-gps-upload-match]'))return;
-  const btn=document.createElement('button');
-  btn.type='button';
-  btn.className='secondary patx-match-gps-upload';
-  btn.dataset.gpsUploadMatch='1';
-  btn.textContent='🛰️ Añadir datos GPS';
-  btn.addEventListener('click',e=>{
+  if(!actions)return;
+  let btn=actions.querySelector('[data-gps-upload-match]');
+  if(!btn){
+    btn=document.createElement('button');
+    btn.type='button';
+    btn.className='secondary patx-match-gps-upload';
+    btn.dataset.gpsUploadMatch='1';
+    btn.textContent='🛰️ Añadir datos GPS';
+    actions.insertBefore(btn,actions.lastElementChild||null);
+  }
+  btn.dataset.matchId=String(matchId);
+  btn.onclick=e=>{
     e.preventDefault();e.stopPropagation();
     location.href=`gps-upload.html?match=${encodeURIComponent(matchId)}`;
-  });
-  actions.insertBefore(btn,actions.lastElementChild||null);
+  };
 }
 
 export async function enhanceOpenMatchGps(matchId){
   ensureCss();
+  currentMatchId=matchId;
   const content=document.getElementById('matchContent');
   if(!content)return;
+  content.dataset.gpsMatchId=String(matchId);
+  const seq=++refreshSeq;
+  clearGpsDecorations(content);
   addUploadButton(matchId);
   try{
     const[nameMap,gpsMap]=await Promise.all([loadPlayerMap(),loadMatchGps(matchId)]);
-    if(!gpsMap.size)return;
+    if(seq!==refreshSeq||String(content.dataset.gpsMatchId)!==String(matchId))return;
     content.querySelectorAll('.big-shirt').forEach(shirt=>{
       const nameEl=shirt.querySelector('.player-name');
       const playerName=String(nameEl?.childNodes?.[0]?.textContent||nameEl?.textContent||'').trim();
@@ -122,11 +147,20 @@ export async function enhanceOpenMatchGps(matchId){
   }
 }
 
+function refreshCurrentMatchGps(){
+  if(currentMatchId==null)return;
+  const modal=document.getElementById('matchModal');
+  const content=document.getElementById('matchContent');
+  if(!modal?.classList.contains('open')||!content)return;
+  setTimeout(()=>enhanceOpenMatchGps(currentMatchId),0);
+}
+
 function install(){
   ensureCss();
   const original=window.openMatch;
   if(typeof original!=='function'||original.__patxGpsWrapped)return false;
   function wrappedOpenMatch(id){
+    currentMatchId=id;
     const result=original.apply(this,arguments);
     Promise.resolve(result).finally(()=>setTimeout(()=>enhanceOpenMatchGps(id),0));
     return result;
@@ -142,4 +176,6 @@ if(!install()){
   const timer=setInterval(()=>{attempts++;if(install()||attempts>80)clearInterval(timer)},50);
 }
 
-window.PatxGpsIndexIntegration={enhanceOpenMatchGps};
+window.addEventListener('pageshow',refreshCurrentMatchGps);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshCurrentMatchGps()});
+window.PatxGpsIndexIntegration={enhanceOpenMatchGps,refreshCurrentMatchGps};
