@@ -4661,7 +4661,370 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 }
 
 </style>
-<link rel="stylesheet" href="./gps/report-overlay.css"></head>
+<link rel="stylesheet" href="./gps/report-overlay.css"><style>
+/* v206 · Jugador@s + resultados de partidos */
+#season .season-players-btn,
+#season .season-players-btn.active{
+  background:linear-gradient(145deg,#176b3a,#238b4d)!important;
+  color:#fff!important;
+  border-color:#43ad6d!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 12px rgba(0,75,35,.22)!important;
+}
+#season .season-players-btn:hover{
+  background:linear-gradient(145deg,#1d7b45,#2a9c58)!important;
+  border-color:#5bc37f!important;
+}
+.latest-match .match-weekday{
+  font-size:12px!important;
+  font-weight:900!important;
+  color:#dce4df!important;
+  text-transform:uppercase!important;
+  letter-spacing:.045em!important;
+}
+.latest-match .match-outcome{font-weight:850!important}
+@media(max-width:700px){
+  .latest-match .match-weekday{font-size:12px!important}
+}
+</style>
+<style>
+/* v207 · estado de forma + tarjetas de resultado */
+.classification-injured{display:inline-block;margin-left:4px;font-size:12px;vertical-align:1px}
+#season .season-add-result-btn{display:inline-flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:1px!important;line-height:1.05!important}
+#season .season-add-result-btn small{display:block;margin-top:3px;font-size:9px;font-weight:650;opacity:.62;letter-spacing:.01em}
+.match-row.latest-match{position:relative!important;min-height:118px!important;grid-template-columns:112px minmax(0,1fr)!important;grid-template-rows:1fr!important;padding:14px 14px!important}
+.latest-match .latest-date-block{grid-column:1!important;grid-row:1!important;align-self:center!important}
+.latest-match .latest-date-line{display:block!important}
+.latest-match .match-weekday{position:absolute!important;top:10px!important;right:12px!important;z-index:3!important;text-align:right!important;font-size:12px!important;font-weight:900!important;color:#dce4df!important;text-transform:uppercase!important;letter-spacing:.045em!important}
+.latest-match .match-score-shirts{position:absolute;left:55%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;gap:8px;z-index:2}
+.match-score-shirt{width:50px;height:56px;display:grid;place-items:center;clip-path:polygon(23% 0,40% 0,50% 13%,60% 0,77% 0,100% 23%,82% 40%,82% 100%,18% 100%,18% 40%,0 23%);border:1px solid rgba(255,255,255,.38);filter:drop-shadow(0 6px 9px rgba(0,0,0,.28))}
+.match-score-shirt.red{background:#d9212b}.match-score-shirt.black{background:#101216}
+.match-score-shirt b{color:#fff;font-size:25px;line-height:1;font-weight:950;text-shadow:0 1px 3px rgba(0,0,0,.75);transform:translateY(2px)}
+.match-score-sep{font-size:22px;font-weight:950;color:#bec7c1}
+.latest-match .match-row-actions{position:absolute!important;right:9px!important;bottom:8px!important;z-index:4!important;display:flex!important;justify-content:flex-end!important;align-items:flex-end!important;gap:5px!important}
+.latest-match .match-status.final{font-size:7px!important;padding:2px 5px!important;line-height:1!important;min-height:0!important}
+.latest-match .match-status.live{font-size:8px!important;padding:3px 6px!important}
+@media(max-width:700px){
+  .match-row.latest-match{min-height:112px!important;grid-template-columns:82px minmax(0,1fr)!important;padding:12px 10px!important}
+  .latest-match .match-thumb{width:74%!important;height:39px!important}
+  .latest-match .match-weekday{top:8px!important;right:9px!important;font-size:11px!important}
+  .latest-match .match-score-shirts{left:57%!important;gap:5px!important}
+  .match-score-shirt{width:43px!important;height:49px!important}
+  .match-score-shirt b{font-size:22px!important}.match-score-sep{font-size:18px!important}
+  .latest-match .match-row-actions{right:7px!important;bottom:6px!important}
+}
+</style>
+<style>
+/* v208 · estados de forma + resultados diferenciados */
+.fitness-info-item{grid-column:1 / -1;position:relative}
+.fitness-info-item.fitness-injured{background:linear-gradient(145deg,rgba(121,22,28,.86),rgba(83,14,18,.92))!important;border-color:rgba(255,86,92,.48)!important;color:#fff!important}
+.fitness-info-item.fitness-injured small,.fitness-info-item.fitness-injured .fitness-injured-since{color:#ffb7ba!important}
+.fitness-current-value{display:block;margin:2px 0 8px;font-size:16px}
+.fitness-injured-since{display:block;margin:-4px 0 8px;font-size:10px;font-weight:750}
+.fitness-quick-control{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px}
+.fitness-quick-control select,.fitness-quick-control input{min-height:34px;border:1px solid rgba(255,255,255,.15);border-radius:8px;background:#101713;color:#fff;padding:6px 9px}
+.fitness-custom-row{display:none}.fitness-custom-row.show{display:block}
+.fitness-custom-row input{width:min(260px,70vw)}
+.fitness-save-btn{padding:7px 10px!important;font-size:10px!important}
+.profile-edit-card-tools{padding:13px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(9,16,12,.56)}
+.profile-edit-card-tools .card-create-meta{margin:7px 0 10px!important}
+.injury-icon-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-left:5px;cursor:pointer;vertical-align:middle;outline:none}
+.injury-plus{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:3px;background:#d81f2a;color:#fff;font-size:15px;line-height:1;font-weight:950;box-shadow:0 1px 4px rgba(0,0,0,.30)}
+.injury-tooltip{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(4px);width:max-content;max-width:220px;padding:7px 9px;border:1px solid rgba(255,255,255,.12);border-radius:8px;background:#080b09;color:#fff;font-size:9px;font-weight:850;line-height:1.3;letter-spacing:.02em;box-shadow:0 8px 22px rgba(0,0,0,.38);opacity:0;visibility:hidden;pointer-events:none;z-index:80;transition:.14s ease}
+.injury-icon-wrap:hover .injury-tooltip,.injury-icon-wrap:focus .injury-tooltip,.injury-icon-wrap.open .injury-tooltip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+@media(min-width:701px){
+  .latest-match .match-score-shirts.is-latest{left:58%!important;gap:4px!important}
+  .latest-match .match-score-shirts.is-latest .match-score-shirt{width:36px!important;height:41px!important}
+  .latest-match .match-score-shirts.is-latest .match-score-shirt b{font-size:19px!important}
+  .latest-match .match-score-shirts.is-latest .match-score-sep{font-size:15px!important}
+  .latest-match .latest-date-block{width:86px!important}
+  .latest-match .match-thumb{width:52%!important;max-width:52px!important;height:31px!important;object-fit:cover!important}
+  .match-row.latest-match{grid-template-columns:88px minmax(0,1fr)!important;min-height:100px!important}
+}
+.match-score-shirt.black{filter:drop-shadow(0 0 .65px rgba(255,255,255,.96)) drop-shadow(0 5px 8px rgba(0,0,0,.30))!important}
+.calendar-match-row{position:relative!important;min-height:104px!important}
+.calendar-match-row .match-score-shirts.is-calendar{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;gap:9px!important;z-index:2!important}
+.calendar-match-row .match-score-shirts.is-calendar .match-score-shirt{width:62px!important;height:70px!important}
+.calendar-match-row .match-score-shirts.is-calendar .match-score-shirt b{font-size:30px!important}
+.calendar-match-row .match-score-shirts.is-calendar .match-score-sep{font-size:25px!important}
+.calendar-match-row .match-row-actions{margin-left:auto!important}
+@media(max-width:700px){
+  .fitness-quick-control{align-items:stretch;flex-direction:column}
+  .fitness-custom-row,.fitness-custom-row input,.fitness-quick-control select,.fitness-save-btn{width:100%!important}
+  .calendar-match-row .match-score-shirts.is-calendar .match-score-shirt{width:52px!important;height:59px!important}
+  .calendar-match-row .match-score-shirts.is-calendar .match-score-shirt b{font-size:25px!important}
+}
+</style>
+<style>
+/* v209 · Últimos y Calendario con tamaños independientes */
+
+/* LESIONADO: base blanca circular + cruz roja */
+.injury-plus{
+  width:17px!important;
+  height:17px!important;
+  border-radius:50%!important;
+  background:#fff!important;
+  color:#d81f2a!important;
+  border:1px solid rgba(216,31,42,.88)!important;
+  font-size:15px!important;
+  line-height:15px!important;
+  font-weight:950!important;
+  box-shadow:0 1px 5px rgba(0,0,0,.28)!important;
+}
+
+/* FICHA PARTIDO · Editar goles arriba a la derecha */
+.match-detail-header{
+  position:relative!important;
+  padding-right:132px!important;
+}
+.match-edit-goals-top{
+  position:absolute!important;
+  top:0!important;
+  right:0!important;
+  margin:0!important;
+  white-space:nowrap!important;
+  z-index:6!important;
+}
+
+/* ÚLTIMOS PARTIDOS · ESCRITORIO */
+@media(min-width:701px){
+  .match-row.latest-match{
+    min-height:104px!important;
+    grid-template-columns:104px minmax(0,1fr)!important;
+  }
+  .latest-match .match-score-shirts.is-latest{
+    left:50%!important;
+    top:50%!important;
+    transform:translate(-50%,-50%)!important;
+    gap:5px!important;
+  }
+  .latest-match .match-score-shirts.is-latest .match-score-shirt{
+    width:38px!important;
+    height:43px!important;
+  }
+  .latest-match .match-score-shirts.is-latest .match-score-shirt b{
+    font-size:20px!important;
+  }
+  .latest-match .match-score-shirts.is-latest .match-score-sep{
+    font-size:16px!important;
+  }
+  .latest-match .latest-date-block{
+    width:94px!important;
+  }
+  .latest-match .match-thumb{
+    width:64px!important;
+    max-width:64px!important;
+    height:38px!important;
+    object-fit:cover!important;
+    border-radius:7px!important;
+  }
+}
+
+/* CALENDARIO: reglas completamente independientes */
+.calendar-match-row{
+  position:relative!important;
+  min-height:126px!important;
+}
+.calendar-match-row .match-score-shirts.is-calendar{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  gap:11px!important;
+  z-index:2!important;
+}
+.calendar-match-row .match-score-shirts.is-calendar .match-score-shirt{
+  width:76px!important;
+  height:86px!important;
+}
+.calendar-match-row .match-score-shirts.is-calendar .match-score-shirt b{
+  font-size:35px!important;
+}
+.calendar-match-row .match-score-shirts.is-calendar .match-score-sep{
+  font-size:28px!important;
+}
+.calendar-match-row .match-row-actions{
+  margin-left:auto!important;
+}
+
+/* Filo blanco fino de la camiseta negra */
+.latest-match .match-score-shirt.black,
+.calendar-match-row .match-score-shirt.black{
+  filter:
+    drop-shadow(0 0 .7px rgba(255,255,255,.98))
+    drop-shadow(0 5px 8px rgba(0,0,0,.30))!important;
+}
+
+@media(max-width:700px){
+  .match-detail-header{
+    padding-right:0!important;
+    padding-top:42px!important;
+  }
+  .match-edit-goals-top{
+    top:0!important;
+    right:0!important;
+  }
+  .calendar-match-row{
+    min-height:116px!important;
+  }
+  .calendar-match-row .match-score-shirts.is-calendar .match-score-shirt{
+    width:60px!important;
+    height:68px!important;
+  }
+  .calendar-match-row .match-score-shirts.is-calendar .match-score-shirt b{
+    font-size:29px!important;
+  }
+  .calendar-match-row .match-score-shirts.is-calendar .match-score-sep{
+    font-size:23px!important;
+  }
+}
+</style>
+<style>
+/* v210 · ajustes móvil temporada + tooltip lesión */
+
+/* Al volver Editar goles abajo, la cabecera recupera su espacio normal */
+.match-detail-header{
+  padding-right:0!important;
+}
+@media(max-width:700px){
+  .match-detail-header{
+    padding-top:0!important;
+  }
+}
+
+/* Últimos partidos y Calendario: centrado reforzado en móvil */
+@media(max-width:700px){
+  .latest-match .match-score-shirts.is-latest,
+  .calendar-match-row .match-score-shirts.is-calendar{
+    left:50%!important;
+    top:50%!important;
+    transform:translate(-50%,-50%)!important;
+  }
+}
+
+/* Temporada · escritorio: Jugador@s algo más estrecho, Últimos más ancho */
+@media(min-width:701px){
+  #seasonContent .season-grid{
+    grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important;
+  }
+}
+
+/* Temporada · móvil: primero Últimos partidos, después Jugador@s */
+@media(max-width:700px){
+  #seasonContent .season-grid{
+    grid-template-columns:1fr!important;
+  }
+  #seasonContent .season-grid > .panel:first-child{
+    order:2!important;
+  }
+  #seasonContent .season-grid > .panel:nth-child(2){
+    order:1!important;
+  }
+}
+
+/* Tooltip móvil de lesión fuera del overflow de la tabla */
+.patx-mobile-injury-tooltip{
+  position:fixed;
+  z-index:100000;
+  max-width:min(240px,calc(100vw - 16px));
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:9px;
+  background:#070a08;
+  color:#fff;
+  box-shadow:0 10px 28px rgba(0,0,0,.48);
+  font-size:10px;
+  font-weight:850;
+  line-height:1.35;
+  letter-spacing:.015em;
+  text-align:center;
+  pointer-events:none;
+}
+</style>
+<style>
+/* v211 · Temporada: overview escritorio / calendario móvil */
+
+/* ESCRITORIO · vista inicial 50/50 */
+@media(min-width:701px){
+  #seasonContent .season-grid.season-overview-grid{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:18px!important;
+  }
+
+  /* Al pulsar Jugador@s, clasificación a ancho completo */
+  #seasonContent .season-grid.season-players-only-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  #seasonContent .season-players-only-grid .season-players-panel{
+    width:100%!important;
+    max-width:none!important;
+  }
+}
+
+/* MÓVIL · Jugador@s nunca incluye Últimos partidos */
+@media(max-width:700px){
+  #seasonContent .season-grid.season-players-only-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+  }
+
+  #seasonContent .season-players-only-grid .season-players-panel{
+    order:1!important;
+    width:100%!important;
+  }
+}
+
+/* =========================================================
+   FICHA PARTIDO · ESCRITORIO
+   Recuperar equilibrio vertical entre alineaciones y goles.
+   ========================================================= */
+@media(min-width:761px){
+  #matchCaptureArea.match-desktop-layout{
+    align-items:stretch!important;
+  }
+
+  #matchCaptureArea .match-detail-lineup,
+  #matchCaptureArea .match-detail-side{
+    min-height:292px!important;
+    height:100%!important;
+  }
+
+  #matchCaptureArea .match-detail-lineup{
+    display:flex!important;
+  }
+
+  #matchCaptureArea .match-detail-lineup > .final-pitch{
+    flex:1 1 auto!important;
+    width:100%!important;
+    min-height:292px!important;
+    margin-top:0!important;
+    display:flex!important;
+    align-items:stretch!important;
+  }
+
+  #matchCaptureArea .match-detail-lineup > .final-pitch > .final-teams{
+    flex:1 1 auto!important;
+    width:100%!important;
+  }
+
+  #matchCaptureArea .match-detail-side{
+    display:flex!important;
+    flex-direction:column!important;
+  }
+
+  #matchCaptureArea .match-detail-side > .match-events-grid{
+    flex:1 1 auto!important;
+    min-height:292px!important;
+    align-items:stretch!important;
+  }
+
+  #matchCaptureArea .match-detail-side .match-events-box{
+    height:100%!important;
+    box-sizing:border-box!important;
+  }
+}
+</style>
+</head>
 <body>
 <button id="mobileHomeEnterBall" class="mobile-home-enter-ball" type="button" aria-label="Entrar">
   <span class="football-pattern" aria-hidden="true">⚽</span>
@@ -4992,7 +5355,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v205</span>
+    <span class="history-version">VERSIÓN v211</span>
   </header>
         
         
@@ -5003,7 +5366,98 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
         
         
         
-        <section class="history-change-section">
+                                                        <section class="history-change-section">
+      <div class="history-section-number">163</div>
+      <div class="history-section-content">
+        <h2>Temporada · navegación independiente y ficha de partido equilibrada</h2>
+        <ul>
+          <li>En móvil, Temporada abre directamente en Calendario.</li>
+          <li>En móvil, al pulsar «Jugador@s» se muestra únicamente la clasificación, eliminando «Últimos partidos» de esa vista.</li>
+          <li>En escritorio, la entrada a Temporada mantiene la vista conjunta de clasificación y Últimos partidos, ahora con un reparto exacto 50/50.</li>
+          <li>En escritorio, al pulsar «Jugador@s» la clasificación pasa a ocupar una única columna a ancho completo.</li>
+          <li>Calendario conserva su pantalla independiente tanto en móvil como en escritorio.</li>
+          <li>La ficha de partido en escritorio recupera el equilibrio vertical entre la ilustración de alineaciones y el bloque de goles, igualando sus alturas.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">162</div>
+      <div class="history-section-content">
+        <h2>Temporada móvil · orden, centrado y tooltip de lesión</h2>
+        <ul>
+          <li>En móvil, al pulsar el icono de lesionado se muestra correctamente el aviso flotante con la fecha de inicio de la lesión, fuera del contenedor de la tabla para evitar recortes.</li>
+          <li>En móvil, los marcadores con camisetas quedan centrados tanto en Últimos partidos como en Calendario.</li>
+          <li>«Editar goles» vuelve a su posición anterior dentro del bloque inferior de acciones de la ficha de partido.</li>
+          <li>En móvil, la vista Jugador@s de Temporada muestra primero Últimos partidos y después la clasificación de jugadores.</li>
+          <li>En escritorio se mantiene el orden Jugador@s / Últimos partidos, pero Últimos partidos pasa a ocupar aproximadamente un 15% más de ancho y Jugador@s un 15% menos.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">161</div>
+      <div class="history-section-content">
+        <h2>Resultados · tamaños independientes y edición de goles</h2>
+        <ul>
+          <li>El icono de lesionado pasa a ser circular, con fondo blanco y símbolo + rojo.</li>
+          <li>En Últimos partidos de escritorio el marcador queda centrado, las camisetas se mantienen compactas y la fotografía recupera algo de tamaño.</li>
+          <li>La camiseta negra mantiene un filo blanco muy fino para separarse del fondo.</li>
+          <li>Calendario y Últimos partidos quedan estilizados mediante variantes independientes para que los cambios de tamaño de uno no afecten al otro.</li>
+          <li>En Calendario el marcador queda centrado en el contenedor expandido y las camisetas aumentan de tamaño.</li>
+          <li>En la ficha de partido, «Editar goles» se mueve a la esquina superior derecha y desaparece del bloque de acciones inferior.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">160</div>
+      <div class="history-section-content">
+        <h2>Perfil · estados de forma ampliados y resultados refinados</h2>
+        <ul>
+          <li>El estado de forma se puede actualizar directamente desde la ficha del jugador, sin entrar en Editar.</li>
+          <li>Se añaden estados como «Mejor que nunca», «Con dolores», «Medio zombie» y «De resaca», además de un estado personalizado de hasta 60 caracteres.</li>
+          <li>«Lesionado» muestra un símbolo + rojo junto al nombre en Jugador@s; al pasar el ratón o pulsarlo aparece la fecha desde la que figura lesionado.</li>
+          <li>La tarjeta «Estado de forma» se vuelve roja mientras el jugador está marcado como lesionado.</li>
+          <li>Cuando ya existe una carta, «Crear carta» y el contador de generaciones pasan a la pantalla Editar para limpiar la ficha principal.</li>
+          <li>En Últimos partidos de escritorio se reducen las camisetas del marcador y la fotografía; la camiseta negra gana un filo blanco muy fino.</li>
+          <li>En Calendario, las camisetas del resultado quedan centradas y aumentan de tamaño.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">159</div>
+      <div class="history-section-content">
+        <h2>PDF por bloques, estado de forma y resultados visuales</h2>
+        <ul>
+          <li>Guardar informe genera un PDF A4 por bloques completos, evitando partir mapas, tarjetas o secciones entre dos páginas.</li>
+          <li>Se añade «Estado de forma» al perfil con tres opciones: «En la flor de la vida», «Aceptable» y «Lesionado».</li>
+          <li>Cuando un jugador está marcado como «Lesionado» aparece una cruz roja junto a su nombre en Jugador@s; cualquier usuario puede actualizar este estado desde el perfil.</li>
+          <li>El orden inicial de Jugador@s mantiene aleatorio al grupo general y deja al final únicamente a quienes tienen 0 partidos, no tienen foto y no tienen carta.</li>
+          <li>Calendario y Últimos partidos eliminan los textos de victoria/empate y muestran el marcador centrado con cada cifra dentro de una camiseta roja o negra.</li>
+          <li>«Finalizado» se reduce y se coloca abajo a la derecha; el día de la semana queda arriba a la derecha.</li>
+          <li>El botón «Añadir resultado» incorpora el subtítulo «Partido ya jugado».</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">158</div>
+      <div class="history-section-content">
+        <h2>Temporada · Jugador@s y lectura de resultados</h2>
+        <ul>
+          <li>La pestaña «Clasificación» pasa a llamarse «Jugador@s» y adopta color verde.</li>
+          <li>La lista mantiene el orden aleatorio al entrar, pero los jugadores que aún no han actualizado perfil, no tienen foto ni carta y tampoco han disputado ningún partido quedan siempre al final.</li>
+          <li>Se elimina el título «Clasificación de jugadores/as» del contenido.</li>
+          <li>El porcentaje de victorias se oculta para usuarios normales y permanece visible cuando se accede como administrador.</li>
+          <li>En Calendario y Últimos partidos, «Roj@s vs Negr@s» se sustituye por «Victoria para l@s roj@s», «Empate» o «Victoria para l@s negr@s» según el resultado.</li>
+          <li>El día de la semana pasa a mostrarse completo —por ejemplo LUNES o VIERNES—, en negrita y con mayor tamaño.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
       <div class="history-section-number">157</div>
       <div class="history-section-content">
         <h2>GPS móvil · cabecera y Ley Rico compactados</h2>
@@ -6911,8 +7365,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 </div></section>
 
 <section id="season" class="screen results"><div class="card">
-<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><div class="lineup-top-actions"><button class="primary season-add-result-btn" onclick="show('resultMode')">Añadir resultado</button></div></div>
-<div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn season-calendar-btn" onclick="seasonTab('calendar',this)">📅 Calendario</button><button class="nav-btn album-special-btn" id="seasonAlbumBtn" onclick="window.open('album.html','_blank')"><span class="album-star">★</span> Ver álbum de cartas <span class="album-star">★</span></button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><div class="lineup-top-actions"><button class="primary season-add-result-btn" onclick="show('resultMode')"><span>Añadir resultado</span><small>Partido ya jugado</small></button></div></div>
+<div class="section-nav"><button class="nav-btn season-players-btn active" onclick="seasonTab('classification',this)">Jugador@s</button><button class="nav-btn season-calendar-btn" onclick="seasonTab('calendar',this)">📅 Calendario</button><button class="nav-btn album-special-btn" id="seasonAlbumBtn" onclick="window.open('album.html','_blank')"><span class="album-star">★</span> Ver álbum de cartas <span class="album-star">★</span></button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
 <div id="seasonContent"></div>
 </div></section>
 
@@ -6991,7 +7445,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v205 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v211 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -7071,11 +7525,11 @@ function resetClassificationRandomOrder(){
   }
 }
 const cardGenerationDrafts={};
-function defaultPlayer(name){return {name,fullName:name,birthDate:"",age:"",photo:"",leg:"",palmares:"",position:"",number:""}}
+function defaultPlayer(name){return {name,fullName:name,birthDate:"",age:"",photo:"",leg:"",palmares:"",position:"",number:"",fitnessStatus:"aceptable"}}
 function saveDB(){}
 function allPlayers(){return Object.keys(db.players).sort((a,b)=>a.localeCompare(b,'es'))}
 function ensurePlayers(list){list.forEach(n=>{if(!db.players[n])db.players[n]=defaultPlayer(n)})}
-function mapPlayerRow(p){return{id:p.id,name:p.nickname,fullName:p.full_name||p.nickname,birthDate:p.birth_date||"",age:calculateAge(p.birth_date),photo:p.photo_url||"",card:p.card_url||"",leg:p.leg||"",palmares:"",position:p.position||"",number:"",football7:!!p.football7,football5:!!p.football5}}
+function mapPlayerRow(p){return{id:p.id,name:p.nickname,fullName:p.full_name||p.nickname,birthDate:p.birth_date||"",age:calculateAge(p.birth_date),photo:p.photo_url||"",card:p.card_url||"",leg:p.leg||"",palmares:"",position:p.position||"",number:"",football7:!!p.football7,football5:!!p.football5,fitnessStatus:p.fitness_status||"aceptable",fitnessInjuredSince:p.fitness_injured_since||""}}
 async function loadSupabaseData(){
   const [playersRes,matchesRes,lineupsRes,eventsRes,photosRes]=await Promise.all([
     sbPublic.from('players').select('*').order('nickname'),
@@ -8971,9 +9425,35 @@ async function saveCurrentLineup(){
 }
 
 function updateSeasonAdminTabs(){document.querySelectorAll('.admin-season-tab').forEach(x=>x.style.display=adminLogged?'':'none')}
-function openSeason(mode){if(!mode){show('seasonMode');return}currentSeasonMode=mode;document.getElementById('seasonTitle').textContent='Temporada 26/27 · '+(mode==='f7'?'Fútbol 7':'Fútbol Sala');const albumBtn=document.getElementById('seasonAlbumBtn');if(albumBtn)albumBtn.style.display=mode==='f7'?'':'none';updateSeasonAdminTabs();resetClassificationRandomOrder();show('season');seasonTab('classification',document.querySelector('#season .nav-btn'))}
+function openSeason(mode){
+  if(!mode){show('seasonMode');return}
+  currentSeasonMode=mode;
+  document.getElementById('seasonTitle').textContent='Temporada 26/27 · '+(mode==='f7'?'Fútbol 7':'Fútbol Sala');
+  const albumBtn=document.getElementById('seasonAlbumBtn');
+  if(albumBtn)albumBtn.style.display=mode==='f7'?'':'none';
+  updateSeasonAdminTabs();
+  resetClassificationRandomOrder();
+  show('season');
+
+  const navs=[...document.querySelectorAll('#season .nav-btn')];
+  navs.forEach(x=>x.classList.remove('active'));
+
+  const c=document.getElementById('seasonContent');
+  if(window.matchMedia('(max-width:700px)').matches){
+    const calBtn=document.querySelector('#season .season-calendar-btn');
+    if(calBtn)calBtn.classList.add('active');
+    renderCalendar(c);
+  }else{
+    renderSeasonOverview(c);
+  }
+}
 function seasonTab(tab,btn){document.querySelectorAll('#season .nav-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');const c=document.getElementById('seasonContent');if(tab!=='cards')document.body.classList.remove('album-reader-open');if(tab==='classification')renderClassification(c);if(tab==='calendar')renderCalendar(c);if(tab==='cards'){cardAlbumPage=0;renderCardAlbum(c);}if(tab==='scorers')renderLeaders(c,'goals');if(tab==='assists')renderLeaders(c,'assists')}
 function stats(){const s={};const list=currentSeasonMode==='f7'?F7:FS;list.forEach(n=>s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0});db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode&&m.status!=='in_progress').forEach(m=>{const rs=Number(m.redScore),bs=Number(m.blackScore);const outcome=rs===bs?'draw':rs>bs?'red':'black';[...m.red,...m.black].forEach(n=>{if(!s[n])s[n]={name:n,played:0,wins:0,draws:0,losses:0,goals:0,assists:0};s[n].played++;const team=m.red.includes(n)?'red':'black';if(outcome==='draw')s[n].draws++;else if(team===outcome)s[n].wins++;else s[n].losses++});(m.goals||[]).forEach(e=>{if(s[e.player])s[e.player].goals+=Number(e.count)||1});(m.assists||[]).forEach(e=>{if(s[e.player])s[e.player].assists+=Number(e.count)||1})});return Object.values(s).map(x=>({...x,winPct:x.played?Math.round(x.wins/x.played*100):0}))}
+function classificationIsUninitialized(s){
+  const p=db.players?.[s.name]||{};
+  return Number(s.played||0)===0&&!p.photo&&!p.card;
+}
+
 function sortedStats(){
   const rows=stats();
   if(!classificationSort.key){
@@ -8985,7 +9465,11 @@ function sortedStats(){
       }
     }
     const pos=new Map(classificationRandomOrder.map((name,i)=>[name,i]));
-    return rows.sort((a,b)=>(pos.get(a.name)??9999)-(pos.get(b.name)??9999));
+    return rows.sort((a,b)=>{
+      const aPending=classificationIsUninitialized(a),bPending=classificationIsUninitialized(b);
+      if(aPending!==bPending)return aPending?1:-1;
+      return (pos.get(a.name)??9999)-(pos.get(b.name)??9999);
+    });
   }
   const {key,dir}=classificationSort,mult=dir==='asc'?1:-1;
   return rows.sort((a,b)=>{
@@ -9009,18 +9493,38 @@ function sortClassification(key){
   if(classificationSort.key===key)classificationSort.dir=classificationSort.dir==='asc'?'desc':'asc';
   else classificationSort={key,dir:'asc'};
   const c=document.getElementById('seasonContent');
-  if(c)renderClassification(c);
+  if(!c)return;
+  if(c.querySelector('.season-overview-grid'))renderSeasonOverview(c);
+  else renderClassification(c);
 }
 function classificationHeader(label,key){
   const active=classificationSort.key===key;
   const arrow=active?(classificationSort.dir==='asc'?' ▲':' ▼'):'';
   return `<th class="sortable-th" onclick="sortClassification('${key}')" title="Ordenar por ${escapeHtml(label)}">${escapeHtml(label)}<span class="sort-arrow">${arrow}</span></th>`;
 }
-function renderClassification(c){
+function classificationPanelHtml(){
   const rows=sortedStats();
-  const adminExtraHeaders=adminLogged?`${classificationHeader('GL','goals')}${classificationHeader('AS','assists')}`:'';
-  c.innerHTML=`<div class="season-grid"><div class="panel"><h3>Clasificación de jugadores/as</h3><div class="table-wrap"><table class="standings"><thead><tr><th>#</th>${classificationHeader('Jugador','name')}${classificationHeader('PJ','played')}${classificationHeader('G','wins')}${classificationHeader('E','draws')}${classificationHeader('P','losses')}${classificationHeader('% V','winPct')}${adminExtraHeaders}</tr></thead><tbody>${rows.map((s,i)=>`<tr><td class="rank">${i+1}</td><td class="player-link" onclick="openProfile('${escapeJs(s.name)}')"><span class="classification-player">${db.players?.[s.name]?.photo?`<img class="classification-avatar" src="${escapeHtml(db.players[s.name].photo)}" alt="" loading="lazy">`:''}<span>${escapeHtml(s.name)}</span></span></td><td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td><td>${s.winPct}%</td>${adminLogged?`<td>${s.goals}</td><td>${s.assists}</td>`:''}</tr>`).join('')}</tbody></table></div><div class="sort-help">Pulsa en el nombre de una columna para ordenar. Vuelve a pulsar para invertir el orden.</div></div><div class="panel"><h3>Últimos partidos</h3>${matchRows(db.matches.filter(m=>(m.mode||'f7')===currentSeasonMode).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6))}</div></div>`;
+  const adminExtraHeaders=adminLogged?`${classificationHeader('% V','winPct')}${classificationHeader('GL','goals')}${classificationHeader('AS','assists')}`:'';
+  return `<div class="panel season-players-panel"><div class="table-wrap"><table class="standings"><thead><tr><th>#</th>${classificationHeader('Jugador','name')}${classificationHeader('PJ','played')}${classificationHeader('G','wins')}${classificationHeader('E','draws')}${classificationHeader('P','losses')}${adminExtraHeaders}</tr></thead><tbody>${rows.map((s,i)=>`<tr><td class="rank">${i+1}</td><td class="player-link" onclick="openProfile('${escapeJs(s.name)}')"><span class="classification-player">${db.players?.[s.name]?.photo?`<img class="classification-avatar" src="${escapeHtml(db.players[s.name].photo)}" alt="" loading="lazy">`:''}<span>${escapeHtml(s.name)}${classificationInjuryIcon(s.name)}</span></span></td><td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td>${adminLogged?`<td>${s.winPct}%</td><td>${s.goals}</td><td>${s.assists}</td>`:''}</tr>`).join('')}</tbody></table></div><div class="sort-help">Pulsa en el nombre de una columna para ordenar. Vuelve a pulsar para invertir el orden.</div></div>`;
 }
+
+function recentMatchesPanelHtml(){
+  const latest=db.matches
+    .filter(m=>(m.mode||'f7')===currentSeasonMode)
+    .slice()
+    .sort((a,b)=>new Date(b.date)-new Date(a.date))
+    .slice(0,6);
+  return `<div class="panel season-recent-panel"><h3>Últimos partidos</h3>${matchRows(latest)}</div>`;
+}
+
+function renderClassification(c){
+  c.innerHTML=`<div class="season-grid season-players-only-grid">${classificationPanelHtml()}</div>`;
+}
+
+function renderSeasonOverview(c){
+  c.innerHTML=`<div class="season-grid season-overview-grid">${classificationPanelHtml()}${recentMatchesPanelHtml()}</div>`;
+}
+
 
 let cardAlbumPage=0;
 
@@ -9084,8 +9588,20 @@ function matchWeekday(dateString){
   if(!dateString)return '';
   const d=new Date(dateString+'T12:00:00');
   if(Number.isNaN(d.getTime()))return '';
-  return new Intl.DateTimeFormat('es-ES',{weekday:'short'}).format(d).replace('.','');
+  return new Intl.DateTimeFormat('es-ES',{weekday:'long'}).format(d).replace('.','');
 }
+function matchOutcomeLabel(m){
+  if(m.status==='in_progress')return 'Partido en juego';
+  const rs=Number(m.redScore),bs=Number(m.blackScore);
+  if(rs===bs)return 'Empate';
+  return rs>bs?'Victoria para l@s roj@s':'Victoria para l@s negr@s';
+}
+
+function matchScoreShirts(m,variant=''){
+  const rs=Number(m.redScore)||0,bs=Number(m.blackScore)||0;
+  return `<div class="match-score-shirts ${variant?`is-${variant}`:''}" aria-label="Resultado ${rs} a ${bs}"><span class="match-score-shirt red"><b>${rs}</b></span><span class="match-score-sep">-</span><span class="match-score-shirt black"><b>${bs}</b></span></div>`;
+}
+
 function matchRows(arr){
   return arr.length?`<div class="match-list">${arr.map(m=>matchRow(m,true)).join('')}</div>`:'<div class="empty">No hay partidos registrados.</div>'
 }
@@ -9101,12 +9617,11 @@ function matchRow(m,compact=false){
       <div class="latest-date-block">
         <div class="latest-date-line">
           <span class="match-date">${formatDate(m.date)}</span>
-          <span class="match-weekday">${escapeHtml(matchWeekday(m.date))}</span>
         </div>
         ${thumb}
       </div>
-      <div class="match-teams"><span class="redtxt">Roj@s</span> vs <span>Negr@s</span></div>
-      <div class="score">${score}</div>
+      <span class="match-weekday">${escapeHtml(matchWeekday(m.date))}</span>
+      ${matchScoreShirts(m,'latest')}
       <div class="match-row-actions">
         <span class="match-status ${live?'live':'final'}">${live?'● En juego':'Finalizado'}</span>
         ${live?`<button class="secondary match-edit-btn" onclick="event.stopPropagation();editPendingResult('${m.id}')">Editar resultado</button>`:''}
@@ -9114,10 +9629,9 @@ function matchRow(m,compact=false){
     </div>`
   }
 
-  return `<div class="match-row" onclick="openMatch('${m.id}')">
+  return `<div class="match-row calendar-match-row" onclick="openMatch('${m.id}')">
     <div class="match-date">${formatDate(m.date)}</div>
-    <div class="match-teams"><span class="redtxt">Roj@s</span> vs <span>Negr@s</span></div>
-    <div class="score">${score}</div>
+    ${matchScoreShirts(m,'calendar')}
     <div class="match-row-actions">
       <span class="match-status ${live?'live':'final'}">${live?'● En juego':'Finalizado'}</span>
       ${live?`<button class="secondary match-edit-btn" onclick="event.stopPropagation();editPendingResult('${m.id}')">Editar resultado</button>`:''}
@@ -9154,6 +9668,98 @@ async function getCardGenerationUsage(name){
   }catch(err){console.error(err);return {attempts_used:0,remaining:3,processing:false}}
 }
 
+const FITNESS_PRESETS=[
+  ['flor_de_la_vida','En la flor de la vida'],
+  ['mejor_que_nunca','Mejor que nunca'],
+  ['aceptable','Aceptable'],
+  ['con_dolores','Con dolores'],
+  ['medio_zombie','Medio zombie'],
+  ['de_resaca','De resaca']
+];
+
+function fitnessStatusLabel(value){
+  const v=String(value||'aceptable');
+  if(v==='lesionado')return 'Lesionado';
+  const hit=FITNESS_PRESETS.find(([key])=>key===v);
+  return hit?hit[1]:v;
+}
+function fitnessIsPreset(value){
+  const v=String(value||'');
+  return v==='lesionado'||FITNESS_PRESETS.some(([key])=>key===v);
+}
+function formatFitnessInjuryDate(value){
+  if(!value)return 'fecha desconocida';
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return 'fecha desconocida';
+  return `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
+}
+function fitnessStatusControl(name,p){
+  const current=String(p.fitnessStatus||'aceptable');
+  const custom=!fitnessIsPreset(current);
+  const options=[
+    ...FITNESS_PRESETS.map(([key,label])=>`<option value="${key}" ${current===key?'selected':''}>${label}</option>`),
+    `<option value="custom" ${custom?'selected':''}>Personalizado...</option>`,
+    `<option value="lesionado" ${current==='lesionado'?'selected':''}>Lesionado</option>`
+  ].join('');
+  return `<div class="fitness-quick-control">
+    <select data-fitness-select onchange="toggleFitnessCustomInput(this)">${options}</select>
+    <div class="fitness-custom-row ${custom?'show':''}" data-fitness-custom-row>
+      <input data-fitness-custom maxlength="60" value="${custom?escapeHtml(current):''}" placeholder="Escribe tu estado...">
+    </div>
+    <button type="button" class="secondary fitness-save-btn" onclick="saveQuickFitnessStatus('${escapeJs(name)}')">Actualizar estado</button>
+  </div>`;
+}
+function toggleFitnessCustomInput(select){
+  const item=select?.closest('.fitness-quick-control');
+  const row=item?.querySelector('[data-fitness-custom-row]');
+  if(row)row.classList.toggle('show',select.value==='custom');
+}
+async function saveQuickFitnessStatus(name){
+  const id=playerIdByName[name];
+  if(!id){toast('No se encontro el jugador');return}
+  const control=document.querySelector('.fitness-quick-control');
+  const select=control?.querySelector('[data-fitness-select]');
+  if(!select)return;
+  let value=select.value;
+  if(value==='custom'){
+    value=control.querySelector('[data-fitness-custom]')?.value.trim()||'';
+    if(!value){toast('Escribe un estado de forma');return}
+  }
+  try{
+    const fd=new FormData();
+    fd.append('player_id',String(id));
+    fd.append('fitness_status',value);
+    const r=await fetch(`${SUPABASE_URL}/functions/v1/update-player-profile`,{
+      method:'POST',
+      headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`},
+      body:fd
+    });
+    const data=await r.json();
+    if(!r.ok||!data.ok)throw new Error(data?.error||'No se pudo actualizar el estado');
+    await loadSupabaseData();
+    await openProfile(name);
+    toast('Estado de forma actualizado');
+  }catch(err){
+    console.error(err);
+    toast(err?.message||'No se pudo actualizar el estado')
+  }
+}
+function classificationInjuryIcon(name){
+  const p=db.players?.[name];
+  if(p?.fitnessStatus!=='lesionado')return '';
+  const date=formatFitnessInjuryDate(p.fitnessInjuredSince);
+  return `<span class="injury-icon-wrap" onclick="event.stopPropagation();toggleInjuryTooltip(this)" tabindex="0">
+    <span class="injury-plus" aria-label="Lesionado">+</span>
+    <span class="injury-tooltip">LESIONADO DESDE EL DIA ${date}</span>
+  </span>`;
+}
+function toggleInjuryTooltip(el){
+  document.querySelectorAll('.injury-icon-wrap.open').forEach(x=>{if(x!==el)x.classList.remove('open')});
+  el?.classList.toggle('open');
+}
+document.addEventListener('click',()=>document.querySelectorAll('.injury-icon-wrap.open').forEach(x=>x.classList.remove('open')));
+
+
 async function openProfile(name){
   ensurePlayers([name]);
   const p=db.players[name],s=stats().find(x=>x.name===name)||{played:0,wins:0,goals:0,assists:0,winPct:0};
@@ -9161,7 +9767,13 @@ async function openProfile(name){
   const used=Number(usage.attempts_used||0),remaining=Math.max(0,Number(usage.remaining??(3-used))),processing=!!usage.processing;
   const photo=p.photo?escapeHtml(p.photo):'';
   const avatarHtml=photo?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`:initials(name);
-  const cardButtons=`${p.card?`<button class="secondary profile-card-view-btn" onclick="openFifaCard('${escapeJs(name)}')"><span class="album-star">★</span> Ver carta <span class="album-star">★</span></button>`:''}<button class="${p.card?'secondary':'primary'}" ${remaining<=0||processing?'disabled':''} onclick="openCreateCard('${escapeJs(name)}')">${processing?'Generando…':remaining<=0?'Límite alcanzado':'Crear carta'}</button>${adminLogged?`<button class="secondary" onclick="openCardEditor('${escapeJs(name)}')">Editar carta</button>`:''}`;
+
+  const viewCard=p.card?`<button class="secondary profile-card-view-btn" onclick="openFifaCard('${escapeJs(name)}')"><span class="album-star">★</span> Ver carta <span class="album-star">★</span></button>`:'';
+  const createMain=!p.card?`<button class="primary" ${remaining<=0||processing?'disabled':''} onclick="openCreateCard('${escapeJs(name)}')">${processing?'Generando...':remaining<=0?'Limite alcanzado':'Crear carta'}</button>`:'';
+  const adminCard=adminLogged&&p.card?`<button class="secondary" onclick="openCardEditor('${escapeJs(name)}')">Editar carta</button>`:'';
+  const mainCardMeta=!p.card?`<div class="card-create-meta">Generaciones de carta: ${used}/3${remaining>0?' · quedan '+remaining:used>=3?' · limite alcanzado':''}</div>`:'';
+
+  const fitnessClass=p.fitnessStatus==='lesionado'?' fitness-injured':'';
   document.getElementById('profileContent').innerHTML=`
     <div class="profile-top">
       <div class="avatar ${photo?'clickable':''}" ${photo?`onclick="openPhotoViewer('${escapeJs(p.photo)}')"`:''}>${avatarHtml}</div>
@@ -9170,12 +9782,23 @@ async function openProfile(name){
     </div>
     <div class="profile-body">
       <div class="profile-info">
-        <div class="info-item"><small>Apodo</small>${escapeHtml(p.name||name)}</div><div class="info-item"><small>Nombre completo</small>${escapeHtml(p.fullName||name)}</div><div class="info-item"><small>Fecha de nacimiento</small>${formatBirthDate(p.birthDate)}</div><div class="info-item"><small>Edad</small>${p.birthDate?calculateAge(p.birthDate)+' años':'—'}</div><div class="info-item"><small>Pierna</small>${escapeHtml(p.leg||'—')}</div><div class="info-item"><small>Posición</small>${escapeHtml(p.position||'—')}</div>
+        <div class="info-item"><small>Apodo</small>${escapeHtml(p.name||name)}</div>
+        <div class="info-item"><small>Nombre completo</small>${escapeHtml(p.fullName||name)}</div>
+        <div class="info-item"><small>Fecha de nacimiento</small>${formatBirthDate(p.birthDate)}</div>
+        <div class="info-item"><small>Edad</small>${p.birthDate?calculateAge(p.birthDate)+' anos':'—'}</div>
+        <div class="info-item"><small>Pierna</small>${escapeHtml(p.leg||'—')}</div>
+        <div class="info-item"><small>Posicion</small>${escapeHtml(p.position||'—')}</div>
+        <div class="info-item fitness-info-item${fitnessClass}">
+          <small>Estado de forma</small>
+          <strong class="fitness-current-value">${escapeHtml(fitnessStatusLabel(p.fitnessStatus))}</strong>
+          ${p.fitnessStatus==='lesionado'&&p.fitnessInjuredSince?`<span class="fitness-injured-since">Desde ${formatFitnessInjuryDate(p.fitnessInjuredSince)}</span>`:''}
+          ${fitnessStatusControl(name,p)}
+        </div>
       </div>
-      <div class="card-create-meta">Generaciones de carta: ${used}/3${remaining>0?' · quedan '+remaining:used>=3?' · límite alcanzado':''}</div>
+      ${mainCardMeta}
     </div>
     <div class="profile-actions">
-      <div class="left-actions">${cardButtons}</div>
+      <div class="left-actions">${viewCard}${createMain}${adminCard}</div>
       <div class="right-actions"><button class="secondary" onclick="openPlayerEditor('${escapeJs(name)}')">Editar</button><button class="secondary" onclick="closeProfile()">Cerrar</button></div>
     </div>`;
   document.getElementById('profileModal').classList.add('open')
@@ -9325,7 +9948,16 @@ async function saveGeneratedCard(name,generationId){
 }
 async function openPlayerEditor(name){
   const p=db.players[name]||defaultPlayer(name);
-  document.getElementById('profileContent').innerHTML=`<div class="profile-body"><div class="kicker">EDITAR JUGADOR</div><h2 style="margin-bottom:18px">${escapeHtml(name)}</h2><div class="profile-edit-form"><label>Apodo<input id="editNickname" value="${escapeHtml(name)}" maxlength="50" placeholder="Apodo"></label><label>Nombre completo<input id="editFullName" value="${escapeHtml(p.fullName||name)}"></label><label>Fecha de nacimiento<input id="editBirthDate" type="date" value="${escapeHtml(p.birthDate||'')}" onchange="updateCalculatedAge()"></label><label>Edad calculada<input id="editCalculatedAge" value="${p.birthDate?calculateAge(p.birthDate)+' años':'—'}" disabled></label><label>Pierna<select id="editLeg"><option value="">—</option><option ${p.leg==='Derecha'?'selected':''}>Derecha</option><option ${p.leg==='Izquierda'?'selected':''}>Izquierda</option><option ${p.leg==='Ambas'?'selected':''}>Ambas</option></select></label><label>Posición<input id="editPosition" value="${escapeHtml(p.position||'')}" placeholder="Portero, defensa, medio…"></label><label>Competiciones<div style="display:flex;gap:12px;padding:10px 0"><span><input id="editF7" type="checkbox" ${p.football7?'checked':''}> Fútbol 7</span><span><input id="editF5" type="checkbox" ${p.football5?'checked':''}> Fútbol Sala</span></div></label><label class="full">Foto de perfil<input id="editPhoto" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">JPG, PNG o WebP. Se subirá al guardar.</small></label>${p.photo?`<div class="full"><img class="photo-preview" src="${escapeHtml(p.photo)}" alt="Foto actual"></div>`:''}${adminLogged?`<label class="full">Cambiar carta<input id="editPlayerCard" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">Solo administrador · JPG, PNG o WebP · máximo 8 MB. Si eliges una imagen, sustituirá la carta actual al guardar.</small></label>${p.card?`<div class="full card-current-preview"><div class="kicker" style="margin-bottom:8px">Carta actual</div><img src="${escapeHtml(p.card)}" alt="Carta actual de ${escapeHtml(name)}"></div>`:''}`:''}</div><div class="controls"><button class="primary" onclick="savePlayerProfile('${escapeJs(name)}')">Guardar cambios</button><button class="secondary" onclick="openProfile('${escapeJs(name)}')">Cancelar</button></div></div>`
+  const usage=await getCardGenerationUsage(name);
+  const used=Number(usage.attempts_used||0),remaining=Math.max(0,Number(usage.remaining??(3-used))),processing=!!usage.processing;
+  const cardManagement=p.card?`
+    <div class="full profile-edit-card-tools">
+      <div class="kicker">CARTA DEL JUGADOR</div>
+      <div class="card-create-meta">Generaciones de carta: ${used}/3${remaining>0?' · quedan '+remaining:used>=3?' · limite alcanzado':''}</div>
+      <button class="secondary" ${remaining<=0||processing?'disabled':''} onclick="openCreateCard('${escapeJs(name)}')">${processing?'Generando...':remaining<=0?'Limite alcanzado':'Crear carta'}</button>
+    </div>`:'';
+
+  document.getElementById('profileContent').innerHTML=`<div class="profile-body"><div class="kicker">EDITAR JUGADOR</div><h2 style="margin-bottom:18px">${escapeHtml(name)}</h2><div class="profile-edit-form"><label>Apodo<input id="editNickname" value="${escapeHtml(name)}" maxlength="50" placeholder="Apodo"></label><label>Nombre completo<input id="editFullName" value="${escapeHtml(p.fullName||name)}"></label><label>Fecha de nacimiento<input id="editBirthDate" type="date" value="${escapeHtml(p.birthDate||'')}" onchange="updateCalculatedAge()"></label><label>Edad calculada<input id="editCalculatedAge" value="${p.birthDate?calculateAge(p.birthDate)+' anos':'—'}" disabled></label><label>Pierna<select id="editLeg"><option value="">—</option><option ${p.leg==='Derecha'?'selected':''}>Derecha</option><option ${p.leg==='Izquierda'?'selected':''}>Izquierda</option><option ${p.leg==='Ambas'?'selected':''}>Ambas</option></select></label><label>Posicion<input id="editPosition" value="${escapeHtml(p.position||'')}" placeholder="Portero, defensa, medio..."></label><label>Competiciones<div style="display:flex;gap:12px;padding:10px 0"><span><input id="editF7" type="checkbox" ${p.football7?'checked':''}> Futbol 7</span><span><input id="editF5" type="checkbox" ${p.football5?'checked':''}> Futbol Sala</span></div></label><label class="full">Foto de perfil<input id="editPhoto" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">JPG, PNG o WebP. Se subira al guardar.</small></label>${p.photo?`<div class="full"><img class="photo-preview" src="${escapeHtml(p.photo)}" alt="Foto actual"></div>`:''}${cardManagement}${adminLogged?`<label class="full">Cambiar carta<input id="editPlayerCard" type="file" accept="image/jpeg,image/png,image/webp"><small style="font-weight:400;color:#7f8994">Solo administrador · JPG, PNG o WebP · maximo 8 MB. Si eliges una imagen, sustituira la carta actual al guardar.</small></label>${p.card?`<div class="full card-current-preview"><div class="kicker" style="margin-bottom:8px">Carta actual</div><img src="${escapeHtml(p.card)}" alt="Carta actual de ${escapeHtml(name)}"></div>`:''}`:''}</div><div class="controls"><button class="primary" onclick="savePlayerProfile('${escapeJs(name)}')">Guardar cambios</button><button class="secondary" onclick="openProfile('${escapeJs(name)}')">Cancelar</button></div></div>`
 }
 
 function updateCalculatedAge(){
@@ -10482,4 +11114,62 @@ document.addEventListener('keydown',e=>{
 <script type="module" src="./gps/index-integration.js"></script>
 <link rel="stylesheet" href="./gps/v196-overrides.css">
 <script src="./gps/v196-overrides.js"></script>
-<script type="module" src="./gps/report-overlay.js"></script></body></html>
+<script type="module" src="./gps/report-overlay.js"></script><script>
+/* v210 · tooltip de lesión fiable en móvil */
+(function(){
+  function closeTip(){
+    const tip=document.getElementById('patxMobileInjuryTooltip');
+    if(tip)tip.remove();
+  }
+
+  window.toggleInjuryTooltip=function(el){
+    if(!el)return;
+
+    if(!window.matchMedia('(max-width:700px)').matches){
+      document.querySelectorAll('.injury-icon-wrap.open').forEach(x=>{if(x!==el)x.classList.remove('open')});
+      el.classList.toggle('open');
+      return;
+    }
+
+    const existing=document.getElementById('patxMobileInjuryTooltip');
+    if(existing&&existing.__owner===el){
+      closeTip();
+      return;
+    }
+    closeTip();
+
+    const source=el.querySelector('.injury-tooltip');
+    const text=(source?.textContent||'LESIONADO').trim();
+
+    const tip=document.createElement('div');
+    tip.id='patxMobileInjuryTooltip';
+    tip.className='patx-mobile-injury-tooltip';
+    tip.textContent=text;
+    tip.__owner=el;
+    document.body.appendChild(tip);
+
+    const r=el.getBoundingClientRect();
+    const tr=tip.getBoundingClientRect();
+
+    let left=r.left+r.width/2-tr.width/2;
+    left=Math.max(8,Math.min(left,window.innerWidth-tr.width-8));
+
+    let top=r.top-tr.height-9;
+    if(top<8)top=r.bottom+9;
+    top=Math.max(8,Math.min(top,window.innerHeight-tr.height-8));
+
+    tip.style.left=Math.round(left)+'px';
+    tip.style.top=Math.round(top)+'px';
+  };
+
+  document.addEventListener('click',function(e){
+    if(e.target.closest?.('.injury-icon-wrap'))return;
+    closeTip();
+  });
+
+  window.addEventListener('resize',closeTip);
+  window.addEventListener('orientationchange',closeTip);
+  window.addEventListener('scroll',closeTip,true);
+})();
+</script>
+</body></html>

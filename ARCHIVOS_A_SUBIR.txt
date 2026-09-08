@@ -1,44 +1,75 @@
-PATXANGUILLES v202 · ARCHIVOS PARA GITHUB
-==========================================
+PATXANGUILLES v211 · PAQUETE FINAL PARA GITHUB
+================================================
 
-Sube el CONTENIDO de esta carpeta respetando exactamente las rutas.
+IMPORTANTE
+----------
+album.html NO está incluido.
+No se valida, no se copia y no se sobrescribe.
 
-RAÍZ
-----
+SUBE EL CONTENIDO DE ESTA CARPETA respetando exactamente las rutas.
+
+ARCHIVOS EN RAÍZ
+----------------
 index.html
-album.html
 gps-report.html
 gps-upload.html
 gps-calibrate.html
 gps-fit-mvp.js
+gps-compare.html
 
 CARPETA
 -------
-gps/   -> subir completa
+gps/  -> subir completa tal como aparece aquí
 
 ESTADO FINAL INCLUIDO
 ---------------------
-- versión/historial v202
-- Ley Rico cambia interpretación pero NO gira los mapas
-- Huerta izquierda / Muro derecha como orientación física fija
-- leyendas ATAQUE / DEFENSA reducidas
+- versión e historial v211
+- Temporada móvil abre Calendario
+- Jugador@s móvil muestra solo clasificación
+- escritorio: vista inicial Jugador@s + Últimos 50/50
+- escritorio: botón Jugador@s expande clasificación a una columna
+- ficha de partido escritorio con alineaciones y goles equilibrados
+- tooltip móvil de lesión con fecha
+- estado de forma editable desde ficha
+- estados personalizados y estados divertidos
+- + rojo de lesión con fondo blanco circular
+- 0 partidos + sin foto + sin carta -> abajo en Jugador@s
+- Últimos partidos y Calendario con estilos independientes
+- marcadores con camisetas roja/negra
+- Editar goles de nuevo en el bloque inferior
+- botón Añadir resultado con subtítulo
+- informe GPS integrado en la misma web
+- botón Comparar
+- comparación entre partidos / jugadores
+- Guardar informe PDF por bloques completos
 - mapa de calor estático
-- Recorrido con animación Play/Pause + slider 0′-60′
-- "Sobre el terreno real" satélite, panorámico y estático
-- Ley Rico móvil y refinamientos GPS previos
-- botón de borrado de informe para admin
-- icono GPS en camisetas con datos
-- mejoras responsive del informe
-- vídeo de fondo móvil estabilizado
-- álbum móvil con navegación táctil introducida en esta tanda
-- página 3 del álbum: slots 4, 5 y 6, 4 px hacia arriba
+- Recorrido animado
+- mapa satélite "Sobre el terreno real"
+- Ley Rico y refinamientos móviles finales
+- foto de perfil en informe
+- fecha D-M-A
+- ORIGEN FIT eliminado
+- Highlights refinados
+- resumen con distancia total recorrida
+- resto de cambios acumulados de esta tanda
 
-NO SUBIR
---------
+NO SUBIR DESDE ESTE PAQUETE
+---------------------------
+album.html
+
+NO SUBIR TAMPOCO
+----------------
 APLICAR_V*.py
+PREPARAR_PARA_GITHUB*.py
+*.bat de instalación/preparación
 LEEME de parches
 _files/
-ZIPs de pruebas
-carpetas PARA_SUBIR anteriores
+ZIPs
+carpetas PARA_SUBIR antiguas
 tests
 archivos temporales
+
+NOTA SUPABASE
+-------------
+Los cambios de fitness_status / fitness_injured_since y la Edge Function
+se hicieron en Supabase y no forman parte de los archivos de GitHub.
