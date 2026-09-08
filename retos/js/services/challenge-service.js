@@ -16,7 +16,17 @@
   }
 
   async function getToday() {
-    return firstRow(await rpc('get_or_create_daily_challenge'));
+    const challenge = firstRow(await rpc('get_or_create_daily_challenge'));
+    if (!challenge?.game_id) return challenge;
+
+    const { data: game, error } = await db
+      .from('game_definitions')
+      .select('category')
+      .eq('id', challenge.game_id)
+      .maybeSingle();
+
+    if (!error && game?.category) challenge.category = game.category;
+    return challenge;
   }
 
   async function startAttempt() {
