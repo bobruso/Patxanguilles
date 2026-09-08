@@ -18,27 +18,35 @@ Módulo independiente de minijuegos diarios. Requiere una cuenta Patxanguilles v
 12. `top-bins` — A la escuadra — más puntos gana.
 13. `var-offside` — VAR — más decisiones correctas gana.
 14. `football-trivia` — Trivial futbolero — cinco preguntas, puntuación calculada por el servidor.
+15. `spot-ball` — Spot the Ball — menor error de posición gana.
+16. `perfect-pass` — Pase perfecto — dibujar pases limpios evitando defensas.
+17. `free-kick` — Falta directa — superar la barrera y buscar precisión.
 
 Todos los juegos tienen 2 intentos diarios por defecto. El intento se consume en servidor al pulsar JUGAR; cerrar o recargar la página no lo restaura.
 
 ## Modo demo
 
-El modo demo no consume intentos ni guarda resultados:
+El modo demo no consume intentos ni guarda resultados. Formato: `/retos/?demo=<id>`.
 
-- `/retos/?demo=stop-seven`
-- `/retos/?demo=reaction`
-- `/retos/?demo=center-hit`
-- `/retos/?demo=speed-tap`
-- `/retos/?demo=color-reflex`
-- `/retos/?demo=quick-maths`
-- `/retos/?demo=grid-memory`
-- `/retos/?demo=sequence`
-- `/retos/?demo=keep-up`
-- `/retos/?demo=penalties`
-- `/retos/?demo=goalkeeper`
-- `/retos/?demo=top-bins`
-- `/retos/?demo=var-offside`
-- `/retos/?demo=football-trivia`
+IDs disponibles:
+
+- `stop-seven`
+- `reaction`
+- `center-hit`
+- `speed-tap`
+- `color-reflex`
+- `quick-maths`
+- `grid-memory`
+- `sequence`
+- `keep-up`
+- `penalties`
+- `goalkeeper`
+- `top-bins`
+- `var-offside`
+- `football-trivia`
+- `spot-ball`
+- `perfect-pass`
+- `free-kick`
 
 ## Clasificaciones
 
@@ -69,7 +77,7 @@ La pantalla muestra:
 
 ## Trivial editable
 
-El banco se administra en `/retos/admin-trivia.html` y exige rol `admin`.
+El banco se administra en `/retos/admin-trivia.html` y exige rol `admin`. En `/retos/` aparece un acceso `ADMIN TRIVIAL` solo para administradores.
 
 Cada pregunta contiene:
 
@@ -99,6 +107,8 @@ Puntuación por pregunta correcta: hasta 1000 puntos, bajando con el tiempo de r
 
 Los resultados reales se validan y guardan mediante RPC de Supabase; el navegador no inserta intentos directamente.
 
-## Juegos de fútbol
+## Familias de juegos
 
-`Que no caiga` usa física simple en tiempo real y Pointer Events. `Penaltis`, `Portero` y `A la escuadra` trabajan sobre una portería interactiva común. `VAR` es una simplificación deliberada del fuera de juego para convertirlo en un reto corto de decisión rápida, no un simulador completo del reglamento IFAB.
+Los juegos genéricos cubren timing, reflejos, velocidad, lógica y memoria.
+
+Los juegos futboleros incluyen física simple (`Que no caiga`), portería interactiva (`Penaltis`, `Portero`, `A la escuadra`), decisiones (`VAR`), conocimiento (`Trivial futbolero`), memoria espacial (`Spot the Ball`) y Canvas con trayectorias (`Pase perfecto`, `Falta directa`). `VAR` es una simplificación deliberada del fuera de juego para convertirlo en un reto corto, no un simulador completo del reglamento IFAB.
