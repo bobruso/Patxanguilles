@@ -83,22 +83,37 @@ function buildPosition(samples,{attackDirection=1,field=null}={}){
   return{grid,zoneGrid,avgPosition,trail,points:pts,thirds:thirds.map(v=>v/(totalTime||1)),sides:sides.map(v=>v/(totalTime||1)),attackDirection:direction,fieldCalibrated:!!fieldTf,lengthM:fieldTf?.lengthM||null,widthM:fieldTf?.widthM||null};
 }
 
-function roleFromFeatures({thirds=[],sides=[],spreadU=0,spreadV=0,sprintCount=0,durationS=0,avgPosition=null,attackDirection=1}={}){
-  const def=thirds[0]||0,mid=thirds[1]||0,att=thirds[2]||0,left=sides[0]||0,center=sides[1]||0,right=sides[2]||0,wide=Math.max(left,right),roam=(spreadU+spreadV)/2,sprintRate=durationS?sprintCount/(durationS/60):0;
+function sprintSpatialProfile(pos,sprints){
+  if(!pos?.points?.length||!Array.isArray(sprints)||!sprints.length)return{thirds:[0,0,0],sides:[0,0,0],count:0};
+  const thirds=[0,0,0],sides=[0,0,0];
+  for(const sp of sprints){
+    let best=pos.points[0],bestDt=Math.abs(Number(best.tSec)-Number(sp.tSec));
+    for(const pt of pos.points){const d=Math.abs(Number(pt.tSec)-Number(sp.tSec));if(d<bestDt){best=pt;bestDt=d}}
+    thirds[Math.min(2,Math.floor(clamp(Number(best.u)||0,0,0.9999)*3))]++;
+    sides[Math.min(2,Math.floor(clamp(Number(best.v)||0,0,0.9999)*3))]++;
+  }
+  const n=sprints.length||1;return{thirds:thirds.map(v=>v/n),sides:sides.map(v=>v/n),count:sprints.length};
+}
+
+function roleFromFeatures({thirds=[],sides=[],spreadU=0,spreadV=0,sprintCount=0,durationS=0,avgPosition=null,attackDirection=1,sprintThirds=[],sprintSides=[]}={}){
+  const def=thirds[0]||0,mid=thirds[1]||0,att=thirds[2]||0,left=sides[0]||0,center=sides[1]||0,right=sides[2]||0,wide=Math.max(left,right),roam=(spreadU+spreadV)/2,sprintRate=durationS?sprintCount/(durationS/60):0,sDef=sprintThirds[0]||0,sMid=sprintThirds[1]||0,sAtt=sprintThirds[2]||0,sWide=Math.max(sprintSides[0]||0,sprintSides[2]||0);
   const roles=[
-    {role:'Delantero centro',score:att*3.3+center*1.3+sprintRate*.35+(1-def)*.5},
-    {role:'Extremo',score:att*2.2+wide*2.4+sprintRate*.55+spreadU*.8},
-    {role:'Centrocampista',score:mid*3.1+roam*2.4+(1-Math.abs(att-def))*.7},
-    {role:'Interior / mediapunta',score:mid*1.8+att*2+center*.8+roam*1.4},
-    {role:'Lateral / carrilero',score:def*1.5+mid*1.5+wide*2.3+roam*1.2},
-    {role:'Defensa central',score:def*3.2+center*1.5+(1-att)*.8+(1-Math.min(1,spreadU*2))*.5}
+    {role:'Delantero centro',score:att*3.1+center*1.25+sAtt*.9+sprintRate*.18+(1-def)*.45},
+    {role:'Extremo',score:att*2.05+wide*2.2+sWide*1.15+sAtt*.55+sprintRate*.25+spreadU*.7},
+    {role:'Centrocampista',score:mid*3+roam*2.2+sMid*.55+(1-Math.abs(att-def))*.65},
+    {role:'Interior / mediapunta',score:mid*1.7+att*1.9+center*.8+roam*1.3+sAtt*.45+sMid*.35},
+    {role:'Lateral / carrilero',score:def*1.45+mid*1.45+wide*2.15+sWide*.9+sDef*.35+roam*1.05},
+    {role:'Defensa central',score:def*3.05+center*1.45+sDef*.75+(1-att)*.75+(1-Math.min(1,spreadU*2))*.45}
   ].sort((a,b)=>b.score-a.score);
   const total=roles.reduce((s,r)=>s+Math.max(0,r.score),0)||1,top=roles[0],confidence=Math.round(100*top.score/total);
   const notes=[];if(att>.45)notes.push('Gran parte del tiempo aparece en campo rival.');else if(def>.45)notes.push('Tendencia clara a ocupar zonas defensivas.');else notes.push('Ocupación bastante repartida alrededor del centro del campo.');
-  if(wide>.48)notes.push('Perfil muy abierto hacia banda.');if(roam>.22)notes.push('Amplio radio de acción.');if(sprintCount>=10)notes.push('Alta frecuencia de picos de sprint relativos.');
-  return{top:top.role,confidence,ranked:roles.slice(0,4).map(r=>({role:r.role,score:+r.score.toFixed(2)})),notes,avgU:avgPosition?+avgPosition.u.toFixed(3):null,avgV:avgPosition?+avgPosition.v.toFixed(3):null,spreadU:+spreadU.toFixed(3),spreadV:+spreadV.toFixed(3),attackDirection};
+  if(wide>.48)notes.push('Perfil muy abierto hacia banda.');if(roam>.22)notes.push('Amplio radio de acción.');if(sprintCount>=10)notes.push('Alta frecuencia de picos de sprint relativos.');if(sAtt>.5)notes.push(Math.round(sAtt*100)+'% de los picos de sprint aparecen en tercio atacante.');else if(sDef>.5)notes.push(Math.round(sDef*100)+'% de los picos de sprint aparecen en tercio defensivo.');if(sWide>.6)notes.push('Los sprints se concentran especialmente en zonas de banda.');
+  return{top:top.role,confidence,ranked:roles.slice(0,4).map(r=>({role:r.role,score:+r.score.toFixed(2)})),notes,avgU:avgPosition?+avgPosition.u.toFixed(3):null,avgV:avgPosition?+avgPosition.v.toFixed(3):null,spreadU:+spreadU.toFixed(3),spreadV:+spreadV.toFixed(3),attackDirection,sprintThirds:[sDef,sMid,sAtt],sprintSides:[sprintSides[0]||0,sprintSides[1]||0,sprintSides[2]||0]};
 }
-function roleEstimate(pos,ctx){if(!pos)return null;return roleFromFeatures({thirds:pos.thirds,sides:pos.sides,spreadU:std(pos.points.map(p=>p.u)),spreadV:std(pos.points.map(p=>p.v)),sprintCount:ctx.sprints.length,durationS:ctx.durationS,avgPosition:pos.avgPosition,attackDirection:pos.attackDirection})}
+function roleEstimate(pos,ctx){
+  if(!pos)return null;const sprintProfile=sprintSpatialProfile(pos,ctx.sprints);
+  return roleFromFeatures({thirds:pos.thirds,sides:pos.sides,spreadU:std(pos.points.map(p=>p.u)),spreadV:std(pos.points.map(p=>p.v)),sprintCount:ctx.sprints.length,durationS:ctx.durationS,avgPosition:pos.avgPosition,attackDirection:pos.attackDirection,sprintThirds:sprintProfile.thirds,sprintSides:sprintProfile.sides});
+}
 
 function speedZones(samples){const defs=[['Caminar',0,7],['Trote',7,14.4],['Carrera',14.4,19.8],['Alta velocidad',19.8,25.2],['Muy alta velocidad',25.2,Infinity]].map(([name,min,max])=>({name,min,max,distanceM:0,timeS:0}));for(const s of samples){const z=defs.find(z=>s.speedKmh>=z.min&&s.speedKmh<z.max)||defs.at(-1);z.distanceM+=s.dInc||0;z.timeS+=s.dt||0}return defs.map(z=>({...z,distanceM:+z.distanceM.toFixed(1),timeS:+z.timeS.toFixed(1)}))}
 function hrZones(samples,referenceMax){if(!referenceMax)return[];const defs=[[1,.5,.6],[2,.6,.7],[3,.7,.8],[4,.8,.9],[5,.9,1.2]].map(([zone,min,max])=>({zone,name:'Zona '+zone,minPct:min,maxPct:max,lowBpm:Math.round(referenceMax*min),highBpm:Math.round(referenceMax*Math.min(1,max)),timeS:0}));for(const s of samples){if(!(s.hr>0))continue;const p=s.hr/referenceMax,z=defs.find(z=>p>=z.minPct&&p<z.maxPct)||defs.at(-1);z.timeS+=s.dt||0}return defs.map(z=>({...z,timeS:+z.timeS.toFixed(1)}))}
@@ -121,4 +136,4 @@ export async function analyzeFit(buf,options={}){
 
 export function toSupabaseRow(matchId,playerId,a){const p=a?.analysisDetail?.positional||{};return{match_id:matchId,player_id:playerId,source_format:'fit',source_started_at:a.sourceStartedAt,duration_s:a.durationS,moving_time_s:a.movingTimeS,distance_m:a.distanceM,top_speed_kmh:a.topSpeedKmh,avg_speed_kmh:a.avgSpeedKmh,sprint_count:a.sprintCount,high_intensity_distance_m:a.highIntensityDistanceM,avg_hr:a.avgHr,max_hr:a.maxHr,sample_count:a.sampleCount,has_gps:a.hasGps,has_hr:a.hasHr,heatmap_grid:a.heatmapGrid,zone_grid:a.zoneGrid,avg_position:a.avgPosition,trail:a.trail,speed_zones:a.speedZones,analysis_detail:a.analysisDetail||{},pitch_id:p.pitchId??null,attack_direction:p.attackDirection===-1?-1:1,analysis_version:4,updated_at:new Date().toISOString()}}
 export function fromSupabaseRow(row){if(!row)return null;const a={sourceStartedAt:row.source_started_at,durationS:Number(row.duration_s)||0,movingTimeS:Number(row.moving_time_s)||0,distanceM:Number(row.distance_m)||0,topSpeedKmh:Number(row.top_speed_kmh)||0,avgSpeedKmh:Number(row.avg_speed_kmh)||0,sprintCount:Number(row.sprint_count)||0,highIntensityDistanceM:Number(row.high_intensity_distance_m)||0,avgHr:row.avg_hr==null?null:Number(row.avg_hr),maxHr:row.max_hr==null?null:Number(row.max_hr),sampleCount:Number(row.sample_count)||0,hasGps:!!row.has_gps,hasHr:!!row.has_hr,heatmapGrid:row.heatmap_grid||[],zoneGrid:row.zone_grid||[],avgPosition:row.avg_position||null,trail:row.trail||[],speedZones:row.speed_zones||[],analysisDetail:row.analysis_detail||{}};a.analysisDetail.positional=a.analysisDetail.positional||{};a.analysisDetail.positional.attackDirection=row.attack_direction===-1?-1:(a.analysisDetail.positional.attackDirection===-1?-1:1);return a}
-export function setAttackDirection(analysis,direction){if(!analysis)return analysis;const target=Number(direction)===-1?-1:1,pos=analysis.analysisDetail?.positional||{},current=Number(pos.attackDirection)===-1?-1:1;if(target===current)return analysis;const clone=typeof structuredClone==='function'?structuredClone(analysis):JSON.parse(JSON.stringify(analysis));const p=clone.analysisDetail.positional||{},speed=clone.analysisDetail.speed||{};clone.heatmapGrid=(clone.heatmapGrid||[]).map(row=>row.slice().reverse());clone.zoneGrid=(clone.zoneGrid||[]).map(row=>row.slice().reverse());if(clone.avgPosition)clone.avgPosition={...clone.avgPosition,u:1-Number(clone.avgPosition.u||0)};clone.trail=(clone.trail||[]).map(x=>({...x,u:1-Number(x.u||0)}));p.thirds=(p.thirds||[]).slice().reverse();p.attackDirection=target;const oldRole=p.role||{},avg=clone.avgPosition||{u:.5,v:.5};p.role=roleFromFeatures({thirds:p.thirds,sides:p.sides||[],spreadU:Number(oldRole.spreadU)||0,spreadV:Number(oldRole.spreadV)||0,sprintCount:Number(clone.sprintCount)||speed.sprints?.length||0,durationS:Number(clone.durationS)||0,avgPosition:avg,attackDirection:target});return clone}
+export function setAttackDirection(analysis,direction){if(!analysis)return analysis;const target=Number(direction)===-1?-1:1,pos=analysis.analysisDetail?.positional||{},current=Number(pos.attackDirection)===-1?-1:1;if(target===current)return analysis;const clone=typeof structuredClone==='function'?structuredClone(analysis):JSON.parse(JSON.stringify(analysis));const p=clone.analysisDetail.positional||{},speed=clone.analysisDetail.speed||{};clone.heatmapGrid=(clone.heatmapGrid||[]).map(row=>row.slice().reverse());clone.zoneGrid=(clone.zoneGrid||[]).map(row=>row.slice().reverse());if(clone.avgPosition)clone.avgPosition={...clone.avgPosition,u:1-Number(clone.avgPosition.u||0)};clone.trail=(clone.trail||[]).map(x=>({...x,u:1-Number(x.u||0)}));p.thirds=(p.thirds||[]).slice().reverse();p.attackDirection=target;const oldRole=p.role||{},avg=clone.avgPosition||{u:.5,v:.5};p.role=roleFromFeatures({thirds:p.thirds,sides:p.sides||[],spreadU:Number(oldRole.spreadU)||0,spreadV:Number(oldRole.spreadV)||0,sprintCount:Number(clone.sprintCount)||speed.sprints?.length||0,durationS:Number(clone.durationS)||0,avgPosition:avg,attackDirection:target,sprintThirds:p.sprintProfile?.thirds||[],sprintSides:p.sprintProfile?.sides||[]});return clone}
