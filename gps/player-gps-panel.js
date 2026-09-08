@@ -1,4 +1,5 @@
 import{drawAllPitchMaps}from'./pitch-maps.js';
+import{drawAllTimeCharts}from'./time-charts.js';
 
 const esc=v=>String(v??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
 const finite=v=>Number.isFinite(Number(v));
@@ -48,13 +49,14 @@ export function playerGpsPanelHtml(a,{playerName='',showSave=false,showBack=fals
     </div>
 
     <section class="patx-gps-section patx-gps-wide"><div class="patx-gps-section-head"><span>VELOCIDAD Y DISTANCIA</span><h4>Breakdown de carrera</h4></div>
+      ${chartCard('Velocidad durante el partido','La línea temporal muestra picos, alta intensidad y sprints','speed')}
       <div class="patx-gps-zone-table">${(speed.zones||a?.speedZones||[]).map(z=>zoneRow(z,a?.distanceM)).join('')}</div>
       <div class="patx-gps-inline-metrics">
         ${mini('Sprints detectados',a?.sprintCount??0)}${mini('Carreras alta intensidad',speed.highIntensityRuns?.length??'—')}${mini('Aceleraciones fuertes',speed.accelerations?.length??'—')}${mini('Deceleraciones fuertes',speed.decelerations?.length??'—')}${mini('Distancia / min',finite(work.distancePerMin)?Math.round(work.distancePerMin)+' m':'—')}${mini('Alta intensidad / min',finite(work.highIntensityDistancePerMin)?Math.round(work.highIntensityDistancePerMin)+' m':'—')}
       </div>
     </section>
 
-    ${hasHr?`<section class="patx-gps-section patx-gps-wide"><div class="patx-gps-section-head"><span>FRECUENCIA CARDÍACA</span><h4>Pulsaciones y zonas</h4></div><div class="patx-gps-inline-metrics">${mini('FC media',(a.avgHr??'—')+' ppm')}${mini('FC máxima',(a.maxHr??'—')+' ppm')}${mini('Referencia máx.',(hr.referenceMaxBpm??'—')+' ppm')}${mini('Cadencia media',work.avgCadence==null?'—':work.avgCadence+' spm')}</div><div class="patx-gps-hr-zones">${(hr.zones||[]).map(z=>hrZone(z,a?.durationS)).join('')}</div></section>`:''}
+    ${hasHr?`<section class="patx-gps-section patx-gps-wide"><div class="patx-gps-section-head"><span>FRECUENCIA CARDÍACA</span><h4>Pulsaciones y zonas</h4></div>${chartCard('Pulso durante el partido','Evolución de las pulsaciones y límites aproximados de zonas','hr')}<div class="patx-gps-inline-metrics">${mini('FC media',(a.avgHr??'—')+' ppm')}${mini('FC máxima',(a.maxHr??'—')+' ppm')}${mini('Referencia máx.',(hr.referenceMaxBpm??'—')+' ppm')}${mini('Cadencia media',work.avgCadence==null?'—':work.avgCadence+' spm')}</div><div class="patx-gps-hr-zones">${(hr.zones||[]).map(z=>hrZone(z,a?.durationS)).join('')}</div></section>`:''}
 
     ${work.fatigue?`<section class="patx-gps-section patx-gps-wide"><div class="patx-gps-section-head"><span>CARGA Y FATIGA</span><h4>Primera mitad vs segunda mitad</h4></div><div class="patx-gps-inline-metrics">${mini('1ª mitad',fmtKm(work.fatigue.first?.distanceM))}${mini('2ª mitad',fmtKm(work.fatigue.second?.distanceM))}${mini('Ritmo 1ª',Math.round(work.fatigue.first?.distancePerMin||0)+' m/min')}${mini('Ritmo 2ª',Math.round(work.fatigue.second?.distancePerMin||0)+' m/min')}${mini('Cambio de ritmo',(work.fatigue.distanceRateChangePct>0?'+':'')+work.fatigue.distanceRateChangePct+'%')}</div><p class="patx-gps-note">${work.fatigue.provisional?'No se ha detectado un descanso fiable; la comparación divide la grabación en dos de forma provisional.':'La comparación utiliza las dos primeras partes detectadas en la grabación.'}</p></section>`:''}
   </section>`;
@@ -63,9 +65,11 @@ export function playerGpsPanelHtml(a,{playerName='',showSave=false,showBack=fals
 function stat(label,value,caption){return `<div class="patx-gps-stat"><span>${label}</span><strong>${value}</strong><small>${caption}</small></div>`}
 function mini(label,value){return `<div class="patx-gps-mini"><span>${label}</span><strong>${value}</strong></div>`}
 function mapCard(title,caption,key){return `<article class="patx-gps-map-card"><div class="patx-gps-map-title"><strong>${title}</strong><span>${caption}</span></div><div class="patx-gps-canvas-wrap"><canvas data-gps-map="${key}" aria-label="${title}"></canvas></div></article>`}
+function chartCard(title,caption,key){return `<article class="patx-gps-chart-card"><div class="patx-gps-chart-title"><strong>${title}</strong><span>${caption}</span></div><div class="patx-gps-chart-wrap"><canvas data-gps-chart="${key}" aria-label="${title}"></canvas></div></article>`}
 function bar(label,value){const p=Math.round((Number(value)||0)*100);return `<div class="patx-gps-bar-row"><div><span>${label}</span><b>${p}%</b></div><i><em style="width:${Math.min(100,p)}%"></em></i></div>`}
 function zoneRow(z,total){const d=Number(z.distanceM)||0,p=Number(total)>0?d/Number(total)*100:0;return `<div class="patx-gps-zone-row"><span>${esc(z.name)}</span><div><i><em style="width:${Math.min(100,p)}%"></em></i></div><b>${fmtKm(d)}</b><small>${fmtTime(z.timeS)}</small></div>`}
 function hrZone(z,duration){const p=Number(duration)>0?(Number(z.timeS)||0)/Number(duration)*100:0;return `<div class="patx-gps-hr-row"><span>Z${z.zone} · ${z.lowBpm}-${z.highBpm} ppm</span><i><em style="width:${Math.min(100,p)}%"></em></i><b>${Math.round(p)}%</b></div>`}
 
-export function mountPlayerGpsPanel(container,analysis,options={}){if(!container)return null;container.innerHTML=playerGpsPanelHtml(analysis,options);const panel=container.querySelector('[data-patx-gps-panel]');if(panel)requestAnimationFrame(()=>drawAllPitchMaps(panel,analysis));return panel}
-export function redrawPlayerGpsPanel(panel,analysis){if(panel)drawAllPitchMaps(panel,analysis)}
+function drawAll(panel,analysis){drawAllPitchMaps(panel,analysis);drawAllTimeCharts(panel,analysis)}
+export function mountPlayerGpsPanel(container,analysis,options={}){if(!container)return null;container.innerHTML=playerGpsPanelHtml(analysis,options);const panel=container.querySelector('[data-patx-gps-panel]');if(panel)requestAnimationFrame(()=>drawAll(panel,analysis));return panel}
+export function redrawPlayerGpsPanel(panel,analysis){if(panel)drawAll(panel,analysis)}
