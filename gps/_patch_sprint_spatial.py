@@ -67,3 +67,4 @@ new2="  ${sprintSpatialPanelHtml(a,speed)}\n  ${fatiguePanelHtml(speed,a?.durati
 if old2 not in s: raise SystemExit('panel section target missing')
 s=s.replace(old2,new2,1)
 p.write_text(s)
+# trigger workflow
