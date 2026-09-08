@@ -58,8 +58,19 @@ function detectRelativeSprintPeaks(samples){
   }
   selected.sort((a,b)=>a.index-b.index);
   const peakValues=selected.map(p=>p.peakSpeedKmh),cutoff=Math.max(runningFloor,selected.length>=8?percentile(peakValues,.85):robustTop*.80);
-  const sprints=selected.filter(p=>p.peakSpeedKmh>=cutoff).map(p=>({tSec:+samples[p.index].tSec.toFixed(1),peakSpeedKmh:+p.peakSpeedKmh.toFixed(2),prominenceKmh:+p.prominenceKmh.toFixed(2)}));
-  return{model:'relative_peak_v1',cutoffKmh:+cutoff.toFixed(2),robustTopKmh:+robustTop.toFixed(2),runningFloorKmh:+runningFloor.toFixed(2),candidatePeakCount:selected.length,sprints};
+  const eventFloor=Math.max(runningFloor,cutoff*.78);
+  const sprints=selected.filter(p=>p.peakSpeedKmh>=cutoff).map(p=>{
+    let a=p.index,b=p.index;
+    while(a>0&&values[a-1]>=eventFloor&&samples[p.index].tSec-samples[a-1].tSec<=12)a--;
+    while(b<values.length-1&&values[b+1]>=eventFloor&&samples[b+1].tSec-samples[p.index].tSec<=12)b++;
+    let distanceM=0;for(let j=a;j<=b;j++)distanceM+=Number(samples[j].dInc)||0;
+    const startSec=Number(samples[a].tSec)||0,endSec=Number(samples[b].tSec)||startSec,durationS=Math.max(0,endSec-startSec),peakSec=Number(samples[p.index].tSec)||0;
+    return{tSec:+peakSec.toFixed(1),startSec:+startSec.toFixed(1),endSec:+endSec.toFixed(1),durationS:+durationS.toFixed(1),distanceM:+distanceM.toFixed(1),peakSpeedKmh:+p.peakSpeedKmh.toFixed(2),prominenceKmh:+p.prominenceKmh.toFixed(2),relativeIntensityPct:robustTop>0?Math.round(p.peakSpeedKmh/robustTop*100):null};
+  });
+  for(let i=0;i<sprints.length;i++)sprints[i].recoveryToNextS=i<sprints.length-1?+Math.max(0,sprints[i+1].startSec-sprints[i].endSec).toFixed(1):null;
+  const longest=sprints.slice().sort((a,b)=>b.distanceM-a.distanceM)[0]||null,explosive=sprints.slice().sort((a,b)=>(b.prominenceKmh/Math.max(.5,b.durationS))-(a.prominenceKmh/Math.max(.5,a.durationS)))[0]||null,fastest=sprints.slice().sort((a,b)=>b.peakSpeedKmh-a.peakSpeedKmh)[0]||null,totalSprintDistanceM=sprints.reduce((n,x)=>n+x.distanceM,0),recoveries=sprints.map(x=>x.recoveryToNextS).filter(Number.isFinite),avgRecoveryS=recoveries.length?mean(recoveries):null;
+  const eventSummary={count:sprints.length,totalSprintDistanceM:+totalSprintDistanceM.toFixed(1),avgRecoveryS:Number.isFinite(avgRecoveryS)?+avgRecoveryS.toFixed(1):null,densityPer10Min:samples.length&&samples.at(-1).tSec>0?+(sprints.length/(samples.at(-1).tSec/600)).toFixed(2):0,longest:longest?{tSec:longest.tSec,distanceM:longest.distanceM,durationS:longest.durationS}:null,fastest:fastest?{tSec:fastest.tSec,peakSpeedKmh:fastest.peakSpeedKmh}:null,mostExplosive:explosive?{tSec:explosive.tSec,prominenceKmh:explosive.prominenceKmh,durationS:explosive.durationS}:null};
+  return{model:'relative_peak_v2',cutoffKmh:+cutoff.toFixed(2),robustTopKmh:+robustTop.toFixed(2),runningFloorKmh:+runningFloor.toFixed(2),eventFloorKmh:+eventFloor.toFixed(2),candidatePeakCount:selected.length,eventSummary,sprints};
 }
 
 function downsampleSeries(samples,key,maxPoints=360){const src=samples.filter(s=>Number.isFinite(s[key]));if(!src.length)return[];const step=Math.max(1,Math.ceil(src.length/maxPoints));return src.filter((_,i)=>i%step===0||i===src.length-1).map(s=>({tSec:+s.tSec.toFixed(1),value:+s[key].toFixed(2)}))}
