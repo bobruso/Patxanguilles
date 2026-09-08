@@ -31,8 +31,8 @@ export function buildFatigueProfile(speed={},durationS=0){
   const capacitySignals=[speedRetention,peakRetention].filter(Number.isFinite),capacityDrop=capacitySignals.filter(v=>v<.90).length,capacityMild=capacitySignals.filter(v=>v<.95).length,recoveryWorse=finite(recoveryRatio)&&recoveryRatio>1.18,densityWorse=finite(densityRetention)&&densityRetention<.72;
   let label='Sin lectura suficiente',level='unknown';
   if(finite(retention)){
-    if(capacityDrop>=1&&(capacityMild>=2||recoveryWorse)){label='Descenso claro de intensidad';level='clear'}
-    else if(capacityMild>=1||recoveryWorse||(densityWorse&&capacitySignals.some(v=>v<.98))){label='Descenso leve de intensidad';level='mild'}
+    if(capacityDrop>=2&&recoveryWorse){label='Descenso claro de intensidad';level='clear'}
+    else if(capacityMild>=2&&recoveryWorse){label='Descenso leve de intensidad';level='mild'}
     else{label='Intensidad bastante estable';level='stable'}
   }
   const notes=[];
