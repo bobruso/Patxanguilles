@@ -25,18 +25,9 @@
 
     <section id="challengePanel" class="panel challenge-panel loading">
       <div class="stats">
-        <div class="stat">
-          <div class="stat-label">Tu mejor marca</div>
-          <div id="bestValue" class="stat-value">—</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Intentos</div>
-          <div id="attemptsValue" class="stat-value">—</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Tipo</div>
-          <div id="categoryValue" class="stat-value">—</div>
-        </div>
+        <div class="stat"><div class="stat-label">Tu mejor marca</div><div id="bestValue" class="stat-value">—</div></div>
+        <div class="stat"><div class="stat-label">Intentos</div><div id="attemptsValue" class="stat-value">—</div></div>
+        <div class="stat"><div class="stat-label">Tipo</div><div id="categoryValue" class="stat-value">—</div></div>
       </div>
       <button id="playButton" class="play-button" type="button" disabled>CARGANDO…</button>
       <p id="microcopy" class="microcopy">Validando sesión y reto.</p>
@@ -45,10 +36,7 @@
     <div id="errorBox" class="error-box" hidden></div>
 
     <section id="gamePanel" class="panel game-panel" hidden>
-      <div class="game-header">
-        <div id="gameTitle" class="game-title">Juego</div>
-        <div id="gameAttempt" class="game-attempt"></div>
-      </div>
+      <div class="game-header"><div id="gameTitle" class="game-title">Juego</div><div id="gameAttempt" class="game-attempt"></div></div>
       <div id="gameStage" class="game-stage"></div>
     </section>
 
@@ -59,52 +47,23 @@
     </section>
 
     <section class="leaderboard">
-      <div class="section-head">
-        <h2>Clasificación de hoy</h2>
-        <div class="section-note">Mejor intento de cada jugador</div>
-      </div>
-      <div id="ranking" class="panel ranking">
-        <div class="empty">Cargando clasificación…</div>
-      </div>
+      <div class="section-head"><h2>Clasificación de hoy</h2><div class="section-note">Mejor intento de cada jugador</div></div>
+      <div id="ranking" class="panel ranking"><div class="empty">Cargando clasificación…</div></div>
     </section>
 
     <section class="leaderboard">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow neutral">TEMPORADA</div>
-          <h2 id="seasonName">Clasificación mensual</h2>
-        </div>
-        <div class="section-note">Puntos según posición diaria</div>
-      </div>
-      <div id="seasonRanking" class="panel ranking">
-        <div class="empty">Cargando temporada…</div>
-      </div>
+      <div class="section-head"><div><div class="eyebrow neutral">TEMPORADA</div><h2 id="seasonName">Clasificación mensual</h2></div><div class="section-note">Puntos según posición diaria</div></div>
+      <div id="seasonRanking" class="panel ranking"><div class="empty">Cargando temporada…</div></div>
     </section>
 
     <section class="leaderboard">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow neutral">AYER</div>
-          <h2 id="yesterdayTitle">Resultados anteriores</h2>
-        </div>
-        <div class="section-note">Último reto cerrado</div>
-      </div>
-      <div id="yesterdayRanking" class="panel ranking">
-        <div class="empty">Todavía no hay un reto anterior.</div>
-      </div>
+      <div class="section-head"><div><div class="eyebrow neutral">AYER</div><h2 id="yesterdayTitle">Resultados anteriores</h2></div><div class="section-note">Último reto cerrado</div></div>
+      <div id="yesterdayRanking" class="panel ranking"><div class="empty">Todavía no hay un reto anterior.</div></div>
     </section>
 
     <section class="leaderboard">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow neutral">ARCHIVO</div>
-          <h2>Historial de retos</h2>
-        </div>
-        <div class="section-note">Tus resultados y ganadores</div>
-      </div>
-      <div id="historyList" class="history-list">
-        <div class="panel empty">Cargando historial…</div>
-      </div>
+      <div class="section-head"><div><div class="eyebrow neutral">ARCHIVO</div><h2>Historial de retos</h2></div><div class="section-note">Tus resultados y ganadores</div></div>
+      <div id="historyList" class="history-list"><div class="panel empty">Cargando historial…</div></div>
     </section>
   </main>
 
@@ -121,6 +80,11 @@
   <script src="./js/games/quick-maths.js"></script>
   <script src="./js/games/grid-memory.js"></script>
   <script src="./js/games/sequence.js"></script>
+  <script src="./js/games/keep-up.js"></script>
+  <script src="./js/games/penalties.js"></script>
+  <script src="./js/games/goalkeeper.js"></script>
+  <script src="./js/games/top-bins.js"></script>
+  <script src="./js/games/var-offside.js"></script>
   <script src="./js/app.js"></script>
 </body>
 </html>
