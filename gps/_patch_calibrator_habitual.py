@@ -27,3 +27,4 @@ s=s.replace("${p.is_active?'':' · INACTIVO'}","${p.is_active?' · HABITUAL':' �
 s=s.replace("${p.is_active?'Desactivar':'Activar'}","${p.is_active?'Desactivar':'Usar como habitual'}")
 
 p.write_text(s)
+# trigger
