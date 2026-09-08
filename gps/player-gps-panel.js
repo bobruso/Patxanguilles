@@ -7,11 +7,13 @@ const fmtKmh=v=>finite(v)?Number(v).toFixed(1)+' km/h':'—';
 const fmtTime=s=>{if(!finite(s))return'—';const n=Math.max(0,Math.round(Number(s))),m=Math.floor(n/60),sec=n%60;return m+'m '+String(sec).padStart(2,'0')+'s'};
 
 export function playerGpsPanelHtml(a,{playerName='',showSave=false,showBack=false}={}){
-  const d=a?.analysisDetail||{},pos=d.positional||{},speed=d.speed||{},hr=d.heartRate||{},work=d.workload||{},role=pos.role||null,thirds=pos.thirds||[],sides=pos.sides||[],hasHr=!!a?.hasHr,reliable=!!pos.orientationReliable;
+  const d=a?.analysisDetail||{},pos=d.positional||{},speed=d.speed||{},hr=d.heartRate||{},work=d.workload||{},role=pos.role||null,thirds=pos.thirds||[],sides=pos.sides||[],hasHr=!!a?.hasHr,reliable=!!pos.orientationReliable,fieldCalibrated=!!pos.fieldCalibrated,periods=pos.periods||[];
   const thirdLabels=reliable?['Tercio defensivo','Tercio medio','Tercio atacante']:['Tercio A','Tercio central','Tercio B'];
+  const roleState=reliable?'':fieldCalibrated?' · falta sentido de ataque':' · campo sin calibrar';
+  const pitchContext=pos.pitchName?`<div class="patx-gps-note" style="margin:5px 0 0">Campo: <b>${esc(pos.pitchName)}</b>${finite(pos.lengthM)&&finite(pos.widthM)?` · ${Number(pos.lengthM).toFixed(0)} × ${Number(pos.widthM).toFixed(0)} m`:''}${periods.length?` · ${periods.length} partes detectadas`:''}</div>`:'';
   return `<section class="patx-gps-panel patx-gps-report" data-patx-gps-panel>
     <div class="patx-gps-head">
-      <div class="patx-gps-title-row">${showBack?'<button type="button" class="patx-gps-back" data-gps-back>← Partido</button>':''}<div><div class="patx-gps-kicker">ANÁLISIS GPS DEL PARTIDO</div><h3>${esc(playerName||'Jugador')}</h3>${role?`<div class="patx-gps-role-pill"><b>${reliable?esc(role.top):'Perfil provisional'}</b><span>${role.confidence}% confianza${reliable?'':' · campo sin calibrar'}</span></div>`:''}</div></div>
+      <div class="patx-gps-title-row">${showBack?'<button type="button" class="patx-gps-back" data-gps-back>← Partido</button>':''}<div><div class="patx-gps-kicker">ANÁLISIS GPS DEL PARTIDO</div><h3>${esc(playerName||'Jugador')}</h3>${role?`<div class="patx-gps-role-pill"><b>${reliable?esc(role.top):'Perfil provisional'}</b><span>${role.confidence}% confianza${roleState}</span></div>`:''}${pitchContext}</div></div>
       <div class="patx-gps-head-actions">${showSave?'<button type="button" class="patx-gps-save" data-gps-save>Guardar datos</button>':''}</div>
     </div>
 
@@ -36,7 +38,7 @@ export function playerGpsPanelHtml(a,{playerName='',showSave=false,showBack=fals
       <section class="patx-gps-section"><div class="patx-gps-section-head"><span>POSICIÓN</span><h4>Ocupación del campo</h4></div>
         <div class="patx-gps-bars">${bar(thirdLabels[0],thirds[0])}${bar(thirdLabels[1],thirds[1])}${bar(thirdLabels[2],thirds[2])}</div>
         <div class="patx-gps-subtitle">Distribución lateral</div><div class="patx-gps-bars compact">${bar('Izquierda',sides[0])}${bar('Centro',sides[1])}${bar('Derecha',sides[2])}</div>
-        ${!reliable?'<p class="patx-gps-note">Todavía no asignamos “defensivo” y “atacante” a los extremos del campo. Al calibrar las cuatro esquinas podremos orientar el mapa correctamente y convertir Tercio A/B en defensa/ataque.</p>':''}
+        ${!reliable?`<p class="patx-gps-note">${fieldCalibrated?'El campo ya está calibrado. Falta indicar hacia qué portería atacaba el jugador en la primera parte para convertir Tercio A/B en defensa/ataque.':'Todavía no asignamos “defensivo” y “atacante” a los extremos. Hay que calibrar las cuatro esquinas del campo.'}</p>`:''}
       </section>
 
       <section class="patx-gps-section"><div class="patx-gps-section-head"><span>PERFIL</span><h4>${reliable?'Posición estimada':'Lectura provisional del rol'}</h4></div>
@@ -54,7 +56,7 @@ export function playerGpsPanelHtml(a,{playerName='',showSave=false,showBack=fals
 
     ${hasHr?`<section class="patx-gps-section patx-gps-wide"><div class="patx-gps-section-head"><span>FRECUENCIA CARDÍACA</span><h4>Pulsaciones y zonas</h4></div><div class="patx-gps-inline-metrics">${mini('FC media',(a.avgHr??'—')+' ppm')}${mini('FC máxima',(a.maxHr??'—')+' ppm')}${mini('Referencia máx.',(hr.referenceMaxBpm??'—')+' ppm')}${mini('Cadencia media',work.avgCadence==null?'—':work.avgCadence+' spm')}</div><div class="patx-gps-hr-zones">${(hr.zones||[]).map(z=>hrZone(z,a?.durationS)).join('')}</div></section>`:''}
 
-    ${work.fatigue?`<section class="patx-gps-section patx-gps-wide"><div class="patx-gps-section-head"><span>CARGA Y FATIGA</span><h4>Primera mitad vs segunda mitad</h4></div><div class="patx-gps-inline-metrics">${mini('1ª mitad',fmtKm(work.fatigue.first?.distanceM))}${mini('2ª mitad',fmtKm(work.fatigue.second?.distanceM))}${mini('Ritmo 1ª',Math.round(work.fatigue.first?.distancePerMin||0)+' m/min')}${mini('Ritmo 2ª',Math.round(work.fatigue.second?.distancePerMin||0)+' m/min')}${mini('Cambio de ritmo',(work.fatigue.distanceRateChangePct>0?'+':'')+work.fatigue.distanceRateChangePct+'%')}</div><p class="patx-gps-note">Comparación provisional dividiendo la grabación en dos. Cuando añadamos detección/edición de periodos usará las dos partes reales del partido.</p></section>`:''}
+    ${work.fatigue?`<section class="patx-gps-section patx-gps-wide"><div class="patx-gps-section-head"><span>CARGA Y FATIGA</span><h4>Primera mitad vs segunda mitad</h4></div><div class="patx-gps-inline-metrics">${mini('1ª mitad',fmtKm(work.fatigue.first?.distanceM))}${mini('2ª mitad',fmtKm(work.fatigue.second?.distanceM))}${mini('Ritmo 1ª',Math.round(work.fatigue.first?.distancePerMin||0)+' m/min')}${mini('Ritmo 2ª',Math.round(work.fatigue.second?.distancePerMin||0)+' m/min')}${mini('Cambio de ritmo',(work.fatigue.distanceRateChangePct>0?'+':'')+work.fatigue.distanceRateChangePct+'%')}</div><p class="patx-gps-note">${work.fatigue.provisional?'No se ha detectado un descanso fiable; la comparación divide la grabación en dos de forma provisional.':'La comparación utiliza las dos primeras partes detectadas en la grabación.'}</p></section>`:''}
   </section>`;
 }
 
