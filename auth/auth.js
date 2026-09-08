@@ -42,7 +42,8 @@
     logoutButton: $('logoutButton'),
     adminPanel: $('adminPanel'),
     adminPlayers: $('adminPlayers'),
-    refreshAdmin: $('refreshAdmin')
+    refreshAdmin: $('refreshAdmin'),
+    testTelegram: $('testTelegram')
   };
 
   let currentTab = 'login';
@@ -257,6 +258,27 @@
     }
   }
 
+  async function testTelegramConnection() {
+    if (!els.testTelegram) return;
+    clearStatus();
+    setBusy(els.testTelegram, true, 'Enviando…');
+    try {
+      const { data, error } = await db.functions.invoke('telegram-notify', {
+        body: {
+          type: 'test',
+          entity_id: 'account-registration'
+        }
+      });
+      if (error) throw error;
+      if (data?.ok === false) throw new Error(data.error || 'Telegram no aceptó la prueba.');
+      showStatus('Prueba enviada. Comprueba Telegram.', 'success');
+    } catch (error) {
+      showStatus(`No se pudo enviar la prueba de Telegram: ${error.message}`, 'error');
+    } finally {
+      setBusy(els.testTelegram, false);
+    }
+  }
+
   function beginCodeStep(result, playerId, nickname, password) {
     pendingRegistration = {
       requestId: result.request_id,
@@ -409,6 +431,7 @@
   els.logoutButton.addEventListener('click', logout);
   els.unlinkedLogout.addEventListener('click', logout);
   els.refreshAdmin.addEventListener('click', loadAdminPlayers);
+  if (els.testTelegram) els.testTelegram.addEventListener('click', testTelegramConnection);
 
   auth.onChange(({ event }) => {
     if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
