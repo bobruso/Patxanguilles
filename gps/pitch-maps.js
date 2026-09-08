@@ -1,3 +1,4 @@
+import{buildSprintSpatial}from'./sprint-spatial.js';
 const DEFAULT_ASPECT=68/105;
 
 function fitCanvas(canvas,aspect=DEFAULT_ASPECT){
@@ -37,20 +38,18 @@ function drawPitchBase(ctx,w,h,margin){
   ctx.strokeRect(margin+pw-goalW,margin+(ph-goalH)/2,goalW,goalH);
 }
 
-function orientationReliable(analysis){return !!analysis?.analysisDetail?.positional?.orientationReliable}
 function drawDirection(ctx,w,h,margin,analysis){
-  ctx.font='700 11px system-ui';
-  ctx.fillStyle='rgba(255,255,255,.78)';
-  if(orientationReliable(analysis)){
-    ctx.textAlign='left';ctx.fillText('◀ DEFENSA',margin+5,h-4);
-    ctx.textAlign='right';ctx.fillText('ATAQUE ▶',w-margin-5,h-4);
-  }else{
-    ctx.textAlign='center';
-    ctx.fillStyle='rgba(255,255,255,.56)';
-    ctx.fillText('ORIENTACIÓN DEL CAMPO SIN CALIBRAR',w/2,h-4);
-  }
+  const dir=Number(analysis?.analysisDetail?.positional?.attackDirection)===-1?-1:1;
+  ctx.font='700 11px system-ui';ctx.fillStyle='rgba(255,255,255,.78)';
+  if(dir===1){ctx.textAlign='left';ctx.fillText('◀ DEFENSA',margin+5,h-4);ctx.textAlign='right';ctx.fillText('ATAQUE ▶',w-margin-5,h-4)}
+  else{ctx.textAlign='left';ctx.fillText('◀ ATAQUE',margin+5,h-4);ctx.textAlign='right';ctx.fillText('DEFENSA ▶',w-margin-5,h-4)}
 }
 
+function drawSprintPoints(ctx,w,h,margin,analysis){
+  const spatial=buildSprintSpatial(analysis);if(!spatial.count)return;
+  const{map}=pitchMapper(w,h,margin),robust=Number(analysis?.analysisDetail?.speed?.robustTopKmh)||1;
+  for(const sp of spatial.points){const p=map(sp.u,sp.v),ratio=Math.max(.75,Math.min(1.25,(Number(sp.peakSpeedKmh)||robust)/robust)),r=Math.max(4,Math.min(8,w/150))*ratio;ctx.beginPath();ctx.fillStyle='rgba(255,176,30,.92)';ctx.strokeStyle='rgba(17,17,17,.92)';ctx.lineWidth=1.5;ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fill();ctx.stroke()}
+}
 function heatColor(t){
   const stops=[[0,[28,62,199]],[.35,[36,190,200]],[.55,[70,210,90]],[.75,[244,218,42]],[1,[231,43,38]]];
   for(let i=1;i<stops.length;i++)if(t<=stops[i][0]){
@@ -76,6 +75,7 @@ export function drawHeatmap(canvas,analysis){
   for(let i=0;i<d.length;i+=4){const a=d[i+3]/255;if(a<=.02){d[i+3]=0;continue}const c=heatColor(a);d[i]=c[0];d[i+1]=c[1];d[i+2]=c[2];d[i+3]=Math.min(235,a*235)}
   lctx.putImageData(img,0,0);ctx.drawImage(layer,0,0,w,h);
   if(analysis.avgPosition){const p=map(analysis.avgPosition.u,analysis.avgPosition.v);ctx.beginPath();ctx.fillStyle='#fff';ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='800 10px system-ui';ctx.textAlign='center';ctx.fillText('AVG',p.x,p.y-11)}
+  drawSprintPoints(ctx,w,h,margin,analysis);
   drawDirection(ctx,w,h,margin,analysis);
 }
 
