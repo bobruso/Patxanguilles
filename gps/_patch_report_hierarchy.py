@@ -21,3 +21,4 @@ append="""
 """
 if '.patx-gps-summary{' not in s:s+=append
 p.write_text(s)
+# trigger workflow
