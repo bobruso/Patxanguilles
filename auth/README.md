@@ -2,53 +2,95 @@
 
 Rama: `feature/accounts-auth`
 
-## Estado
+## Objetivo
 
-Este módulo es independiente del `index.html` principal para poder probar identidad sin interferir con el desarrollo general de Patxanguilles.
+Introducir cuentas de forma progresiva sin obligar todavía a iniciar sesión para utilizar la web actual. La identidad será obligatoria para funcionalidades nuevas que necesiten saber inequívocamente quién actúa, empezando por **Reto del día**.
 
-Incluye:
+El módulo `/auth/` permanece separado del `index.html` principal para poder desarrollar y probar el sistema sin interferir con Patxanguilles operativa.
 
-- login con Supabase Auth (email + contraseña)
-- sesión persistente
-- vínculo 1:1 entre `auth.users` / `profiles` y `players`
-- rol `user` / `admin`
-- generación de invitaciones de un solo uso por el admin
-- código de 6 cifras con caducidad de 7 días
-- registro de jugador + reclamación segura de su ficha
-- panel admin básico de estado de cuentas
+## Modelo de identidad
 
-## Antes de probar altas nuevas
+- `auth.users` mantiene la sesión de Supabase.
+- `profiles.id` enlaza con `auth.users.id`.
+- `profiles.player_id` enlaza 1:1 con `players.id`.
+- Un jugador solo puede tener una cuenta.
+- Una cuenta solo puede representar a un jugador.
+- Roles actuales: `user` y `admin`.
+- La cuenta admin existente sigue siendo compatible.
 
-En Supabase Dashboard:
+## Registro nuevo
 
-`Authentication > Providers > Email`
+Las cuentas nuevas NO requieren email visible para el usuario.
 
-Desactivar **Confirm email**.
+Flujo:
 
-La intención de Patxanguilles es que, tras registrarse con email + contraseña y un código válido, el usuario obtenga sesión inmediatamente sin tener que abrir el correo.
+1. El usuario abre **Crear cuenta**.
+2. Selecciona su jugador de una lista de jugadores que todavía no tienen cuenta.
+3. Elige y repite una contraseña.
+4. Pulsa **Solicitar registro**.
+5. La cuenta todavía NO se crea.
+6. El administrador recibe en Telegram el jugador seleccionado y un código de 6 cifras.
+7. La pantalla muestra **Pide el código al administrador**.
+8. El usuario introduce el código recibido del administrador.
+9. Si el código es correcto, se crea la cuenta, se vincula a `players.id` y se inicia sesión.
+10. Ese jugador desaparece automáticamente de la lista de jugadores disponibles para registro.
+
+El código caduca a las 24 horas y tiene un máximo de 5 intentos.
+
+## Login
+
+El login normal es:
+
+- Jugador
+- Contraseña
+
+No se solicita email.
+
+La cuenta admin anterior al nuevo sistema se mantiene compatible: el servidor detecta que utiliza credenciales `native` y valida su contraseña actual.
+
+## Telegram
+
+El panel admin incluye **Probar Telegram**. Esta prueba no crea jugadores ni solicitudes de registro; únicamente comprueba que el canal de notificaciones está funcionando.
+
+Cuando haya una solicitud real, Telegram deberá mostrar aproximadamente:
+
+- nombre/apodo del jugador reclamado
+- código de 6 cifras
+- aviso de que la cuenta todavía no ha sido creada
+- caducidad del código
+
+## Seguridad transitoria
+
+La incorporación de cuentas es gradual. Se mantienen las políticas `anon` que usa la web actual para no romper el funcionamiento sin login.
+
+Sin embargo, una cuenta `authenticated` recién creada pero todavía no vinculada a un jugador no puede aprovechar permisos antiguos de autenticados para modificar jugadores, partidos, eventos, GPS o Storage.
+
+En esta fase, los usuarios vinculados todavía conservan parte de los permisos amplios históricos para mantener compatibilidad. El bloqueo definitivo propietario/admin se activará cuando integremos identidad en las funcionalidades existentes.
 
 ## Prueba local
 
-1. Cambiar a la rama `feature/accounts-auth`.
-2. Servir el repositorio por HTTP local (no abrir el HTML con `file://`).
-3. Abrir `/auth/`.
-4. Iniciar sesión con la cuenta admin existente.
-5. Confirmar que aparece la ficha de Jorge y el rol ADMINISTRADOR.
-6. En el panel de invitaciones, generar un código para un jugador sin cuenta.
-7. Cerrar sesión.
-8. Crear una cuenta nueva usando ese jugador, el código generado, un email de prueba válido y una contraseña.
-9. Confirmar que la cuenta queda vinculada al jugador y el código deja de ser reutilizable.
-10. Cerrar y volver a abrir el navegador para comprobar la persistencia de la sesión.
+1. `git fetch origin`
+2. `git switch feature/accounts-auth`
+3. Servir el repositorio por HTTP local, por ejemplo `python -m http.server 8000`.
+4. Abrir `http://localhost:8000/auth/`.
+5. Entrar como Jorge seleccionando el jugador y usando la contraseña de la cuenta admin existente.
+6. Confirmar que aparece `ADMINISTRADOR`.
+7. Pulsar **Probar Telegram** y confirmar la recepción del mensaje.
+8. Revisar que en **Crear cuenta** aparecen los jugadores sin cuenta y que Jorge ya no aparece disponible para registro.
+9. No completar todavía el alta de un jugador real salvo que esa persona esté participando en la prueba.
+10. Abrir `http://localhost:8000/retos/` para comprobar que esa zona exige una cuenta vinculada.
+
+## Despliegue gradual previsto
+
+1. Sistema de cuentas opcional.
+2. `SIGN IN / jugador` discreto en la Home.
+3. Reto del día: login obligatorio.
+4. Autoría de resultados, goles, fotos y acciones.
+5. Draft: identificar automáticamente a los entrenadores y excluirlos de los jugadores fichables.
+6. Perfil: propietario o admin.
+7. Carta de jugador: propietario o admin.
+8. Endurecimiento final de RLS y permisos de todas las acciones sensibles.
 
 ## Importante
 
-Todavía NO se han reemplazado las políticas RLS generales de `players`. Se mantienen temporalmente para no romper la web principal mientras esta rama no está integrada.
-
-La siguiente fase, una vez validado este MVP, será:
-
-- integrar identidad en el `index.html`
-- mostrar usuario actual en la navegación
-- aplicar permisos de edición de ficha por propietario/admin
-- registrar autoría de resultados, goles y fotos
-- vincular entrenadores del draft con el usuario autenticado
-- endurecer las políticas RLS de `players` y las tablas afectadas
+`main` no contiene todavía la interfaz de cuentas. La web publicada sigue utilizando el flujo existente. Las tablas y funciones añadidas a Supabase son aditivas y se han diseñado para convivir durante esta transición.
