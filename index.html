@@ -1139,7 +1139,8 @@ body.bg-coach-room{
 .coach-whatsapp-head strong{display:block;font-size:17px;margin-bottom:4px}
 .coach-whatsapp-head span{display:block;font-size:12px;color:#aeb7be;line-height:1.4}
 #coachCallupText,
-#automaticCallupText{
+#automaticCallupText,
+#resultCallupText{
   width:100%;resize:vertical;min-height:145px;
   padding:14px;border-radius:12px;
   border:1px solid #394139;
@@ -1148,7 +1149,8 @@ body.bg-coach-room{
   box-sizing:border-box;
 }
 #coachCallupText:focus,
-#automaticCallupText:focus{
+#automaticCallupText:focus,
+#resultCallupText:focus{
   outline:none;border-color:#8ea48f;
   box-shadow:0 0 0 3px rgba(142,164,143,.12);
 }
@@ -3519,11 +3521,14 @@ body.album-reader-open{
 
 #desktopHomeVideoBg{display:none}
 @media(min-width:901px){
-  #desktopHomeVideoBg{display:block;position:fixed;inset:0;z-index:-3;overflow:hidden;background:#07100b;opacity:0;pointer-events:none;transition:opacity .25s ease}
+  /* v195 · primer paint de escritorio = frame 0 real del vídeo.
+     Sobrescribe el antiguo background-home.jpg antes de que arranque el JS. */
+  body{background:#07100b url('background-home-desktop.jpg?v=195-firstframe') center/cover fixed no-repeat!important}
+  #desktopHomeVideoBg{display:block;position:fixed;inset:0;z-index:-3;overflow:hidden;background:#07100b url('background-home-desktop.jpg?v=194-firstframe') center/cover no-repeat;opacity:1;pointer-events:none;transition:none}
   body.desktop-home-video #desktopHomeVideoBg{opacity:1}
   #desktopHomeVideo{width:100%;height:100%;object-fit:cover;display:block;opacity:1}
   #desktopHomeVideo.ready{opacity:1}
-  body.desktop-home-video{background:#07100b!important}
+  body.desktop-home-video{background:#07100b url('background-home-desktop.jpg?v=194-firstframe') center/cover fixed no-repeat!important}
   body.home-intro-pending #home .hero{opacity:0;transform:translateY(18px) scale(.985);pointer-events:none}
   body.home-intro-visible #home .hero{opacity:1;transform:none;transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.25,1)}
 }
@@ -3682,6 +3687,15 @@ body.album-reader-open{
   #matchCaptureArea .match-detail-side .match-photo-view img{max-height:430px;object-fit:contain}
 }
 
+
+
+/* v193 · accesos Home y temporada */
+.home-options .mode.purpleline{background:linear-gradient(145deg,#6f2c78,#44204f)}
+.home-options .mode.purpleline:after{content:"";position:absolute;left:0;bottom:0;height:5px;width:100%;background:rgba(255,255,255,.65)}
+.home-options .mode.goldline{background:linear-gradient(145deg,#9a6d14,#d2a532 52%,#75500c);border-color:#d8b44c}
+.home-options .mode.goldline:after{content:"";position:absolute;left:0;bottom:0;height:5px;width:100%;background:#f0cf69}
+.home-options .mode.goldline .home-card-copy>span:last-child{color:#f6e5ae}
+.season-add-result-btn{white-space:nowrap}
 
 /* v188 · perfil compacto y botón de carta dorado */
 .profile-top{position:relative}
@@ -4662,7 +4676,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 </div>
 <div id="mobileDayVideoBg" aria-hidden="true"><video id="mobileDayVideo" muted loop playsinline preload="none" poster="background-home-mobile.png"></video></div>
 <div id="desktopHomeVideoBg" aria-hidden="true">
-  <video id="desktopHomeVideo" muted loop playsinline preload="auto">
+  <video id="desktopHomeVideo" muted loop playsinline preload="auto" poster="background-home-desktop.jpg?v=194-firstframe">
     <source src="background-home-desktop.mp4" type="video/mp4">
   </video>
 </div>
@@ -4733,8 +4747,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="card hero">
 <div class="home-options">
 <button class="mode redline home-image-card" onclick="openCreateGame()"><span class="home-card-copy"><span class="icon">⚽</span><strong>Crear alineaciones</strong><span>Nuevo partido</span></span><span class="home-card-image"><img src="crear alineacion.jpg" alt=""></span></button>
-<button class="mode greenline home-image-card" onclick="openSeason()"><span class="home-card-copy"><span class="icon">🏆</span><strong>Temporada 26/27</strong><span>Clasificación y calendario</span></span><span class="home-card-image"><img src="temporada.jpg" alt=""></span></button>
-<button class="mode greenline home-image-card" onclick="show('resultMode')"><span class="home-card-copy"><span class="icon">📝</span><strong>Apuntar resultado</strong><span>Partido ya jugado</span></span><span class="home-card-image"><img src="apuntar resultado.jpg" alt=""></span></button>
+<button class="mode purpleline home-image-card" onclick="openSeason()"><span class="home-card-copy"><span class="icon">🏆</span><strong>Temporada 26/27</strong><span>Clasificación y calendario</span></span><span class="home-card-image"><img src="temporada.jpg" alt=""></span></button>
+<button class="mode goldline home-image-card" onclick="window.open('album.html','_blank')"><span class="home-card-copy"><span class="icon">★</span><strong>Álbum de cartas</strong><span>Ver álbum</span></span><span class="home-card-image"><img src="album foto boton.png" alt="Portada del álbum de cartas"></span></button>
 </div>
 </div>
 
@@ -4978,8 +4992,44 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v192</span>
+    <span class="history-version">VERSIÓN v195</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">147</div>
+      <div class="history-section-content">
+        <h2>Datos GPS de partido</h2>
+        <ul>
+          <li>Importación local de actividades FIT, TCX y GPX desde la ficha del partido, sin guardar el archivo original ni las coordenadas GPS geográficas.</li>
+          <li>Informe completo con mapa de calor, recorrido, ocupación por zonas, velocidad, sprints, carreras de alta intensidad, frecuencia cardiaca cuando exista y highlights del partido.</li>
+          <li>Campo F7 habitual calibrable por administración y orientación mediante la Ley Rico.</li>
+          <li>Tabla “Datos GPS” en la ficha del partido con distancia total recorrida, velocidad máxima, carreras de alta intensidad y acceso al informe de cada jugador.</li>
+        </ul>
+      </div>
+    </section>
+    <section class="history-change-section">
+      <div class="history-section-number">146</div>
+      <div class="history-section-content">
+        <h2>Arranque del fondo de vídeo en escritorio</h2>
+        <ul>
+          <li>La Home de escritorio usa el fotograma inicial exacto del vídeo desde el primer paint, sustituyendo el antiguo fondo que se veía durante la carga.</li>
+          <li>Se fuerza el MP4 a comenzar desde el segundo 0 y se invalida la caché del poster para evitar que Windows/Chrome reutilicen una imagen anterior.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">145</div>
+      <div class="history-section-content">
+        <h2>Home, temporada y resultados</h2>
+        <ul>
+          <li>El fondo inicial de escritorio utiliza como imagen de espera el primer fotograma exacto del vídeo para evitar saltos al comenzar la reproducción.</li>
+          <li>«Añadir resultado» vuelve a la cabecera de Temporada y el acceso de Home se sustituye por «Álbum de cartas».</li>
+          <li>Temporada adopta un acceso morado, el álbum uno dorado y el importador de convocatoria de resultados iguala su diseño al Modo Entrenador.</li>
+          <li>El calendario muestra «Roj@s vs Negr@s».</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">144</div>
       <div class="history-section-content">
@@ -6720,7 +6770,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 </div></section>
 
 <section id="season" class="screen results"><div class="card">
-<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div></div>
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('home')">← Volver</button><h2 id="seasonTitle">Temporada 26/27 · Fútbol 7</h2></div><div class="lineup-top-actions"><button class="primary season-add-result-btn" onclick="show('resultMode')">Añadir resultado</button></div></div>
 <div class="section-nav"><button class="nav-btn active" onclick="seasonTab('classification',this)">Clasificación</button><button class="nav-btn season-calendar-btn" onclick="seasonTab('calendar',this)">📅 Calendario</button><button class="nav-btn album-special-btn" id="seasonAlbumBtn" onclick="window.open('album.html','_blank')"><span class="album-star">★</span> Ver álbum de cartas <span class="album-star">★</span></button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('scorers',this)">Máximos goleadores</button><button class="nav-btn admin-season-tab" style="display:none" onclick="seasonTab('assists',this)">Asistencias</button></div>
 <div id="seasonContent"></div>
 </div></section>
@@ -6800,7 +6850,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v192 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v195 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -8914,7 +8964,7 @@ function matchRow(m,compact=false){
         </div>
         ${thumb}
       </div>
-      <div class="match-teams"><span class="redtxt">Rojos</span> vs <span>Negros</span></div>
+      <div class="match-teams"><span class="redtxt">Roj@s</span> vs <span>Negr@s</span></div>
       <div class="score">${score}</div>
       <div class="match-row-actions">
         <span class="match-status ${live?'live':'final'}">${live?'● En juego':'Finalizado'}</span>
@@ -8925,7 +8975,7 @@ function matchRow(m,compact=false){
 
   return `<div class="match-row" onclick="openMatch('${m.id}')">
     <div class="match-date">${formatDate(m.date)}</div>
-    <div class="match-teams"><span class="redtxt">Rojos</span> vs <span>Negros</span></div>
+    <div class="match-teams"><span class="redtxt">Roj@s</span> vs <span>Negr@s</span></div>
     <div class="score">${score}</div>
     <div class="match-row-actions">
       <span class="match-status ${live?'live':'final'}">${live?'● En juego':'Finalizado'}</span>
@@ -9654,7 +9704,7 @@ async function loginAdmin(){
 }
 function renderAdminPanel(){
   const matches=(db.matches||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)),content=document.getElementById('adminContent');
-  content.innerHTML=`<div class="topbar"><div><div class="kicker">ADMINISTRACIÓN</div><h2>Gestión de resultados</h2></div><button class="secondary" type="button" id="adminCloseBtn">Cerrar</button></div><div class="admin-actions"><button class="secondary" type="button" id="adminLogoutBtn">Cerrar sesión</button></div><div class="admin-list">${matches.length?matches.map(m=>`<div class="admin-match" data-match-id="${escapeHtml(String(m.id))}"><span class="match-date">${formatDate(m.date)}</span><span><b>${m.mode==='f7'?'Fútbol 7':'Fútbol Sala'}</b><br>Rojos ${m.redScore} — ${m.blackScore} Negros</span><span class="admin-actions"><button class="secondary admin-edit-btn" type="button">Editar</button><button class="danger admin-delete-btn" type="button">Eliminar</button></span></div>`).join(''):'<div class="empty">No hay partidos registrados.</div>'}</div>`;
+  content.innerHTML=`<div class="topbar"><div><div class="kicker">ADMINISTRACIÓN</div><h2>Gestión de resultados</h2></div><button class="secondary" type="button" id="adminCloseBtn">Cerrar</button></div><div class="admin-actions"><button class="secondary" type="button" onclick="location.href='gps-calibrate.html'">Administrar campo GPS habitual</button><button class="secondary" type="button" id="adminLogoutBtn">Cerrar sesión</button></div><div class="admin-list">${matches.length?matches.map(m=>`<div class="admin-match" data-match-id="${escapeHtml(String(m.id))}"><span class="match-date">${formatDate(m.date)}</span><span><b>${m.mode==='f7'?'Fútbol 7':'Fútbol Sala'}</b><br>Rojos ${m.redScore} — ${m.blackScore} Negros</span><span class="admin-actions"><button class="secondary admin-edit-btn" type="button">Editar</button><button class="danger admin-delete-btn" type="button">Eliminar</button></span></div>`).join(''):'<div class="empty">No hay partidos registrados.</div>'}</div>`;
   document.getElementById('adminModal').classList.add('open');
   document.getElementById('adminCloseBtn').onclick=closeAdmin;document.getElementById('adminLogoutBtn').onclick=adminLogout;
   content.querySelectorAll('.admin-delete-btn').forEach(btn=>{btn.onclick=function(e){e.preventDefault();e.stopPropagation();const row=this.closest('.admin-match');if(row)deleteMatch(row.getAttribute('data-match-id'))}});
@@ -10195,10 +10245,11 @@ document.addEventListener('keydown',e=>{
     if(!mq.matches||!video)return;
     document.body.classList.add('desktop-home-video');
     const playVideo=()=>{
+      // Fondo y poster ya son exactamente el frame 0. Arrancamos también el MP4 desde 0.
+      try{video.currentTime=0}catch(e){}
       const p=video.play();
       if(p&&p.catch)p.catch(()=>{});
     };
-    // No usamos un JPG/poster previo: el primer fotograma visible pertenece al propio MP4.
     if(video.readyState>=2)playVideo();
     else video.addEventListener('loadeddata',playVideo,{once:true});
   }
@@ -10287,4 +10338,5 @@ document.addEventListener('keydown',e=>{
   });
 })();
 </script>
+<script type="module" src="./gps/index-integration.js"></script>
 </body></html>

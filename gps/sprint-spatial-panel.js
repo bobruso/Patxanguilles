@@ -1,0 +1,7 @@
+import{buildSprintSpatial}from'./sprint-spatial.js';
+const pct=v=>Math.round((Number(v)||0)*100)+'%';
+const item=(label,count,share)=>`<div class="patx-gps-mini"><span>${label}</span><strong>${count} · ${pct(share)}</strong></div>`;
+export function sprintSpatialPanelHtml(analysis,speed){
+  const s=buildSprintSpatial(analysis,speed);if(!s.count)return'';const pattern=s.pattern||{};
+  return `<section class="patx-gps-section patx-gps-wide"><div class="patx-gps-section-head"><span>SPRINTS EN EL CAMPO</span><h4>Dónde aparecen los esfuerzos máximos</h4></div><div class="patx-gps-inline-metrics">${item('Defensivos',s.thirdCounts[0],s.thirds[0])}${item('Zona media',s.thirdCounts[1],s.thirds[1])}${item('Atacantes',s.thirdCounts[2],s.thirds[2])}${item('Izquierda',s.sideCounts[0],s.sides[0])}${item('Centro',s.sideCounts[1],s.sides[1])}${item('Derecha',s.sideCounts[2],s.sides[2])}</div>${pattern.headline?`<div class="patx-gps-role-main" style="margin-top:12px"><strong>${pattern.headline}</strong></div>`:''}${pattern.notes?.length?`<ul class="patx-gps-notes">${pattern.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`:''}<p class="patx-gps-note">Los puntos de sprint se dibujan sobre el mapa de calor. La distribución longitudinal se recalcula al cambiar la orientación de ataque. Estas etiquetas describen patrones espaciales del GPS; no identifican por sí solas una contra, una cobertura o una acción con balón.</p></section>`;
+}
