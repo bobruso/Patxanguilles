@@ -1,0 +1,27 @@
+/* v217 · mapa satélite real con trazado SVG superpuesto */
+.patx-v217-terrain-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:10px
+}
+.patx-v217-terrain-subtitle{margin-top:3px;color:#859188;font-size:9px;letter-spacing:.02em}
+.patx-v217-terrain-status{color:#87958d;font-size:10px;text-align:right;max-width:42%}
+.patx-v217-terrain-frame{
+  position:relative;width:100%;aspect-ratio:21/9;overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);border-radius:16px;background:#09110c
+}
+.patx-v217-terrain-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:fill}
+.patx-v217-terrain-frame:after{
+  content:"";position:absolute;inset:0;pointer-events:none;background:rgba(0,0,0,.08);z-index:1
+}
+.patx-v217-terrain-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.patx-v217-route-shadow{fill:none;stroke:rgba(0,0,0,.75);stroke-width:11;stroke-linecap:round;stroke-linejoin:round;opacity:.5}
+.patx-v217-route{fill:none;stroke:#ffd24a;stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
+.patx-v217-route-start{fill:#fff;stroke:#111b14;stroke-width:3}
+.patx-v217-route-end{fill:#ffd24a;stroke:#111b14;stroke-width:3}
+.patx-v217-terrain-placeholder,.patx-v217-terrain-error{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;
+  gap:5px;text-align:center;color:#96a29a;font-size:11px;padding:18px
+}
+.patx-v217-terrain-error strong{color:#d9e0db;font-size:12px}.patx-v217-terrain-error span{font-size:9px;opacity:.7}
+@media(max-width:700px){
+  .patx-v217-terrain-head{align-items:flex-start}.patx-v217-terrain-status{font-size:9px}.patx-v217-terrain-subtitle{font-size:8px}.patx-v217-terrain-frame{border-radius:12px}
+}

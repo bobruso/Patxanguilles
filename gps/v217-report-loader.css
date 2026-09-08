@@ -1,0 +1,21 @@
+/* v217 · pantalla de carga del informe GPS */
+.gps-report-loading-v217{
+  position:fixed;inset:0;z-index:99999;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 43%,rgba(33,99,54,.18),transparent 38%),#06100a;
+  opacity:1;visibility:visible;transition:opacity .36s ease,visibility .36s ease
+}
+.gps-report-loading-v217.is-ready{opacity:0;visibility:hidden;pointer-events:none}
+.gps-report-loading-card-v217{
+  width:min(86vw,440px);padding:29px 25px 25px;text-align:center;border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);background:rgba(10,18,13,.92);box-shadow:0 24px 70px rgba(0,0,0,.48)
+}
+.gps-report-loading-kicker-v217{font-size:9px;font-weight:900;letter-spacing:.18em;color:#62b778;margin-bottom:10px}
+.gps-report-loading-card-v217 h2{margin:0;color:#fff;font-size:19px;letter-spacing:-.01em}
+.gps-report-loading-card-v217 p{min-height:42px;margin:10px 0 0;color:#a7b2aa;font-size:12px;line-height:1.5}
+.gps-report-spinner-v217{width:42px;height:42px;margin:0 auto 15px;border:3px solid rgba(255,255,255,.10);border-top-color:#55ba73;border-radius:50%;animation:gpsV217Spin .8s linear infinite}
+.gps-report-loading-bar-v217{height:2px;width:72%;margin:15px auto 0;overflow:hidden;border-radius:99px;background:rgba(255,255,255,.08)}
+.gps-report-loading-bar-v217:after{content:"";display:block;width:35%;height:100%;background:#55ba73;animation:gpsV217Bar 1.35s ease-in-out infinite}
+@keyframes gpsV217Spin{to{transform:rotate(360deg)}}
+@keyframes gpsV217Bar{0%{transform:translateX(-120%)}50%{transform:translateX(185%)}100%{transform:translateX(390%)}}
+@media(max-width:700px){.gps-report-loading-card-v217{width:min(88vw,390px);padding:25px 21px 22px}.gps-report-loading-card-v217 h2{font-size:17px}.gps-report-loading-card-v217 p{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.gps-report-spinner-v217,.gps-report-loading-bar-v217:after{animation:none}}
