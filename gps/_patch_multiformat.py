@@ -48,3 +48,4 @@ s=s.replace("if(!f)return $('status').textContent='Selecciona un .fit'","if(!f)r
 s=s.replace("$('status').textContent='Analizando…'","$('status').textContent=`Analizando ${String(detectActivityFormat(f)||'archivo').toUpperCase()}…`")
 s=s.replace('El archivo se analiza localmente. Se guardan métricas y posiciones normalizadas, nunca las coordenadas GPS originales ni el FIT.','El archivo se analiza localmente. Admite FIT, GPX y TCX. Se guardan métricas y posiciones normalizadas, nunca las coordenadas GPS originales ni el archivo original.')
 p.write_text(s)
+# trigger
