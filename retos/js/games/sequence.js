@@ -3,7 +3,7 @@
 
   window.PatxGameRegistry.register('sequence', ({ container, config = {}, seed = 1, onFinish }) => {
     const startLength = Number(config.start_length || 3);
-    const maxLevel = Number(config.max_level || 20);
+    const maxLevel = Math.min(Number(config.max_level || 8), 8);
     let state = Number(seed) || 1;
     let sequence = [];
     let inputIndex = 0;
