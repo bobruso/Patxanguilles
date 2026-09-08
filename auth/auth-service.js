@@ -38,10 +38,40 @@
     const authPath = config.authPath || '/auth/';
     const url = new URL(authPath, window.location.origin);
     const safeReturnTo = safeSameOriginUrl(returnTo);
-    if (safeReturnTo) {
-      url.searchParams.set('returnTo', safeReturnTo);
-    }
+    if (safeReturnTo) url.searchParams.set('returnTo', safeReturnTo);
     return url.href;
+  }
+
+  async function callAccountAuth(action, payload = {}) {
+    const response = await fetch(`${config.supabaseUrl}/functions/v1/account-auth`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: config.supabasePublishableKey
+      },
+      body: JSON.stringify({ action, ...payload })
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data?.ok === false) {
+      const error = new Error(data?.error || 'No se pudo completar la operación.');
+      error.status = response.status;
+      error.payload = data;
+      throw error;
+    }
+    return data;
+  }
+
+  async function setReturnedSession(session) {
+    if (!session?.access_token || !session?.refresh_token) return false;
+    const { error } = await client.auth.setSession({
+      access_token: session.access_token,
+      refresh_token: session.refresh_token
+    });
+    if (error) throw error;
+    accountCache = undefined;
+    accountPromise = null;
+    return true;
   }
 
   async function getSession() {
@@ -109,6 +139,45 @@
     };
   }
 
+  async function listAvailablePlayers() {
+    const data = await callAccountAuth('available_players');
+    return data.players || [];
+  }
+
+  async function listRegisteredPlayers() {
+    const data = await callAccountAuth('registered_players');
+    return data.players || [];
+  }
+
+  async function requestRegistration(playerId) {
+    return callAccountAuth('request_registration', {
+      player_id: Number(playerId)
+    });
+  }
+
+  async function completeRegistration({ playerId, requestId, code, password }) {
+    const data = await callAccountAuth('complete_registration', {
+      player_id: Number(playerId),
+      request_id: requestId,
+      code,
+      password
+    });
+    if (data.session) await setReturnedSession(data.session);
+    return data;
+  }
+
+  async function signInPlayer(playerId, password) {
+    accountCache = undefined;
+    accountPromise = null;
+    const data = await callAccountAuth('login', {
+      player_id: Number(playerId),
+      password
+    });
+    await setReturnedSession(data.session);
+    return data;
+  }
+
+  // Legacy helper retained temporarily while the account branch is being tested.
   async function signIn(email, password) {
     accountCache = undefined;
     return client.auth.signInWithPassword({
@@ -180,7 +249,12 @@
     getAccount,
     getState,
     signIn,
+    signInPlayer,
     signOut,
+    listAvailablePlayers,
+    listRegisteredPlayers,
+    requestRegistration,
+    completeRegistration,
     requireAccount,
     requireAdmin,
     getAuthUrl,
