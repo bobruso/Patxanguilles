@@ -1,0 +1,22 @@
+name: GPS fatigue connect
+on:
+  push:
+    branches: [feature/gps-fit-mvp]
+    paths: ['gps/_patch_fatigue_connect.py']
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/gps-fit-mvp
+      - run: python gps/_patch_fatigue_connect.py
+      - run: node --check gps/player-gps-panel.js && node --check gps/fatigue-panel.js && node --check gps/fatigue-profile.js
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gps/player-gps-panel.js
+          git diff --cached --quiet || git commit -m "Connect continuous GPS intensity profile"
+          git push
