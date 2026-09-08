@@ -30,7 +30,10 @@
     goalkeeper:{id:'goalkeeper',game_name:'Portero',description:'Lee el disparo y toca la zona correcta antes de que llegue el balón.',category:'football',unit:'saves',scoring_direction:'higher',config:{shots:5,max_score:5,reaction_ms:850}},
     'top-bins':{id:'top-bins',game_name:'A la escuadra',description:'Cinco tiros a objetivos pequeños dentro de la portería. Cuanto más preciso, más puntos.',category:'football',unit:'points',scoring_direction:'higher',config:{shots:5,max_score:5000}},
     'var-offside':{id:'var-offside',game_name:'VAR',description:'Decide rápidamente si la jugada es fuera de juego o posición legal.',category:'football',unit:'correct',scoring_direction:'higher',config:{rounds:8,max_score:8,round_timeout_ms:4500}},
-    'football-trivia':{id:'football-trivia',game_name:'Trivial futbolero',description:'Cinco preguntas de fútbol. Acertar rápido da más puntos.',category:'football',unit:'points',scoring_direction:'higher',config:{questions:5,question_timeout_ms:8000,max_score:5000}}
+    'football-trivia':{id:'football-trivia',game_name:'Trivial futbolero',description:'Cinco preguntas de fútbol. Acertar rápido da más puntos.',category:'football',unit:'points',scoring_direction:'higher',config:{questions:5,question_timeout_ms:8000,max_score:5000}},
+    'spot-ball':{id:'spot-ball',game_name:'Spot the Ball',description:'Memoriza dónde estaba el balón y señala su posición cuando desaparezca.',category:'football',unit:'error',scoring_direction:'lower',config:{reveal_ms:1800,max_error:1000}},
+    'perfect-pass':{id:'perfect-pass',game_name:'Pase perfecto',description:'Dibuja la trayectoria del pase hasta tu compañero evitando a los defensas.',category:'football',unit:'points',scoring_direction:'higher',config:{rounds:3,max_score:3000}},
+    'free-kick':{id:'free-kick',game_name:'Falta directa',description:'Traza el golpeo de la falta, supera la barrera y busca la escuadra.',category:'football',unit:'points',scoring_direction:'higher',config:{shots:3,max_score:3000}}
   };
 
   let accountState=null, challenge=null, activeGame=null, playing=false;
