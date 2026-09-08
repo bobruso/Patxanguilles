@@ -1,0 +1,65 @@
+
+/* v212 · loader del álbum + visor móvil de una mano */
+.album-v212-loader{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(110,78,17,.18),transparent 38%),
+    #080b09;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .22s ease,visibility .22s ease;
+}
+.album-v212-loader.show{
+  opacity:1;
+  visibility:visible;
+}
+.album-v212-loader-inner{
+  width:min(84vw,430px);
+  text-align:center;
+  padding:28px 24px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  background:rgba(16,18,16,.90);
+  box-shadow:0 22px 60px rgba(0,0,0,.45);
+}
+.album-v212-loader-inner h3{
+  margin:13px 0 8px;
+  font-size:17px;
+  letter-spacing:.06em;
+}
+.album-v212-loader-inner p{
+  min-height:42px;
+  margin:0;
+  color:#aab1ac;
+  font-size:12px;
+  line-height:1.55;
+}
+.album-v212-spinner{
+  width:38px;height:38px;
+  margin:0 auto;
+  border:3px solid rgba(255,255,255,.12);
+  border-top-color:#d6b24a;
+  border-radius:50%;
+  animation:albumV212Spin .8s linear infinite;
+}
+@keyframes albumV212Spin{to{transform:rotate(360deg)}}
+
+@media(max-width:700px){
+  .stage{
+    overflow:hidden!important;
+    touch-action:none!important;
+    overscroll-behavior:none!important;
+  }
+  .page-viewport{
+    will-change:transform!important;
+    transform-origin:top center!important;
+  }
+  .page,.page *{
+    -webkit-user-select:none!important;
+    user-select:none!important;
+  }
+}

@@ -1,0 +1,32 @@
+
+/* v212 · terreno real sin Leaflet: satélite + trazado sobre canvas */
+.patx-v212-terrain-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+.patx-v212-terrain-status{
+  color:#87958d;
+  font-size:10px;
+  text-align:right;
+}
+.patx-v212-terrain-frame{
+  width:100%;
+  aspect-ratio:21/9;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:16px;
+  background:#0b120e;
+}
+.patx-v212-terrain-canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}
+@media(max-width:700px){
+  .patx-v212-terrain-head{align-items:flex-start}
+  .patx-v212-terrain-status{font-size:9px}
+  .patx-v212-terrain-frame{border-radius:12px}
+}

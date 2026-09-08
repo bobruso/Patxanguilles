@@ -1,0 +1,10 @@
+PATXANGUILLES · PUBLICACIÓN DEFINITIVA v216
+==========================================
+
+Sube TODO el contenido de esta carpeta a GitHub respetando las rutas.
+
+El preparador ha aplicado automáticamente v215 y v216 si tu carpeta local todavía estaba en v214.
+
+IMPORTANTE: los 10 audios nuevos NO están incluidos. Consulta CANCIONES_SUBIR_MANUALMENTE.txt y súbelos manualmente a la raíz.
+
+Supabase ya está actualizado; no hay archivos de backend que subir a GitHub.

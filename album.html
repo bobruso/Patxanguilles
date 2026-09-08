@@ -405,6 +405,38 @@ body.fit-height .page{
 }
 
 </style>
+<link rel="stylesheet" href="./album-v212.css"><style id="album-v214-inline">
+/* v214 · render nítido del álbum en escritorio */
+@media(min-width:701px){
+  #pageViewport,
+  .page-viewport{
+    transform:none!important;
+    will-change:auto!important;
+    backface-visibility:visible!important;
+    transform-style:flat!important;
+  }
+
+  #pageViewport img,
+  .page-viewport img,
+  .slot img{
+    image-rendering:auto!important;
+    will-change:auto!important;
+    backface-visibility:visible!important;
+  }
+
+  /*
+    Evita que Chrome conserve una capa rasterizada a menor resolución
+    al escalar el álbum completo mediante transform.
+  */
+  .slot img{
+    filter:none!important;
+  }
+
+  .stage{
+    scroll-behavior:auto!important;
+  }
+}
+</style>
 </head>
 <body class="fit-height">
 <div class="reader">
@@ -708,6 +740,197 @@ document.addEventListener('mouseup',()=>{
 applyViewerState();
 
 loadCards();
+</script>
+<script src="./album-v212.js"></script><script id="album-v214-inline">
+(()=>{
+  const mq=window.matchMedia('(min-width:701px)');
+  let zoom=1;
+  let repairing=false;
+  let observer=null;
+
+  function clamp(v){
+    return Math.max(.55,Math.min(2.6,Number(v)||1));
+  }
+
+  function target(){
+    return document.getElementById('pageViewport')
+      || document.querySelector('.page-viewport')
+      || document.getElementById('page');
+  }
+
+  function stage(){
+    return document.getElementById('stage')
+      || document.querySelector('.stage');
+  }
+
+  function scaleFromTransform(el){
+    const inline=String(el?.style?.transform||'');
+    const direct=inline.match(/scale\(\s*([0-9.]+)\s*\)/i);
+    if(direct)return clamp(Number(direct[1]));
+
+    try{
+      const tr=getComputedStyle(el).transform;
+      if(tr&&tr!=='none'){
+        const m=new DOMMatrixReadOnly(tr);
+        const s=Math.sqrt(m.a*m.a+m.b*m.b);
+        if(Number.isFinite(s)&&s>0)return clamp(s);
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function crisp(el){
+    if(!el||!mq.matches)return;
+
+    const detected=scaleFromTransform(el);
+    if(detected&&Math.abs(detected-1)>.005&&Math.abs(detected-zoom)>.005){
+      zoom=detected;
+    }
+
+    repairing=true;
+
+    /*
+      En escritorio el zoom deja de depender del transform: scale()
+      del visor original. CSS zoom obliga a Chrome a recalcular el
+      layout y repintar las cartas a la resolución actual.
+    */
+    el.style.setProperty('transform','none','important');
+    el.style.setProperty('will-change','auto','important');
+    el.style.setProperty('backface-visibility','visible','important');
+    el.style.zoom=String(zoom);
+    el.dataset.v214Sharp='1';
+
+    el.querySelectorAll('img').forEach(img=>{
+      img.style.setProperty('will-change','auto','important');
+      img.style.setProperty('backface-visibility','visible','important');
+      img.style.setProperty('image-rendering','auto','important');
+      img.style.setProperty('filter','none','important');
+    });
+
+    void el.offsetWidth;
+    repairing=false;
+  }
+
+  function applyZoom(next,anchor=null){
+    if(!mq.matches)return;
+
+    const el=target();
+    const st=stage();
+    if(!el||!st)return;
+
+    const old=zoom;
+    zoom=clamp(next);
+
+    const rect=st.getBoundingClientRect();
+    const mouseX=anchor?.clientX??(rect.left+st.clientWidth/2);
+    const mouseY=anchor?.clientY??(rect.top+st.clientHeight/2);
+
+    const contentX=st.scrollLeft+(mouseX-rect.left);
+    const contentY=st.scrollTop +(mouseY-rect.top);
+    const ratio=zoom/Math.max(.001,old);
+
+    crisp(el);
+
+    requestAnimationFrame(()=>{
+      st.scrollLeft=contentX*ratio-(mouseX-rect.left);
+      st.scrollTop =contentY*ratio-(mouseY-rect.top);
+    });
+  }
+
+  function bindWheel(){
+    const st=stage();
+    if(!st||st.dataset.v214Wheel==='1')return;
+
+    st.dataset.v214Wheel='1';
+    st.addEventListener('wheel',e=>{
+      if(!mq.matches)return;
+      e.preventDefault();
+      applyZoom(zoom+(e.deltaY<0?.10:-.10),e);
+    },{passive:false});
+  }
+
+  /*
+    Conservamos los botones + / - existentes, pero en escritorio
+    pasan por el motor nítido. En móvil sigue funcionando el visor
+    táctil de album-v212.js.
+  */
+  const previousZoomBy=window.zoomBy;
+  window.zoomBy=function(delta){
+    if(mq.matches){
+      applyZoom(zoom+Number(delta||0));
+      return;
+    }
+    if(typeof previousZoomBy==='function'){
+      return previousZoomBy(delta);
+    }
+  };
+
+  function setupObserver(){
+    const el=target();
+    if(!el)return;
+
+    observer?.disconnect();
+    observer=new MutationObserver(mutations=>{
+      if(repairing||!mq.matches)return;
+
+      for(const mutation of mutations){
+        if(mutation.type==='attributes'&&mutation.attributeName==='style'){
+          const tr=String(el.style.transform||'');
+          if(tr&&tr!=='none'){
+            const detected=scaleFromTransform(el);
+            if(detected)zoom=detected;
+            crisp(el);
+          }
+        }
+      }
+    });
+
+    observer.observe(el,{attributes:true,attributeFilter:['style']});
+  }
+
+  function init(){
+    if(!mq.matches)return;
+
+    const el=target();
+    if(!el)return;
+
+    const detected=scaleFromTransform(el);
+    if(detected)zoom=detected;
+
+    crisp(el);
+    bindWheel();
+    setupObserver();
+  }
+
+  /*
+    Al cambiar de página se crean nuevas cartas. Se vuelve a aplicar
+    el render nítido sin tocar posiciones ni la estructura del álbum.
+  */
+  const domObserver=new MutationObserver(()=>{
+    if(!mq.matches)return;
+
+    requestAnimationFrame(()=>{
+      const el=target();
+      if(!el)return;
+
+      crisp(el);
+      bindWheel();
+    });
+  });
+
+  domObserver.observe(document.documentElement,{
+    childList:true,
+    subtree:true
+  });
+
+  mq.addEventListener?.('change',()=>{
+    if(mq.matches)init();
+  });
+
+  requestAnimationFrame(init);
+  setTimeout(init,250);
+  setTimeout(init,900);
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,30 @@
+
+/* v212 · PDF oscuro y maquetado */
+@media print{
+  @page{size:A4;margin:9mm}
+  html,body{
+    background:#07100b!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  .patx-gps-panel,
+  .gps-page{
+    background:#07100b!important;
+  }
+  .patx-gps-head,.patx-gps-top-grid,.patx-gps-summary,.patx-gps-highlights,
+  .patx-gps-map-card,.patx-gps-stats,.patx-gps-breakdown-grid,.patx-gps-section,
+  .patx-v198-terrain{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .patx-v204-save-zone,.patx-gps-admin-zone,.patx-gps-back,.patx-v204-compare-btn,.patx-v201-timeline{
+    display:none!important;
+  }
+}
+html.patx-v212-pdf-exporting .patx-v204-save-zone,
+html.patx-v212-pdf-exporting .patx-gps-admin-zone,
+html.patx-v212-pdf-exporting .patx-gps-back,
+html.patx-v212-pdf-exporting .patx-v204-compare-btn,
+html.patx-v212-pdf-exporting .patx-v201-timeline{
+  visibility:hidden!important;
+}
