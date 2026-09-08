@@ -1,0 +1,35 @@
+name: GPS Ley Rico
+on:
+  push:
+    branches: [feature/gps-fit-mvp]
+    paths: ['gps/_patch_ley_rico.py']
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/gps-fit-mvp
+      - run: python gps/_patch_ley_rico.py
+      - run: node --check gps/player-gps-panel.js
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re,subprocess
+          for page in ['gps-upload.html','gps-report.html']:
+              s=Path(page).read_text()
+              for i,code in enumerate(re.findall(r'<script type="module">([\s\S]*?)</script>',s)):
+                  p=Path(f'/tmp/{Path(page).stem}-{i}.mjs');p.write_text(code);subprocess.check_call(['node','--check',str(p)])
+          panel=Path('gps/player-gps-panel.js').read_text()
+          assert 'Activar Ley Rico' in panel
+          assert 'Desactivar Ley Rico' in panel
+          assert '/muro/i.test' in panel
+          PY
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gps/player-gps-panel.js gps-upload.html gps-report.html
+          git diff --cached --quiet || git commit -m "Add Ley Rico GPS orientation toggle"
+          git push
