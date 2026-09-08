@@ -21,3 +21,4 @@ s=s.replace("setOrientationState('Guardando orientación…')","setOrientationSt
 s=s.replace("console.warn('[GPS] No se pudo guardar orientación',error)","console.warn('[GPS] No se pudo guardar Ley Rico',error)")
 s=s.replace("setOrientationState('Orientación guardada')","setOrientationState('Ley Rico guardada')")
 p.write_text(s)
+# trigger
