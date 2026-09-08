@@ -12,10 +12,11 @@ function events(times,peakFn=()=>18,recoveryFn=()=>45){return times.map((t,i)=>(
 }
 
 {
-  const speed={speedSeries:speedSeries(3600,t=>{const fade=t<1800?1:1-.18*((t-1800)/1800);return (10+5*Math.sin(t/120)+2*Math.sin(t/31))*fade}),sprints:events([180,420,660,900,1140,1380,1620,1860,2160,2460,2760,3060,3360],t=>t<1800?19:15.5,t=>t<1800?45:75)};
+  // Deliberately strong, multi-signal deterioration: both high-speed capacity and sprint peaks fall sharply, while recovery worsens.
+  const speed={speedSeries:speedSeries(3600,t=>{const fade=t<1800?1:1-.35*((t-1800)/1800);return (10+5*Math.sin(t/120)+2*Math.sin(t/31))*fade}),sprints:events([180,420,660,900,1140,1380,1620,1860,2160,2460,2760,3060,3360],t=>t<1800?19:13.5,t=>t<1800?45:95)};
   const f=buildFatigueProfile(speed,3600);
   assert.equal(f.available,true);
-  assert.equal(f.summary.level,'clear');
+  assert.equal(f.summary.level,'clear','Only a consistent multi-signal deterioration should classify as clear fatigue');
 }
 
 {
