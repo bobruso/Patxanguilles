@@ -29,7 +29,8 @@
     penalties:{id:'penalties',game_name:'Penaltis',description:'Cinco lanzamientos. Coloca el balón lejos de donde se tire el portero.',category:'football',unit:'points',scoring_direction:'higher',config:{shots:5,max_score:5000}},
     goalkeeper:{id:'goalkeeper',game_name:'Portero',description:'Lee el disparo y toca la zona correcta antes de que llegue el balón.',category:'football',unit:'saves',scoring_direction:'higher',config:{shots:5,max_score:5,reaction_ms:850}},
     'top-bins':{id:'top-bins',game_name:'A la escuadra',description:'Cinco tiros a objetivos pequeños dentro de la portería. Cuanto más preciso, más puntos.',category:'football',unit:'points',scoring_direction:'higher',config:{shots:5,max_score:5000}},
-    'var-offside':{id:'var-offside',game_name:'VAR',description:'Decide rápidamente si la jugada es fuera de juego o posición legal.',category:'football',unit:'correct',scoring_direction:'higher',config:{rounds:8,max_score:8,round_timeout_ms:4500}}
+    'var-offside':{id:'var-offside',game_name:'VAR',description:'Decide rápidamente si la jugada es fuera de juego o posición legal.',category:'football',unit:'correct',scoring_direction:'higher',config:{rounds:8,max_score:8,round_timeout_ms:4500}},
+    'football-trivia':{id:'football-trivia',game_name:'Trivial futbolero',description:'Cinco preguntas de fútbol. Acertar rápido da más puntos.',category:'football',unit:'points',scoring_direction:'higher',config:{questions:5,question_timeout_ms:8000,max_score:5000}}
   };
 
   let accountState=null, challenge=null, activeGame=null, playing=false;
@@ -110,13 +111,13 @@
   }
 
   async function refreshData(){challenge=await service.getToday();if(!challenge)throw new Error('No se ha podido cargar el reto de hoy.');renderChallenge();renderLeaderboard(await service.getLeaderboard());await refreshSupplemental();}
-
   function cleanupGame(){if(activeGame){try{activeGame.destroy();}catch(_){}activeGame=null;}playing=false;}
 
   function showResult(result,saved,shown){
     els.resultPanel.hidden=false;
     els.resultLabel.textContent=demoMode?'RESULTADO DEMO':saved?.status==='completed'?'RESULTADO':'INTENTO NO VÁLIDO';
-    els.resultScore.textContent=saved?.status==='invalid'?'NO VÁLIDO':formatScore(result.score,shown.unit);
+    const displayScore=!demoMode&&saved?.status==='completed'&&saved?.score!=null?saved.score:result.score;
+    els.resultScore.textContent=saved?.status==='invalid'?'NO VÁLIDO':formatScore(displayScore,shown.unit);
     if(demoMode)els.resultCopy.textContent='No se ha guardado ni se ha consumido ningún intento.';
     else if(saved?.status==='completed'){const remaining=Number(saved.attempts_remaining||0);els.resultCopy.textContent=remaining>0?`Te queda ${remaining} intento${remaining===1?'':'s'} hoy.`:'Has usado todos tus intentos de hoy.';}
     else els.resultCopy.textContent='El servidor ha rechazado este resultado. El intento sigue contando.';
@@ -125,7 +126,7 @@
   async function finishGame(attempt,shown,result){
     let saved=null;
     try{
-      if(!demoMode)saved=await service.finishAttempt({attemptId:attempt.attempt_id,score:result.score,durationMs:result.duration,metadata:result.metadata||{}});
+      if(!demoMode)saved=await service.finishAttempt({attemptId:attempt.attempt_id,gameId:attempt.game_id,score:result.score,durationMs:result.duration,metadata:result.metadata||{}});
       showResult(result,saved,shown);cleanupGame();if(!demoMode)await refreshData();else renderChallenge();els.resultPanel.scrollIntoView({behavior:'smooth',block:'nearest'});
     }catch(error){cleanupGame();showError(error.message||'No se pudo guardar el resultado.');if(!demoMode)await refreshData().catch(()=>{});}
   }
@@ -139,7 +140,7 @@
       if(!registry.has(attempt.game_id))throw new Error(`El juego ${attempt.game_id} todavía no está instalado.`);
       playing=true;els.gamePanel.hidden=false;els.gameTitle.textContent=shown.game_name||shown.name||'Reto';els.gameAttempt.textContent=demoMode?'DEMO':`INTENTO ${attempt.attempt_no} / ${challenge.max_attempts}`;els.gameStage.innerHTML='';
       if(!demoMode){challenge.attempts_remaining=attempt.attempts_remaining;renderChallenge();}
-      activeGame=registry.create(attempt.game_id,{container:els.gameStage,config:attempt.config||shown.config||{},seed:attempt.seed,onFinish:(result)=>finishGame(attempt,shown,result)});
+      activeGame=registry.create(attempt.game_id,{container:els.gameStage,config:attempt.config||shown.config||{},seed:attempt.seed,attemptId:attempt.attempt_id,onFinish:(result)=>finishGame(attempt,shown,result)});
       activeGame.start();els.gamePanel.scrollIntoView({behavior:'smooth',block:'center'});
     }catch(error){cleanupGame();showError(error.message||'No se pudo empezar el juego.');await refreshData().catch(()=>{});}
   }
