@@ -1427,6 +1427,16 @@ body.bg-coach-room{
 }
 
 
+/* v190 · feedback desde historial */
+.history-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.history-feedback-btn{margin-left:auto;background:linear-gradient(145deg,#7f1117,#b51f28)!important;color:#fff!important;border:1px solid #d84a52!important;border-radius:9px;padding:10px 14px;font-weight:850;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 12px rgba(90,0,5,.22)}
+.history-feedback-btn:hover{filter:brightness(1.08)}
+.feedback-modal{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.68);backdrop-filter:blur(6px)}
+.feedback-modal.open{display:flex}
+.feedback-panel{width:min(520px,100%);background:#111713;border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.feedback-panel h2{margin:0 0 6px;font-size:25px}.feedback-panel p{margin:0 0 18px;color:#aeb7b1;font-size:13px}.feedback-form{display:grid;gap:14px}.feedback-form label{display:grid;gap:6px;font-size:12px;font-weight:800}.feedback-form input,.feedback-form textarea{width:100%;border:1px solid rgba(255,255,255,.18);border-radius:9px;background:#080c09;color:#fff;padding:11px 12px;font:inherit}.feedback-form textarea{min-height:150px;resize:vertical}.feedback-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:4px}
+@media(max-width:700px){.history-topbar{padding:12px 12px 0}.history-feedback-btn{font-size:11px;padding:9px 10px}.feedback-panel{padding:18px}.feedback-actions{flex-direction:column-reverse}.feedback-actions button{width:100%}}
+
 /* v50 · historial integrado + tablero entrenador */
 
 /* Historial dentro del index */
@@ -3509,11 +3519,11 @@ body.album-reader-open{
 
 #desktopHomeVideoBg{display:none}
 @media(min-width:901px){
-  #desktopHomeVideoBg{display:block;position:fixed;inset:0;z-index:-3;overflow:hidden;background:#07100b url('background-home-desktop.jpg') center/cover no-repeat;opacity:0;pointer-events:none;transition:opacity .25s ease}
+  #desktopHomeVideoBg{display:block;position:fixed;inset:0;z-index:-3;overflow:hidden;background:#07100b;opacity:0;pointer-events:none;transition:opacity .25s ease}
   body.desktop-home-video #desktopHomeVideoBg{opacity:1}
-  #desktopHomeVideo{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .45s ease}
+  #desktopHomeVideo{width:100%;height:100%;object-fit:cover;display:block;opacity:1}
   #desktopHomeVideo.ready{opacity:1}
-  body.desktop-home-video{background:#07100b url('background-home-desktop.jpg') center/cover fixed no-repeat!important}
+  body.desktop-home-video{background:#07100b!important}
   body.home-intro-pending #home .hero{opacity:0;transform:translateY(18px) scale(.985);pointer-events:none}
   body.home-intro-visible #home .hero{opacity:1;transform:none;transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.25,1)}
 }
@@ -4629,9 +4639,9 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   .coach-lineup-cards{left:0;top:0;width:100%;height:100%;transform:none}
   .coach-lineup-card{width:26.4vw;height:36vw;max-width:202px;max-height:278px;min-width:98px;min-height:137px}
   .coach-lineup-card.pos-0{left:50%;top:49%;z-index:7}
-  .coach-lineup-card.pos-1{left:14%;top:49%;z-index:6}.coach-lineup-card.pos-2{left:86%;top:49%;z-index:6}
-  .coach-lineup-card.pos-3{left:32%;top:27%;z-index:5}.coach-lineup-card.pos-4{left:68%;top:27%;z-index:5}
-  .coach-lineup-card.pos-5{left:32%;top:71%;z-index:4}.coach-lineup-card.pos-6{left:68%;top:71%;z-index:4}
+  .coach-lineup-card.pos-1{left:24%;top:49%;z-index:6}.coach-lineup-card.pos-2{left:76%;top:49%;z-index:6}
+  .coach-lineup-card.pos-3{left:37%;top:27%;z-index:5}.coach-lineup-card.pos-4{left:63%;top:27%;z-index:5}
+  .coach-lineup-card.pos-5{left:37%;top:71%;z-index:4}.coach-lineup-card.pos-6{left:63%;top:71%;z-index:4}
   .coach-lineup-presentation-actions{bottom:7%;width:90%}
   .coach-lineup-share-btn{font-size:17px!important;min-width:min(280px,86vw)}
 }
@@ -4652,8 +4662,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 </div>
 <div id="mobileDayVideoBg" aria-hidden="true"><video id="mobileDayVideo" muted loop playsinline preload="none" poster="background-home-mobile.png"></video></div>
 <div id="desktopHomeVideoBg" aria-hidden="true">
-  <video id="desktopHomeVideo" muted loop playsinline preload="none" poster="background-home-desktop.jpg">
-    <source data-src="background-home-desktop.mp4" type="video/mp4">
+  <video id="desktopHomeVideo" muted loop playsinline preload="auto">
+    <source src="background-home-desktop.mp4" type="video/mp4">
   </video>
 </div>
 
@@ -4941,10 +4951,26 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 
 </div></section>
 
+<div id="feedbackModal" class="feedback-modal" aria-hidden="true" onclick="feedbackBackdrop(event)">
+  <div class="feedback-panel">
+    <h2>Deja tu feedback e ideas</h2>
+    <p>Cuéntanos qué mejorarías o qué te gustaría ver en la web.</p>
+    <form id="feedbackForm" class="feedback-form" onsubmit="submitFeedback(event)">
+      <label>Nombre:<input id="feedbackName" maxlength="80" autocomplete="name" required></label>
+      <label>Feedback:<textarea id="feedbackText" maxlength="3000" required></textarea></label>
+      <div class="feedback-actions">
+        <button type="button" class="secondary" onclick="closeFeedbackForm()">Cancelar</button>
+        <button id="feedbackSubmitBtn" type="submit" class="primary">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <section id="changeHistory" class="screen">
   <div class="card history-card">
     <div class="history-topbar">
       <button class="back" onclick="show('home')">← Volver</button>
+      <button class="history-feedback-btn" onclick="openFeedbackForm()">Deja tu feedback e ideas</button>
     </div>
     <div class="history-wrap">
       
@@ -4952,8 +4978,40 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v189</span>
+    <span class="history-version">VERSIÓN v192</span>
   </header>
+    <section class="history-change-section">
+      <div class="history-section-number">144</div>
+      <div class="history-section-content">
+        <h2>Entrada de la Home en escritorio</h2>
+        <ul>
+          <li>El fondo inicial de escritorio deja de usar una imagen estática previa y carga directamente el vídeo de la Home, evitando el pequeño salto visual al comenzar la reproducción.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">143</div>
+      <div class="history-section-content">
+        <h2>Presentación vertical de alineaciones</h2>
+        <ul>
+          <li>Las cartas de la presentación móvil se agrupan hacia el centro para conseguir una composición más compacta sobre el vídeo vertical.</li>
+          <li>Las parejas superior e inferior se acercan 5 puntos por carta y los extremos de la fila central, 10 puntos por carta, manteniendo fija la carta central.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="history-change-section">
+      <div class="history-section-number">142</div>
+      <div class="history-section-content">
+        <h2>Feedback e ideas del equipo</h2>
+        <ul>
+          <li>El historial incorpora un formulario para enviar feedback e ideas directamente desde la web.</li>
+          <li>Los mensajes se envían al bot de Telegram de Patxanguilles con el nombre de la persona y su comentario.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="history-change-section">
       <div class="history-section-number">141</div>
       <div class="history-section-content">
@@ -6742,7 +6800,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v189 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v192 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -8956,6 +9014,34 @@ function openCreateCard(name){
 }
 
 
+function openFeedbackForm(){
+  const modal=document.getElementById('feedbackModal');
+  if(!modal)return;
+  modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+  setTimeout(()=>document.getElementById('feedbackName')?.focus(),80);
+}
+function closeFeedbackForm(){
+  const modal=document.getElementById('feedbackModal');
+  if(!modal)return;
+  modal.classList.remove('open');modal.setAttribute('aria-hidden','true');
+}
+function feedbackBackdrop(e){if(e.target?.id==='feedbackModal')closeFeedbackForm()}
+async function submitFeedback(e){
+  e.preventDefault();
+  const name=document.getElementById('feedbackName')?.value.trim()||'';
+  const feedback=document.getElementById('feedbackText')?.value.trim()||'';
+  const btn=document.getElementById('feedbackSubmitBtn');
+  if(!name||!feedback){toast('Completa nombre y feedback');return}
+  if(btn)btn.disabled=true;
+  try{
+    const r=await fetch(`${SUPABASE_URL}/functions/v1/telegram-notify`,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({type:'feedback',name,feedback})});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok||data?.ok!==true)throw new Error(data?.error||'No se pudo enviar');
+    document.getElementById('feedbackForm')?.reset();closeFeedbackForm();toast('Feedback enviado. ¡Gracias!');
+  }catch(err){console.warn('Feedback no enviado',err);toast('No se pudo enviar el feedback')}
+  finally{if(btn)btn.disabled=false}
+}
+
 async function notifyTelegramEvent(type,entityId,action=''){
   try{
     const r=await fetch(`${SUPABASE_URL}/functions/v1/telegram-notify`,{
@@ -10108,26 +10194,13 @@ document.addEventListener('keydown',e=>{
   function startDesktopVideo(){
     if(!mq.matches||!video)return;
     document.body.classList.add('desktop-home-video');
-    const source=video.querySelector('source[data-src]');
-    if(source&&!source.getAttribute('src')){
-      source.src=source.dataset.src;
-      video.load();
-    }
-    let revealed=false;
-    const revealVideo=()=>{
-      if(revealed)return;
-      revealed=true;
+    const playVideo=()=>{
       const p=video.play();
-      if(p&&p.then){
-        p.then(()=>requestAnimationFrame(()=>video.classList.add('ready'))).catch(()=>{});
-      }else{
-        requestAnimationFrame(()=>video.classList.add('ready'));
-      }
+      if(p&&p.catch)p.catch(()=>{});
     };
-    // Mientras descarga permanece visible el primer frame estático.
-    // En conexiones lentas esperamos a canplaythrough para no enseñar un vídeo a medias.
-    if(video.readyState>=4)revealVideo();
-    else video.addEventListener('canplaythrough',revealVideo,{once:true});
+    // No usamos un JPG/poster previo: el primer fotograma visible pertenece al propio MP4.
+    if(video.readyState>=2)playVideo();
+    else video.addEventListener('loadeddata',playVideo,{once:true});
   }
 
   window.startHomeExperience=function(){
