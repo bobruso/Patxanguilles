@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07100b">
+  <title>Cuenta · Patxanguilles</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="./auth.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="brand">
+      <a class="back-link" href="../">← Volver a Patxanguilles</a>
+      <div class="eyebrow">PATXANGUILLES ANTIFEIXISTES</div>
+      <h1>Tu cuenta</h1>
+      <p class="lead">Identifícate para que la web sepa quién juega, quién edita y quién registra cada acción.</p>
+    </header>
+
+    <section id="statusBanner" class="status-banner" hidden></section>
+
+    <section id="loggedOutView" class="panel auth-panel">
+      <div class="tabs" role="tablist" aria-label="Acceso">
+        <button id="loginTab" class="tab active" type="button">Entrar</button>
+        <button id="registerTab" class="tab" type="button">Crear cuenta</button>
+      </div>
+
+      <form id="loginForm" class="form-stack">
+        <div>
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" autocomplete="email" required placeholder="tu@email.com">
+        </div>
+        <div>
+          <label for="loginPassword">Contraseña</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="••••••••">
+        </div>
+        <button id="loginButton" class="primary" type="submit">Entrar</button>
+      </form>
+
+      <form id="registerForm" class="form-stack" hidden>
+        <div class="notice">
+          Para crear una cuenta necesitas un código de invitación generado por el administrador para tu ficha de jugador.
+        </div>
+        <div>
+          <label for="registerPlayer">Jugador</label>
+          <select id="registerPlayer" required>
+            <option value="">Cargando jugadores disponibles…</option>
+          </select>
+        </div>
+        <div>
+          <label for="inviteCode">Código de invitación</label>
+          <input id="inviteCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required placeholder="000000">
+        </div>
+        <div>
+          <label for="registerEmail">Email</label>
+          <input id="registerEmail" type="email" autocomplete="email" required placeholder="tu@email.com">
+        </div>
+        <div>
+          <label for="registerPassword">Contraseña</label>
+          <input id="registerPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="Mínimo 6 caracteres">
+        </div>
+        <button id="registerButton" class="primary" type="submit">Crear mi cuenta</button>
+      </form>
+    </section>
+
+    <section id="unlinkedView" class="panel" hidden>
+      <div class="eyebrow">CUENTA CREADA</div>
+      <h2>Vincula tu jugador</h2>
+      <p class="muted">La sesión está activa, pero esta cuenta todavía no está asociada a una ficha de Patxanguilles.</p>
+      <form id="claimForm" class="form-stack compact">
+        <div>
+          <label for="claimPlayer">Jugador</label>
+          <select id="claimPlayer" required></select>
+        </div>
+        <div>
+          <label for="claimCode">Código de invitación</label>
+          <input id="claimCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required>
+        </div>
+        <button class="primary" type="submit">Vincular jugador</button>
+      </form>
+      <button id="unlinkedLogout" class="secondary" type="button">Cerrar sesión</button>
+    </section>
+
+    <section id="accountView" hidden>
+      <article class="panel account-card">
+        <div class="account-photo-wrap">
+          <img id="accountPhoto" class="account-photo" alt="Foto del jugador" hidden>
+          <div id="accountPhotoFallback" class="photo-fallback">⚽</div>
+        </div>
+        <div class="account-copy">
+          <div id="accountRole" class="eyebrow"></div>
+          <h2 id="accountName">Jugador</h2>
+          <p id="accountFullName" class="muted"></p>
+          <div class="account-actions">
+            <a id="openPlayerProfile" class="primary link-button" href="../">Abrir mi ficha</a>
+            <button id="logoutButton" class="secondary" type="button">Cerrar sesión</button>
+          </div>
+        </div>
+      </article>
+
+      <section id="adminPanel" class="panel admin-panel" hidden>
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">ADMIN</div>
+            <h2>Invitaciones de cuentas</h2>
+          </div>
+          <button id="refreshAdmin" class="secondary small" type="button">Actualizar</button>
+        </div>
+        <p class="muted">Genera un código de seis cifras y envíaselo al jugador. El código caduca a los 7 días y deja de servir cuando se usa.</p>
+        <div id="adminPlayers" class="admin-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+  <script src="./auth.js"></script>
+</body>
+</html>
