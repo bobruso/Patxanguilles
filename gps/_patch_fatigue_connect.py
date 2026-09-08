@@ -10,3 +10,4 @@ new2="  ${fatiguePanelHtml(speed,a?.durationS)}\n  ${hasHr?`<section class=\"pat
 if old2 not in s: raise SystemExit('section target missing')
 s=s.replace(old2,new2,1)
 p.write_text(s)
+# trigger connector workflow
