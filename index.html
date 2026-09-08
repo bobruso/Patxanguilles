@@ -4992,9 +4992,93 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v196</span>
+    <span class="history-version">VERSIÓN v202</span>
   </header>
+        
+        
+        
+        
+        
+        
         <section class="history-change-section">
+      <div class="history-section-number">153</div>
+      <div class="history-section-content">
+        <h2>GPS · animación simplificada al Recorrido</h2>
+        <ul>
+          <li>Se retira la animación del mapa de calor para evitar tirones y problemas de rendimiento; vuelve a mostrarse como mapa estático completo.</li>
+          <li>Se mantiene únicamente la animación del mapa Recorrido, con su deslizador 0′–60′ y Play/Pause, al ser la solución más fluida y estable.</li>
+          <li>La sección «Sobre el terreno real» vuelve a mostrar el recorrido completo de forma estática, sin controles temporales.</li>
+          <li>Se simplifica el código de animación del informe para reducir carga de CPU y posibles conflictos de renderizado.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">154</div>
+      <div class="history-section-content">
+        <h2>Álbum · corrección definitiva fila 2 página 3</h2>
+        <ul>
+          <li>Los slots 4, 5 y 6 de la página 3 se desplazan exactamente 4 px hacia arriba.</li>
+          <li>La corrección queda escrita directamente en album.html mediante una regla CSS final y prioritaria.</li>
+          <li>El instalador verifica después de escribir el archivo que la regla existe realmente y queda después de los estilos originales de la página 3.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">152</div>
+      <div class="history-section-content">
+        <h2>GPS · controles de animación independientes</h2>
+        <ul>
+          <li>Mapa de calor y Recorrido pasan a tener cada uno su propio deslizador 0′–60′ y su propio botón Play/Pause.</li>
+          <li>Las animaciones dejan de estar sincronizadas: reproducir o mover un mapa no modifica el estado temporal de los demás.</li>
+          <li>La sección «Sobre el terreno real» incorpora también su propio control temporal independiente para el trazado satélite.</li>
+          <li>Los tres controles se mantienen dentro de sus respectivos marcos o cabeceras sin modificar las dimensiones de los mapas ni desordenar el informe.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">151</div>
+      <div class="history-section-content">
+        <h2>GPS · heatmap animado y ajuste directo del álbum</h2>
+        <ul>
+          <li>El mismo deslizador 0′–60′ del mapa Recorrido pasa a animar también el mapa de calor, acumulando únicamente las posiciones GPS registradas hasta el minuto seleccionado.</li>
+          <li>La posición promedio y los puntos de sprint mostrados sobre el mapa de calor evolucionan con el tiempo seleccionado.</li>
+          <li>Recorrido, mapa de calor y vista satélite «Sobre el terreno real» quedan sincronizados con un único control temporal.</li>
+          <li>La corrección de la segunda fila de la página 3 del álbum queda escrita directamente en album.html: los slots 4, 5 y 6 suben 4 px.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">150</div>
+      <div class="history-section-content">
+        <h2>GPS · mapa real y recorrido animado</h2>
+        <ul>
+          <li>Las leyendas ATAQUE y DEFENSA de los mapas GPS reducen su tamaño para ganar limpieza visual.</li>
+          <li>El mapa Recorrido incorpora dentro del marco un control Play/Pause y un deslizador de 0′ a 60′ que redibuja progresivamente el trazado sin modificar el tamaño ni la estructura del informe.</li>
+          <li>Se añade al final del informe la sección «Sobre el terreno real», con vista satélite panorámica del campo calibrado de Santa Ana y el recorrido GPS superpuesto.</li>
+          <li>El recorrido del mapa satélite se sincroniza con el minuto seleccionado en el deslizador del mapa Recorrido.</li>
+          <li>En el álbum, la segunda fila de cartas de la página 3 sube 4 px para ajustar su encaje en el diseño.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">149</div>
+      <div class="history-section-content">
+        <h2>GPS · orientación física fija del campo</h2>
+        <ul>
+          <li>Los mapas GPS mantienen siempre la misma orientación física del terreno: Huerta a la izquierda y Muro a la derecha.</li>
+          <li>Cambiar Ley Rico ya no gira, espeja ni recalcula la geometría del mapa de calor, recorrido, ocupación, posición media ni puntos de sprint.</li>
+          <li>Ley Rico pasa a afectar únicamente a las etiquetas ATAQUE/DEFENSA y a la interpretación longitudinal de los datos, como tercios y rol estimado.</li>
+          <li>La misma regla se aplica tanto en el informe GPS guardado como en la previsualización al importar una actividad.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
       <div class="history-section-number">148</div>
       <div class="history-section-content">
         <h2>GPS · informe y ficha de partido</h2>
@@ -6858,7 +6942,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v196 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v202 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">

@@ -1,0 +1,51 @@
+/* v198 · recorrido animado + terreno real */
+.patx-gps-map-card{position:relative!important}
+
+.patx-v198-timeline{
+  position:absolute;
+  top:9px;
+  right:10px;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  width:190px;
+  padding:4px 6px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:9px;
+  background:rgba(7,13,10,.74);
+  backdrop-filter:blur(5px);
+  box-sizing:border-box;
+}
+.patx-v198-play{
+  flex:none;width:28px;height:28px;padding:0;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:7px;background:#17201b;color:#fff;
+  font-size:12px;font-weight:900;line-height:1;cursor:pointer;
+}
+.patx-v198-slider{flex:1 1 auto;min-width:0;width:auto;accent-color:#e3bb3b}
+.patx-v198-minute{flex:none;width:28px;text-align:right;font-size:11px;font-weight:900}
+.patx-gps-map-card:has(.patx-v198-timeline) .patx-gps-map-title{padding-right:205px!important}
+
+.patx-v198-terrain{width:100%;margin:24px 0 8px}
+.patx-v198-terrain-title{margin:0 0 10px;font-size:18px;font-weight:900;color:#fff}
+.patx-v198-terrain-map{
+  width:100%;aspect-ratio:21/9;min-height:220px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;overflow:hidden;background:#0b120e;
+}
+.patx-v198-terrain-map .leaflet-control-attribution{
+  padding:1px 4px!important;background:rgba(0,0,0,.34)!important;
+  color:rgba(255,255,255,.58)!important;font-size:9px!important;
+}
+.patx-v198-terrain-map .leaflet-control-attribution a{color:rgba(255,255,255,.68)!important}
+
+@media(max-width:700px){
+  .patx-v198-timeline{width:164px;right:7px;top:8px;gap:5px}
+  .patx-gps-map-card:has(.patx-v198-timeline) .patx-gps-map-title{padding-right:175px!important}
+  .patx-v198-play{width:26px;height:26px}
+  .patx-v198-minute{width:25px;font-size:10px}
+  .patx-v198-terrain{margin-top:20px}
+  .patx-v198-terrain-title{font-size:16px}
+  .patx-v198-terrain-map{min-height:0;aspect-ratio:21/9;border-radius:13px}
+}

@@ -1,0 +1,44 @@
+PATXANGUILLES v202 · ARCHIVOS PARA GITHUB
+==========================================
+
+Sube el CONTENIDO de esta carpeta respetando exactamente las rutas.
+
+RAÍZ
+----
+index.html
+album.html
+gps-report.html
+gps-upload.html
+gps-calibrate.html
+gps-fit-mvp.js
+
+CARPETA
+-------
+gps/   -> subir completa
+
+ESTADO FINAL INCLUIDO
+---------------------
+- versión/historial v202
+- Ley Rico cambia interpretación pero NO gira los mapas
+- Huerta izquierda / Muro derecha como orientación física fija
+- leyendas ATAQUE / DEFENSA reducidas
+- mapa de calor estático
+- Recorrido con animación Play/Pause + slider 0′-60′
+- "Sobre el terreno real" satélite, panorámico y estático
+- Ley Rico móvil y refinamientos GPS previos
+- botón de borrado de informe para admin
+- icono GPS en camisetas con datos
+- mejoras responsive del informe
+- vídeo de fondo móvil estabilizado
+- álbum móvil con navegación táctil introducida en esta tanda
+- página 3 del álbum: slots 4, 5 y 6, 4 px hacia arriba
+
+NO SUBIR
+--------
+APLICAR_V*.py
+LEEME de parches
+_files/
+ZIPs de pruebas
+carpetas PARA_SUBIR anteriores
+tests
+archivos temporales

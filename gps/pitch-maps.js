@@ -40,7 +40,7 @@ function drawPitchBase(ctx,w,h,margin){
 
 function drawDirection(ctx,w,h,margin,analysis){
   const dir=Number(analysis?.analysisDetail?.positional?.attackDirection)===-1?-1:1;
-  ctx.font='700 11px system-ui';ctx.fillStyle='rgba(255,255,255,.78)';
+  ctx.font='700 9px system-ui';ctx.fillStyle='rgba(255,255,255,.78)';
   if(dir===1){ctx.textAlign='left';ctx.fillText('◀ DEFENSA',margin+5,h-4);ctx.textAlign='right';ctx.fillText('ATAQUE ▶',w-margin-5,h-4)}
   else{ctx.textAlign='left';ctx.fillText('◀ ATAQUE',margin+5,h-4);ctx.textAlign='right';ctx.fillText('DEFENSA ▶',w-margin-5,h-4)}
 }
@@ -96,42 +96,179 @@ function heatColor(t){
   return stops.at(-1)[1];
 }
 
-export function drawHeatmap(canvas,analysis){
-  const grid=analysis?.heatmapGrid;
+export function drawHeatmapAtMinute(canvas,analysis,minute=Infinity){
+  const baseGrid=analysis?.heatmapGrid;
+  const trail=analysis?.trail;
+
+  if(!baseGrid?.length)return drawNoGps(canvas,'Sin datos GPS suficientes');
+
+  const finiteMinute=Number.isFinite(Number(minute));
+  const capSec=finiteMinute?Math.max(0,Number(minute))*60:Infinity;
+
+  let grid=baseGrid;
+  let avgPosition=analysis?.avgPosition||null;
+  let sprintPoints=analysis?.analysisDetail?.positional?.sprintPoints||[];
+
+  if(finiteMinute&&Array.isArray(trail)&&trail.length){
+    const gy=baseGrid.length;
+    const gx=baseGrid[0]?.length||0;
+    grid=Array.from({length:gy},()=>Array(gx).fill(0));
+
+    let sumU=0,sumV=0,count=0;
+
+    for(const pt of trail){
+      const t=Number(pt?.tSec);
+      if(Number.isFinite(t)&&t>capSec)continue;
+
+      const u=Math.max(0,Math.min(.999999,Number(pt?.u)||0));
+      const v=Math.max(0,Math.min(.999999,Number(pt?.v)||0));
+
+      const x=Math.min(gx-1,Math.floor(u*gx));
+      const y=Math.min(gy-1,Math.floor(v*gy));
+
+      if(x>=0&&y>=0){
+        grid[y][x]+=1;
+        sumU+=u;
+        sumV+=v;
+        count++;
+      }
+    }
+
+    avgPosition=count?{u:sumU/count,v:sumV/count}:null;
+
+    sprintPoints=(sprintPoints||[]).filter(sp=>{
+      const t=Number(sp?.tSec);
+      return !Number.isFinite(t)||t<=capSec;
+    });
+  }
+
   if(!grid?.length)return drawNoGps(canvas,'Sin datos GPS suficientes');
+
   const{ctx,w,h}=fitCanvas(canvas),margin=Math.max(14,w*.03),{pw,ph,map}=pitchMapper(w,h,margin);
   drawPitchBase(ctx,w,h,margin);
-  const gx=grid[0]?.length||0,gy=grid.length,max=Math.max(1,...grid.flat()),cellW=pw/Math.max(1,gx),radius=Math.max(11,cellW*1.8);
-  const layer=document.createElement('canvas');layer.width=Math.round(w);layer.height=Math.round(h);const lctx=layer.getContext('2d');
+
+  const gx=grid[0]?.length||0;
+  const gy=grid.length;
+  const max=Math.max(1,...grid.flat());
+  const cellW=pw/Math.max(1,gx);
+  const radius=Math.max(11,cellW*1.8);
+
+  const layer=document.createElement('canvas');
+  layer.width=Math.round(w);
+  layer.height=Math.round(h);
+  const lctx=layer.getContext('2d');
+
   for(let y=0;y<gy;y++)for(let x=0;x<gx;x++){
-    const value=grid[y][x];if(value<=0)continue;
-    const intensity=Math.pow(value/max,.55),p=map((x+.5)/gx,(y+.5)/gy),g=lctx.createRadialGradient(p.x,p.y,0,p.x,p.y,radius);
-    g.addColorStop(0,`rgba(0,0,0,${.92*intensity})`);g.addColorStop(1,'rgba(0,0,0,0)');lctx.fillStyle=g;lctx.fillRect(p.x-radius,p.y-radius,radius*2,radius*2);
+    const value=grid[y][x];
+    if(value<=0)continue;
+
+    const intensity=Math.pow(value/max,.55);
+    const p=map((x+.5)/gx,(y+.5)/gy);
+    const g=lctx.createRadialGradient(p.x,p.y,0,p.x,p.y,radius);
+
+    g.addColorStop(0,`rgba(0,0,0,${.92*intensity})`);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+
+    lctx.fillStyle=g;
+    lctx.fillRect(p.x-radius,p.y-radius,radius*2,radius*2);
   }
-  const img=lctx.getImageData(0,0,Math.round(w),Math.round(h)),d=img.data;
-  for(let i=0;i<d.length;i+=4){const a=d[i+3]/255;if(a<=.02){d[i+3]=0;continue}const c=heatColor(a);d[i]=c[0];d[i+1]=c[1];d[i+2]=c[2];d[i+3]=Math.min(235,a*235)}
-  lctx.putImageData(img,0,0);ctx.drawImage(layer,0,0,w,h);
-  if(analysis.avgPosition){const p=map(analysis.avgPosition.u,analysis.avgPosition.v);ctx.beginPath();ctx.fillStyle='#fff';ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='800 10px system-ui';ctx.textAlign='center';ctx.fillText('POSICIÓN PROMEDIO',p.x,p.y-13)}
-  drawSprintPoints(ctx,w,h,margin,analysis);
+
+  const img=lctx.getImageData(0,0,Math.round(w),Math.round(h));
+  const d=img.data;
+
+  for(let i=0;i<d.length;i+=4){
+    const a=d[i+3]/255;
+    if(a<=.02){
+      d[i+3]=0;
+      continue;
+    }
+    const c=heatColor(a);
+    d[i]=c[0];
+    d[i+1]=c[1];
+    d[i+2]=c[2];
+    d[i+3]=Math.min(235,a*235);
+  }
+
+  lctx.putImageData(img,0,0);
+  ctx.drawImage(layer,0,0,w,h);
+
+  if(avgPosition){
+    const p=map(avgPosition.u,avgPosition.v);
+    ctx.beginPath();
+    ctx.fillStyle='#fff';
+    ctx.strokeStyle='#111';
+    ctx.lineWidth=2;
+    ctx.arc(p.x,p.y,7,0,Math.PI*2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle='#111';
+    ctx.font='800 9px system-ui';
+    ctx.textAlign='center';
+    ctx.fillText('POS',p.x,p.y-11);
+  }
+
+  if(Array.isArray(sprintPoints)&&sprintPoints.length){
+    const proxy={
+      ...analysis,
+      analysisDetail:{
+        ...(analysis.analysisDetail||{}),
+        positional:{
+          ...(analysis.analysisDetail?.positional||{}),
+          sprintPoints
+        }
+      }
+    };
+    drawSprintPoints(ctx,w,h,margin,proxy);
+  }
+
   drawDirection(ctx,w,h,margin,analysis);
+}
+
+export function drawHeatmap(canvas,analysis){
+  return drawHeatmapAtMinute(canvas,analysis,Infinity);
 }
 
 function timeColor(t){return[Math.round(137+(255-137)*t),Math.round(88+(149-88)*t),Math.round(248+(28-248)*t)]}
 
-export function drawMovementTrail(canvas,analysis){
-  const pts=analysis?.trail;
-  if(!pts?.length)return drawNoGps(canvas,'Sin recorrido GPS suficiente');
+export function drawMovementTrailAtMinute(canvas,analysis,minute=Infinity){
+  const allPts=analysis?.trail;
+  if(!allPts?.length)return drawNoGps(canvas,'Sin recorrido GPS suficiente');
+  const capSec=Number.isFinite(Number(minute))?Math.max(0,Number(minute))*60:Infinity;
+  let pts=allPts.filter(p=>!Number.isFinite(Number(p?.tSec))||Number(p.tSec)<=capSec);
+  if(!pts.length)pts=[allPts[0]];
+
   const{ctx,w,h}=fitCanvas(canvas),margin=Math.max(14,w*.03),{map}=pitchMapper(w,h,margin);
   drawPitchBase(ctx,w,h,margin);
-  const tMax=pts.at(-1)?.tSec||1;
+  const tMax=allPts.at(-1)?.tSec||1;
   ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=Math.max(1.5,w/520);
+
   for(let i=1;i<pts.length;i++){
     const a=map(pts[i-1].u,pts[i-1].v),b=map(pts[i].u,pts[i].v),c=timeColor(Math.min(1,(pts[i].tSec||i)/tMax));
-    ctx.strokeStyle=`rgba(${c[0]},${c[1]},${c[2]},.68)`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+    ctx.strokeStyle=`rgba(${c[0]},${c[1]},${c[2]},.68)`;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
   }
-  const start=map(pts[0].u,pts[0].v),end=map(pts.at(-1).u,pts.at(-1).v);
-  for(const[p,label,fill]of[[start,'I','#fff'],[end,'F','#ffb01e']]){ctx.beginPath();ctx.fillStyle=fill;ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='800 9px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,p.x,p.y+.5)}
+
+  const start=map(allPts[0].u,allPts[0].v);
+  const endPt=pts.at(-1);
+  const end=map(endPt.u,endPt.v);
+
+  ctx.beginPath();
+  ctx.fillStyle='#fff';ctx.strokeStyle='#111';ctx.lineWidth=2;
+  ctx.arc(start.x,start.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#111';ctx.font='800 9px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('I',start.x,start.y+.5);
+
+  ctx.beginPath();
+  ctx.fillStyle='#ffb01e';ctx.strokeStyle='#111';ctx.lineWidth=2;
+  ctx.arc(end.x,end.y,7,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#111';ctx.font='800 9px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(Number.isFinite(Number(minute))&&Number(minute)<60?'•':'F',end.x,end.y+.5);
+
   drawDirection(ctx,w,h,margin,analysis);
+}
+
+export function drawMovementTrail(canvas,analysis){
+  return drawMovementTrailAtMinute(canvas,analysis,Infinity);
 }
 
 export function drawZoneOccupancy(canvas,analysis){

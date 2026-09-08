@@ -1,0 +1,82 @@
+/* v201 · solo Recorrido animado */
+
+.patx-gps-map-card{position:relative!important}
+
+.patx-v201-timeline{
+  position:absolute;
+  top:9px;
+  right:10px;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  width:190px;
+  padding:4px 6px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:9px;
+  background:rgba(7,13,10,.74);
+  backdrop-filter:blur(5px);
+  box-sizing:border-box;
+}
+
+.patx-v201-play{
+  flex:none;
+  width:28px;
+  height:28px;
+  padding:0;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:7px;
+  background:#17201b;
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  line-height:1;
+  cursor:pointer;
+}
+
+.patx-v201-slider{
+  flex:1 1 auto;
+  min-width:0;
+  width:auto;
+  accent-color:#e3bb3b;
+}
+
+.patx-v201-minute{
+  flex:none;
+  width:28px;
+  text-align:right;
+  font-size:11px;
+  font-weight:900;
+}
+
+.patx-gps-map-card:has(> .patx-v201-timeline) .patx-gps-map-title{
+  padding-right:205px!important;
+}
+
+/* Recupera la cabecera simple del mapa real */
+.patx-v198-terrain-title{
+  margin:0 0 10px!important;
+}
+
+@media(max-width:700px){
+  .patx-v201-timeline{
+    width:164px;
+    right:7px;
+    top:8px;
+    gap:5px;
+  }
+
+  .patx-gps-map-card:has(> .patx-v201-timeline) .patx-gps-map-title{
+    padding-right:175px!important;
+  }
+
+  .patx-v201-play{
+    width:26px;
+    height:26px;
+  }
+
+  .patx-v201-minute{
+    width:25px;
+    font-size:10px;
+  }
+}
