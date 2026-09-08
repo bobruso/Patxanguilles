@@ -18,13 +18,7 @@
   async function getToday() {
     const challenge = firstRow(await rpc('get_or_create_daily_challenge'));
     if (!challenge?.game_id) return challenge;
-
-    const { data: game, error } = await db
-      .from('game_definitions')
-      .select('category')
-      .eq('id', challenge.game_id)
-      .maybeSingle();
-
+    const { data: game, error } = await db.from('game_definitions').select('category').eq('id', challenge.game_id).maybeSingle();
     if (!error && game?.category) challenge.category = game.category;
     return challenge;
   }
@@ -33,11 +27,24 @@
     return firstRow(await rpc('start_daily_game_attempt'));
   }
 
-  async function finishAttempt({ attemptId, score, durationMs, metadata = {} }) {
+  async function getTriviaQuestions(attemptId) {
+    const data = await rpc('get_trivia_questions_for_attempt', { p_attempt_id: attemptId });
+    return Array.isArray(data) ? data : [];
+  }
+
+  async function finishAttempt({ attemptId, gameId, score, durationMs, metadata = {} }) {
+    const duration = Math.max(0, Math.round(Number(durationMs) || 0));
+    if (gameId === 'football-trivia') {
+      return firstRow(await rpc('finish_trivia_game_attempt', {
+        p_attempt_id: attemptId,
+        p_duration_ms: duration,
+        p_metadata: metadata || {}
+      }));
+    }
     return firstRow(await rpc('finish_daily_game_attempt', {
       p_attempt_id: attemptId,
       p_score: Number(score),
-      p_duration_ms: Math.max(0, Math.round(Number(durationMs) || 0)),
+      p_duration_ms: duration,
       p_metadata: metadata || {}
     }));
   }
@@ -69,6 +76,7 @@
   window.PatxChallengeService = Object.freeze({
     getToday,
     startAttempt,
+    getTriviaQuestions,
     finishAttempt,
     getLeaderboard,
     getLeaderboardForDate,
