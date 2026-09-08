@@ -3,6 +3,7 @@
 
   if (!window.PatxAuth) throw new Error('PatxAuth no está disponible');
   const db = window.PatxAuth.getClient();
+  const footballSkillGames = new Set(['spot-ball','perfect-pass','free-kick']);
 
   function firstRow(data) {
     if (Array.isArray(data)) return data[0] || null;
@@ -37,6 +38,14 @@
     if (gameId === 'football-trivia') {
       return firstRow(await rpc('finish_trivia_game_attempt', {
         p_attempt_id: attemptId,
+        p_duration_ms: duration,
+        p_metadata: metadata || {}
+      }));
+    }
+    if (footballSkillGames.has(gameId)) {
+      return firstRow(await rpc('finish_football_skill_attempt', {
+        p_attempt_id: attemptId,
+        p_score: Number(score),
         p_duration_ms: duration,
         p_metadata: metadata || {}
       }));
