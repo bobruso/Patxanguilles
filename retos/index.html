@@ -66,6 +66,45 @@
         <div class="empty">Cargando clasificación…</div>
       </div>
     </section>
+
+    <section class="leaderboard">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow neutral">TEMPORADA</div>
+          <h2 id="seasonName">Clasificación mensual</h2>
+        </div>
+        <div class="section-note">Puntos según posición diaria</div>
+      </div>
+      <div id="seasonRanking" class="panel ranking">
+        <div class="empty">Cargando temporada…</div>
+      </div>
+    </section>
+
+    <section class="leaderboard">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow neutral">AYER</div>
+          <h2 id="yesterdayTitle">Resultados anteriores</h2>
+        </div>
+        <div class="section-note">Último reto cerrado</div>
+      </div>
+      <div id="yesterdayRanking" class="panel ranking">
+        <div class="empty">Todavía no hay un reto anterior.</div>
+      </div>
+    </section>
+
+    <section class="leaderboard">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow neutral">ARCHIVO</div>
+          <h2>Historial de retos</h2>
+        </div>
+        <div class="section-note">Tus resultados y ganadores</div>
+      </div>
+      <div id="historyList" class="history-list">
+        <div class="panel empty">Cargando historial…</div>
+      </div>
+    </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -76,6 +115,11 @@
   <script src="./js/games/stop-seven.js"></script>
   <script src="./js/games/reaction.js"></script>
   <script src="./js/games/center-hit.js"></script>
+  <script src="./js/games/speed-tap.js"></script>
+  <script src="./js/games/color-reflex.js"></script>
+  <script src="./js/games/quick-maths.js"></script>
+  <script src="./js/games/grid-memory.js"></script>
+  <script src="./js/games/sequence.js"></script>
   <script src="./js/app.js"></script>
 </body>
 </html>
