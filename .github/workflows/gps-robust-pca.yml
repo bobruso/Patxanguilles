@@ -1,0 +1,37 @@
+name: GPS robust PCA calibration
+on:
+  push:
+    branches: [feature/gps-fit-mvp]
+    paths: ['.github/workflows/gps-robust-pca.yml']
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/gps-fit-mvp
+      - name: Make automatic field normalization robust to GPS outliers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('gps/fit-analysis.js'); s=p.read_text()
+          old="const uv=loc.map(p=>({u:p.x*ax+p.y*ay,v:p.x*bx+p.y*by})),us=uv.map(p=>p.u),vs=uv.map(p=>p.v),minU=Math.min(...us),maxU=Math.max(...us),minV=Math.min(...vs),maxV=Math.max(...vs),su=maxU-minU||1,sv=maxV-minV||1;\n  return{project:(lat,lon)=>{const x=(lon-mn)*r*c*R,y=(lat-ml)*r*R;return{u:(x*ax+y*ay-minU)/su,v:(x*bx+y*by-minV)/sv}}};"
+          new="const uv=loc.map(p=>({u:p.x*ax+p.y*ay,v:p.x*bx+p.y*by})),us=uv.map(p=>p.u),vs=uv.map(p=>p.v);\n  const lo=.015,hi=.985,minU=percentile(us,lo),maxU=percentile(us,hi),minV=percentile(vs,lo),maxV=percentile(vs,hi),su=maxU-minU||1,sv=maxV-minV||1;\n  const rejected=uv.filter(p=>p.u<minU||p.u>maxU||p.v<minV||p.v>maxV).length,quality=Math.max(0,1-rejected/Math.max(1,uv.length));\n  return{project:(lat,lon)=>{const x=(lon-mn)*r*c*R,y=(lat-ml)*r*R;return{u:(x*ax+y*ay-minU)/su,v:(x*bx+y*by-minV)/sv}},autoBounds:{trimLow:lo,trimHigh:hi,quality:+quality.toFixed(3),rejected}};"
+          if old not in s: raise SystemExit('PCA target not found')
+          s=s.replace(old,new)
+          s=s.replace("return{grid,zoneGrid,avgPosition,trail,points:pts,thirds:thirds.map(v=>v/(totalTime||1)),sides:sides.map(v=>v/(totalTime||1)),attackDirection:direction,fieldCalibrated:!!fieldTf,lengthM:fieldTf?.lengthM||null,widthM:fieldTf?.widthM||null};","return{grid,zoneGrid,avgPosition,trail,points:pts,thirds:thirds.map(v=>v/(totalTime||1)),sides:sides.map(v=>v/(totalTime||1)),attackDirection:direction,fieldCalibrated:!!fieldTf,autoBounds:fieldTf?null:(tf.autoBounds||null),lengthM:fieldTf?.lengthM||null,widthM:fieldTf?.widthM||null};")
+          s=s.replace("pitchDistanceFromTrackM:selectedPitch?.distanceFromTrackM??null,lengthM:pos?.lengthM??null,widthM:pos?.widthM??null","pitchDistanceFromTrackM:selectedPitch?.distanceFromTrackM??null,autoBounds:pos?.autoBounds||null,lengthM:pos?.lengthM??null,widthM:pos?.widthM??null")
+          p.write_text(s)
+          PY
+          node --check gps/fit-analysis.js
+          grep -q "trimLow:lo" gps/fit-analysis.js
+          grep -q "autoBounds:pos?.autoBounds" gps/fit-analysis.js
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gps/fit-analysis.js
+          git diff --cached --quiet || git commit -m "Make GPS auto field bounds robust to outliers"
+          git push
