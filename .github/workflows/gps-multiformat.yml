@@ -1,0 +1,30 @@
+name: GPS multiformat
+on:
+  push:
+    branches: [feature/gps-fit-mvp]
+    paths: ['gps/_patch_multiformat.py']
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/gps-fit-mvp
+      - run: python gps/_patch_multiformat.py
+      - run: node --check gps/fit-analysis.js && node --check gps/activity-import.js
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re,subprocess
+          s=Path('gps-upload.html').read_text()
+          for i,code in enumerate(re.findall(r'<script type="module">([\s\S]*?)</script>',s)):
+              p=Path(f'/tmp/gps-upload-{i}.mjs');p.write_text(code);subprocess.check_call(['node','--check',str(p)])
+          PY
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898238+github-actions[bot]@users.noreply.github.com"
+          git add gps/fit-analysis.js gps/activity-import.js gps-upload.html
+          git diff --cached --quiet || git commit -m "Support GPX and TCX GPS imports"
+          git push
