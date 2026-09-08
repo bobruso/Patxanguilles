@@ -60,3 +60,5 @@ jobs:
           if(!(tf.widthM>30&&tf.widthM<70))throw new Error('Unexpected pitch width '+tf.widthM);
           console.log('Homography OK',tf.lengthM.toFixed(1)+'m x '+tf.widthM.toFixed(1)+'m');
           JS
+      - name: Test continuous fatigue inference
+        run: node gps/fatigue-profile.test.mjs
