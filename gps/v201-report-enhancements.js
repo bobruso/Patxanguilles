@@ -293,7 +293,7 @@ function mount(){
   // El heatmap vuelve al renderer estático original:
   // no se toca ni se vuelve a dibujar desde este módulo.
   mountRouteControl();
-  mountTerrainStatic();
+  // v220: mapa satélite final retirado por decisión de producto.
 }
 
 let scheduled=false;
@@ -317,7 +317,7 @@ window.addEventListener('patx-gps-analysis-updated',()=>{
 
 window.addEventListener('resize',()=>{
   drawRoute();
-  if(terrainState.map)setTimeout(()=>terrainState.map.invalidateSize(),60);
+  // v220: sin mapa satélite final.
 });
 
 setTimeout(mount,0);

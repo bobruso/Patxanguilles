@@ -5355,7 +5355,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v217</span>
+    <span class="history-version">VERSIÓN v220</span>
   </header>
         
         
@@ -5366,7 +5366,45 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
         
         
         
-                                                                                                        <section class="history-change-section">
+                                                                                                                                <section class="history-change-section">
+      <div class="history-section-number">172</div>
+      <div class="history-section-content">
+        <h2>Informe GPS · retirada de la vista satélite final</h2>
+        <ul>
+          <li>Se elimina por completo la sección «Sobre el terreno real» y su mapa satélite del final del informe GPS.</li>
+          <li>Se conserva intacto el resto del análisis: métricas, mapa de calor, Recorrido animado, sprints, posición media, fatiga, Ley Rico, comparación y exportación PDF.</li>
+          <li>La pantalla de carga analítica deja de esperar a Leaflet o a cualquier servicio cartográfico externo y desaparece en cuanto el informe principal está montado.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">171</div>
+      <div class="history-section-content">
+        <h2>Informe GPS · restauración del mapa satélite estable</h2>
+        <ul>
+          <li>Se identifica que el informe estaba ejecutando simultáneamente el mapa Leaflet estable de v201 y un segundo renderer de terreno real añadido después; ambos reutilizaban la misma sección y el renderer nuevo terminaba sustituyendo el mapa que ya funcionaba.</li>
+          <li>Se retiran los renderers experimentales v212/v217/v218 del informe y se recupera como única fuente del mapa real la implementación Leaflet de v201, basada en Esri World Imagery y el campo calibrado de Supabase.</li>
+          <li>El mapa final vuelve a ser estático: satélite real + recorrido GPS superpuesto, mientras solo el mapa «Recorrido» conserva animación.</li>
+          <li>La pantalla de carga analítica permanece activa hasta detectar que Leaflet ha creado el mapa y sus tiles están disponibles.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">170</div>
+      <div class="history-section-content">
+        <h2>Informe GPS · mapa real por tiles sin bloqueo</h2>
+        <ul>
+          <li>La vista «Sobre el terreno real» deja de utilizar la exportación de imagen completa de Esri, que podía quedarse indefinidamente en «Cargando vista satélite».</li>
+          <li>El mapa se construye ahora mediante tiles georreferenciados de World Imagery y el recorrido GPS se proyecta en las mismas coordenadas Web Mercator para mantener la alineación exacta.</li>
+          <li>Se añade un contorno del campo calibrado y tiempos máximos de carga por tile para que el informe nunca quede esperando indefinidamente.</li>
+          <li>Si el satélite no responde, el informe intenta un mapa base alternativo y, como último recurso, mantiene visible el trazado GPS sobre el campo calibrado en lugar de dejar un contenedor vacío.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
       <div class="history-section-number">169</div>
       <div class="history-section-content">
         <h2>Informe GPS · mapa real estable y pantalla de carga</h2>
@@ -7527,7 +7565,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v217 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v220 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
