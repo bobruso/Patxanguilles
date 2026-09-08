@@ -12,57 +12,29 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: feature/gps-fit-mvp
-      - name: Add calibration context and orientation save feedback
+      - name: Replace misleading auto-adjust quality with explicit outlier count
         run: |
           python - <<'PY'
           from pathlib import Path
-
           p=Path('gps/player-gps-panel.js'); s=p.read_text()
-          old="  const pitchContext=pos.pitchName?`<div class=\"patx-gps-note patx-gps-context\">Campo: <b>${esc(pos.pitchName)}</b>${finite(pos.lengthM)&&finite(pos.widthM)?` · ${Number(pos.lengthM).toFixed(0)} × ${Number(pos.widthM).toFixed(0)} m`:''}</div>`:'';"
-          new="  const autoQuality=finite(pos.autoBounds?.quality)?Math.round(Number(pos.autoBounds.quality)*100):null;\n  const contextLabel=pos.fieldCalibrated?'CAMPO CALIBRADO':'AUTOAJUSTE GPS';\n  const contextDetail=pos.pitchName?`${esc(pos.pitchName)}${finite(pos.lengthM)&&finite(pos.widthM)?` · ${Number(pos.lengthM).toFixed(0)} × ${Number(pos.widthM).toFixed(0)} m`:''}`:`Rectángulo robusto del recorrido${autoQuality!=null?` · calidad ${autoQuality}%`:''}`;\n  const pitchContext=`<div class=\"patx-gps-context-row\"><span class=\"patx-gps-context-badge ${pos.fieldCalibrated?'is-calibrated':'is-auto'}\">${contextLabel}</span><span>${contextDetail}</span></div>`;"
-          if old not in s: raise SystemExit('player context target missing')
-          s=s.replace(old,new)
-          s=s.replace("<small>Invierte el eje del campo y recalcula ocupación, posición media y rol estimado.</small>","<small>Invierte el eje del campo y recalcula ocupación, posición media, ubicación de sprints y rol estimado.</small><span class=\"patx-gps-orientation-state\" data-gps-orientation-state></span>")
-          s=s.replace("Heurística basada en ocupación longitudinal/lateral, dispersión del movimiento y frecuencia de sprints relativos.","Heurística basada en ocupación longitudinal/lateral, dispersión del movimiento, frecuencia y ubicación de los sprints relativos.")
+          s=s.replace("  const autoQuality=finite(pos.autoBounds?.quality)?Math.round(Number(pos.autoBounds.quality)*100):null;\n", "  const autoRejected=finite(pos.autoBounds?.rejected)?Math.round(Number(pos.autoBounds.rejected)):null;\n")
+          s=s.replace("`Rectángulo robusto del recorrido${autoQuality!=null?` · calidad ${autoQuality}%`:''}`", "`Rectángulo robusto del recorrido${autoRejected!=null?` · ${autoRejected} puntos extremos ignorados`:''}`")
           p.write_text(s)
-
-          p=Path('gps/gps-panel.css'); s=p.read_text()
-          insert=".patx-gps-context-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:7px;color:#9aa69f;font-size:10px}.patx-gps-context-badge{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:950;letter-spacing:.11em;border:1px solid rgba(255,255,255,.13)}.patx-gps-context-badge.is-calibrated{background:rgba(72,187,120,.12);color:#9fe0b9;border-color:rgba(72,187,120,.28)}.patx-gps-context-badge.is-auto{background:rgba(70,150,220,.12);color:#9bd2ff;border-color:rgba(70,150,220,.28)}.patx-gps-orientation-state{margin-left:auto;color:#8bd2ff!important;font-weight:800}.patx-gps-orientation-state.is-error{color:#ff9f9f!important}\n"
-          if '.patx-gps-context-row{' not in s:
-              s=s.replace('.patx-gps-role-pill{',insert+'.patx-gps-role-pill{')
-          s=s.replace('@media(max-width:560px){','@media(max-width:560px){.patx-gps-context-row{align-items:flex-start}.patx-gps-orientation-state{margin-left:0;width:100%}')
-          p.write_text(s)
-
           p=Path('gps-upload.html'); s=p.read_text()
-          old="$('status').innerHTML=`Análisis listo${pos.pitchName?` · campo: <b>${esc(pos.pitchName)}</b>`:''} · <b>${latest.sprintCount}</b> sprints relativos${Number.isFinite(Number(s.relativeSprintCutoffKmh))?` (umbral ≈ ${Number(s.relativeSprintCutoffKmh).toFixed(1)} km/h)`:''} · ${s.absoluteSprintCount18??0} esfuerzos &gt;18 km/h.`"
-          new="const quality=Number.isFinite(Number(pos.autoBounds?.quality))?Math.round(Number(pos.autoBounds.quality)*100):null,geo=pos.fieldCalibrated?`campo calibrado: <b>${esc(pos.pitchName||'campo guardado')}</b>`:`autoajuste GPS${quality!=null?` · calidad <b>${quality}%</b>`:''}`;$('status').innerHTML=`Análisis listo · ${geo} · <b>${latest.sprintCount}</b> sprints relativos${Number.isFinite(Number(s.relativeSprintCutoffKmh))?` (umbral ≈ ${Number(s.relativeSprintCutoffKmh).toFixed(1)} km/h)`:''} · ${s.absoluteSprintCount18??0} esfuerzos &gt;18 km/h.`"
-          if old not in s: raise SystemExit('upload status target missing')
-          s=s.replace(old,new)
-          p.write_text(s)
-
-          p=Path('gps-report.html'); s=p.read_text()
-          old="function bind(){const back=root.querySelector('[data-gps-back]');if(back)back.onclick=()=>history.length>1?history.back():location.assign('./index.html');root.querySelectorAll('[data-gps-dir]').forEach(btn=>btn.onclick=async()=>{const dir=Number(btn.dataset.gpsDir)===-1?-1:1;if(analysis?.analysisDetail?.positional?.attackDirection===dir)return;analysis=setAttackDirection(analysis,dir);render();const{error}=await sb.from('match_player_gps').update({attack_direction:dir,heatmap_grid:analysis.heatmapGrid,zone_grid:analysis.zoneGrid,avg_position:analysis.avgPosition,trail:analysis.trail,analysis_detail:analysis.analysisDetail,updated_at:new Date().toISOString()}).eq('match_id',matchId).eq('player_id',playerId);if(error)console.warn('[GPS] No se pudo guardar orientación',error)})}"
-          new="function setOrientationState(text,isError=false){const el=root.querySelector('[data-gps-orientation-state]');if(!el)return;el.textContent=text||'';el.classList.toggle('is-error',!!isError)}function bind(){const back=root.querySelector('[data-gps-back]');if(back)back.onclick=()=>history.length>1?history.back():location.assign('./index.html');root.querySelectorAll('[data-gps-dir]').forEach(btn=>btn.onclick=async()=>{const dir=Number(btn.dataset.gpsDir)===-1?-1:1;if(analysis?.analysisDetail?.positional?.attackDirection===dir)return;analysis=setAttackDirection(analysis,dir);render();setOrientationState('Guardando orientación…');const{error}=await sb.from('match_player_gps').update({attack_direction:dir,heatmap_grid:analysis.heatmapGrid,zone_grid:analysis.zoneGrid,avg_position:analysis.avgPosition,trail:analysis.trail,analysis_detail:analysis.analysisDetail,updated_at:new Date().toISOString()}).eq('match_id',matchId).eq('player_id',playerId);if(error){console.warn('[GPS] No se pudo guardar orientación',error);setOrientationState('No se pudo guardar',true)}else setOrientationState('Orientación guardada')})}"
-          if old not in s: raise SystemExit('report bind target missing')
-          s=s.replace(old,new)
+          s=s.replace("const quality=Number.isFinite(Number(pos.autoBounds?.quality))?Math.round(Number(pos.autoBounds.quality)*100):null,geo=pos.fieldCalibrated?`campo calibrado: <b>${esc(pos.pitchName||'campo guardado')}</b>`:`autoajuste GPS${quality!=null?` · calidad <b>${quality}%</b>`:''}`;", "const rejected=Number.isFinite(Number(pos.autoBounds?.rejected))?Math.round(Number(pos.autoBounds.rejected)):null,geo=pos.fieldCalibrated?`campo calibrado: <b>${esc(pos.pitchName||'campo guardado')}</b>`:`autoajuste GPS${rejected!=null?` · <b>${rejected}</b> puntos extremos ignorados`:''}`;")
           p.write_text(s)
           PY
           node --check gps/player-gps-panel.js
           python - <<'PY'
           from pathlib import Path
-          import re, tempfile, subprocess
-          for name in ['gps-upload.html','gps-report.html']:
-              txt=Path(name).read_text()
-              blocks=re.findall(r'<script type="module">(.*?)</script>',txt,re.S)
-              assert blocks, name
-              for i,b in enumerate(blocks):
-                  f=Path('/tmp')/f'{name}-{i}.mjs'; f.write_text(b)
-                  subprocess.run(['node','--check',str(f)],check=True)
+          import re,subprocess
+          txt=Path('gps-upload.html').read_text(); b=re.findall(r'<script type="module">(.*?)</script>',txt,re.S)[0]
+          f=Path('/tmp/gps-upload.mjs'); f.write_text(b); subprocess.run(['node','--check',str(f)],check=True)
           PY
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add gps/player-gps-panel.js gps/gps-panel.css gps-upload.html gps-report.html
-          git diff --cached --quiet || git commit -m "Show GPS calibration context and orientation save state"
+          git add gps/player-gps-panel.js gps-upload.html
+          git diff --cached --quiet || git commit -m "Clarify GPS auto-adjust outlier handling"
           git push
