@@ -1,0 +1,24 @@
+.eyebrow.neutral{color:#8f9aa8;margin-bottom:5px}
+.history-list{display:grid;gap:10px}
+.history-card{padding:15px 17px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px 14px;align-items:center}
+.history-date{font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#8f9aa8}
+.history-main{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0}
+.history-main strong{font-size:14px}.history-main span{font-size:12px;color:#c7ced6;text-align:right}
+.history-foot{grid-column:2;display:flex;justify-content:space-between;gap:14px;color:#707c89;font-size:10px}
+.round-counter{margin-top:12px;color:#8f9aa8;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.speed-tap-surface{touch-action:none}
+.color-target,.math-question{font-size:clamp(48px,15vw,86px);font-weight:950;letter-spacing:-.055em;line-height:.95;margin:24px 0}
+.color-grid,.answer-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(520px,100%);margin-bottom:20px}
+.color-option,.answer-option,.memory-cell,.sequence-pad{border:1px solid rgba(255,255,255,.12);background:#171d26;color:#fff;border-radius:16px;font-weight:900;cursor:pointer;touch-action:manipulation}
+.color-option,.answer-option{min-height:68px;padding:14px;font-size:16px}
+.color-0{background:#6d2028}.color-1{background:#203c73}.color-2{background:#245b3d}.color-3{background:#766323}
+.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;width:min(390px,88vw);margin:24px auto}
+.memory-cell{aspect-ratio:1;background:#171d26;padding:0}
+.memory-cell.is-lit{background:#f3f6f8;box-shadow:0 0 26px rgba(255,255,255,.22)}
+.memory-cell.is-picked{background:#38694a}
+.memory-cell.is-wrong{background:#762b34}
+.sequence-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(390px,88vw);margin:24px auto}
+.sequence-pad{aspect-ratio:1;font-size:22px;background:#171d26;transition:transform .08s ease,filter .08s ease,background .08s ease}
+.sequence-pad.is-lit{background:#f3f6f8;color:#080a0e;transform:scale(.96);filter:brightness(1.15)}
+.season-row .rank-meta{white-space:normal}
+@media(max-width:520px){.history-card{grid-template-columns:58px minmax(0,1fr);padding:13px}.history-main{align-items:flex-start;flex-direction:column;gap:4px}.history-main span{text-align:left}.history-foot{grid-column:1/-1;padding-left:58px;flex-direction:column;gap:3px}.color-option,.answer-option{min-height:62px}.color-target,.math-question{margin:18px 0}.memory-grid,.sequence-grid{width:min(330px,86vw)}}
