@@ -10,17 +10,13 @@ on:
       - '.github/workflows/gps-smoke.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: feature/gps-fit-mvp
-      - name: Apply habitual calibrator patch
-        run: python gps/_patch_calibrator_habitual.py
       - name: Check JavaScript module syntax
         run: |
           for file in gps/*.js; do
@@ -41,8 +37,6 @@ jobs:
                   path.write_text(block,encoding='utf-8')
                   print('Checking',page,'module',i)
                   subprocess.run(['node','--check',str(path)],check=True)
-          assert 'draggable:true' in Path('gps-calibrate.html').read_text()
-          assert 'Guardar como campo habitual' in Path('gps-calibrate.html').read_text()
           PY
       - name: Test calibrated pitch homography
         run: |
@@ -68,10 +62,3 @@ jobs:
           JS
       - name: Test continuous fatigue inference
         run: node gps/fatigue-profile.test.mjs
-      - name: Commit habitual calibrator
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add gps-calibrate.html
-          git diff --cached --quiet || git commit -m "Polish habitual GPS field calibrator"
-          git push
