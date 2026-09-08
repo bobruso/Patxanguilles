@@ -1,18 +1,13 @@
 (() => {
   'use strict';
 
-  const config = window.PATX_AUTH_CONFIG;
-  if (!config || !window.supabase) {
+  if (!window.PatxAuth) {
     document.body.innerHTML = '<p style="padding:24px;color:white">No se ha podido cargar el sistema de autenticación.</p>';
     return;
   }
 
-  const db = window.supabase.createClient(
-    config.supabaseUrl,
-    config.supabasePublishableKey,
-    { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
-  );
-
+  const auth = window.PatxAuth;
+  const db = auth.getClient();
   const $ = (id) => document.getElementById(id);
   const els = {
     status: $('statusBanner'),
@@ -22,18 +17,21 @@
     loginTab: $('loginTab'),
     registerTab: $('registerTab'),
     loginForm: $('loginForm'),
-    registerForm: $('registerForm'),
-    loginEmail: $('loginEmail'),
+    loginPlayer: $('loginPlayer'),
     loginPassword: $('loginPassword'),
     loginButton: $('loginButton'),
+    registerFlow: $('registerFlow'),
+    registerRequestForm: $('registerRequestForm'),
     registerPlayer: $('registerPlayer'),
-    inviteCode: $('inviteCode'),
-    registerEmail: $('registerEmail'),
     registerPassword: $('registerPassword'),
-    registerButton: $('registerButton'),
-    claimForm: $('claimForm'),
-    claimPlayer: $('claimPlayer'),
-    claimCode: $('claimCode'),
+    registerPasswordRepeat: $('registerPasswordRepeat'),
+    requestRegistrationButton: $('requestRegistrationButton'),
+    codeStep: $('codeStep'),
+    codeStepCopy: $('codeStepCopy'),
+    registrationCode: $('registrationCode'),
+    completeRegistrationForm: $('completeRegistrationForm'),
+    completeRegistrationButton: $('completeRegistrationButton'),
+    restartRegistration: $('restartRegistration'),
     unlinkedLogout: $('unlinkedLogout'),
     accountRole: $('accountRole'),
     accountName: $('accountName'),
@@ -47,8 +45,11 @@
     refreshAdmin: $('refreshAdmin')
   };
 
+  let currentTab = 'login';
   let currentAccount = null;
-  let claimablePlayers = [];
+  let availablePlayers = [];
+  let registeredPlayers = [];
+  let pendingRegistration = null;
 
   function showStatus(message, type = '') {
     els.status.textContent = message;
@@ -74,52 +75,15 @@
     }
   }
 
-  function switchTab(mode) {
-    const login = mode === 'login';
-    els.loginTab.classList.toggle('active', login);
-    els.registerTab.classList.toggle('active', !login);
-    els.loginForm.hidden = !login;
-    els.registerForm.hidden = login;
-    clearStatus();
-    if (!login) loadClaimablePlayers();
-  }
-
-  function hideAllViews() {
-    els.loggedOut.hidden = true;
-    els.unlinked.hidden = true;
-    els.account.hidden = true;
-  }
-
-  async function loadClaimablePlayers() {
-    const { data, error } = await db.rpc('list_claimable_players');
-    if (error) {
-      claimablePlayers = [];
-      populatePlayerSelect(els.registerPlayer, []);
-      populatePlayerSelect(els.claimPlayer, []);
-      showStatus(`No se pudieron cargar los jugadores disponibles: ${error.message}`, 'error');
-      return;
-    }
-
-    claimablePlayers = data || [];
-    populatePlayerSelect(els.registerPlayer, claimablePlayers);
-    populatePlayerSelect(els.claimPlayer, claimablePlayers);
-
-    const pending = readPendingClaim();
-    if (pending?.playerId && claimablePlayers.some((p) => String(p.id) === String(pending.playerId))) {
-      els.claimPlayer.value = String(pending.playerId);
-      els.registerPlayer.value = String(pending.playerId);
-      els.claimCode.value = pending.code || '';
-      els.inviteCode.value = pending.code || '';
-    }
-  }
-
-  function populatePlayerSelect(select, players) {
+  function populatePlayerSelect(select, players, emptyText, placeholderText) {
     if (!select) return;
+    const previous = select.value;
     select.innerHTML = '';
+
     if (!players.length) {
       const option = document.createElement('option');
       option.value = '';
-      option.textContent = 'No hay invitaciones activas';
+      option.textContent = emptyText;
       select.appendChild(option);
       select.disabled = true;
       return;
@@ -128,102 +92,77 @@
     select.disabled = false;
     const placeholder = document.createElement('option');
     placeholder.value = '';
-    placeholder.textContent = 'Selecciona tu jugador';
+    placeholder.textContent = placeholderText;
     select.appendChild(placeholder);
 
     for (const player of players) {
       const option = document.createElement('option');
-      option.value = player.id;
+      option.value = String(player.id);
       option.textContent = player.nickname;
       select.appendChild(option);
     }
-  }
 
-  function savePendingClaim(playerId, code) {
-    localStorage.setItem('patx_pending_account_claim', JSON.stringify({
-      playerId: String(playerId),
-      code: String(code || '').trim(),
-      savedAt: Date.now()
-    }));
-  }
-
-  function readPendingClaim() {
-    try {
-      const raw = localStorage.getItem('patx_pending_account_claim');
-      return raw ? JSON.parse(raw) : null;
-    } catch (_) {
-      return null;
+    if (players.some((player) => String(player.id) === String(previous))) {
+      select.value = previous;
     }
   }
 
-  function clearPendingClaim() {
-    localStorage.removeItem('patx_pending_account_claim');
-  }
-
-  async function signIn(email, password) {
-    return db.auth.signInWithPassword({ email: email.trim(), password });
-  }
-
-  async function claimPlayer(playerId, inviteCode) {
-    const { data, error } = await db.rpc('claim_player_profile', {
-      p_player_id: Number(playerId),
-      p_invite_code: String(inviteCode).trim()
-    });
-    if (error) throw error;
-    clearPendingClaim();
-    return data;
-  }
-
-  async function getMyAccount() {
-    const { data, error } = await db.rpc('get_my_account');
-    if (error) throw error;
-    return Array.isArray(data) ? (data[0] || null) : data;
-  }
-
-  async function renderAuthState() {
-    clearStatus();
-    const { data: sessionData } = await db.auth.getSession();
-    const session = sessionData?.session;
-
-    if (!session) {
-      currentAccount = null;
-      hideAllViews();
-      els.loggedOut.hidden = false;
-      switchTab('login');
-      return;
-    }
-
+  async function loadRegisteredPlayers() {
     try {
-      currentAccount = await getMyAccount();
+      registeredPlayers = await auth.listRegisteredPlayers();
+      populatePlayerSelect(
+        els.loginPlayer,
+        registeredPlayers,
+        'Todavía no hay cuentas registradas',
+        'Selecciona tu jugador'
+      );
     } catch (error) {
-      hideAllViews();
-      els.loggedOut.hidden = false;
-      showStatus(`La sesión existe, pero no se pudo cargar el perfil: ${error.message}`, 'error');
-      return;
+      registeredPlayers = [];
+      populatePlayerSelect(els.loginPlayer, [], 'No se pudieron cargar las cuentas', 'Selecciona tu jugador');
+      showStatus(error.message, 'error');
     }
+  }
 
-    if (!currentAccount || !currentAccount.player_id) {
-      hideAllViews();
-      els.unlinked.hidden = false;
-      await loadClaimablePlayers();
-      const pending = readPendingClaim();
-      if (pending) {
-        els.claimPlayer.value = pending.playerId || '';
-        els.claimCode.value = pending.code || '';
-      }
-      return;
+  async function loadAvailablePlayers() {
+    try {
+      availablePlayers = await auth.listAvailablePlayers();
+      populatePlayerSelect(
+        els.registerPlayer,
+        availablePlayers,
+        'Todos los jugadores ya tienen cuenta',
+        'Selecciona quién eres'
+      );
+    } catch (error) {
+      availablePlayers = [];
+      populatePlayerSelect(els.registerPlayer, [], 'No se pudieron cargar los jugadores', 'Selecciona quién eres');
+      showStatus(error.message, 'error');
     }
+  }
 
-    hideAllViews();
-    els.account.hidden = false;
-    renderAccount(currentAccount);
+  async function switchTab(mode) {
+    currentTab = mode === 'register' ? 'register' : 'login';
+    const login = currentTab === 'login';
+    els.loginTab.classList.toggle('active', login);
+    els.registerTab.classList.toggle('active', !login);
+    els.loginForm.hidden = !login;
+    els.registerFlow.hidden = login;
+    clearStatus();
 
-    if (currentAccount.role === 'admin') {
-      els.adminPanel.hidden = false;
-      await loadAdminPlayers();
+    if (login) {
+      await loadRegisteredPlayers();
     } else {
-      els.adminPanel.hidden = true;
+      if (!pendingRegistration) {
+        els.registerRequestForm.hidden = false;
+        els.codeStep.hidden = true;
+      }
+      await loadAvailablePlayers();
     }
+  }
+
+  function hideAllViews() {
+    els.loggedOut.hidden = true;
+    els.unlinked.hidden = true;
+    els.account.hidden = true;
   }
 
   function renderAccount(account) {
@@ -239,6 +178,36 @@
     } else {
       els.accountPhoto.hidden = true;
       els.accountPhotoFallback.hidden = false;
+    }
+  }
+
+  async function renderAuthState() {
+    const state = await auth.getState(true);
+
+    if (!state.signedIn) {
+      currentAccount = null;
+      hideAllViews();
+      els.loggedOut.hidden = false;
+      await switchTab(currentTab);
+      return;
+    }
+
+    currentAccount = state.account;
+    if (!state.linked) {
+      hideAllViews();
+      els.unlinked.hidden = false;
+      return;
+    }
+
+    hideAllViews();
+    els.account.hidden = false;
+    renderAccount(currentAccount);
+
+    if (state.isAdmin) {
+      els.adminPanel.hidden = false;
+      await loadAdminPlayers();
+    } else {
+      els.adminPanel.hidden = true;
     }
   }
 
@@ -258,8 +227,8 @@
 
     const profileByPlayer = new Map(
       (profilesResult.data || [])
-        .filter((p) => p.player_id != null)
-        .map((p) => [String(p.player_id), p])
+        .filter((profile) => profile.player_id != null)
+        .map((profile) => [String(profile.player_id), profile])
     );
 
     els.adminPlayers.innerHTML = '';
@@ -276,63 +245,43 @@
       const copy = document.createElement('div');
       copy.innerHTML = `
         <div class="admin-name">${escapeHtml(player.nickname)}</div>
-        <div class="admin-state">${profile ? `Cuenta activa · ${escapeHtml(profile.role)}` : 'Sin cuenta vinculada'}</div>
+        <div class="admin-state">${profile ? `Cuenta activa · ${escapeHtml(profile.role)}` : 'Disponible para registro'}</div>
       `;
 
-      const action = document.createElement('button');
-      action.className = 'secondary small row-action';
-      action.type = 'button';
-      action.textContent = profile ? 'Vinculada' : 'Generar código';
-      action.disabled = Boolean(profile);
+      const badge = document.createElement('span');
+      badge.className = `account-state-badge ${profile ? 'active' : ''}`;
+      badge.textContent = profile ? 'REGISTRADO' : 'LIBRE';
 
-      if (!profile) {
-        action.addEventListener('click', () => generateInvite(player, row, action));
-      }
-
-      row.append(avatar, copy, action);
+      row.append(avatar, copy, badge);
       els.adminPlayers.appendChild(row);
     }
   }
 
-  async function generateInvite(player, row, button) {
+  function beginCodeStep(result, playerId, nickname, password) {
+    pendingRegistration = {
+      requestId: result.request_id,
+      playerId: Number(playerId),
+      nickname,
+      password
+    };
+
+    els.registerRequestForm.hidden = true;
+    els.codeStep.hidden = false;
+    els.codeStepCopy.textContent = result.already_pending
+      ? `Ya existe una solicitud activa para ${nickname}. El administrador ya tiene el código de esa solicitud.`
+      : `Has solicitado crear la cuenta de ${nickname}. La cuenta no se creará hasta que introduzcas el código correcto.`;
+    els.registrationCode.value = '';
+    setTimeout(() => els.registrationCode.focus(), 50);
+  }
+
+  function restartRegistrationFlow() {
+    pendingRegistration = null;
+    els.codeStep.hidden = true;
+    els.registerRequestForm.hidden = false;
+    els.registrationCode.value = '';
+    els.registerPassword.value = '';
+    els.registerPasswordRepeat.value = '';
     clearStatus();
-    setBusy(button, true, 'Generando…');
-    const { data, error } = await db.rpc('admin_create_player_invite', {
-      p_player_id: Number(player.id),
-      p_valid_hours: 168
-    });
-    setBusy(button, false);
-
-    if (error) {
-      showStatus(error.message, 'error');
-      return;
-    }
-
-    const invite = Array.isArray(data) ? data[0] : data;
-    if (!invite?.invite_code) {
-      showStatus('No se recibió el código de invitación.', 'error');
-      return;
-    }
-
-    button.textContent = 'Regenerar código';
-    const oldCode = row.querySelector('.code-box');
-    if (oldCode) oldCode.remove();
-
-    const codeBox = document.createElement('button');
-    codeBox.type = 'button';
-    codeBox.className = 'code-box row-action';
-    codeBox.textContent = `${invite.invite_code} · copiar`;
-    codeBox.title = 'Pulsa para copiar el código';
-    codeBox.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(invite.invite_code);
-        codeBox.textContent = `${invite.invite_code} · copiado`;
-      } catch (_) {
-        codeBox.textContent = invite.invite_code;
-      }
-    });
-    row.appendChild(codeBox);
-    showStatus(`Código generado para ${player.nickname}. Caduca en 7 días.`, 'success');
   }
 
   function escapeHtml(value) {
@@ -350,85 +299,109 @@
   els.loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     clearStatus();
-    setBusy(els.loginButton, true, 'Entrando…');
-    const { error } = await signIn(els.loginEmail.value, els.loginPassword.value);
-    setBusy(els.loginButton, false);
-    if (error) {
-      showStatus(error.message, 'error');
+
+    const playerId = els.loginPlayer.value;
+    const password = els.loginPassword.value;
+    if (!playerId || password.length === 0) {
+      showStatus('Selecciona tu jugador y escribe tu contraseña.', 'error');
       return;
     }
-    els.loginPassword.value = '';
-    await renderAuthState();
+
+    setBusy(els.loginButton, true, 'Entrando…');
+    try {
+      await auth.signInPlayer(playerId, password);
+      els.loginPassword.value = '';
+      await renderAuthState();
+    } catch (error) {
+      showStatus(error.message, 'error');
+    } finally {
+      setBusy(els.loginButton, false);
+    }
   });
 
-  els.registerForm.addEventListener('submit', async (event) => {
+  els.registerRequestForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     clearStatus();
 
     const playerId = els.registerPlayer.value;
-    const code = els.inviteCode.value.trim();
-    const email = els.registerEmail.value.trim();
     const password = els.registerPassword.value;
+    const repeat = els.registerPasswordRepeat.value;
+    const player = availablePlayers.find((item) => String(item.id) === String(playerId));
 
-    if (!playerId) {
-      showStatus('Selecciona tu jugador.', 'error');
+    if (!playerId || !player) {
+      showStatus('Selecciona quién eres.', 'error');
+      return;
+    }
+    if (password.length === 0) {
+      showStatus('Escribe una contraseña. Puede ser la que quieras, pero no puede estar vacía.', 'error');
+      return;
+    }
+    if (password !== repeat) {
+      showStatus('Las dos contraseñas no coinciden.', 'error');
       return;
     }
 
-    savePendingClaim(playerId, code);
-    setBusy(els.registerButton, true, 'Creando cuenta…');
-
-    const { data, error } = await db.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { display_name: claimablePlayers.find((p) => String(p.id) === String(playerId))?.nickname || '' }
-      }
-    });
-
-    if (error) {
-      setBusy(els.registerButton, false);
-      showStatus(error.message, 'error');
-      return;
-    }
-
-    if (!data.session) {
-      setBusy(els.registerButton, false);
-      showStatus('La cuenta se ha creado, pero Supabase todavía exige confirmar el email. Para Patxanguilles desactivaremos esa confirmación; después el alta será inmediata.', 'error');
-      return;
-    }
-
+    setBusy(els.requestRegistrationButton, true, 'Avisando al administrador…');
     try {
-      await claimPlayer(playerId, code);
-      setBusy(els.registerButton, false);
-      showStatus('Cuenta creada y jugador vinculado correctamente.', 'success');
-      await renderAuthState();
-    } catch (claimError) {
-      setBusy(els.registerButton, false);
-      showStatus(`La cuenta se creó, pero no se pudo vincular el jugador: ${claimError.message}`, 'error');
-      await renderAuthState();
+      const result = await auth.requestRegistration(playerId);
+      beginCodeStep(result, playerId, player.nickname, password);
+      showStatus('Solicitud preparada. Pide el código al administrador.', 'success');
+    } catch (error) {
+      showStatus(error.message, 'error');
+      if (error.status === 409) await loadAvailablePlayers();
+    } finally {
+      setBusy(els.requestRegistrationButton, false);
     }
   });
 
-  els.claimForm.addEventListener('submit', async (event) => {
+  els.completeRegistrationForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     clearStatus();
-    const button = els.claimForm.querySelector('button[type="submit"]');
-    setBusy(button, true, 'Vinculando…');
+
+    if (!pendingRegistration) {
+      showStatus('La solicitud ya no está disponible. Empieza de nuevo.', 'error');
+      restartRegistrationFlow();
+      return;
+    }
+
+    const code = els.registrationCode.value.trim();
+    if (!/^\d{6}$/.test(code)) {
+      showStatus('Introduce el código de 6 cifras.', 'error');
+      return;
+    }
+
+    setBusy(els.completeRegistrationButton, true, 'Verificando…');
     try {
-      await claimPlayer(els.claimPlayer.value, els.claimCode.value);
-      setBusy(button, false);
-      showStatus('Jugador vinculado correctamente.', 'success');
+      const result = await auth.completeRegistration({
+        playerId: pendingRegistration.playerId,
+        requestId: pendingRegistration.requestId,
+        code,
+        password: pendingRegistration.password
+      });
+
+      if (!result.signed_in) {
+        await auth.signInPlayer(pendingRegistration.playerId, pendingRegistration.password);
+      }
+
+      pendingRegistration = null;
+      els.registerPassword.value = '';
+      els.registerPasswordRepeat.value = '';
+      els.registrationCode.value = '';
+      showStatus('Cuenta creada correctamente. Ya estás identificado.', 'success');
       await renderAuthState();
     } catch (error) {
-      setBusy(button, false);
       showStatus(error.message, 'error');
+      els.registrationCode.select();
+    } finally {
+      setBusy(els.completeRegistrationButton, false);
     }
   });
 
+  els.restartRegistration.addEventListener('click', restartRegistrationFlow);
+
   async function logout() {
-    clearPendingClaim();
-    await db.auth.signOut();
+    pendingRegistration = null;
+    await auth.signOut();
     currentAccount = null;
     await renderAuthState();
   }
@@ -437,11 +410,14 @@
   els.unlinkedLogout.addEventListener('click', logout);
   els.refreshAdmin.addEventListener('click', loadAdminPlayers);
 
-  db.auth.onAuthStateChange((event) => {
+  auth.onChange(({ event }) => {
     if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
-      setTimeout(renderAuthState, 0);
+      setTimeout(() => renderAuthState().catch(console.error), 0);
     }
   });
 
-  renderAuthState();
+  renderAuthState().catch((error) => {
+    console.error(error);
+    showStatus('No se pudo cargar el sistema de cuentas.', 'error');
+  });
 })();
