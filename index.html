@@ -5355,7 +5355,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v216</span>
+    <span class="history-version">VERSIÓN v217</span>
   </header>
         
         
@@ -5366,7 +5366,20 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
         
         
         
-                                                                                                <section class="history-change-section">
+                                                                                                        <section class="history-change-section">
+      <div class="history-section-number">169</div>
+      <div class="history-section-content">
+        <h2>Informe GPS · mapa real estable y pantalla de carga</h2>
+        <ul>
+          <li>Se corrige la sección «Sobre el terreno real»: el análisis GPS se expone correctamente al módulo del mapa y el recorrido se dibuja mediante SVG directamente sobre una imagen satélite real del campo calibrado.</li>
+          <li>El mapa deja de depender de dibujar la imagen satélite dentro de un canvas, evitando el contenedor vacío provocado por problemas de carga/CORS.</li>
+          <li>Mientras se prepara el informe se muestra una pantalla de carga completa con frases irónicas sobre métricas, pulsaciones, sprints y sufrimiento postpartido.</li>
+          <li>El informe solo aparece cuando el análisis y el mapa han terminado de prepararse, con salida de seguridad si un servicio externo tarda demasiado.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
       <div class="history-section-number">168</div>
       <div class="history-section-content">
         <h2>Reproductor · diez nuevas canciones</h2>
@@ -7514,7 +7527,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v216 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v217 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
