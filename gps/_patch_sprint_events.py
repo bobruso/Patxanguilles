@@ -1,4 +1,5 @@
 from pathlib import Path
+# trigger workflow
 
 p=Path('gps/fit-analysis.js'); s=p.read_text()
 old="""  const sprints=selected.filter(p=>p.peakSpeedKmh>=cutoff).map(p=>({tSec:+samples[p.index].tSec.toFixed(1),peakSpeedKmh:+p.peakSpeedKmh.toFixed(2),prominenceKmh:+p.prominenceKmh.toFixed(2)}));
