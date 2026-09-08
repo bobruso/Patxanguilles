@@ -34,3 +34,4 @@ if old not in s: raise SystemExit('map init target missing')
 s=s.replace(old,new,1)
 s=s.replace('Marca una vez las cuatro esquinas reales del terreno de juego.','Marca una vez las cuatro esquinas reales del terreno de juego sobre la vista satélite.')
 p.write_text(s)
+# trigger
