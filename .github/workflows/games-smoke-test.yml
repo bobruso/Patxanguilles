@@ -1,0 +1,28 @@
+name: Games smoke test
+
+on:
+  push:
+    paths:
+      - 'juegos/**'
+      - 'tools/games-smoke.mjs'
+      - 'patx-v214.js'
+      - '.github/workflows/games-smoke-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate games
+        run: node tools/games-smoke.mjs
