@@ -129,6 +129,63 @@
     grid.appendChild(btn);
   }
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',injectGamesHomeButton,{once:true});
-  else injectGamesHomeButton();
+  function injectLatestHistory(){
+    const history=document.querySelector('#changeHistory .history-wrap');
+    const header=history?.querySelector('.history-header');
+    if(!history||!header||history.querySelector('[data-history-version="223"]'))return;
+
+    const versionLabel=header.querySelector('.history-version');
+    if(versionLabel)versionLabel.textContent='VERSIÓN v223';
+
+    const html=`
+<section class="history-change-section" data-history-version="223">
+  <div class="history-section-number">223</div>
+  <div class="history-section-content">
+    <h2>Móvil, Temporada e informes GPS</h2>
+    <ul>
+      <li>En móvil, al entrar en Temporada 26/27, tanto en Fútbol 7 como en Fútbol Sala, se sustituye el fondo de vídeo por <code>background-home-mobile.png</code>.</li>
+      <li>El botón «Añadir resultado» se ensancha para evitar que el texto se parta en dos líneas, especialmente en Fútbol Sala.</li>
+      <li>En los informes GPS se elimina la etiqueta visible «CAMPO CALIBRADO».</li>
+      <li>El botón o gesto Atrás de Android cierra correctamente el informe GPS y devuelve al usuario a la ficha del partido.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="history-change-section" data-history-version="222">
+  <div class="history-section-number">222</div>
+  <div class="history-section-content">
+    <h2>Android y mejoras de integración</h2>
+    <ul>
+      <li>La web queda asociada con la aplicación Android de Patxanguilles mediante la configuración de enlaces de aplicación.</li>
+      <li>Se siguen afinando los minijuegos y sus pruebas de funcionamiento antes de publicarlos.</li>
+      <li>Memoria Vintage recibe nuevos ajustes de dificultad, ranking y distribución de cartas.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="history-change-section" data-history-version="221">
+  <div class="history-section-number">221</div>
+  <div class="history-section-content">
+    <h2>Juegos y Memoria Vintage</h2>
+    <ul>
+      <li>Se incorpora una nueva sección Juegos accesible desde la Home.</li>
+      <li>Se publica Memoria Vintage utilizando el archivo de cromos históricos importado desde Odio Eterno al Fútbol Moderno.</li>
+      <li>El juego pasa a tener dos dificultades: Fácil · 6 parejas y Difícil · 10 parejas, cada una con su propio ranking.</li>
+      <li>Se adapta la disposición de las cartas para móvil, tanto en vertical como en horizontal, evitando cortes y aprovechando mejor la pantalla.</li>
+      <li>Se prepara la infraestructura de otros minijuegos, como ¿Quién es? y Patxanguilles Heads, pero permanecen ocultos o desactivados hasta estar terminados.</li>
+      <li>Se añaden herramientas internas para importar, preparar y enmascarar nombres de los cromos vintage.</li>
+    </ul>
+  </div>
+</section>`;
+
+    header.insertAdjacentHTML('afterend',html);
+  }
+
+  function initV214Extras(){
+    injectGamesHomeButton();
+    injectLatestHistory();
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV214Extras,{once:true});
+  else initV214Extras();
 })();
