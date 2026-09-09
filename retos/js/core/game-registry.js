@@ -17,6 +17,13 @@
     if(id==='memory-cards'){atLeast('pairs',12);atLeast('timeout_ms',90000);atLeast('max_score',120000);}
     if(id==='tower-stack')atLeast('max_level',50);
     if(id==='zig-zag')atLeast('max_score',120);
+    if(id==='lane-rush'){atLeast('max_score',60);atLeast('start_interval_ms',950);c.min_interval_ms=300;}
+    if(id==='drop-zone')atLeast('max_level',15);
+    if(id==='shape-gate'){atLeast('rounds',14);atLeast('round_timeout_ms',2500);atLeast('max_score',14000);}
+    if(id==='odd-one'){atLeast('rounds',15);atLeast('round_timeout_ms',3000);atLeast('max_score',15000);}
+    if(id==='balance'){atLeast('duration_ms',30000);atLeast('max_score',30000);atLeast('level_ms',4000);}
+    if(id==='target-lock'){atLeast('rounds',12);atLeast('max_score',12000);}
+    if(id==='catch-drop'){atLeast('duration_ms',45000);atLeast('max_score',30);}
     if(id==='football-trivia'){
       c.questions=10;
       c.question_timeout_ms=15000;
