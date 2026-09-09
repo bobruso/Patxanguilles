@@ -3,6 +3,7 @@
 
   const resultPanel=document.getElementById('resultPanel');
   const resultLabel=document.getElementById('resultLabel');
+  const resultScore=document.getElementById('resultScore');
   const resultScoreButton=document.getElementById('resultScoreButton');
   const playButton=document.getElementById('playButton');
   const gameStage=document.getElementById('gameStage');
@@ -23,6 +24,7 @@
     'Zig Zag':['Avanza por un camino de curvas suaves que empieza fácil y se acelera progresivamente.',['La pieza avanza sola por el camino.','Cada toque cambia el sentido de giro.','Las curvas y la velocidad aumentan poco a poco. Salirse del camino termina la partida.'],'Gana quien avance más lejos sin salirse.']
   };
   const esc=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+  const demoId=new URLSearchParams(location.search).get('demo')||'';
 
   function applyCopy(){
     if(!hero)return;
@@ -33,6 +35,15 @@
     if(score)score.textContent=item[2];
   }
 
+  function normalizeDemoResult(){
+    if(!resultScore||resultPanel.hidden||resultScore.textContent==='NO VÁLIDO')return;
+    if(!['center-hit','quick-maths','football-trivia'].includes(demoId))return;
+    const match=resultScore.textContent.match(/-?\d+(?:[.,]\d+)?/);if(!match)return;
+    const n=Math.max(0,Math.round(Number(match[0].replace(',','.'))||0));
+    const wanted=demoId==='center-hit'?`Racha ${n}`:`${n} acierto${n===1?'':'s'}`;
+    if(resultScore.textContent!==wanted)resultScore.textContent=wanted;
+  }
+
   let lastFeedbackKey='';
   function vibrate(pattern){try{if(navigator.vibrate)navigator.vibrate(pattern);}catch(_) {}}
   function updatePracticeNudge(){
@@ -40,6 +51,7 @@
     const isPractice=visible&&resultLabel.textContent.includes('PRÁCTICA');
     resultScoreButton?.classList.toggle('result-score-button-ready',isPractice&&!resultScoreButton.hidden);
     playButton?.classList.toggle('score-ready-after-practice',isPractice&&!playButton.hidden&&!playButton.disabled);
+    normalizeDemoResult();
   }
 
   const resultObserver=new MutationObserver(updatePracticeNudge);
