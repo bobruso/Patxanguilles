@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="./css/game-polish.css">
   <link rel="stylesheet" href="./css/game-polish-2.css">
   <link rel="stylesheet" href="./css/game-polish-3.css">
+  <link rel="stylesheet" href="./css/game-polish-4.css">
 </head>
 <body>
   <main class="shell">
@@ -35,23 +36,13 @@
         <div id="demoBadge" class="demo-badge" hidden>MODO DEMO · NO GUARDA</div>
       </div>
       <div class="daily-visual" aria-hidden="true">
-        <span class="visual-orb orb-a"></span>
-        <span class="visual-orb orb-b"></span>
-        <span class="visual-bar bar-a"></span>
-        <span class="visual-bar bar-b"></span>
-        <span class="visual-dot dot-a"></span>
-        <span class="visual-dot dot-b"></span>
+        <span class="visual-orb orb-a"></span><span class="visual-orb orb-b"></span><span class="visual-bar bar-a"></span><span class="visual-bar bar-b"></span><span class="visual-dot dot-a"></span><span class="visual-dot dot-b"></span>
       </div>
     </section>
 
     <section id="howToPanel" class="howto-card">
-      <div class="howto-head">
-        <div><div class="eyebrow neutral">ANTES DE JUGAR</div><h2>Cómo se juega</h2></div>
-        <div class="howto-note">Puedes practicar sin límite</div>
-      </div>
-      <div id="instructionSteps" class="instruction-steps">
-        <div class="instruction-step"><span>1</span><p>Cargando instrucciones…</p></div>
-      </div>
+      <div class="howto-head"><div><div class="eyebrow neutral">ANTES DE JUGAR</div><h2>Cómo se juega</h2></div><div class="howto-note">Puedes practicar sin límite</div></div>
+      <div id="instructionSteps" class="instruction-steps"><div class="instruction-step"><span>1</span><p>Cargando instrucciones…</p></div></div>
       <div id="scoringHint" class="scoring-hint">Preparando el sistema de puntuación.</div>
     </section>
 
@@ -62,70 +53,27 @@
         <div class="stat"><div class="stat-label">Prácticas</div><div class="stat-value">∞</div></div>
       </div>
       <div class="challenge-actions">
-        <button id="practiceButton" class="action-button practice-button" type="button" disabled>
-          <span class="action-kicker">NO PUNTÚA</span><span>PROBAR JUEGO</span>
-        </button>
-        <button id="playButton" class="action-button score-button" type="button" disabled>
-          <span class="action-kicker">INTENTO OFICIAL</span><span>JUGAR POR PUNTOS</span>
-        </button>
+        <button id="practiceButton" class="action-button practice-button" type="button" disabled><span class="action-kicker">NO PUNTÚA</span><span>PROBAR JUEGO</span></button>
+        <button id="playButton" class="action-button score-button" type="button" disabled><span class="action-kicker">INTENTO OFICIAL</span><span>JUGAR POR PUNTOS</span></button>
       </div>
       <p id="microcopy" class="microcopy">Practicar nunca consume intentos. Solo JUGAR POR PUNTOS entra en la clasificación.</p>
     </section>
 
     <div id="errorBox" class="error-box" hidden></div>
-
-    <section id="gamePanel" class="panel game-panel" hidden>
-      <div class="game-header">
-        <div><div id="gameMode" class="game-mode practice">PRÁCTICA · NO PUNTÚA</div><div id="gameTitle" class="game-title">Juego</div></div>
-        <div id="gameAttempt" class="game-attempt"></div>
-      </div>
-      <div id="gameStage" class="game-stage" aria-live="polite"></div>
-    </section>
+    <section id="gamePanel" class="panel game-panel" hidden><div class="game-header"><div><div id="gameMode" class="game-mode practice">PRÁCTICA · NO PUNTÚA</div><div id="gameTitle" class="game-title">Juego</div></div><div id="gameAttempt" class="game-attempt"></div></div><div id="gameStage" class="game-stage" aria-live="polite"></div></section>
 
     <section id="resultPanel" class="panel result-panel" hidden>
-      <div id="resultLabel" class="result-label">RESULTADO</div>
-      <div id="resultScore" class="result-score">—</div>
-      <p id="resultCopy" class="result-copy"></p>
-      <div class="result-actions">
-        <button id="resultPracticeButton" class="small-action ghost" type="button">VOLVER A PROBAR</button>
-        <button id="resultScoreButton" class="small-action primary" type="button">JUGAR POR PUNTOS</button>
-      </div>
+      <div id="resultLabel" class="result-label">RESULTADO</div><div id="resultScore" class="result-score">—</div><p id="resultCopy" class="result-copy"></p>
+      <div class="result-actions"><button id="resultPracticeButton" class="small-action ghost" type="button">VOLVER A PROBAR</button><button id="resultScoreButton" class="small-action primary" type="button">JUGAR POR PUNTOS</button></div>
     </section>
 
-    <section class="leaderboard">
-      <div class="section-head"><h2>Clasificación de hoy</h2><div class="section-note">Mejor intento oficial de cada jugador</div></div>
-      <div id="ranking" class="panel ranking"><div class="empty">Cargando clasificación…</div></div>
-    </section>
-
-    <section class="leaderboard">
-      <div class="section-head"><div><div class="eyebrow neutral">TEMPORADA</div><h2 id="seasonName">Clasificación mensual</h2></div><div class="section-note">Puntos según posición diaria</div></div>
-      <div id="seasonRanking" class="panel ranking"><div class="empty">Cargando temporada…</div></div>
-    </section>
-
-    <section class="leaderboard">
-      <div class="section-head"><div><div class="eyebrow neutral">AYER</div><h2 id="yesterdayTitle">Resultados anteriores</h2></div><div class="section-note">Último reto cerrado</div></div>
-      <div id="yesterdayRanking" class="panel ranking"><div class="empty">Todavía no hay un reto anterior.</div></div>
-    </section>
-
-    <section class="leaderboard">
-      <div class="section-head"><div><div class="eyebrow neutral">ARCHIVO</div><h2>Historial de retos</h2></div><div class="section-note">Tus resultados y ganadores</div></div>
-      <div id="historyList" class="history-list"><div class="panel empty">Cargando historial…</div></div>
-    </section>
+    <section class="leaderboard"><div class="section-head"><h2>Clasificación de hoy</h2><div class="section-note">Mejor intento oficial de cada jugador</div></div><div id="ranking" class="panel ranking"><div class="empty">Cargando clasificación…</div></div></section>
+    <section class="leaderboard"><div class="section-head"><div><div class="eyebrow neutral">TEMPORADA</div><h2 id="seasonName">Clasificación mensual</h2></div><div class="section-note">Puntos según posición diaria</div></div><div id="seasonRanking" class="panel ranking"><div class="empty">Cargando temporada…</div></div></section>
+    <section class="leaderboard"><div class="section-head"><div><div class="eyebrow neutral">AYER</div><h2 id="yesterdayTitle">Resultados anteriores</h2></div><div class="section-note">Último reto cerrado</div></div><div id="yesterdayRanking" class="panel ranking"><div class="empty">Todavía no hay un reto anterior.</div></div></section>
+    <section class="leaderboard"><div class="section-head"><div><div class="eyebrow neutral">ARCHIVO</div><h2>Historial de retos</h2></div><div class="section-note">Tus resultados y ganadores</div></div><div id="historyList" class="history-list"><div class="panel empty">Cargando historial…</div></div></section>
   </main>
 
-  <dialog id="scoreConfirm" class="score-dialog">
-    <form method="dialog" class="score-dialog-card">
-      <div class="dialog-icon">!</div>
-      <div class="eyebrow neutral">INTENTO OFICIAL</div>
-      <h2>Ahora sí cuenta</h2>
-      <p id="scoreConfirmText">Este intento entrará en la clasificación.</p>
-      <div class="dialog-warning">Si cierras o recargas después de empezar, el intento seguirá consumido.</div>
-      <div class="dialog-actions">
-        <button value="cancel" class="small-action ghost">CANCELAR</button>
-        <button id="confirmScoreButton" value="default" class="small-action primary">EMPEZAR INTENTO</button>
-      </div>
-    </form>
-  </dialog>
+  <dialog id="scoreConfirm" class="score-dialog"><form method="dialog" class="score-dialog-card"><div class="dialog-icon">!</div><div class="eyebrow neutral">INTENTO OFICIAL</div><h2>Ahora sí cuenta</h2><p id="scoreConfirmText">Este intento entrará en la clasificación.</p><div class="dialog-warning">Si cierras o recargas después de empezar, el intento seguirá consumido.</div><div class="dialog-actions"><button value="cancel" class="small-action ghost">CANCELAR</button><button id="confirmScoreButton" value="default" class="small-action primary">EMPEZAR INTENTO</button></div></form></dialog>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../auth/config.js"></script><script src="../auth/auth-service.js"></script><script src="./js/services/challenge-service.js"></script><script src="./js/core/game-registry.js"></script>
