@@ -21,7 +21,15 @@
     'Cups':['Sigue el vaso que esconde la bola. Cada ronda se complica y solo tienes una vida.',['Memoriza en qué vaso está la bola.','Sigue los vasos mientras se mezclan.','Elige el vaso correcto. Si fallas una vez, la partida termina.'],'Gana quien encadene más aciertos seguidos.'],
     'Memory Cards':['Encuentra parejas de cromos de fútbol vintage en una cuadrícula ampliada.',['Destapa dos cromos cada vez.','Si son iguales quedan descubiertos; si no, vuelven a taparse.','Completa las 12 parejas lo más rápido posible.'],'Gana quien complete las 12 parejas en menos tiempo.'],
     'Tower Stack':['Construye una torre sin límite visual: la cámara sube contigo mientras colocas bloques.',['El bloque móvil cruza la pantalla.','Toca para colocarlo sobre el bloque anterior.','La parte que quede fuera se recorta; si no hay solapamiento, termina la partida. La cámara sigue la parte alta de la torre.'],'Gana quien coloque más bloques.'],
-    'Zig Zag':['Avanza por un camino de curvas suaves que empieza fácil y se acelera progresivamente.',['La pieza avanza sola por el camino.','Cada toque cambia el sentido de giro.','Las curvas y la velocidad aumentan poco a poco. Salirse del camino termina la partida.'],'Gana quien avance más lejos sin salirse.']
+    'Zig Zag':['Avanza por un camino de curvas suaves que empieza fácil y se acelera progresivamente.',['La pieza avanza sola por el camino.','Cada toque cambia el sentido de giro.','Las curvas y la velocidad aumentan poco a poco. Salirse del camino termina la partida.'],'Gana quien avance más lejos sin salirse.'],
+    'Lane Rush':['Conduce el balón por el césped y esquiva las entradas de los defensas.',['Muévete entre los tres carriles sin perder el balón.','Los rivales llegan con entradas de pie, al suelo y en diagonal.','Cada rival superado aumenta tu marca y la velocidad va subiendo.'],'Gana quien supere más entradas. En PC usa ← → o A / D.'],
+    'Drop Zone':['Chuta una pelota de fútbol a una portería que se mueve por el horizonte.',['La portería se desplaza de lado a lado.','Toca para chutar cuando esté alineada con el balón.','Cada gol hace la portería más estrecha y más rápida; un fallo termina.'],'Gana quien complete más niveles seguidos.'],
+    'Shape Gate':['Encuentra la figura exactamente igual entre polígonos cada vez más parecidos.',['Compara el polígono grande con las cuatro opciones.','Fíjate en vértices, entrantes y proporciones, no solo en la silueta general.','Cada pocas rondas aparecen más vértices y diferencias más pequeñas.'],'Aciertos y velocidad determinan la puntuación.'],
+    'Snake Sprint':['Guía la serpiente, recoge objetivos y evita chocar.',['En móvil puedes deslizar o usar el pad de dirección.','En PC usa las flechas o W A S D.','No puedes girar directamente hacia atrás; evita paredes y tu propio cuerpo.'],'Gana quien recoja más objetivos antes de chocar o terminar el tiempo.'],
+    'Odd One':['Encuentra el único símbolo ligeramente distinto en cuadrículas cada vez mayores.',['Empieza en 3×3 y termina llegando hasta 6×6.','Los símbolos se parecen mucho entre sí: busca pequeños cambios de relleno o forma.','Cada ronda reduce el tiempo disponible.'],'Aciertos y rapidez determinan la puntuación.'],
+    'Balance':['Mantén una pelota sobre un balancín que se va haciendo más corto.',['Inclina el balancín hacia izquierda o derecha para compensar el movimiento de la bola.','Cada 4 segundos el balancín se encoge y queda menos espacio para corregir.','Si la pelota cae por un extremo, la partida termina.'],'Gana quien aguante más tiempo. PC: ← → o A / D.'],
+    'Target Lock':['Haz coincidir el anillo móvil con el objetivo mientras la dificultad aumenta.',['Toca cuando el anillo móvil tenga el tamaño del objetivo.','Cada ronda el anillo se mueve más rápido.','El margen válido también se hace más estrecho, así que exige más precisión.'],'Cada acierto da hasta 1000 puntos según la precisión.'],
+    'Catch Drop':['Arkanoid con balón de fútbol: devuelve la pelota y rompe todos los bloques.',['Mueve la barra inferior para devolver el balón.','Cada impacto rompe un bloque y acelera ligeramente la pelota.','Si el balón cae por debajo de la barra, termina la partida.'],'Gana quien rompa más bloques. PC: ← → o A / D.']
   };
   const esc=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
   const demoId=new URLSearchParams(location.search).get('demo')||'';
@@ -37,6 +45,9 @@
 
   function normalizeDemoResult(){
     if(!resultScore||resultPanel.hidden||resultScore.textContent==='NO VÁLIDO')return;
+    if(demoId==='balance'){
+      const match=resultScore.textContent.match(/-?\d+(?:[.,]\d+)?/);if(!match)return;const ms=Math.max(0,Number(match[0].replace(',','.'))||0);const wanted=`${(ms/1000).toFixed(2)} s`;if(resultScore.textContent!==wanted)resultScore.textContent=wanted;return;
+    }
     if(!['center-hit','quick-maths'].includes(demoId))return;
     const match=resultScore.textContent.match(/-?\d+(?:[.,]\d+)?/);if(!match)return;
     const n=Math.max(0,Math.round(Number(match[0].replace(',','.'))||0));
@@ -70,7 +81,7 @@
   if(gameStage)stageObserver.observe(gameStage,{subtree:true,attributes:true,attributeFilter:['class']});
 
   document.addEventListener('pointerdown',event=>{
-    if(event.target.closest('.action-button,.small-action,.answer-option,.color-option,.memory-cell,.sequence-pad,.hl-actions button,.trivia-answers button'))vibrate(6);
+    if(event.target.closest('.action-button,.small-action,.answer-option,.color-option,.memory-cell,.sequence-pad,.hl-actions button,.trivia-answers button,.football-lane-controls button,.snake-dpad button,.seesaw-actions button'))vibrate(6);
   },{passive:true});
 
   updatePracticeNudge();applyCopy();setTimeout(applyCopy,300);setTimeout(applyCopy,900);
