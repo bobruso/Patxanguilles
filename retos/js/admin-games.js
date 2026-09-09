@@ -10,26 +10,23 @@
     ['quick-maths','Quick Maths','logic','Resuelve operaciones cada vez más difíciles hasta fallar.'],
     ['grid-memory','Grid Memory','memory','Memoriza patrones en cuadrículas que crecen de tamaño.'],
     ['sequence','Secuencia','memory','Observa y repite secuencias cada vez más largas y complejas.'],
-    ['football-trivia','Trivial futbolero','football','10 preguntas, 15 segundos cada una: aciertos y velocidad suman puntos.'],
+    ['football-trivia','Trivial futbolero','football','10 preguntas, 15 segundos cada una; acierto y velocidad dan puntos.'],
     ['cups','Cups','memory','Sigue la bola y encadena aciertos; un fallo termina la partida.'],
     ['memory-cards','Memory Cards','memory','Encuentra 12 parejas de cromos vintage en el menor tiempo posible.'],
     ['tower-stack','Tower Stack','precision','Construye la torre más alta mientras la cámara sube contigo.'],
     ['zig-zag','Zig Zag','arcade','Sigue un camino de curvas que aumenta progresivamente de dificultad.'],
-    ['lane-rush','Lane Rush','arcade','Cambia de carril y esquiva obstáculos.'],
+    ['lane-rush','Lane Rush','arcade','Regatea con el balón por el césped y esquiva entradas cada vez más rápidas.'],
     ['arrow-rush','Arrow Rush','reflex','Responde a la dirección que aparece antes de que cambie.'],
-    ['drop-zone','Drop Zone','precision','Suelta la bola justo cuando esté alineada con el hueco.'],
-    ['orbit-pins','Orbit Pins','precision','Lanza clavijas al objetivo giratorio sin chocar.'],
-    ['rhythm-tap','Rhythm Tap','timing','Toca siguiendo el pulso con la mayor precisión posible.'],
-    ['shape-gate','Shape Gate','reflex','Elige rápidamente la figura que coincide con el objetivo.'],
-    ['snake-sprint','Snake Sprint','arcade','Guía la serpiente, recoge puntos y evita chocar.'],
-    ['odd-one','Odd One','reflex','Encuentra el único símbolo diferente.'],
-    ['flash-count','Flash Count','memory','Cuenta los destellos y responde cuántos has visto.'],
-    ['balance','Balance','precision','Mantén la aguja dentro de la zona segura.'],
-    ['target-lock','Target Lock','timing','Toca cuando el anillo coincida con el objetivo.'],
-    ['swipe-sort','Swipe Sort','reflex','Clasifica cada número con un gesto rápido izquierda/derecha.'],
-    ['catch-drop','Catch Drop','arcade','Mueve la cesta y atrapa los objetos que caen.']
+    ['drop-zone','Drop Zone','precision','Chuta cuando la portería móvil quede alineada; cada nivel es más estrecho y rápido.'],
+    ['shape-gate','Shape Gate','reflex','Compara polígonos con cada vez más vértices y diferencias más pequeñas.'],
+    ['snake-sprint','Snake Sprint','arcade','Guía la serpiente con swipe, pad, flechas o WASD.'],
+    ['odd-one','Odd One','reflex','Encuentra una diferencia mínima en cuadrículas que crecen hasta 6×6.'],
+    ['balance','Balance','precision','Mantén la bola sobre un balancín que se va haciendo más pequeño.'],
+    ['target-lock','Target Lock','timing','Haz coincidir el anillo mientras aumenta la velocidad y disminuye el margen.'],
+    ['catch-drop','Catch Drop','arcade','Arkanoid con un balón de fútbol: devuelve la pelota y rompe los bloques.']
   ].map(([id,name,category,description],index)=>({id,name,category,description,index:index+1}));
 
+  const discarded=['Higher or Lower','Orbit Pins','Rhythm Tap','Flash Count','Swipe Sort'];
   const categoryNames = {
     timing:'TIEMPO', reflex:'REFLEJOS', precision:'PRECISIÓN', speed:'VELOCIDAD',
     logic:'LÓGICA', memory:'MEMORIA', football:'FÚTBOL', arcade:'ARCADE'
@@ -122,7 +119,8 @@
     const pending=games.filter(g=>!gameState(g.id));
     lines.push(`SIN VALORAR (${pending.length})`);
     if(pending.length) lines.push(pending.map(g=>g.name).join(', '));
-    lines.push('','DESCARTADO PREVIAMENTE','- Higher or Lower');
+    lines.push('','DESCARTADOS PREVIAMENTE');
+    discarded.forEach(name=>lines.push(`- ${name}`));
     return lines.join('\n');
   }
 
