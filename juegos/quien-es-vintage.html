@@ -11,7 +11,7 @@
 body{min-height:100dvh;background:radial-gradient(circle at 50% -10%,rgba(170,128,37,.2),transparent 40%),linear-gradient(rgba(0,0,0,.44),rgba(0,0,0,.8)),url('../background-home.jpg') center/cover fixed no-repeat}
 button{font:inherit}.shell{width:min(980px,100%);margin:auto;padding:16px 14px 34px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.back,.restart{border:1px solid var(--line);background:rgba(10,12,10,.8);color:white;border-radius:12px;padding:10px 13px;cursor:pointer;font-weight:850}.brand{text-align:center}.brand small{display:block;color:var(--gold);text-transform:uppercase;letter-spacing:.18em;font-size:9px;font-weight:900}.brand strong{font:900 clamp(23px,5vw,38px)/1 Georgia,serif}.panel{background:linear-gradient(155deg,rgba(22,24,20,.95),rgba(6,8,7,.95));border:1px solid rgba(215,180,90,.25);border-radius:24px;padding:18px;box-shadow:0 25px 80px rgba(0,0,0,.48)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}.stat{text-align:center;padding:8px 5px;border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:11px}.stat b{display:block;font-size:18px}.stat span{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;font-size:8px;margin-top:2px}
-.stage{display:grid;grid-template-columns:minmax(250px,390px) 1fr;gap:22px;align-items:center;max-width:850px;margin:auto}.card-wrap{position:relative;width:100%;aspect-ratio:3/4;border:2px solid #b9923c;border-radius:14px;overflow:hidden;background:#0d0d0b;box-shadow:0 18px 45px rgba(0,0,0,.5)}.card-wrap img{width:100%;height:100%;display:block;object-fit:contain}.name-mask{position:absolute;pointer-events:none;overflow:hidden;border-radius:4px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(40,40,35,.13);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}.card-wrap.reveal .name-mask{opacity:0}.answers{display:grid;grid-template-columns:1fr;gap:9px}.answer{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:#151916;color:#f5f3eb;padding:13px 14px;text-align:left;font-weight:850;cursor:pointer;transition:.16s}.answer:hover:not(:disabled){transform:translateX(3px);border-color:#9b823f}.answer.correct{background:rgba(34,139,69,.25);border-color:#51cc78}.answer.wrong{background:rgba(185,35,44,.26);border-color:#e1535c}.answer:disabled{cursor:default}.prompt{font-size:13px;color:#c4c9c2;margin:0 0 12px}.feedback{min-height:44px;margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);color:#c6cbc4;font-size:13px;display:flex;align-items:center}.feedback strong{color:#fff}.next{margin-top:10px;width:100%;padding:12px;border:0;border-radius:12px;background:#efe6cf;color:#16130e;font-weight:950;cursor:pointer;display:none}.next.show{display:block}
+.stage{display:grid;grid-template-columns:minmax(250px,390px) 1fr;gap:22px;align-items:center;max-width:850px;margin:auto}.card-wrap{position:relative;width:100%;aspect-ratio:3/4;border:2px solid #b9923c;border-radius:14px;overflow:hidden;background:#0d0d0b;box-shadow:0 18px 45px rgba(0,0,0,.5)}.card-wrap img{width:100%;height:100%;display:block;object-fit:contain}.name-mask{position:absolute;pointer-events:none;overflow:hidden;border-radius:4px;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);background:rgba(30,30,27,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);transition:opacity .18s}.card-wrap.reveal .name-mask{opacity:0}.answers{display:grid;grid-template-columns:1fr;gap:9px}.answer{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:#151916;color:#f5f3eb;padding:13px 14px;text-align:left;font-weight:850;cursor:pointer;transition:.16s}.answer:hover:not(:disabled){transform:translateX(3px);border-color:#9b823f}.answer.correct{background:rgba(34,139,69,.25);border-color:#51cc78}.answer.wrong{background:rgba(185,35,44,.26);border-color:#e1535c}.answer:disabled{cursor:default}.prompt{font-size:13px;color:#c4c9c2;margin:0 0 12px}.feedback{min-height:44px;margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);color:#c6cbc4;font-size:13px;display:flex;align-items:center}.feedback strong{color:#fff}.next{margin-top:10px;width:100%;padding:12px;border:0;border-radius:12px;background:#efe6cf;color:#16130e;font-weight:950;cursor:pointer;display:none}.next.show{display:block}
 .loading,.error{min-height:430px;display:grid;place-items:center;text-align:center}.spinner{width:38px;height:38px;border:4px solid rgba(255,255,255,.12);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:auto auto 12px}@keyframes spin{to{transform:rotate(360deg)}}
 .finish{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(0,0,0,.8);backdrop-filter:blur(7px);z-index:30}.finish.open{display:grid}.finish-card{width:min(430px,100%);text-align:center;padding:28px 22px;border-radius:22px;background:linear-gradient(145deg,#1b1b16,#090a09);border:1px solid rgba(215,180,90,.45)}.finish h2{font:900 34px/1 Georgia,serif;margin:10px 0}.finish-score{font-size:48px;font-weight:1000;color:#e7c86d}.primary{width:100%;border:0;border-radius:12px;background:#eee6d0;color:#15120e;font-weight:950;padding:13px;cursor:pointer;margin-top:14px}
 @media(max-width:700px){.shell{padding:9px 8px 24px}.panel{padding:10px;border-radius:17px}.stage{grid-template-columns:1fr;gap:12px}.card-wrap{width:min(58vw,280px);margin:auto}.answers{grid-template-columns:1fr 1fr;gap:6px}.answer{font-size:12px;padding:10px 9px}.stats{margin-bottom:9px}.brand strong{font-size:22px}.back,.restart{font-size:11px;padding:8px 9px}.prompt{text-align:center;margin-bottom:8px}.feedback{font-size:11px;min-height:36px}}
@@ -33,6 +33,12 @@ const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 const ROUNDS=10,CHOICES=6;
+const FALLBACK_EDGE_MASKS=[
+  {x:0,y:0,w:100,h:17},
+  {x:0,y:79,w:100,h:21},
+  {x:0,y:16,w:13,h:64},
+  {x:87,y:16,w:13,h:64}
+];
 let pool=[],roundCards=[],roundIndex=0,correct=0,points=0,streak=0,answered=false,roundStarted=0;
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -49,16 +55,17 @@ function normalizeMasks(mask){
     return{x,y,w,h};
   }).filter(Boolean);
 }
+function masksFor(card){const exact=normalizeMasks(card?.name_mask);return exact.length?exact:FALLBACK_EDGE_MASKS}
 async function loadPool(){
   const {data,error}=await sb.from('vintage_cards').select('id,player_name,position,source_image_url,quiz_image_url,name_mask').eq('enabled',true).eq('parse_status','ready').not('source_image_url','is',null);
   if(error)throw error;
-  pool=(data||[]).filter(c=>c.player_name&&c.source_image_url&&(c.quiz_image_url||normalizeMasks(c.name_mask).length));
-  if(pool.length<Math.max(ROUNDS,CHOICES))throw new Error(`Hay ${pool.length} cromos preparados para el quiz. Aún hacen falta máscaras de nombre para completar el juego.`);
+  pool=(data||[]).filter(c=>c.player_name&&c.source_image_url);
+  if(pool.length<Math.max(ROUNDS,CHOICES))throw new Error(`Solo hay ${pool.length} cromos disponibles.`);
 }
 async function startGame(){
   closeFinish();roundIndex=0;correct=0;points=0;streak=0;answered=false;
   const main=document.getElementById('main');main.innerHTML='<div class="loading"><div><div class="spinner"></div><b>Barajando identidades…</b></div></div>';
-  try{if(!pool.length)await loadPool();roundCards=shuffle(pool).slice(0,Math.min(ROUNDS,pool.length));renderRound()}catch(err){console.error(err);main.innerHTML=`<div class="error"><div><h2>El quiz todavía se está preparando</h2><p>${esc(err?.message||'Error al cargar')}</p></div></div>`}
+  try{if(!pool.length)await loadPool();roundCards=shuffle(pool).slice(0,Math.min(ROUNDS,pool.length));renderRound()}catch(err){console.error(err);main.innerHTML=`<div class="error"><div><h2>No se pudieron cargar los cromos</h2><p>${esc(err?.message||'Error al cargar')}</p></div></div>`}
 }
 function distractorsFor(card){
   const others=pool.filter(x=>x.id!==card.id);
@@ -70,7 +77,7 @@ function distractorsFor(card){
 function renderRound(){
   if(roundIndex>=roundCards.length){finishGame();return}
   answered=false;roundStarted=performance.now();
-  const card=roundCards[roundIndex],choices=distractorsFor(card),masks=normalizeMasks(card.name_mask),image=card.quiz_image_url||card.source_image_url;
+  const card=roundCards[roundIndex],choices=distractorsFor(card),masks=masksFor(card),image=card.quiz_image_url||card.source_image_url;
   const maskHtml=card.quiz_image_url?'':masks.map(m=>`<span class="name-mask" style="left:${m.x}%;top:${m.y}%;width:${m.w}%;height:${m.h}%"></span>`).join('');
   document.getElementById('main').innerHTML=`
     <div class="stats"><div class="stat"><b>${roundIndex+1}/${roundCards.length}</b><span>Ronda</span></div><div class="stat"><b>${correct}</b><span>Aciertos</span></div><div class="stat"><b>${points}</b><span>Puntos</span></div><div class="stat"><b>x${Math.max(1,streak)}</b><span>Racha</span></div></div>
