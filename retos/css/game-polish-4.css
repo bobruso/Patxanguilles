@@ -1,0 +1,58 @@
+/* Patxanguilles Retos — feedback redesign pass */
+
+/* Reaction ball */
+.reaction-ball-surface{min-height:430px!important}
+.reaction-ball-head,.center-run-head,.cups-head,.memory-cards-head{width:min(560px,94vw);display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px auto 12px}
+.reaction-field{position:relative;width:min(620px,94vw);height:300px;margin:16px auto;border-radius:28px;overflow:hidden;background:linear-gradient(180deg,#65c8ff 0 42%,#6bd487 42% 100%);box-shadow:inset 0 0 0 5px rgba(255,255,255,.56),0 9px 0 rgba(41,75,119,.14);touch-action:none}
+.reaction-field:before{content:"";position:absolute;left:50%;top:42%;bottom:0;border-left:3px solid rgba(255,255,255,.48)}
+.reaction-field:after{content:"";position:absolute;left:50%;top:71%;width:78px;height:78px;border:3px solid rgba(255,255,255,.48);border-radius:50%;transform:translate(-50%,-50%)}
+.reaction-wait-mark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(23px,7vw,40px);font-weight:1000;letter-spacing:.08em;color:rgba(14,74,49,.67)}
+.reaction-football{position:absolute;width:76px;height:76px;border:0;border-radius:50%;padding:0;background:#fff;font-size:53px;line-height:76px;transform:translate(-50%,-50%) scale(.15);box-shadow:0 8px 0 rgba(23,75,48,.17),0 14px 26px rgba(15,74,44,.23);animation:ballSpawn .18s cubic-bezier(.15,.8,.25,1) forwards;cursor:pointer;touch-action:none}
+.reaction-football.is-hit{animation:ballHit .16s ease forwards}.reaction-ball-go [data-main]{color:#0b6b41!important}.reaction-ball-false .reaction-field{background:linear-gradient(180deg,#ff91a2,#e85a75)}
+@keyframes ballSpawn{to{transform:translate(-50%,-50%) scale(1)}}@keyframes ballHit{to{transform:translate(-50%,-50%) scale(.7);opacity:.35}}
+
+/* Endless center */
+.center-run-head{margin-bottom:4px}.center-hit-surface.is-round-success .center-track-wrap{box-shadow:0 0 0 6px rgba(55,194,119,.19),0 8px 0 rgba(33,66,139,.13)!important}.center-hit-surface.is-round-success .center-feedback{color:#10643c}.center-hit-surface .center-zone{min-width:54px}
+
+/* Stroop / Color Reflex */
+.stroop-instruction{margin:14px auto 8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.46);font-size:10px;font-weight:1000;letter-spacing:.12em;max-width:max-content}
+.stroop-prompt{min-height:145px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stroop-prompt .color-target{max-width:100%;padding:0 8px;white-space:nowrap;line-height:1!important;font-size:clamp(38px,12vw,72px)!important;letter-spacing:-.045em!important}
+.stroop-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;width:min(560px,94vw)!important}
+.stroop-option{min-width:0!important;min-height:76px!important;padding:10px 8px!important;overflow:hidden!important;font-size:clamp(14px,4vw,19px)!important;letter-spacing:-.025em!important;text-shadow:0 1px 0 rgba(255,255,255,.22)}
+.stroop-option span{display:block;max-width:100%;overflow:hidden;text-overflow:clip;white-space:nowrap}
+
+/* Quick maths difficulty */
+.maths-difficulty{display:inline-flex;margin:12px auto 0;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.5);font-size:9px;font-weight:1000;letter-spacing:.12em;color:#4d358e}
+
+/* Growing memory grid */
+.dynamic-memory-grid{width:min(600px,94vw)!important;aspect-ratio:1/1;gap:clamp(4px,1.2vw,10px)!important;margin:18px auto!important;display:grid!important}
+.dynamic-memory-grid .memory-cell{min-width:0!important;min-height:0!important;width:auto!important;height:auto!important;border-radius:clamp(7px,2vw,17px)!important}
+.dynamic-memory-grid[data-size="7"] .memory-cell,.dynamic-memory-grid[data-size="8"] .memory-cell{box-shadow:0 3px 0 rgba(58,42,142,.13)!important}
+
+/* Sequence: deliberately calmer than old multicolour pads */
+.dynamic-sequence-grid{display:grid!important;width:min(590px,94vw)!important;aspect-ratio:1/1;gap:clamp(5px,1.2vw,12px)!important;margin:18px auto!important}
+.simple-sequence-pad{min-width:0!important;min-height:0!important;height:auto!important;background:rgba(255,255,255,.88)!important;box-shadow:0 5px 0 rgba(73,48,148,.14)!important;border-radius:clamp(8px,2vw,19px)!important}
+.simple-sequence-pad:before{display:none!important}.simple-sequence-pad span{font-size:clamp(11px,3.5vw,21px)!important;color:#59479b!important;opacity:.55}.simple-sequence-pad.is-lit{background:#ffe16a!important;box-shadow:0 5px 0 #d9a819!important;filter:none!important}.simple-sequence-pad.is-lit span{color:#4f3900!important;opacity:1}
+
+/* Vintage football memory */
+.football-cards-grid{--memory-cols:6;grid-template-columns:repeat(var(--memory-cols),minmax(0,1fr))!important;width:min(720px,96vw)!important;gap:clamp(5px,1vw,10px)!important;margin:18px auto!important}
+.football-memory-card{aspect-ratio:2/3!important;min-width:0!important;height:auto!important;border-radius:clamp(8px,1.5vw,15px)!important;padding:0!important;overflow:hidden!important;background:linear-gradient(145deg,#6955e9,#432fae)!important}
+.football-card-back{position:absolute;inset:0;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:linear-gradient(145deg,#6d58ec,#402aa9);color:#ffe25d;font-weight:1000}.football-card-back span{font-size:clamp(18px,4vw,32px)}.football-card-back b{font-size:clamp(7px,1.5vw,11px);letter-spacing:.13em}
+.vintage-card-face{position:absolute!important;inset:0!important;display:none!important;background:#eee!important;border-radius:0!important;overflow:hidden}.football-memory-card.is-open .vintage-card-face,.football-memory-card.is-match .vintage-card-face{display:flex!important}.football-memory-card.is-open .football-card-back,.football-memory-card.is-match .football-card-back{display:none!important}
+.vintage-card-face img{width:100%;height:100%;object-fit:cover;display:block}.vintage-card-fallback{width:100%;height:100%;padding:8px;display:flex;align-items:center;justify-content:center;text-align:center;background:#f3ead4;color:#3b2e22;font-size:11px;font-weight:900}
+.vintage-source{font-size:9px;text-align:center;margin-top:9px;color:color-mix(in srgb,var(--game-ink,#21194a) 62%,transparent);font-weight:750}
+
+/* Tower camera */
+.camera-stack-stage{height:330px!important;overflow:hidden!important}.stack-world{position:absolute;inset:0;transform:translateY(0);transition:none;will-change:transform}.stack-world .stack-block{position:absolute!important}.stack-focus-line{position:absolute;left:10%;right:10%;top:50%;border-top:2px dashed rgba(255,255,255,.15);pointer-events:none}.camera-stack-stage .stack-skyline{position:absolute;z-index:0}.camera-stack-stage .stack-world{z-index:2}.camera-stack-stage .stack-flash{z-index:5}
+
+/* Smooth Zig Zag */
+.smooth-zig-surface .zig-canvas{height:380px!important}.smooth-zig-surface .arcade-head{margin-bottom:10px}
+
+@media(max-width:620px){
+  .reaction-field{height:285px}.reaction-football{width:70px;height:70px;line-height:70px;font-size:49px}
+  .football-cards-grid{--memory-cols:4!important}.football-memory-card{border-radius:9px!important}
+  .camera-stack-stage{height:310px!important}.smooth-zig-surface .zig-canvas{height:350px!important}
+}
+@media(max-width:400px){.stroop-grid{grid-template-columns:1fr 1fr!important}.stroop-option{font-size:13px!important;padding:8px 4px!important}.dynamic-memory-grid,.dynamic-sequence-grid{width:92vw!important}.football-cards-grid{gap:5px!important}}
+@media(prefers-reduced-motion:reduce){.reaction-football{animation:none;transform:translate(-50%,-50%) scale(1)}}
