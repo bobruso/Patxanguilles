@@ -32,7 +32,35 @@ Módulo independiente de minijuegos diarios. Requiere una cuenta Patxanguilles v
 26. `swipe-sort` — Swipe Sort
 27. `catch-drop` — Catch Drop
 
-Todos los juegos tienen 2 intentos diarios por defecto. El intento se consume en servidor al pulsar JUGAR; cerrar o recargar la página no lo restaura.
+## Flujo del juego diario
+
+Antes de cualquier intento oficial, la pantalla explica el juego con tres pasos y muestra cómo se calcula la clasificación.
+
+Hay dos acciones claramente separadas:
+
+- `PROBAR JUEGO`: práctica ilimitada, no crea `game_attempt`, no consume intentos y no guarda resultado.
+- `JUGAR POR PUNTOS`: abre una confirmación explícita; solo tras confirmar se crea el intento oficial en servidor.
+
+La confirmación recuerda cuántos intentos quedan y que cerrar o recargar después de iniciar no devuelve el intento.
+
+La práctica usa una semilla distinta de la partida oficial para no revelar una secuencia competitiva. En el Trivial, la práctica usa preguntas de demostración y nunca expone las cinco preguntas oficiales del día.
+
+Todos los juegos tienen 2 intentos oficiales diarios por defecto. La clasificación usa únicamente resultados oficiales.
+
+## Diseño
+
+La interfaz utiliza una tarjeta protagonista para el juego del día, colores por familia de juego, tipografía grande, superficies claras y controles táctiles grandes. Las referencias de producto son apps de microjuegos sociales como Playus, pero los layouts, estilos y assets de Patxanguilles son propios.
+
+Paletas dinámicas:
+
+- tiempo: violeta/amarillo;
+- reflejos: coral/naranja;
+- precisión: azul/cian;
+- velocidad: naranja/amarillo;
+- lógica: azul;
+- memoria: violeta/magenta;
+- arcade: rosa/violeta;
+- trivial de fútbol: verde/amarillo.
 
 ## Descartados de la rotación
 
@@ -40,15 +68,15 @@ Tras probarlos se desactivaron `keep-up`, `penalties`, `goalkeeper`, `top-bins`,
 
 El único juego de temática fútbol que permanece activo es `football-trivia`.
 
-## Modo demo
+## Modo demo de desarrollo
 
-El modo demo no consume intentos ni guarda resultados. Formato: `/retos/?demo=<id>`.
+El modo demo por URL tampoco consume intentos ni guarda resultados. Formato: `/retos/?demo=<id>`.
 
 Todos los IDs de la lista de juegos activos están disponibles en modo demo.
 
 ## Clasificaciones
 
-La clasificación diaria usa el mejor intento de cada jugador. La temporada es mensual y convierte la posición diaria en puntos: 10, 8, 7, 6, 5, 4, 3, 2 y 1 punto para el resto de participantes. Nunca se suman directamente puntuaciones incompatibles entre juegos.
+La clasificación diaria usa el mejor intento oficial de cada jugador. La temporada es mensual y convierte la posición diaria en puntos: 10, 8, 7, 6, 5, 4, 3, 2 y 1 punto para el resto de participantes. Nunca se suman directamente puntuaciones incompatibles entre juegos.
 
 ## Datos e historial
 
