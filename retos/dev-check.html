@@ -18,7 +18,7 @@
   <main class="wrap">
     <div style="font-size:10px;font-weight:950;letter-spacing:.15em;color:#6b55f5">HERRAMIENTA LOCAL</div>
     <h1>Comprobación de minijuegos</h1>
-    <p class="lead">No inicia partidas, no usa Supabase y no consume intentos. Comprueba que los 27 juegos activos cargan, se registran y cumplen el contrato básico del motor.</p>
+    <p class="lead">No inicia partidas, no usa Supabase y no consume intentos. Comprueba que los 22 juegos activos cargan, se registran y cumplen el contrato básico del motor.</p>
     <div id="summary" class="summary">Comprobando…</div>
     <div id="results" class="grid"></div>
     <a class="back" href="./">← Volver al Reto del día</a>
@@ -35,7 +35,6 @@
   <script src="./js/games/grid-memory.js"></script>
   <script src="./js/games/sequence.js"></script>
   <script src="./js/games/football-trivia.js"></script>
-  <script src="./js/games/higher-lower.js"></script>
   <script src="./js/games/cups.js"></script>
   <script src="./js/games/memory-cards.js"></script>
   <script src="./js/games/tower-stack.js"></script>
@@ -43,20 +42,16 @@
   <script src="./js/games/lane-rush.js"></script>
   <script src="./js/games/arrow-rush.js"></script>
   <script src="./js/games/drop-zone.js"></script>
-  <script src="./js/games/orbit-pins.js"></script>
-  <script src="./js/games/rhythm-tap.js"></script>
   <script src="./js/games/shape-gate.js"></script>
   <script src="./js/games/snake-sprint.js"></script>
   <script src="./js/games/odd-one.js"></script>
-  <script src="./js/games/flash-count.js"></script>
   <script src="./js/games/balance.js"></script>
   <script src="./js/games/target-lock.js"></script>
-  <script src="./js/games/swipe-sort.js"></script>
   <script src="./js/games/catch-drop.js"></script>
 
   <script>
     (()=>{
-      const ids=['stop-seven','reaction','center-hit','speed-tap','color-reflex','quick-maths','grid-memory','sequence','football-trivia','higher-lower','cups','memory-cards','tower-stack','zig-zag','lane-rush','arrow-rush','drop-zone','orbit-pins','rhythm-tap','shape-gate','snake-sprint','odd-one','flash-count','balance','target-lock','swipe-sort','catch-drop'];
+      const ids=['stop-seven','reaction','center-hit','speed-tap','color-reflex','quick-maths','grid-memory','sequence','football-trivia','cups','memory-cards','tower-stack','zig-zag','lane-rush','arrow-rush','drop-zone','shape-gate','snake-sprint','odd-one','balance','target-lock','catch-drop'];
       const results=document.getElementById('results');
       const summary=document.getElementById('summary');
       const sandbox=document.getElementById('sandbox');
