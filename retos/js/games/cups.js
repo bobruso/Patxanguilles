@@ -33,11 +33,13 @@
 
     function applyPositions(animate=true){
       cups.forEach((cup,id)=>{
-        cup.style.transition=animate?'transform .22s ease':'none';
+        cup.style.transition=animate?'transform .22s cubic-bezier(.2,.75,.3,1)':'none';
         const pos=positions[id];
         cup.style.transform=`translateX(${(pos-id)*112}px)`;
       });
     }
+
+    function clearFeedback(){cups.forEach(c=>c.classList.remove('is-correct','is-wrong'));}
 
     function showBall(show){
       cups.forEach((cup,id)=>cup.classList.toggle('has-ball',show&&id===ballCup));
@@ -53,6 +55,7 @@
       if(finished)return;
       if(round>=rounds)return finish();
       accepting=false;
+      clearFeedback();
       positions=Array.from({length:cupCount},(_,i)=>i);
       applyPositions(false);
       ballCup=Math.floor(rnd()*cupCount);
@@ -73,7 +76,7 @@
             applyPositions(true);
           },s*step);
         }
-        later(()=>{accepting=true;helpEl.textContent='¿Dónde está?';},swaps*step+220);
+        later(()=>{accepting=true;helpEl.textContent='¿Dónde está? Toca un vaso.';},swaps*step+220);
       },850);
     }
 
@@ -85,10 +88,13 @@
       const ok=chosenPos===ballPos;
       if(ok)correct++;
       showBall(true);
+      const correctCup=cups.find((_,id)=>positions[id]===ballPos);
+      cups[cupId]?.classList.add(ok?'is-correct':'is-wrong');
+      if(!ok)correctCup?.classList.add('is-correct');
       helpEl.textContent=ok?'¡Correcto!':'No estaba ahí';
       scoreEl.textContent=`${correct} acierto${correct===1?'':'s'}`;
       round++;
-      later(()=>{showBall(false);startRound();},700);
+      later(()=>{showBall(false);clearFeedback();startRound();},850);
     }
 
     function press(e){const cup=e.target.closest('[data-cup]');if(cup)choose(Number(cup.dataset.cup));}
