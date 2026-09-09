@@ -24,7 +24,13 @@
     'orbit-pins':D('orbit-pins','Orbit Pins','Lanza clavijas al objetivo giratorio sin tocar las anteriores.','precision','pins',{pins:14,max_score:14}),
     'rhythm-tap':D('rhythm-tap','Rhythm Tap','Toca siguiendo el pulso con la mayor precisión posible.','timing','points',{beats:12,interval_ms:700,max_score:12000}),
     'shape-gate':D('shape-gate','Shape Gate','Elige rápidamente la figura que encaja en la puerta.','reflex','points',{rounds:12,round_timeout_ms:1800,max_score:12000}),
-    'snake-sprint':D('snake-sprint','Snake Sprint','Guía la serpiente, recoge puntos y evita chocar durante veinte segundos.','arcade','points',{duration_ms:20000,max_score:50})
+    'snake-sprint':D('snake-sprint','Snake Sprint','Guía la serpiente, recoge puntos y evita chocar durante veinte segundos.','arcade','points',{duration_ms:20000,max_score:50}),
+    'odd-one':D('odd-one','Odd One','Encuentra el símbolo diferente antes de que se acabe el tiempo.','reflex','points',{rounds:12,round_timeout_ms:1800,max_score:12000}),
+    'flash-count':D('flash-count','Flash Count','Cuenta cuántos destellos aparecen y responde rápido.','memory','points',{rounds:8,min_count:2,max_count:8,max_score:8000}),
+    balance:D('balance','Balance','Mantén la aguja dentro de la zona segura durante doce segundos.','precision','points',{duration_ms:12000,max_score:12000}),
+    'target-lock':D('target-lock','Target Lock','Pulsa cuando el anillo móvil coincida con el objetivo.','timing','points',{rounds:10,max_score:10000}),
+    'swipe-sort':D('swipe-sort','Swipe Sort','Desliza cada tarjeta hacia el lado correcto siguiendo la regla.','reflex','points',{rounds:16,round_timeout_ms:1800,max_score:16000}),
+    'catch-drop':D('catch-drop','Catch Drop','Mueve la cesta y atrapa tantos objetos como puedas.','arcade','points',{duration_ms:18000,max_score:50})
   };
   let accountState=null,challenge=null,activeGame=null,playing=false;
   const demoGameId=new URLSearchParams(location.search).get('demo'),demoMode=Boolean(demoGameId&&demoDefinitions[demoGameId]);
