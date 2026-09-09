@@ -1,0 +1,110 @@
+/* v200 · controles temporales independientes */
+
+.patx-gps-map-card{position:relative!important}
+
+.patx-v200-timeline{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  width:190px;
+  padding:4px 6px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:9px;
+  background:rgba(7,13,10,.74);
+  backdrop-filter:blur(5px);
+  box-sizing:border-box;
+}
+
+.patx-gps-map-card > .patx-v200-timeline{
+  position:absolute;
+  top:9px;
+  right:10px;
+  z-index:5;
+}
+
+.patx-v200-play{
+  flex:none;
+  width:28px;
+  height:28px;
+  padding:0;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:7px;
+  background:#17201b;
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  line-height:1;
+  cursor:pointer;
+}
+
+.patx-v200-slider{
+  flex:1 1 auto;
+  min-width:0;
+  width:auto;
+  accent-color:#e3bb3b;
+}
+
+.patx-v200-minute{
+  flex:none;
+  width:28px;
+  text-align:right;
+  font-size:11px;
+  font-weight:900;
+}
+
+/* Cada tarjeta reserva su hueco, pero el canvas conserva exactamente su tamaño */
+.patx-gps-map-card:has(> .patx-v200-timeline) .patx-gps-map-title{
+  padding-right:205px!important;
+}
+
+/* Terrain: controles en su propia cabecera */
+.patx-v200-terrain-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 0 10px;
+}
+
+.patx-v200-terrain-head .patx-v198-terrain-title{
+  margin:0!important;
+  min-width:0;
+}
+
+.patx-v200-terrain-timeline{
+  flex:none;
+}
+
+@media(max-width:700px){
+  .patx-v200-timeline{
+    width:164px;
+    gap:5px;
+  }
+
+  .patx-gps-map-card > .patx-v200-timeline{
+    right:7px;
+    top:8px;
+  }
+
+  .patx-gps-map-card:has(> .patx-v200-timeline) .patx-gps-map-title{
+    padding-right:175px!important;
+  }
+
+  .patx-v200-play{
+    width:26px;
+    height:26px;
+  }
+
+  .patx-v200-minute{
+    width:25px;
+    font-size:10px;
+  }
+
+  .patx-v200-terrain-head{
+    gap:8px;
+  }
+
+  .patx-v200-terrain-timeline{
+    width:154px;
+  }
+}
