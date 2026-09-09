@@ -8,10 +8,29 @@
     factories.set(String(id), factory);
   }
 
+  function normalizeOptions(id, options = {}) {
+    const out={...options,config:{...(options.config||{})}};
+    const c=out.config;
+    const atLeast=(key,value)=>{c[key]=Math.max(value,Number(c[key])||0);};
+    if(id==='grid-memory'){atLeast('max_level',20);atLeast('max_grid_size',8);}
+    if(id==='sequence'){atLeast('max_level',20);atLeast('max_grid_size',5);}
+    if(id==='memory-cards'){atLeast('pairs',12);atLeast('timeout_ms',90000);atLeast('max_score',120000);}
+    if(id==='tower-stack')atLeast('max_level',50);
+    if(id==='zig-zag')atLeast('max_score',120);
+    if(id==='football-trivia'){
+      atLeast('questions',100);
+      atLeast('start_timeout_ms',9000);
+      c.min_timeout_ms=5000;
+      c.timeout_decrement_ms=400;
+    }
+    return out;
+  }
+
   function create(id, options) {
-    const factory = factories.get(String(id));
+    const key=String(id);
+    const factory = factories.get(key);
     if (!factory) throw new Error(`Juego no disponible: ${id}`);
-    const game = factory(options || {});
+    const game = factory(normalizeOptions(key,options||{}));
     if (!game || typeof game.start !== 'function' || typeof game.destroy !== 'function') {
       throw new Error(`Contrato de juego no válido: ${id}`);
     }
