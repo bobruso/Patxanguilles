@@ -3,19 +3,18 @@
 
   const games = [
     ['stop-seven','Stop 7','timing','Detén el cronómetro lo más cerca posible de 7 segundos.'],
-    ['reaction','Reacción','reflex','Espera la señal y toca tan rápido como puedas.'],
-    ['center-hit','Clava el centro','precision','Detén el marcador exactamente en el centro.'],
+    ['reaction','Reacción','reflex','Espera a que aparezca el balón y tócalo lo más rápido posible.'],
+    ['center-hit','Clava el centro','precision','Encadena centros acertados mientras la barra acelera.'],
     ['speed-tap','Speed Tap','speed','Haz tantos toques como puedas durante cinco segundos.'],
-    ['color-reflex','Color Reflex','reflex','Elige el color indicado con rapidez y precisión.'],
-    ['quick-maths','Quick Maths','logic','Resuelve operaciones sencillas contra el reloj.'],
-    ['grid-memory','Grid Memory','memory','Memoriza las casillas iluminadas y repítelas.'],
-    ['sequence','Secuencia','memory','Observa y repite una secuencia cada vez más larga.'],
-    ['football-trivia','Trivial futbolero','football','Cinco preguntas de fútbol; acertar rápido suma más.'],
-    ['higher-lower','Higher or Lower','logic','Decide si el siguiente número será mayor o menor.'],
-    ['cups','Cups','memory','Sigue la bola durante la mezcla y encuentra el vaso correcto.'],
-    ['memory-cards','Memory Cards','memory','Encuentra todas las parejas en el menor tiempo posible.'],
-    ['tower-stack','Tower Stack','precision','Suelta bloques y construye la torre más alta posible.'],
-    ['zig-zag','Zig Zag','arcade','Cambia de dirección para mantenerte dentro del camino.'],
+    ['color-reflex','Color Reflex','reflex','Ignora la palabra y responde al color real de la tinta.'],
+    ['quick-maths','Quick Maths','logic','Resuelve operaciones cada vez más difíciles hasta fallar.'],
+    ['grid-memory','Grid Memory','memory','Memoriza patrones en cuadrículas que crecen de tamaño.'],
+    ['sequence','Secuencia','memory','Observa y repite secuencias cada vez más largas y complejas.'],
+    ['football-trivia','Trivial futbolero','football','Responde preguntas de fútbol hasta el primer fallo.'],
+    ['cups','Cups','memory','Sigue la bola y encadena aciertos; un fallo termina la partida.'],
+    ['memory-cards','Memory Cards','memory','Encuentra 12 parejas de cromos vintage en el menor tiempo posible.'],
+    ['tower-stack','Tower Stack','precision','Construye la torre más alta mientras la cámara sube contigo.'],
+    ['zig-zag','Zig Zag','arcade','Sigue un camino de curvas que aumenta progresivamente de dificultad.'],
     ['lane-rush','Lane Rush','arcade','Cambia de carril y esquiva obstáculos.'],
     ['arrow-rush','Arrow Rush','reflex','Responde a la dirección que aparece antes de que cambie.'],
     ['drop-zone','Drop Zone','precision','Suelta la bola justo cuando esté alineada con el hueco.'],
@@ -123,6 +122,7 @@
     const pending=games.filter(g=>!gameState(g.id));
     lines.push(`SIN VALORAR (${pending.length})`);
     if(pending.length) lines.push(pending.map(g=>g.name).join(', '));
+    lines.push('','DESCARTADO PREVIAMENTE','- Higher or Lower');
     return lines.join('\n');
   }
 
