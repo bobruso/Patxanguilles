@@ -10,7 +10,7 @@
     ['quick-maths','Quick Maths','logic','Resuelve operaciones cada vez más difíciles hasta fallar.'],
     ['grid-memory','Grid Memory','memory','Memoriza patrones en cuadrículas que crecen de tamaño.'],
     ['sequence','Secuencia','memory','Observa y repite secuencias cada vez más largas y complejas.'],
-    ['football-trivia','Trivial futbolero','football','Responde preguntas de fútbol hasta el primer fallo.'],
+    ['football-trivia','Trivial futbolero','football','10 preguntas, 15 segundos cada una: aciertos y velocidad suman puntos.'],
     ['cups','Cups','memory','Sigue la bola y encadena aciertos; un fallo termina la partida.'],
     ['memory-cards','Memory Cards','memory','Encuentra 12 parejas de cromos vintage en el menor tiempo posible.'],
     ['tower-stack','Tower Stack','precision','Construye la torre más alta mientras la cámara sube contigo.'],
