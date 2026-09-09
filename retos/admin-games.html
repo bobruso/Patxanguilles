@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#6b55f5">
+  <title>Laboratorio de minijuegos · Patxanguilles</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="./css/admin-games.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="back" href="../">← Patxanguilles</a>
+      <div id="identity" class="identity">Comprobando admin…</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">ADMIN · LABORATORIO</div>
+      <h1>Probar minijuegos</h1>
+      <p>Los 27 juegos activos en un solo sitio. Todas las partidas se abren en <strong>modo demo</strong>: no consumen intentos, no guardan resultados y no alteran clasificaciones.</p>
+      <div class="hero-actions">
+        <a class="secondary-link" href="./dev-check.html">COMPROBAR 27 JUEGOS</a>
+        <a class="secondary-link" href="./admin-trivia.html">ADMIN TRIVIAL</a>
+      </div>
+    </section>
+
+    <section class="toolbar panel">
+      <input id="search" type="search" placeholder="Buscar juego…" autocomplete="off">
+      <select id="categoryFilter" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option></select>
+      <select id="statusFilter" aria-label="Filtrar por valoración">
+        <option value="">Todos los estados</option>
+        <option value="ok">OK</option>
+        <option value="retocar">RETOCAR</option>
+        <option value="fuera">FUERA</option>
+        <option value="sin-valorar">Sin valorar</option>
+      </select>
+      <button id="copySummary" class="copy-button" type="button">COPIAR FEEDBACK</button>
+    </section>
+
+    <div class="summary-strip">
+      <span id="visibleCount">27 juegos</span>
+      <span id="feedbackCount">0 valorados</span>
+      <span class="demo-note">Las valoraciones y notas se guardan solo en este navegador.</span>
+    </div>
+
+    <section id="gamesGrid" class="games-grid" aria-live="polite"></section>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth/config.js"></script>
+  <script src="../auth/auth-service.js"></script>
+  <script src="./js/admin-games.js"></script>
+</body>
+</html>
