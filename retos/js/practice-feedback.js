@@ -17,7 +17,7 @@
     'Quick Maths':['Resuelve operaciones cada vez más difíciles sin equivocarte.',['Resuelve la operación que aparece.','Elige una de las cuatro respuestas antes de que acabe el tiempo.','Cada acierto aumenta la dificultad. El primer fallo termina la partida.'],'Gana quien consiga la racha más larga de operaciones correctas.'],
     'Grid Memory':['Memoriza patrones que crecen desde 4×4 hasta cuadrículas mucho mayores.',['Memoriza todas las casillas iluminadas.','Cuando desaparezcan, toca exactamente esas casillas.','La cuadrícula y los patrones se vuelven más complejos. Un error termina la partida.'],'Gana el nivel más alto completado.'],
     'Secuencia':['Observa y repite patrones cada vez más largos en una cuadrícula que va creciendo.',['Observa el patrón completo sin tocar.','Repítelo respetando exactamente el mismo orden.','Cada nivel aumenta pasos y, progresivamente, filas y columnas. Un error termina la partida.'],'Gana el nivel más alto completado.'],
-    'Trivial futbolero':['Responde preguntas de fútbol hasta que falles. El tiempo baja progresivamente hasta 5 segundos.',['Elige una de las cuatro respuestas.','Si aciertas, pasas inmediatamente a otra pregunta y aumenta tu racha.','El primer fallo o quedarte sin tiempo termina la partida. El límite baja de 9 s hasta un mínimo de 5 s.'],'Gana quien consiga la racha más larga de respuestas correctas.'],
+    'Trivial futbolero':['Responde 10 preguntas de fútbol. Tienes 15 segundos para cada una y la rapidez también puntúa.',['Responde las 10 preguntas: fallar una no termina la partida.','Cada acierto vale entre 250 y 1000 puntos según lo rápido que respondas.','Después de cada respuesta verás claramente la solución: correcta en verde y las otras en rojo.'],'Gana quien consiga más puntos sumando aciertos y velocidad. Máximo: 10.000 puntos.'],
     'Cups':['Sigue el vaso que esconde la bola. Cada ronda se complica y solo tienes una vida.',['Memoriza en qué vaso está la bola.','Sigue los vasos mientras se mezclan.','Elige el vaso correcto. Si fallas una vez, la partida termina.'],'Gana quien encadene más aciertos seguidos.'],
     'Memory Cards':['Encuentra parejas de cromos de fútbol vintage en una cuadrícula ampliada.',['Destapa dos cromos cada vez.','Si son iguales quedan descubiertos; si no, vuelven a taparse.','Completa las 12 parejas lo más rápido posible.'],'Gana quien complete las 12 parejas en menos tiempo.'],
     'Tower Stack':['Construye una torre sin límite visual: la cámara sube contigo mientras colocas bloques.',['El bloque móvil cruza la pantalla.','Toca para colocarlo sobre el bloque anterior.','La parte que quede fuera se recorta; si no hay solapamiento, termina la partida. La cámara sigue la parte alta de la torre.'],'Gana quien coloque más bloques.'],
@@ -37,7 +37,7 @@
 
   function normalizeDemoResult(){
     if(!resultScore||resultPanel.hidden||resultScore.textContent==='NO VÁLIDO')return;
-    if(!['center-hit','quick-maths','football-trivia'].includes(demoId))return;
+    if(!['center-hit','quick-maths'].includes(demoId))return;
     const match=resultScore.textContent.match(/-?\d+(?:[.,]\d+)?/);if(!match)return;
     const n=Math.max(0,Math.round(Number(match[0].replace(',','.'))||0));
     const wanted=demoId==='center-hit'?`Racha ${n}`:`${n} acierto${n===1?'':'s'}`;
