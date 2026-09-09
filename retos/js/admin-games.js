@@ -27,11 +27,12 @@
   ].map(([id,name,category,description],index)=>({id,name,category,description,index:index+1}));
 
   const discarded=['Higher or Lower','Orbit Pins','Rhythm Tap','Flash Count','Swipe Sort'];
+  const approved=['stop-seven','speed-tap','arrow-rush'];
   const categoryNames = {
     timing:'TIEMPO', reflex:'REFLEJOS', precision:'PRECISIÓN', speed:'VELOCIDAD',
     logic:'LÓGICA', memory:'MEMORIA', football:'FÚTBOL', arcade:'ARCADE'
   };
-  const STORAGE_KEY = 'patx_admin_game_feedback_v1';
+  const STORAGE_KEY = 'patx_admin_game_feedback_v2';
   const $ = id => document.getElementById(id);
   const els = {
     identity:$('identity'), search:$('search'), category:$('categoryFilter'), status:$('statusFilter'),
@@ -40,7 +41,13 @@
   let feedback = loadFeedback();
 
   function esc(value){return String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');}
-  function loadFeedback(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')||{};}catch(_){return {};}}
+  function baselineFeedback(){return Object.fromEntries(approved.map(id=>[id,{status:'ok'}]));}
+  function loadFeedback(){
+    try{
+      const stored=localStorage.getItem(STORAGE_KEY);
+      return stored ? (JSON.parse(stored)||{}) : baselineFeedback();
+    }catch(_){return baselineFeedback();}
+  }
   function saveFeedback(){localStorage.setItem(STORAGE_KEY,JSON.stringify(feedback));updateCounts();}
   function toast(message){els.toast.textContent=message;els.toast.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>els.toast.classList.remove('show'),1500);}
   function gameState(id){return feedback[id]?.status||'';}
@@ -71,7 +78,7 @@
       <div class="game-name">${esc(game.name)}</div>
       <div class="game-desc">${esc(game.description)}</div>
       <a class="demo-button" href="./?demo=${encodeURIComponent(game.id)}" target="_blank" rel="noopener">PROBAR DEMO ↗</a>
-      <div class="feedback-label">TU VALORACIÓN</div>
+      <div class="feedback-label">TU VALORACIÓN · RONDA 2</div>
       <div class="feedback-buttons">
         <button class="feedback-btn ${state==='ok'?'active':''}" type="button" data-status="ok">✓ OK</button>
         <button class="feedback-btn ${state==='retocar'?'active':''}" type="button" data-status="retocar">~ RETOCAR</button>
@@ -105,7 +112,7 @@
 
   function summaryText(){
     const labels={ok:'OK',retocar:'RETOCAR',fuera:'FUERA'};
-    const lines=['FEEDBACK MINIJUEGOS PATXANGUILLES',''];
+    const lines=['FEEDBACK MINIJUEGOS PATXANGUILLES · RONDA 2',''];
     ['ok','retocar','fuera'].forEach(status=>{
       const rows=games.filter(g=>gameState(g.id)===status);
       lines.push(`${labels[status]} (${rows.length})`);
