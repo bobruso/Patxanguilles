@@ -2,9 +2,9 @@
   'use strict';
 
   window.PatxGameRegistry.register('memory-cards', ({ container, config = {}, seed = 1, onFinish }) => {
-    const pairs=Math.min(Number(config.pairs||12),12);
-    const timeoutMs=Number(config.timeout_ms||90000);
-    const maxScore=Number(config.max_score||120000);
+    const pairs=Math.min(Math.max(Number(config.pairs||12),12),12);
+    const timeoutMs=Math.max(Number(config.timeout_ms||90000),90000);
+    const maxScore=Math.max(Number(config.max_score||120000),120000);
     const source='Odio Eterno al Fútbol Moderno · Álbum Vintage';
     const footballCards=[
       ['Abelardo','https://odioeternoalfutbolmoderno.es/wp-content/uploads/2023/12/Abelardo.jpeg'],
@@ -50,18 +50,13 @@
       helpEl.textContent=completed?`¡${pairs} parejas completadas!`:`Tiempo: ${matches} / ${pairs} parejas.`;
       onFinish({score,duration,metadata:{matches,completed,pairs,source:'odio-eterno-al-futbol-moderno'}});
     }
-    function tick(now){
-      if(finished)return;const elapsed=now-startedAt,remain=Math.max(0,timeoutMs-elapsed);timeEl.textContent=`${(remain/1000).toFixed(1)} s`;if(remain<=0)return end(false);raf=requestAnimationFrame(tick);
-    }
+    function tick(now){if(finished)return;const elapsed=now-startedAt,remain=Math.max(0,timeoutMs-elapsed);timeEl.textContent=`${(remain/1000).toFixed(1)} s`;if(remain<=0)return end(false);raf=requestAnimationFrame(tick);}
     function hidePair(){[first,second].forEach(c=>c?.classList.remove('is-open'));first=second=null;lock=false;}
     function press(e){
       const card=e.target.closest('[data-card]');if(!card||finished||lock||card.classList.contains('is-open')||card.classList.contains('is-match'))return;
-      e.preventDefault();card.classList.add('is-open');
-      if(!first){first=card;return;}
-      second=card;lock=true;
-      if(first.dataset.value===second.dataset.value){
-        first.classList.add('is-match');second.classList.add('is-match');first=second=null;lock=false;matches++;matchesEl.textContent=`${matches} / ${pairs} parejas`;helpEl.textContent='¡Pareja!';if(matches>=pairs)setTimeout(()=>end(true),240);
-      }else{helpEl.textContent='No coinciden.';setTimeout(hidePair,650);}
+      e.preventDefault();card.classList.add('is-open');if(!first){first=card;return;}second=card;lock=true;
+      if(first.dataset.value===second.dataset.value){first.classList.add('is-match');second.classList.add('is-match');first=second=null;lock=false;matches++;matchesEl.textContent=`${matches} / ${pairs} parejas`;helpEl.textContent='¡Pareja!';if(matches>=pairs)setTimeout(()=>end(true),240);}
+      else{helpEl.textContent='No coinciden.';setTimeout(hidePair,650);}
     }
     container.addEventListener('pointerdown',press,{passive:false});
     return{start(){startedAt=performance.now();raf=requestAnimationFrame(tick);},destroy(){finished=true;cancelAnimationFrame(raf);container.removeEventListener('pointerdown',press);}};
