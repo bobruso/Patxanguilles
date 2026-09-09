@@ -3,7 +3,7 @@
 
   window.PatxGameRegistry.register('orbit-pins', ({container,config={},onFinish}) => {
     const maxPins=Number(config.max_score||14);
-    let startedAt=0,finished=false,raf=0,rotation=0,speed=.018,pins=[],flash='';
+    let startedAt=0,finished=false,locked=false,raf=0,rotation=0,speed=.018,pins=[],flash='';
 
     container.innerHTML=`
       <div class="game-surface orbit-surface">
@@ -15,13 +15,17 @@
     const canvas=container.querySelector('canvas'),ctx=canvas.getContext('2d'),countEl=container.querySelector('[data-count]'),speedEl=container.querySelector('[data-speed]'),helpEl=container.querySelector('[data-help]');
 
     function norm(a){while(a>Math.PI)a-=Math.PI*2;while(a<-Math.PI)a+=Math.PI*2;return a;}
-    function finish(){if(finished)return;finished=true;cancelAnimationFrame(raf);onFinish({score:pins.length,duration:performance.now()-startedAt,metadata:{pins:pins.length}});}
+    function finish(){if(finished)return;finished=true;locked=true;cancelAnimationFrame(raf);onFinish({score:pins.length,duration:performance.now()-startedAt,metadata:{pins:pins.length}});}
 
     function shoot(){
-      if(finished)return;
+      if(finished||locked||pins.length>=maxPins)return;
       const entry=Math.PI/2;
-      for(const rel of pins){const world=norm(rel+rotation);if(Math.abs(norm(world-entry))<.24){flash='miss';helpEl.textContent='¡Choque!';return setTimeout(finish,240);}}
-      pins.push(norm(entry-rotation));countEl.textContent=`${pins.length} / ${maxPins}`;speed=Math.min(.045,speed+.0015);speedEl.textContent=`NIVEL ${1+Math.floor(pins.length/4)}`;flash='hit';helpEl.textContent=pins.length===maxPins?'¡Completado!':'Buena clavija';setTimeout(()=>{flash='';},180);if(pins.length>=maxPins)setTimeout(finish,260);
+      for(const rel of pins){
+        const world=norm(rel+rotation);
+        if(Math.abs(norm(world-entry))<.24){locked=true;flash='miss';helpEl.textContent='¡Choque!';setTimeout(finish,240);return;}
+      }
+      pins.push(norm(entry-rotation));countEl.textContent=`${pins.length} / ${maxPins}`;speed=Math.min(.045,speed+.0015);speedEl.textContent=`NIVEL ${1+Math.floor(pins.length/4)}`;flash='hit';helpEl.textContent=pins.length===maxPins?'¡Completado!':'Buena clavija';setTimeout(()=>{flash='';},180);
+      if(pins.length>=maxPins){locked=true;setTimeout(finish,260);}
     }
 
     function draw(){
@@ -36,6 +40,6 @@
     }
     function loop(){if(finished)return;rotation+=speed;draw();raf=requestAnimationFrame(loop);}
     canvas.addEventListener('pointerdown',shoot);
-    return{start(){startedAt=performance.now();raf=requestAnimationFrame(loop);},destroy(){finished=true;cancelAnimationFrame(raf);canvas.removeEventListener('pointerdown',shoot);}};
+    return{start(){startedAt=performance.now();raf=requestAnimationFrame(loop);},destroy(){finished=true;locked=true;cancelAnimationFrame(raf);canvas.removeEventListener('pointerdown',shoot);}};
   });
 })();
