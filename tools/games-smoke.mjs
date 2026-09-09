@@ -22,7 +22,7 @@ function localRefs(html){
   const re=/(?:href|src)=["']([^"']+)["']/gi;
   for(const m of html.matchAll(re)){
     const v=m[1].trim();
-    if(!v||v.startsWith('#')||v.startsWith('http:')||v.startsWith('https:')||v.startsWith('data:')||v.startsWith('javascript:'))continue;
+    if(!v||v.includes('${')||v.startsWith('#')||v.startsWith('http:')||v.startsWith('https:')||v.startsWith('data:')||v.startsWith('javascript:'))continue;
     refs.push(v.split(/[?#]/)[0]);
   }
   return refs;
