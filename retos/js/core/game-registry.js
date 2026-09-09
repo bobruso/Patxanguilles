@@ -18,10 +18,14 @@
     if(id==='tower-stack')atLeast('max_level',50);
     if(id==='zig-zag')atLeast('max_score',120);
     if(id==='football-trivia'){
-      atLeast('questions',100);
-      atLeast('start_timeout_ms',9000);
-      c.min_timeout_ms=5000;
-      c.timeout_decrement_ms=400;
+      c.questions=10;
+      c.question_timeout_ms=15000;
+      c.max_score=10000;
+      c.points_max_per_correct=1000;
+      c.points_min_per_correct=250;
+      delete c.start_timeout_ms;
+      delete c.min_timeout_ms;
+      delete c.timeout_decrement_ms;
     }
     return out;
   }
