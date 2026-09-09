@@ -6,7 +6,8 @@ const pages=[
   'juegos/index.html',
   'juegos/memoria-vintage.html',
   'juegos/quien-es-vintage.html',
-  'juegos/cabezones/index.html'
+  'juegos/cabezones/index.html',
+  'juegos/admin-mascaras-vintage.html'
 ];
 
 let failures=0;
@@ -66,6 +67,10 @@ if(!/ROUNDS\s*=\s*10\s*,\s*CHOICES\s*=\s*6/.test(quiz))fail('¿Quién es? no est
 const heads=await readFile(path.join(ROOT,'juegos/cabezones/index.html'),'utf8');
 if(!/<canvas[^>]+id=["']game["']/i.test(heads))fail('Patxanguilles Heads: falta canvas de juego');else ok('Patxanguilles Heads: canvas encontrado');
 if(!/setMode\(['"]cpu['"]\)/.test(heads)||!/setMode\(['"]local['"]\)/.test(heads))fail('Patxanguilles Heads: faltan modos CPU/local');else ok('Patxanguilles Heads: modos CPU y 2P local presentes');
+if(!/data-touch-player=["']1["']/.test(heads)||!/data-touch-player=["']2["']/.test(heads))fail('Patxanguilles Heads: faltan controles táctiles independientes para los dos jugadores');else ok('Patxanguilles Heads: controles táctiles 2P presentes');
+
+const maskEditor=await readFile(path.join(ROOT,'juegos/admin-mascaras-vintage.html'),'utf8');
+if(!/admin_set_vintage_card_mask/.test(maskEditor))fail('Editor de máscaras: no llama a la RPC protegida');else ok('Editor de máscaras: RPC protegida presente');
 
 if(failures){
   console.error(`\n${failures} comprobación(es) fallaron.`);
