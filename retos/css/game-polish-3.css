@@ -1,0 +1,61 @@
+/* Patxanguilles Retos — final arcade / precision polish */
+
+.arcade-head,.stack-head,.drop-head,.orbit-head,.rhythm-head,.balance-head,.swipe-head{
+  width:min(560px,94vw);display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px auto 4px;
+}
+
+/* Canvas family */
+.zig-canvas,.lane-canvas,.snake-canvas,.catch-canvas,.drop-canvas,.orbit-canvas{
+  background:#21194f!important;border-color:rgba(255,255,255,.82)!important;
+}
+.lane-controls{color:rgba(255,255,255,.88)!important;background:rgba(32,24,83,.28);padding:8px 12px;border-radius:999px;font-weight:1000!important}
+
+/* Tower Stack */
+.stack-stage{position:relative}
+.stack-skyline{position:absolute;left:0;right:0;bottom:0;height:42%;opacity:.22;background:
+  linear-gradient(90deg,transparent 0 5%,#fff 5% 11%,transparent 11% 17%,#fff 17% 24%,transparent 24% 32%,#fff 32% 37%,transparent 37% 45%,#fff 45% 55%,transparent 55% 62%,#fff 62% 70%,transparent 70% 77%,#fff 77% 84%,transparent 84% 91%,#fff 91% 97%,transparent 97%)}
+.stack-flash{position:absolute;left:50%;top:18px;transform:translateX(-50%);z-index:5;min-width:120px;padding:7px 12px;border-radius:999px;font-size:10px;font-weight:1000;letter-spacing:.12em;opacity:0;transition:opacity .14s ease,transform .14s ease}
+.stack-flash.perfect,.stack-flash.trim{opacity:1;transform:translate(-50%,-3px)}.stack-flash.perfect{background:#c8f4da;color:#145d3a}.stack-flash.trim{background:#fff0a5;color:#755700}
+.stack-stage.is-miss{animation:stackMiss .25s ease}.stack-stage.is-finished{filter:saturate(.9)}
+@keyframes stackMiss{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+
+/* Drop Zone */
+.drop-canvas{cursor:pointer}.drop-surface .game-help{margin-top:12px}
+
+/* Orbit Pins */
+.orbit-canvas{cursor:pointer}.orbit-surface .game-help{margin-top:12px}
+
+/* Rhythm Tap */
+.rhythm-caption{display:inline-flex;align-items:center;justify-content:center;min-width:150px;padding:8px 13px;border-radius:999px;margin:15px auto 0;background:rgba(255,255,255,.48);font-size:10px;font-weight:1000;letter-spacing:.12em;color:#5d4210}
+.rhythm-caption.perfect{background:#c8f4da;color:#145d3a}.rhythm-caption.good{background:#fff0a5;color:#755700}.rhythm-caption.miss{background:#ffd1dc;color:#7a233a}
+.rhythm-pad{position:relative!important;width:210px!important;height:210px!important;margin:22px auto!important;background:rgba(255,255,255,.72)!important;overflow:visible!important}
+.rhythm-target-ring{position:absolute;left:50%;top:50%;width:98px;height:98px;border-radius:50%;border:7px solid #5f49dd;transform:translate(-50%,-50%);box-shadow:0 0 0 9px rgba(95,73,221,.08)}
+.rhythm-pad [data-pulse]{position:absolute!important;left:50%!important;top:50%!important;inset:auto!important;width:96px!important;height:96px!important;margin:-48px 0 0 -48px!important;background:#ffe04e!important;box-shadow:0 0 0 8px rgba(255,224,78,.16)!important;transform-origin:center!important}
+.rhythm-center-dot{position:absolute;left:50%;top:50%;width:22px;height:22px;border-radius:50%;background:#5f49dd;transform:translate(-50%,-50%);z-index:4}
+.rhythm-meter{width:min(420px,84vw);height:9px;border-radius:999px;background:rgba(255,255,255,.44);overflow:hidden;margin:0 auto 14px}.rhythm-meter>div{height:100%;background:#fff;transform-origin:left center;will-change:transform}
+.rhythm-pad.tap-perfect{animation:rhythmPerfect .18s ease}.rhythm-pad.tap-good{box-shadow:0 0 0 7px rgba(255,224,78,.22)!important}.rhythm-pad.tap-miss{box-shadow:0 0 0 7px rgba(255,87,115,.18)!important}
+@keyframes rhythmPerfect{50%{transform:scale(1.06)}}
+
+/* Balance */
+.balance-status{display:inline-flex;min-width:150px;align-items:center;justify-content:center;padding:8px 13px;border-radius:999px;margin:18px auto 2px;background:rgba(255,255,255,.5);font-size:10px;font-weight:1000;letter-spacing:.11em;color:#3e3273}
+.balance-status.safe{background:#c8f4da;color:#145d3a}.balance-status.warn{background:#fff0a5;color:#755700}.balance-status.danger{background:#ffd1dc;color:#7a233a}
+.balance-track{height:88px!important;margin:28px auto 22px!important;transition:box-shadow .12s ease,background .12s ease}
+.balance-track.is-safe{box-shadow:inset 0 0 0 5px rgba(55,185,119,.23),0 7px 0 rgba(64,45,151,.12)!important}.balance-track.is-danger{box-shadow:inset 0 0 0 5px rgba(230,73,102,.28),0 7px 0 rgba(64,45,151,.12)!important}
+.balance-safe{display:flex;align-items:center;justify-content:center}.balance-safe span{font-size:7px;font-weight:1000;letter-spacing:.08em;color:#765a00;white-space:nowrap}
+.balance-actions button.is-held{transform:translateY(4px) scale(.985)!important;background:#ffe65e!important;box-shadow:0 2px 0 rgba(74,48,150,.14)!important}
+
+/* Swipe Sort */
+.swipe-timer{width:min(520px,94vw);height:10px;margin:14px auto 18px;border-radius:999px;background:rgba(255,255,255,.45);overflow:hidden}.swipe-timer>div{height:100%;background:#fff;transform-origin:left center;will-change:transform}
+.swipe-rule-card{width:min(440px,92vw);display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px auto 14px;padding:7px;border-radius:18px;background:rgba(255,255,255,.34)}
+.swipe-rule-card span{display:flex;align-items:center;justify-content:center;min-height:38px;border-radius:13px;font-size:10px;font-weight:1000;letter-spacing:.08em}.swipe-rule-card .odd{background:#ffd7df;color:#7a233a}.swipe-rule-card .even{background:#d7efff;color:#214e79}
+.swipe-card-wrap{height:245px;display:flex;align-items:center;justify-content:center;overflow:hidden;width:min(500px,94vw);margin:0 auto 10px}
+.swipe-card{margin:0!important;width:185px!important;height:220px!important;background:#fff!important;color:#4d369e!important;border:0!important;border-radius:28px!important;box-shadow:0 10px 0 rgba(74,49,155,.14),0 22px 36px rgba(66,43,145,.16)!important;font-size:82px!important;touch-action:none;will-change:transform;user-select:none}
+.swipe-card.is-dragging{box-shadow:0 14px 0 rgba(74,49,155,.12),0 26px 46px rgba(66,43,145,.2)!important}.swipe-card.is-correct{background:#c8f4da!important;color:#145d3a!important}.swipe-card.is-wrong{background:#ffd1dc!important;color:#7a233a!important}
+.swipe-actions button.is-correct{background:#c8f4da!important;box-shadow:0 6px 0 #76c99b!important}.swipe-actions button.is-wrong{background:#ffd1dc!important;box-shadow:0 6px 0 #df95a5!important}
+
+@media(max-width:520px){
+  .rhythm-pad{width:170px!important;height:170px!important}.rhythm-target-ring{width:80px;height:80px}.rhythm-pad [data-pulse]{width:78px!important;height:78px!important;margin:-39px 0 0 -39px!important}
+  .balance-safe span{display:none}.swipe-card-wrap{height:215px}.swipe-card{width:155px!important;height:190px!important;font-size:68px!important}.lane-controls{font-size:8px!important}
+}
+
+@media(prefers-reduced-motion:reduce){.stack-stage,.rhythm-pad,.swipe-card{animation:none!important;transition:none!important}}
