@@ -1,0 +1,16 @@
+{
+  "name": "patxanguilles-vintage-importer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dry": "node import-vintage.mjs --dry-run --from=1 --to=1",
+    "import": "node import-vintage.mjs"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0"
+  }
+}
