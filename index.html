@@ -5355,7 +5355,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v220</span>
+    <span class="history-version">VERSIÓN v222</span>
   </header>
         
         
@@ -5366,7 +5366,33 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
         
         
         
-                                                                                                                                <section class="history-change-section">
+                                                                                                                                                <section class="history-change-section">
+      <div class="history-section-number">174</div>
+      <div class="history-section-content">
+        <h2>GPS · mapa físico fijo y orientación táctica al importar</h2>
+        <ul>
+          <li>Se retira el interruptor experimental de v221 que invertía visualmente los tres campos.</li>
+          <li>Antes de analizar una actividad GPS se pregunta si la Ley Rico estaba activada: desactivada = ataque hacia la Huerta (izquierda); activada = ataque hacia el Muro (derecha).</li>
+          <li>La orientación solo afecta a las métricas tácticas: tercio defensivo/medio/atacante, localización táctica de sprints y rol estimado.</li>
+          <li>Mapa de calor, recorrido, ocupación gráfica, posición media y puntos GPS quedan fijados a la posición física real del campo y nunca se invierten por cambiar la Ley Rico.</li>
+          <li>Se corrige la orientación física del GPS de Rafeta en el último partido.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
+      <div class="history-section-number">173</div>
+      <div class="history-section-content">
+        <h2>Informe GPS · interruptor para invertir los tres campos</h2>
+        <ul>
+          <li>Se añade un pequeño interruptor en la esquina superior derecha del mapa de calor para invertir la orientación visual del informe.</li>
+          <li>Al activarlo se invierten simultáneamente Mapa de calor, Recorrido y Ocupación por zonas, manteniendo textos y porcentajes legibles.</li>
+          <li>La inversión es solo visual: no modifica el GPS guardado, la Ley Rico ni las métricas analíticas del jugador.</li>
+        </ul>
+      </div>
+    </section>
+
+<section class="history-change-section">
       <div class="history-section-number">172</div>
       <div class="history-section-content">
         <h2>Informe GPS · retirada de la vista satélite final</h2>
@@ -7565,7 +7591,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v220 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v222 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">

@@ -37,8 +37,8 @@ export function buildSprintSpatial(analysis,speedOverride=null){
     const track=Array.isArray(analysis?.trail)?analysis.trail:[];
     points=sprints.map(sp=>{const p=nearestTrackPoint(track,sp.tSec);return p?{u:Number(p.u),v:Number(p.v),tSec:Number(sp.tSec),peakSpeedKmh:Number(sp.peakSpeedKmh)||null}:null}).filter(Boolean);
   }
-  const thirds=[0,0,0],sides=[0,0,0];
-  for(const p of points){thirds[Math.min(2,Math.floor(clamp(Number(p.u),0,.9999)*3))]++;sides[Math.min(2,Math.floor(clamp(Number(p.v),0,.9999)*3))]++}
+  const direction=Number(pos.attackDirection)===-1?-1:1,thirds=[0,0,0],sides=[0,0,0];
+  for(const p of points){const physicalU=clamp(Number(p.u),0,.9999),tacticalU=direction<0?1-physicalU:physicalU;thirds[Math.min(2,Math.floor(tacticalU*3))]++;sides[Math.min(2,Math.floor(clamp(Number(p.v),0,.9999)*3))]++}
   const n=points.length||1,thirdShares=thirds.map(v=>v/n),sideShares=sides.map(v=>v/n),widePct=n?((sides[0]+sides[2])/n):0,centerPct=n?(sides[1]/n):0,attackingPct=n?(thirds[2]/n):0,defensivePct=n?(thirds[0]/n):0;
   const base={points,count:points.length,thirdCounts:thirds,sideCounts:sides,thirds:thirdShares,sides:sideShares,widePct,centerPct,attackingPct,defensivePct};
   return{...base,pattern:inferPatterns(base)};
