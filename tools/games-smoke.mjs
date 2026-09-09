@@ -58,6 +58,11 @@ for(const file of pages){
   });
 }
 
+const integration=await readFile(path.join(ROOT,'patx-v214.js'),'utf8');
+try{new Function(integration);ok('patx-v214.js: integración Home/Admin compila')}catch(err){fail(`patx-v214.js: error de sintaxis: ${err.message}`)}
+if(!/id='homeGamesBtn'|id="homeGamesBtn"|homeGamesBtn/.test(integration))fail('patx-v214.js: falta integración del botón Juegos');else ok('patx-v214.js: botón Juegos presente');
+if(!/adminVintageMasksBtn/.test(integration))fail('patx-v214.js: falta acceso admin al editor de máscaras');else ok('patx-v214.js: acceso admin a máscaras presente');
+
 const memory=await readFile(path.join(ROOT,'juegos/memoria-vintage.html'),'utf8');
 if(!/const\s+PAIRS\s*=\s*12\b/.test(memory))fail('Memoria Vintage no está configurado a 12 parejas');else ok('Memoria Vintage: 12 parejas confirmadas');
 
