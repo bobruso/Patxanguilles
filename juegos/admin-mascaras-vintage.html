@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b0a">
+<title>Editor de máscaras Vintage · Patxanguilles</title>
+<style>
+:root{--gold:#d8b55c;--red:#d72832;--green:#36c96a;--text:#f3f4ef;--muted:#9da59f;--line:rgba(255,255,255,.14)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080a09;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}body{min-height:100dvh;background:radial-gradient(circle at 50% 0,rgba(216,181,92,.13),transparent 38%),#080a09}button,input{font:inherit}.shell{width:min(1150px,100%);margin:auto;padding:14px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.back,.secondary,.primary,.danger{border-radius:10px;padding:10px 13px;font-weight:850;cursor:pointer}.back,.secondary{border:1px solid var(--line);background:#141816;color:#fff}.primary{border:0;background:#eee5cf;color:#18140d}.danger{border:1px solid rgba(225,73,82,.5);background:rgba(177,30,40,.18);color:#ff969b}.brand{text-align:center}.brand small{display:block;color:var(--gold);font-size:9px;letter-spacing:.17em;text-transform:uppercase;font-weight:950}.brand strong{font:900 clamp(20px,4vw,34px)/1 Georgia,serif}.panel{display:grid;grid-template-columns:minmax(280px,520px) 1fr;gap:18px;padding:16px;border:1px solid rgba(216,181,92,.23);border-radius:20px;background:linear-gradient(155deg,#151915,#090b0a);box-shadow:0 24px 70px rgba(0,0,0,.45)}.viewer{display:flex;justify-content:center;align-items:flex-start}.mask-stage{position:relative;width:min(430px,100%);line-height:0;touch-action:none;user-select:none;border:2px solid #a88539;border-radius:10px;overflow:hidden;background:#111;box-shadow:0 16px 40px rgba(0,0,0,.5)}.mask-stage img{display:block;width:100%;height:auto}.mask-layer{position:absolute;inset:0;pointer-events:none}.mask-rect{position:absolute;border:2px solid #ffcc52;background:rgba(216,40,50,.22);box-shadow:0 0 0 9999px rgba(0,0,0,0);pointer-events:none}.mask-rect.saved{background:rgba(45,203,105,.2);border-color:#60e689}.mask-rect.preview{background:rgba(255,204,82,.2);border-color:#ffcc52}.side{min-width:0}.status{padding:11px 12px;border-radius:10px;background:rgba(255,255,255,.045);color:#cbd0cc;font-size:12px;line-height:1.45;margin-bottom:12px}.status.good{border:1px solid rgba(54,201,106,.34);color:#98e9af}.status.bad{border:1px solid rgba(215,40,50,.4);color:#ff9ba0}.card-title{font-size:clamp(25px,4vw,40px);font-weight:1000;line-height:1;margin:5px 0}.meta{color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px}.progress{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.stat{padding:9px;border:1px solid var(--line);border-radius:10px;text-align:center;background:rgba(255,255,255,.035)}.stat b{display:block;font-size:19px}.stat span{font-size:8px;text-transform:uppercase;color:var(--muted);letter-spacing:.08em}.search{width:100%;padding:11px;border:1px solid #354039;border-radius:10px;background:#101411;color:#fff;margin:0 0 10px}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.actions button{flex:1 1 135px}.help{margin-top:14px;padding:12px;border-radius:12px;background:rgba(216,181,92,.07);border:1px solid rgba(216,181,92,.18);font-size:12px;color:#c9c2ae;line-height:1.5}.mask-list{margin-top:10px;color:#cfd4d0;font:600 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-word}.locked{min-height:60vh;display:grid;place-items:center;text-align:center}.locked-card{width:min(450px,100%);padding:28px;border:1px solid var(--line);border-radius:18px;background:#111512}.locked-card h2{margin:0 0 10px}.locked-card p{color:var(--muted);line-height:1.5}
+@media(max-width:780px){.panel{grid-template-columns:1fr;padding:10px}.side{order:-1}.mask-stage{width:min(360px,92vw)}.topbar{align-items:flex-start}.brand strong{font-size:20px}.progress{margin:8px 0}.actions button{flex-basis:105px;padding:9px 7px;font-size:11px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar"><button class="back" onclick="location.href='./'">← Juegos</button><div class="brand"><small>Administración</small><strong>Máscaras Álbum Vintage</strong></div><div style="width:72px"></div></div>
+  <main id="app"><div class="locked"><div class="locked-card"><h2>Comprobando sesión…</h2><p>Este editor solo está disponible para administradores.</p></div></div></main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
+const SUPABASE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+let cards=[],index=0,masks=[],drag=null,filtered=null;
+const app=document.getElementById('app');
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function parseMasks(v){if(!v)return[];let x=v;if(typeof x==='string'){try{x=JSON.parse(x)}catch{return[]}}if(!Array.isArray(x))x=[x];return x.filter(r=>r&&['x','y','w','h'].every(k=>Number.isFinite(Number(r[k])))).map(r=>({x:Number(r.x),y:Number(r.y),w:Number(r.w),h:Number(r.h)}))}
+function currentList(){return filtered||cards}
+function current(){return currentList()[index]||null}
+function counts(){const done=cards.filter(c=>parseMasks(c.name_mask).length).length;return{done,pending:cards.length-done,total:cards.length}}
+async function init(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){showLocked('Necesitas iniciar sesión','Entra como administrador en la web principal y vuelve a abrir este editor.');return}
+  const admin=await sb.rpc('is_admin');
+  if(admin.error||admin.data!==true){showLocked('Acceso restringido','La cuenta actual no tiene permisos de administrador.');return}
+  const {data,error}=await sb.from('vintage_cards').select('id,player_name,position,nationality,source_image_url,name_mask').eq('enabled',true).neq('parse_status','disabled').order('player_name');
+  if(error){showLocked('No se pudieron cargar los cromos',error.message);return}
+  cards=(data||[]).filter(c=>c.source_image_url);
+  render();
+}
+function showLocked(title,text){app.innerHTML=`<div class="locked"><div class="locked-card"><h2>${esc(title)}</h2><p>${esc(text)}</p><button class="primary" onclick="location.href='../index.html'">Ir a la web principal</button></div></div>`}
+function render(){
+  const card=current();if(!card){app.innerHTML='<div class="locked"><div class="locked-card"><h2>No hay cromos</h2></div></div>';return}
+  masks=parseMasks(card.name_mask);
+  const c=counts();
+  app.innerHTML=`<div class="panel">
+    <div class="viewer"><div id="maskStage" class="mask-stage"><img id="cardImg" src="${esc(card.source_image_url)}" alt="${esc(card.player_name)}"><div id="maskLayer" class="mask-layer"></div></div></div>
+    <section class="side">
+      <div id="status" class="status good">Sesión de administrador verificada. Arrastra sobre la imagen para cubrir el nombre.</div>
+      <div class="progress"><div class="stat"><b>${c.done}</b><span>Con máscara</span></div><div class="stat"><b>${c.pending}</b><span>Pendientes</span></div><div class="stat"><b>${c.total}</b><span>Total</span></div></div>
+      <input id="search" class="search" type="search" placeholder="Buscar futbolista…" value="${filtered?esc(document.getElementById('search')?.value||''):''}">
+      <div class="card-title">${esc(card.player_name)}</div>
+      <div class="meta">${esc(card.position||'Posición sin datos')} · ${esc(card.nationality||'Nacionalidad sin datos')}<br>Cromo ${index+1} de ${currentList().length}</div>
+      <div class="actions"><button class="secondary" onclick="prevCard()">← Anterior</button><button class="secondary" onclick="nextPending()">Siguiente pendiente →</button></div>
+      <div class="actions"><button class="secondary" onclick="undoMask()">Deshacer rectángulo</button><button class="danger" onclick="clearMasks()">Borrar máscara</button><button class="primary" onclick="saveMasks()">Guardar y siguiente</button></div>
+      <div class="help"><b>Uso:</b> dibuja uno o varios rectángulos sobre el texto que revela el nombre. Las coordenadas se guardan en porcentaje, así que funcionan igual en móvil y escritorio. Verde = máscara ya guardada; amarillo = cambio aún sin guardar.</div>
+      <div id="maskList" class="mask-list"></div>
+    </section>
+  </div>`;
+  document.getElementById('search').addEventListener('input',e=>applySearch(e.target.value));
+  attachStage();renderMasks(true);
+}
+function attachStage(){
+  const stage=document.getElementById('maskStage');if(!stage)return;
+  const point=e=>{const r=stage.getBoundingClientRect();return{x:Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)),y:Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100))}};
+  stage.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;e.preventDefault();const p=point(e);drag={start:p,end:p};try{stage.setPointerCapture(e.pointerId)}catch{}renderMasks(false)});
+  stage.addEventListener('pointermove',e=>{if(!drag)return;e.preventDefault();drag.end=point(e);renderMasks(false)});
+  const finish=e=>{if(!drag)return;e.preventDefault();drag.end=point(e);const x=Math.min(drag.start.x,drag.end.x),y=Math.min(drag.start.y,drag.end.y),w=Math.abs(drag.end.x-drag.start.x),h=Math.abs(drag.end.y-drag.start.y);drag=null;if(w>=1&&h>=1)masks.push({x:+x.toFixed(2),y:+y.toFixed(2),w:+w.toFixed(2),h:+h.toFixed(2)});renderMasks(false)};
+  stage.addEventListener('pointerup',finish);stage.addEventListener('pointercancel',()=>{drag=null;renderMasks(false)});
+}
+function renderMasks(savedStyle=false){
+  const layer=document.getElementById('maskLayer');if(!layer)return;
+  const rects=masks.map(r=>`<i class="mask-rect ${savedStyle?'saved':''}" style="left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%"></i>`);
+  if(drag){const x=Math.min(drag.start.x,drag.end.x),y=Math.min(drag.start.y,drag.end.y),w=Math.abs(drag.end.x-drag.start.x),h=Math.abs(drag.end.y-drag.start.y);rects.push(`<i class="mask-rect preview" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%"></i>`)}
+  layer.innerHTML=rects.join('');const list=document.getElementById('maskList');if(list)list.textContent=masks.length?JSON.stringify(masks):'Sin máscara guardada.';
+}
+function setStatus(text,type='good'){const el=document.getElementById('status');if(!el)return;el.textContent=text;el.className=`status ${type}`}
+function prevCard(){const list=currentList();index=(index-1+list.length)%list.length;render()}
+function nextCard(){const list=currentList();index=(index+1)%list.length;render()}
+function nextPending(){const list=currentList();if(!list.length)return;for(let n=1;n<=list.length;n++){const i=(index+n)%list.length;if(!parseMasks(list[i].name_mask).length){index=i;render();return}}setStatus('Todos los cromos de esta vista ya tienen máscara.','good')}
+function undoMask(){masks.pop();renderMasks(false)}
+async function clearMasks(){const card=current();if(!card)return;if(!confirm(`¿Borrar la máscara guardada de ${card.player_name}?`))return;const {error}=await sb.rpc('admin_set_vintage_card_mask',{p_card_id:card.id,p_mask:null});if(error){setStatus(error.message,'bad');return}card.name_mask=null;masks=[];setStatus('Máscara eliminada.','good');renderMasks(true)}
+async function saveMasks(){const card=current();if(!card)return;if(!masks.length){setStatus('Dibuja al menos un rectángulo antes de guardar.','bad');return}setStatus('Guardando…');const {data,error}=await sb.rpc('admin_set_vintage_card_mask',{p_card_id:card.id,p_mask:masks});if(error||data!==true){setStatus(error?.message||'No se pudo guardar.','bad');return}card.name_mask=JSON.parse(JSON.stringify(masks));setStatus(`Máscara guardada para ${card.player_name}.`,'good');nextPending()}
+function applySearch(value){const q=String(value||'').trim().toLocaleLowerCase('es');if(!q){filtered=null;index=0;render();return}filtered=cards.filter(c=>String(c.player_name||'').toLocaleLowerCase('es').includes(q));index=0;if(filtered.length)render();else setStatus('No hay futbolistas que coincidan con la búsqueda.','bad')}
+init();
+</script>
+</body>
+</html>
