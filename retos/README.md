@@ -4,51 +4,47 @@ Módulo independiente de minijuegos diarios. Requiere una cuenta Patxanguilles v
 
 ## Juegos activos
 
-1. `stop-seven` — Stop 7 — menor error gana.
-2. `reaction` — Reacción — menor tiempo gana.
-3. `center-hit` — Clava el centro — menor error gana.
-4. `speed-tap` — Speed Tap — más toques gana.
-5. `color-reflex` — Color Reflex — más puntos gana.
-6. `quick-maths` — Quick Maths — más puntos gana.
-7. `grid-memory` — Grid Memory — mayor nivel gana.
-8. `sequence` — Secuencia — mayor nivel gana.
-9. `football-trivia` — Trivial futbolero — cinco preguntas, puntuación calculada por servidor.
-10. `higher-lower` — Higher or Lower — más aciertos gana.
-11. `cups` — Cups — seguir la bola entre vasos; más aciertos gana.
-12. `memory-cards` — Memory Cards — completar las parejas en el menor tiempo posible.
-13. `tower-stack` — Tower Stack — mayor altura gana.
-14. `zig-zag` — Zig Zag — mantenerse en el camino; más puntos gana.
-15. `lane-rush` — Lane Rush — esquivar obstáculos; más puntos gana.
+1. `stop-seven` — Stop 7
+2. `reaction` — Reacción
+3. `center-hit` — Clava el centro
+4. `speed-tap` — Speed Tap
+5. `color-reflex` — Color Reflex
+6. `quick-maths` — Quick Maths
+7. `grid-memory` — Grid Memory
+8. `sequence` — Secuencia
+9. `football-trivia` — Trivial futbolero
+10. `higher-lower` — Higher or Lower
+11. `cups` — Cups
+12. `memory-cards` — Memory Cards
+13. `tower-stack` — Tower Stack
+14. `zig-zag` — Zig Zag
+15. `lane-rush` — Lane Rush
+16. `arrow-rush` — Arrow Rush
+17. `drop-zone` — Drop Zone
+18. `orbit-pins` — Orbit Pins
+19. `rhythm-tap` — Rhythm Tap
+20. `shape-gate` — Shape Gate
+21. `snake-sprint` — Snake Sprint
+22. `odd-one` — Odd One
+23. `flash-count` — Flash Count
+24. `balance` — Balance
+25. `target-lock` — Target Lock
+26. `swipe-sort` — Swipe Sort
+27. `catch-drop` — Catch Drop
 
 Todos los juegos tienen 2 intentos diarios por defecto. El intento se consume en servidor al pulsar JUGAR; cerrar o recargar la página no lo restaura.
 
 ## Descartados de la rotación
 
-Tras probarlos, se desactivan los experimentos futboleros `keep-up`, `penalties`, `goalkeeper`, `top-bins`, `var-offside`, `spot-ball`, `perfect-pass` y `free-kick`. El código queda archivado por si alguna mecánica fuese reutilizable, pero no se carga desde `retos/index.html` ni aparece en la rotación diaria.
+Tras probarlos se desactivaron `keep-up`, `penalties`, `goalkeeper`, `top-bins`, `var-offside`, `spot-ball`, `perfect-pass` y `free-kick`. El código queda archivado, pero no se carga desde `retos/index.html` ni aparece en la rotación diaria.
 
-El único juego de temática fútbol que se conserva activo es `football-trivia`.
+El único juego de temática fútbol que permanece activo es `football-trivia`.
 
 ## Modo demo
 
 El modo demo no consume intentos ni guarda resultados. Formato: `/retos/?demo=<id>`.
 
-IDs disponibles:
-
-- `stop-seven`
-- `reaction`
-- `center-hit`
-- `speed-tap`
-- `color-reflex`
-- `quick-maths`
-- `grid-memory`
-- `sequence`
-- `football-trivia`
-- `higher-lower`
-- `cups`
-- `memory-cards`
-- `tower-stack`
-- `zig-zag`
-- `lane-rush`
+Todos los IDs de la lista de juegos activos están disponibles en modo demo.
 
 ## Clasificaciones
 
@@ -73,6 +69,8 @@ El banco se administra en `/retos/admin-trivia.html` y exige rol `admin`. El nav
 - `game_attempts`: intentos iniciados/completados/inválidos.
 - `game_seasons`: temporadas mensuales.
 - `trivia_questions`: banco editable de preguntas.
+
+Los juegos de las tandas arcade usan `finish_arcade_game_attempt`; Trivial usa su corrección específica en servidor y los juegos básicos conservan su validador original.
 
 ## Pendiente — Patxanguilles Heads
 
