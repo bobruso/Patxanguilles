@@ -1,0 +1,32 @@
+name: Export Vintage Catalogue via WordPress API
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/vintage-wp-api-export.yml'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools/vintage-importer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install
+      - name: Export all Album Vintage posts
+        run: node export-from-wp-api.mjs
+      - name: Upload catalogue artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vintage-cards-wp-api
+          path: tools/vintage-importer/vintage-cards-wp.json
+          retention-days: 7
