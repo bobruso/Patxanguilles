@@ -5,6 +5,7 @@
     const pairs=Number(config.pairs||8);
     const timeoutMs=Number(config.timeout_ms||30000);
     const maxScore=Number(config.max_score||60000);
+    const symbols=['★','♥','⚡','●','◆','☾','✿','♛','▲','☀','✦','♣'];
     let state=Number(seed)||1;
     let startedAt=0,finished=false,matches=0,lock=false,first=null,second=null,raf=0;
 
@@ -18,7 +19,7 @@
         <div class="game-kicker">MEMORY CARDS</div>
         <div class="round-counter" data-time>30.0 s</div>
         <div class="cards-grid">
-          ${deck.map((v,i)=>`<button type="button" class="memory-card" data-card="${i}" data-value="${v}" aria-label="Carta ${i+1}"><span class="card-back">?</span><span class="card-face">${String.fromCharCode(65+v)}</span></button>`).join('')}
+          ${deck.map((v,i)=>`<button type="button" class="memory-card" data-card="${i}" data-value="${v}" aria-label="Carta ${i+1}"><span class="card-back">✦</span><span class="card-face">${symbols[v%symbols.length]}</span></button>`).join('')}
         </div>
         <div class="game-help" data-help>Encuentra las ${pairs} parejas.</div>
       </div>`;
