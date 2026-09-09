@@ -1,7 +1,7 @@
 /* Patxanguilles Retos — per-game polish pass 2 */
 
 /* Shared HUD rows */
-.maths-head,.memory-head,.sequence-head,.hl-head,.speed-tap-topline{
+.maths-head,.memory-head,.sequence-head,.hl-head,.speed-tap-topline,.color-head{
   width:min(520px,94vw);display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px auto 0;
 }
 
@@ -60,6 +60,29 @@
 .hl-actions button{display:flex;align-items:center;justify-content:center;gap:10px;min-height:76px!important}
 .hl-actions button .hl-arrow{font-size:28px;line-height:1}.hl-actions button.is-correct{background:#c7f4da!important;box-shadow:0 6px 0 #76c99b!important}.hl-actions button.is-wrong{background:#ffd1db!important;box-shadow:0 6px 0 #df95a5!important}
 
+/* Color Reflex */
+.color-timer{width:min(520px,94vw);height:10px;margin:14px auto 18px;border-radius:999px;background:rgba(255,255,255,.46);overflow:hidden}
+.color-timer>div{height:100%;background:#fff;transform-origin:left center;will-change:transform}
+.color-prompt{width:min(330px,86vw);margin:12px auto 20px;padding:18px 20px 22px;border-radius:28px;background:#fff;box-shadow:0 8px 0 rgba(112,37,65,.13)}
+.color-prompt-label{font-size:9px;font-weight:1000;letter-spacing:.16em;color:#9d6d7d}.color-prompt .color-target{margin:7px 0 0!important;font-size:clamp(48px,15vw,82px)!important}
+.color-target.target-0{color:#e94e67}.color-target.target-1{color:#4e72eb}.color-target.target-2{color:#29a972}.color-target.target-3{color:#d2a100}
+.color-option{display:flex;align-items:center;justify-content:center;gap:9px}.color-dot{width:13px;height:13px;border-radius:50%;background:currentColor;box-shadow:inset 0 0 0 3px rgba(255,255,255,.35)}
+.color-option.is-correct{outline:5px solid #fff!important;filter:brightness(1.07)}.color-option.is-wrong{filter:saturate(.45) brightness(.88);outline:4px solid rgba(100,18,36,.38)!important}
+
+/* Stop 7 */
+.stop-target{display:inline-flex;gap:8px;align-items:center;margin-top:14px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.52);font-size:10px;font-weight:900;letter-spacing:.08em}.stop-target strong{font-size:13px}
+.stop-clock{width:min(340px,86vw);min-height:190px;margin:24px auto 18px;border-radius:30px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 9px 0 rgba(135,91,17,.14);transition:transform .18s ease,background .18s ease}
+.stop-clock-label{font-size:9px;font-weight:1000;letter-spacing:.15em;color:#9a772c}.stop-clock .game-big{margin:10px 0 0!important;color:#5d4210}
+.stop-clock.is-hidden-time{background:#fff1a6;animation:hiddenPulse .8s ease infinite alternate}.stop-clock.is-hidden-time .game-big{letter-spacing:.08em}
+.stop-seven-surface.is-finished .stop-clock{background:#fff}.stop-seven-surface.is-finished .game-tap{background:#fff5b8!important}
+@keyframes hiddenPulse{to{transform:scale(1.025)}}
+
+/* Center Hit */
+.center-copy{margin-top:14px;font-size:10px;font-weight:1000;letter-spacing:.14em;background:rgba(255,255,255,.5);padding:7px 11px;border-radius:999px}
+.center-track-wrap{width:min(600px,94vw);margin:28px auto 18px;padding:17px 14px;border-radius:24px;background:#fff;box-shadow:0 8px 0 rgba(33,66,139,.13)}
+.center-track{width:100%!important;margin:0!important;height:42px!important}.center-zone{width:12%!important}.center-zone span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:7px;font-weight:1000;letter-spacing:.08em;color:#7b5a00;white-space:nowrap}.center-marker{width:22px!important;top:4px!important;bottom:4px!important;background:#5b45e3!important}.center-marker.is-stopped{animation:markerStop .28s ease}.center-feedback{font-size:18px;font-weight:1000;margin:2px 0 12px}.center-hit-surface.is-perfect .center-feedback{color:#12653f}.center-hit-surface.is-near .center-feedback{color:#745700}.center-hit-surface.is-miss .center-feedback{color:#81263d}
+@keyframes markerStop{50%{transform:translateX(-50%) scale(1.35)}}
+
 /* Reaction */
 .reaction-ready .game-big{position:relative}.reaction-ready .game-big:after{content:"";display:block;width:54px;height:9px;margin:18px auto 0;border-radius:999px;background:repeating-linear-gradient(90deg,currentColor 0 10px,transparent 10px 18px);opacity:.28;animation:waitDots 1s linear infinite}
 .reaction-go .game-tap{background:#fff!important;color:#075c35!important;animation:goButton .34s ease infinite alternate}
@@ -73,13 +96,16 @@
 
 /* Make help copy feel intentional */
 .game-help{background:rgba(255,255,255,.28);padding:9px 13px;border-radius:14px;max-width:480px!important;font-weight:750!important}
+.result-score-button-ready{animation:scoreReady .72s ease 2;box-shadow:0 0 0 5px rgba(255,210,46,.18),0 7px 0 #dca30a!important}
+@keyframes scoreReady{50%{transform:translateY(-3px) scale(1.02)}}
 
 @media(max-width:520px){
   .speed-tap-target{width:180px;height:180px;margin-top:22px}.speed-tap-count{font-size:72px}
   .math-question{padding:22px 24px!important;min-width:0;width:min(330px,88vw)}
   .sequence-pad{min-height:105px}.hl-card{min-height:165px}.hl-actions button{min-height:68px!important}
+  .color-prompt{padding:15px 16px 18px}.stop-clock{min-height:160px}.center-track-wrap{padding:14px 10px}.center-zone span{display:none}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .speed-tap-target,.answer-option,.memory-cell,.sequence-pad,.hl-card,.reaction-go .game-tap{animation:none!important;transition:none!important}
+  .speed-tap-target,.answer-option,.memory-cell,.sequence-pad,.hl-card,.reaction-go .game-tap,.stop-clock,.center-marker,.result-score-button-ready{animation:none!important;transition:none!important}
 }
