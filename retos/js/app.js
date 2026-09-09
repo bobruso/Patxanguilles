@@ -67,7 +67,7 @@
     'arrow-rush':['Mira la flecha grande que aparece.','Pulsa la misma dirección en los controles.','Responde rápido: cada ronda dura muy poco.'],
     'drop-zone':['La bola se mueve sobre un hueco.','Toca para soltarla en el momento adecuado.','Si atraviesa el hueco avanzas al siguiente nivel.'],
     'orbit-pins':['El objetivo gira continuamente.','Toca para lanzar una nueva clavija.','No golpees ninguna clavija que ya esté colocada.'],
-    'rhythm-tap':['Observa y escucha visualmente el pulso.','Toca el círculo exactamente en cada beat.','Cuanto menor sea tu desviación, más puntos recibes.'],
+    'rhythm-tap':['Observa el pulso visual.','Toca el círculo exactamente en cada beat.','Cuanto menor sea tu desviación, más puntos recibes.'],
     'shape-gate':['Mira la figura objetivo.','Elige entre las opciones la figura que encaja.','Responde antes de que termine el tiempo de la ronda.'],
     'snake-sprint':['Guía la serpiente por el tablero.','Recoge los objetivos para sumar puntos.','Evita paredes y tu propio cuerpo.'],
     'odd-one':['Busca el único símbolo diferente del grupo.','Tócalo antes de que venza el tiempo.','Cada ronda cambia la disposición y aumenta la presión.'],
@@ -95,7 +95,7 @@
 
   const esc = v => String(v ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
   const shown = () => demoMode ? demoDefinitions[demoGameId] : challenge;
-  const shownGameId = () => shown()?.game_id || shown()?.id;
+  const sleep = ms => new Promise(resolve => setTimeout(resolve,ms));
 
   function showError(message){ els.errorBox.textContent = message || 'Ha ocurrido un error.'; els.errorBox.hidden = false; }
   function clearError(){ els.errorBox.hidden = true; els.errorBox.textContent = ''; }
@@ -238,6 +238,9 @@
 
   function showResult(result,saved,def){
     els.resultPanel.hidden = false;
+    els.resultPanel.classList.remove('result-pop');
+    void els.resultPanel.offsetWidth;
+    els.resultPanel.classList.add('result-pop');
     const official = currentMode === 'score';
     if(!official){
       els.resultLabel.textContent = 'RESULTADO DE PRÁCTICA';
@@ -279,6 +282,26 @@
     return {attempt_id:null,attempt_no:'PRÁCTICA',game_id:id,seed:randomSeed,config:def.config || {},attempts_remaining:999};
   }
 
+  async function runCountdown(def,mode){
+    const firstTip = guides[def.game_id || def.id]?.[0] || 'Prepárate para empezar.';
+    const overlay = document.createElement('div');
+    overlay.className = 'game-countdown';
+    overlay.setAttribute('role','status');
+    overlay.setAttribute('aria-live','assertive');
+    const modeText = mode === 'score' ? 'INTENTO OFICIAL · PUNTÚA' : 'PRÁCTICA · NO PUNTÚA';
+    els.gameStage.appendChild(overlay);
+    const steps = ['3','2','1','¡YA!'];
+    for(let i=0;i<steps.length;i++){
+      if(!playing || !overlay.isConnected) return false;
+      const go = i === steps.length - 1;
+      overlay.classList.toggle('go',go);
+      overlay.innerHTML = `<div class="countdown-mode">${modeText}</div><div class="countdown-number">${steps[i]}</div><div class="countdown-tip">${go ? '¡Empieza!' : esc(firstTip)}</div>`;
+      await sleep(go ? 380 : 560);
+    }
+    overlay.remove();
+    return playing;
+  }
+
   async function startGame(mode){
     if(playing) return;
     clearError();
@@ -295,6 +318,8 @@
       els.gamePanel.hidden = false;
       els.gameTitle.textContent = def.game_name || def.name || 'Reto';
       els.gameStage.innerHTML = '';
+      els.gameStage.dataset.game = attempt.game_id;
+      els.gameStage.dataset.mode = mode;
       if(mode === 'practice'){
         els.gameMode.className = 'game-mode practice';
         els.gameMode.textContent = 'PRÁCTICA · NO PUNTÚA';
@@ -313,8 +338,9 @@
         attemptId:attempt.attempt_id,
         onFinish:result => finishGame(attempt,def,result)
       });
-      activeGame.start();
       els.gamePanel.scrollIntoView({behavior:'smooth',block:'center'});
+      const ready = await runCountdown(def,mode);
+      if(ready && activeGame) activeGame.start();
     }catch(error){
       cleanupGame();
       showError(error.message || 'No se pudo empezar el juego.');
