@@ -66,4 +66,27 @@
       }
     }
   };
+
+  function injectMinigameLabButton(){
+    const content=document.getElementById('adminContent');
+    if(!content||content.querySelector('[data-minigame-lab]'))return;
+    const actions=content.querySelector(':scope > .admin-actions')||content.querySelector('.admin-actions');
+    if(!actions)return;
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='secondary';
+    button.dataset.minigameLab='1';
+    button.textContent='Probar minijuegos';
+    button.onclick=()=>{location.href='retos/admin-games.html';};
+    actions.insertBefore(button,actions.firstChild);
+  }
+
+  const originalRenderAdminPanel=window.renderAdminPanel;
+  if(typeof originalRenderAdminPanel==='function'){
+    window.renderAdminPanel=function(...args){
+      const result=originalRenderAdminPanel.apply(this,args);
+      queueMicrotask(injectMinigameLabButton);
+      return result;
+    };
+  }
 })();
