@@ -2,129 +2,348 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d10">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#283527">
 <title>Memoria Vintage · Patxanguilles</title>
 <style>
 :root{
-  --bg:#080a09;--panel:#111512;--text:#f7f3e8;--muted:#a9afa8;
-  --gold:#d8b65d;--line:rgba(255,255,255,.12)
+  --gap:8px;
+  --paper:#e8dec4;
+  --ink:#332b20;
+  --burgundy:#5d2941;
+  --gold:#b79557;
+  --card-w:100px;
+  --card-h:133px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:#080a09;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+html,body{
+  margin:0;width:100%;height:100%;overflow:hidden;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--ink);background:#44503b
+}
 body{
   min-height:100dvh;
-  background:
-    radial-gradient(circle at 50% -10%,rgba(169,128,40,.18),transparent 38%),
-    linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.78)),
-    url('../background-home.jpg') center/cover fixed no-repeat;
+  background:url('background-memoria-horizontal.png') center/cover no-repeat fixed;
 }
-button{font:inherit}
-.shell{width:min(1280px,100%);margin:auto;padding:18px 16px 34px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
-.back,.restart{
-  border:1px solid var(--line);background:rgba(10,12,10,.78);color:#fff;border-radius:12px;
-  padding:10px 13px;cursor:pointer;font-weight:800
+button,select,input{font:inherit}
+.game{position:relative;width:100vw;height:100dvh;overflow:hidden}
+
+/* HUD */
+.hud{
+  position:absolute;z-index:20;
+  top:max(8px,env(safe-area-inset-top));
+  left:10px;right:10px;
+  display:grid;grid-template-columns:auto 1fr auto;
+  align-items:center;gap:9px;pointer-events:none
 }
-.back:hover,.restart:hover{border-color:rgba(216,182,93,.65)}
-.brand{text-align:center;min-width:0}
-.brand small{display:block;color:var(--gold);font-size:10px;font-weight:900;letter-spacing:.2em;text-transform:uppercase}
-.brand strong{display:block;font-family:Georgia,serif;font-size:clamp(22px,4vw,38px);letter-spacing:-.025em}
-.panel{
-  background:linear-gradient(155deg,rgba(21,24,20,.94),rgba(7,9,8,.94));
-  border:1px solid rgba(216,182,93,.24);border-radius:24px;padding:18px;
-  box-shadow:0 26px 80px rgba(0,0,0,.45)
+.hud button{pointer-events:auto}
+.hud-btn{
+  min-height:38px;border-radius:10px;padding:0 12px;
+  border:1px solid rgba(58,42,25,.24);
+  color:#342a1e;background:rgba(235,224,197,.86);
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  box-shadow:0 4px 15px rgba(38,31,20,.15);
+  font-weight:900;cursor:pointer
 }
-.instructions{text-align:center;color:#c7cbc5;font-size:13px;margin:0 0 9px}
-.orientation{
-  width:max-content;max-width:100%;margin:0 auto 14px;padding:5px 9px;border-radius:999px;
-  border:1px solid rgba(216,182,93,.24);background:rgba(216,182,93,.07);
-  color:#d9c88f;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase
+.title{
+  justify-self:center;
+  font:900 clamp(20px,2.6vw,30px)/1 Georgia,serif;
+  color:#30291f;text-shadow:0 1px rgba(255,255,255,.35)
 }
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.stat{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:12px;padding:9px;text-align:center}
-.stat b{display:block;font-size:18px;color:#fff}
-.stat span{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:2px}
-.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;max-width:1100px;margin:auto;perspective:1200px}
-.board.portrait .memory-card{aspect-ratio:3/4}
-.board.landscape .memory-card{aspect-ratio:4/3}
-.memory-card{position:relative;border:0;padding:0;background:transparent;cursor:pointer;perspective:900px;min-width:0}
+.player-chip{
+  position:absolute;z-index:21;
+  right:10px;
+  top:calc(max(8px,env(safe-area-inset-top)) + 45px);
+  padding:5px 9px;border-radius:999px;
+  background:rgba(236,225,199,.80);border:1px solid rgba(58,42,25,.18);
+  font-size:8px;font-weight:950;letter-spacing:.06em;text-transform:uppercase;
+  color:#5f4e35;backdrop-filter:blur(6px)
+}
+.stats{
+  position:absolute;z-index:19;
+  top:calc(max(8px,env(safe-area-inset-top)) + 44px);
+  left:50%;transform:translateX(-50%);
+  display:flex;gap:2px;padding:4px;border-radius:999px;
+  background:rgba(235,224,197,.80);border:1px solid rgba(58,42,25,.18);
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  box-shadow:0 4px 15px rgba(38,31,20,.12)
+}
+.stat{min-width:82px;text-align:center;padding:4px 9px}
+.stat b{display:block;font-size:13px;line-height:1}
+.stat span{display:block;margin-top:2px;font-size:7px;text-transform:uppercase;letter-spacing:.12em;color:#766650}
+
+.orientation-chip{
+  position:absolute;z-index:19;
+  left:10px;
+  top:calc(max(8px,env(safe-area-inset-top)) + 45px);
+  padding:5px 8px;border-radius:999px;
+  background:rgba(235,224,197,.76);
+  border:1px solid rgba(58,42,25,.16);
+  font-size:7px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;color:#6f5d45
+}
+
+/* Board */
+.board-zone{
+  position:absolute;inset:82px 10px 9px;
+  overflow:hidden;
+}
+.board{
+  width:100%;height:100%;position:relative;
+  perspective:1400px;
+}
+.memory-card{
+  position:absolute;
+  width:var(--card-w);height:var(--card-h);
+  border:0;padding:0;background:transparent;cursor:pointer;perspective:900px;
+  filter:drop-shadow(0 4px 7px rgba(29,25,16,.24))
+}
 .memory-card:disabled{cursor:default}
-.card-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.2,.7,.2,1)}
+.card-inner{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  transition:transform .38s cubic-bezier(.2,.72,.2,1)
+}
 .memory-card.flipped .card-inner,.memory-card.matched .card-inner{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:11px;overflow:hidden}
-.back-face{
-  display:grid;place-items:center;text-align:center;padding:8px;
-  background:
-    radial-gradient(circle at 50% 28%,rgba(239,211,131,.16),transparent 30%),
-    repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 5px,transparent 5px 10px),
-    linear-gradient(145deg,#17130d,#050605 68%);
-  border:2px solid #b9923c;box-shadow:inset 0 0 0 3px #1b160d,0 7px 18px rgba(0,0,0,.38)
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  overflow:hidden;border-radius:6%
 }
-.back-face::before{content:"⚽";font-size:clamp(24px,4vw,44px);filter:sepia(1) saturate(.65)}
-.back-face span{position:absolute;left:8px;right:8px;bottom:10px;font:900 clamp(7px,1.1vw,11px)/1.05 Georgia,serif;color:#d7b969;letter-spacing:.08em;text-transform:uppercase}
-.front-face{transform:rotateY(180deg);background:#111;border:2px solid #c29d48;box-shadow:0 8px 20px rgba(0,0,0,.42)}
-.front-face img{width:100%;height:100%;display:block;object-fit:contain;background:#0e0e0c}
-.memory-card.matched .front-face{box-shadow:0 0 0 2px #ead07a,0 0 25px rgba(230,193,91,.42)}
-.memory-card.matched{animation:matchPop .42s ease}
-@keyframes matchPop{50%{transform:scale(1.055)}}
-.loading{min-height:420px;display:grid;place-items:center;text-align:center;color:#d1d5cf}
-.loading b{display:block;font-size:24px;margin-bottom:5px}
-.spinner{width:38px;height:38px;border:4px solid rgba(255,255,255,.12);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+.back-face img,.front-face img{display:block;width:100%;height:100%}
+.back-face{position:relative;overflow:hidden}
+.back-face img{object-fit:fill}
+.memory-card.horizontal .back-face img{
+  position:absolute;
+  left:50%;top:50%;
+  width:auto;height:133.333%;
+  max-width:none;
+  transform:translate(-50%,-50%) rotate(90deg);
+  transform-origin:center;
+  object-fit:contain;
+}
+.front-face{transform:rotateY(180deg);background:rgba(233,224,201,.96)}
+.front-face img{object-fit:contain;background:rgba(233,224,201,.92)}
+.memory-card.matched{animation:matchPop .4s ease}
+@keyframes matchPop{50%{transform:scale(1.05)}}
+
+.complete-banner{
+  position:absolute;z-index:35;left:50%;top:50%;transform:translate(-50%,-50%) scale(.7);
+  opacity:0;pointer-events:none;
+  padding:12px 20px;border-radius:15px;
+  color:#f2e5c7;background:rgba(55,43,27,.82);
+  border:1px solid rgba(239,218,169,.35);
+  backdrop-filter:blur(6px);font:900 clamp(24px,5vw,46px)/1 Georgia,serif;
+  text-shadow:0 3px 15px rgba(0,0,0,.35)
+}
+.complete-banner.show{animation:completePop 2.15s ease forwards}
+@keyframes completePop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}
+  13%,72%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.94)}
+}
+
+/* overlays */
+.overlay{
+  position:fixed;inset:0;z-index:60;display:none;place-items:center;padding:16px;
+  background:rgba(28,33,26,.65);backdrop-filter:blur(7px)
+}
+.overlay.open{display:grid}
+.modal{
+  width:min(520px,96vw);max-height:92dvh;overflow:auto;
+  padding:22px;border-radius:20px;
+  background:#e7ddc3;border:1px solid rgba(73,54,30,.25);
+  box-shadow:0 25px 80px rgba(0,0,0,.32)
+}
+.modal h2{font:900 31px/1 Georgia,serif;margin:3px 0 8px}
+.modal p{color:#6d614e;font-size:12px;line-height:1.5}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:12px 0}
+.tab{
+  border:1px solid rgba(64,47,27,.18);border-radius:10px;padding:9px;
+  background:rgba(255,255,255,.20);font-weight:900;cursor:pointer;color:#493c2d
+}
+.tab.active{background:#45392c;color:#f1e6cf}
+.field{margin:10px 0}
+.field label{display:block;font-size:8px;font-weight:950;letter-spacing:.09em;text-transform:uppercase;color:#75644c;margin-bottom:4px}
+.field select,.field input{
+  width:100%;min-height:42px;border-radius:10px;
+  border:1px solid rgba(68,50,29,.20);padding:0 11px;
+  background:#f1e8d3;color:#352d22;outline:none
+}
+.primary{
+  width:100%;min-height:44px;border:0;border-radius:11px;
+  background:#40352a;color:#f4e9d2;font-weight:950;cursor:pointer;margin-top:8px
+}
+.secondary{
+  width:100%;min-height:40px;border:1px solid rgba(68,50,29,.18);border-radius:11px;
+  background:rgba(255,255,255,.22);color:#473a2c;font-weight:900;cursor:pointer;margin-top:7px
+}
+.danger{
+  border:1px solid rgba(122,27,34,.25);background:#7d2d33;color:#f8e5e1
+}
+.status{min-height:18px;margin-top:9px;font-size:11px;color:#765d3e}
+.user-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:9px 10px;border-radius:10px;background:rgba(94,73,39,.07);margin-bottom:10px
+}
+.user-row b{font-size:13px}
+
+/* Ranking */
+.ranking-list{display:grid;gap:6px;margin-top:12px}
+.rank-row{
+  display:grid;grid-template-columns:32px 38px 1fr auto;align-items:center;gap:8px;
+  padding:9px 10px;border-radius:10px;background:rgba(82,64,38,.07)
+}
+.rank-row.me{outline:1px solid rgba(93,41,65,.40)}
+.rank-num{font-weight:1000;color:#765a2f}
+.rank-avatar{
+  width:38px;height:38px;border-radius:50%;object-fit:cover;
+  border:1px solid rgba(73,54,30,.24);
+  background:rgba(255,255,255,.18)
+}
+.rank-name{font-weight:850}.rank-time{font-weight:1000}
+.rank-meta{font-size:8px;color:#7b6c58;margin-top:2px}
+.rank-empty{padding:16px;text-align:center;color:#756853;font-size:12px}
+
+/* Admin ranking */
+.admin-list{display:grid;gap:6px;margin-top:10px}
+.admin-row{
+  display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
+  padding:9px 10px;border-radius:10px;background:rgba(82,64,38,.07)
+}
+.admin-row small{display:block;color:#7c6e5b;font-size:8px;margin-top:2px}
+.admin-actions{display:flex;gap:4px}
+.mini{
+  border:1px solid rgba(65,48,28,.18);background:rgba(255,255,255,.25);color:#433729;
+  border-radius:8px;padding:6px 8px;font-size:9px;font-weight:900;cursor:pointer
+}
+.mini.delete{background:#7b3036;color:#f5e2dd;border-color:#7b3036}
+
+/* loading */
+.loading{
+  position:fixed;inset:0;z-index:50;display:grid;place-items:center;
+  background:rgba(230,220,193,.53);backdrop-filter:blur(4px)
+}
+.loading-card{
+  padding:16px 20px;border-radius:15px;background:rgba(237,226,200,.91);
+  border:1px solid rgba(64,47,27,.18);text-align:center
+}
+.spinner{
+  width:32px;height:32px;margin:0 auto 9px;border-radius:50%;
+  border:4px solid rgba(67,48,27,.12);border-top-color:#6e542e;animation:spin .8s linear infinite
+}
 @keyframes spin{to{transform:rotate(360deg)}}
-.finish{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(0,0,0,.78);backdrop-filter:blur(7px);z-index:30}
-.finish.open{display:grid}
-.finish-card{width:min(450px,100%);text-align:center;border-radius:24px;padding:28px 22px;background:linear-gradient(145deg,#1b1b16,#090a09);border:1px solid rgba(216,182,93,.45);box-shadow:0 30px 90px #000}
-.finish-icon{font-size:60px}.finish h2{font:900 34px/1 Georgia,serif;margin:8px 0}.finish p{color:#b9bdb8}
-.finish-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
-.finish-grid div{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:12px;padding:10px}
-.finish-grid b{display:block;font-size:20px}.finish-grid span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
-.primary{border:0;border-radius:13px;padding:13px 18px;background:#eee6d0;color:#12110d;font-weight:950;cursor:pointer;width:100%}
-.error{max-width:650px;margin:35px auto;text-align:center;padding:25px;border-radius:18px;border:1px solid rgba(215,40,50,.38);background:rgba(90,13,18,.2)}
-@media(max-width:820px){
-  .shell{padding:10px 8px 24px}.panel{padding:11px;border-radius:17px}
-  .board{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
-  .topbar{margin-bottom:9px}.brand strong{font-size:23px}.back,.restart{padding:8px 10px;font-size:12px}
-  .stats{gap:5px}.stat{padding:7px 4px}.stat b{font-size:16px}.instructions{font-size:11px;margin-bottom:7px}
-}
-@media(max-width:410px){
-  .board{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.panel{padding:7px}
-  .front-face,.back-face{border-width:1px;border-radius:8px}.stat span{font-size:7px}.back-face span{font-size:6px;bottom:6px}
+
+/* finish */
+.finish-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:15px 0}
+.finish-grid div{padding:10px;border-radius:10px;background:rgba(81,63,37,.07);text-align:center}
+.finish-grid b{display:block;font-size:20px}.finish-grid span{font-size:7px;text-transform:uppercase;letter-spacing:.1em}
+
+/* MOBILE: 4 x 5, 10 pairs */
+@media(max-width:700px), (orientation:portrait){
+  :root{--gap:4px}
+  body{background:url('background-memoria-vertical.png') center/cover no-repeat fixed}
+  .hud{top:max(4px,env(safe-area-inset-top));left:5px;right:5px}
+  .hud-btn{min-height:33px;padding:0 8px;font-size:10px}
+  .title{font-size:18px}
+  .stats{top:calc(max(4px,env(safe-area-inset-top)) + 37px);padding:3px}
+  .stat{min-width:65px;padding:3px 7px}.stat b{font-size:11px}.stat span{font-size:6px}
+  .player-chip{right:5px;top:calc(max(4px,env(safe-area-inset-top)) + 38px);font-size:6px;padding:4px 6px}
+  .orientation-chip{left:5px;top:calc(max(4px,env(safe-area-inset-top)) + 38px);font-size:6px;padding:4px 6px}
+  .board-zone{inset:70px 4px calc(4px + env(safe-area-inset-bottom))}
 }
 </style>
 </head>
 <body>
-<div class="shell">
-  <div class="topbar">
-    <button class="back" onclick="location.href='./'">← Juegos</button>
-    <div class="brand"><small>Patxanguilles Antifeixistes</small><strong>Memoria Vintage</strong></div>
-    <button class="restart" onclick="newGame()">↻ Nueva</button>
+<div class="game">
+  <div class="hud">
+    <button class="hud-btn" onclick="location.href='./'">← Juegos</button>
+    <div class="title">Memoria Vintage</div>
+    <button class="hud-btn" onclick="openRanking()">Ranking</button>
   </div>
 
-  <main class="panel">
-    <p class="instructions">Encuentra las <b>10 parejas</b>. Cada partida utiliza exclusivamente cromos horizontales o exclusivamente cromos verticales.</p>
-    <div id="orientationBadge" class="orientation">Seleccionando orientación…</div>
-    <div class="stats">
-      <div class="stat"><b id="pairsStat">0/10</b><span>Parejas</span></div>
-      <div class="stat"><b id="movesStat">0</b><span>Movimientos</span></div>
-      <div class="stat"><b id="errorsStat">0</b><span>Errores</span></div>
-      <div class="stat"><b id="timeStat">0:00</b><span>Tiempo</span></div>
-    </div>
-    <div id="gameArea" class="loading"><div><div class="spinner"></div><b>Barajando cromos…</b><span>Rebuscando en el álbum.</span></div></div>
-  </main>
+  <div class="stats">
+    <div class="stat"><b id="pairsStat">0/10</b><span>Parejas</span></div>
+    <div class="stat"><b id="timeStat">0:00.0</b><span>Tiempo</span></div>
+  </div>
+  <div id="orientationChip" class="orientation-chip">—</div>
+  <div id="playerChip" class="player-chip" style="display:none"></div>
+
+  <div class="board-zone"><div id="board" class="board"></div></div>
+  <div id="completeBanner" class="complete-banner">¡COMPLETADO!</div>
+
+  <div id="loading" class="loading">
+    <div class="loading-card"><div class="spinner"></div><b>Preparando el álbum…</b></div>
+  </div>
 </div>
 
-<div id="finish" class="finish" role="dialog" aria-modal="true">
-  <div class="finish-card">
-    <div class="finish-icon">🏆</div>
-    <h2>¡Álbum completado!</h2>
-    <p>Las diez parejas han vuelto a encontrarse.</p>
-    <div class="finish-grid">
-      <div><b id="finishTime">0:00</b><span>Tiempo</span></div>
-      <div><b id="finishMoves">0</b><span>Movimientos</span></div>
-      <div><b id="finishErrors">0</b><span>Errores</span></div>
+<!-- AUTH -->
+<div id="authOverlay" class="overlay">
+  <div class="modal">
+    <h2>Identifícate para jugar</h2>
+    <p>Las partidas cuentan para el ranking, así que cada resultado queda vinculado a un miembro de Patxanguilles.</p>
+    <div class="tabs">
+      <button id="loginTab" class="tab active" onclick="showAuthTab('login')">Entrar</button>
+      <button id="registerTab" class="tab" onclick="showAuthTab('register')">Crear cuenta</button>
     </div>
-    <button class="primary" onclick="closeFinish();newGame()">Jugar otra partida</button>
+    <div id="loginPane">
+      <div class="field"><label>Jugador</label><select id="loginPlayer"></select></div>
+      <div class="field"><label>Contraseña</label><input id="loginPassword" type="password" autocomplete="current-password"></div>
+      <button class="primary" onclick="doLogin()">ENTRAR</button>
+    </div>
+    <div id="registerPane" style="display:none">
+      <div id="registerStep1">
+        <div class="field"><label>Jugador</label><select id="registerPlayer"></select></div>
+        <div class="field"><label>Contraseña</label><input id="registerPassword" type="password" autocomplete="new-password"></div>
+        <button class="primary" onclick="requestRegistration()">SOLICITAR REGISTRO</button>
+      </div>
+      <div id="registerStep2" style="display:none">
+        <p>Introduce el código de 6 cifras que te pasa el administrador.</p>
+        <div class="field"><label>Código</label><input id="registerCode" inputmode="numeric" maxlength="6"></div>
+        <button class="primary" onclick="completeRegistration()">VALIDAR Y CREAR CUENTA</button>
+        <button class="secondary" onclick="resetRegistration()">Volver</button>
+      </div>
+    </div>
+    <div id="authStatus" class="status"></div>
+  </div>
+</div>
+
+<!-- RANKING -->
+<div id="rankingOverlay" class="overlay" onclick="if(event.target===this)closeRanking()">
+  <div class="modal">
+    <div class="user-row">
+      <b>Ranking · Memoria Vintage</b>
+      <button class="tab" style="padding:6px 9px" onclick="closeRanking()">Cerrar</button>
+    </div>
+    <div id="rankingList" class="ranking-list"><div class="rank-empty">Cargando…</div></div>
+    <button id="adminRankingBtn" class="secondary" style="display:none" onclick="openAdminRanking()">Administrar ranking</button>
+  </div>
+</div>
+
+<!-- ADMIN RANKING -->
+<div id="adminOverlay" class="overlay" onclick="if(event.target===this)closeAdminRanking()">
+  <div class="modal">
+    <div class="user-row">
+      <b>ADMIN · Ranking Memoria</b>
+      <button class="tab" style="padding:6px 9px" onclick="closeAdminRanking()">Cerrar</button>
+    </div>
+    <p>Puedes corregir tiempos concretos, borrar partidas o resetear completamente el ranking.</p>
+    <button class="secondary danger" onclick="resetRanking()">RESET COMPLETO DEL RANKING</button>
+    <div id="adminStatus" class="status"></div>
+    <div id="adminList" class="admin-list"></div>
+  </div>
+</div>
+
+<!-- FINISH -->
+<div id="finishOverlay" class="overlay">
+  <div class="modal" style="text-align:center">
+    <div style="font-size:48px">🏆</div>
+    <h2>¡Completado!</h2>
+    <p id="finishModeLabel"></p>
+    <div class="finish-grid">
+      <div><b id="finishTime">0:00.0</b><span>Tiempo</span></div>
+      <div><b id="finishRank">—</b><span>Posición</span></div>
+    </div>
+    <div id="saveStatus" class="status"></div>
+    <button class="primary" onclick="closeFinish();newGame()">Otra partida</button>
+    <button class="secondary" onclick="closeFinish();openRanking()">Ver ranking</button>
   </div>
 </div>
 
@@ -132,166 +351,403 @@ button{font:inherit}
 <script>
 const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
+const ACCOUNT_AUTH_URL=`${SUPABASE_URL}/functions/v1/account-auth`;
 const WP_API='https://odioeternoalfutbolmoderno.es/wp-json/wp/v2/posts';
-const WP_CATEGORY=422;
-const WP_PAGES=8;
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
-const PAIRS=10;
-let allCards=[],cardsByPostId=new Map(),orientationCache=new Map(),deck=[];
-let firstCard=null,secondCard=null,locked=false,matched=0,moves=0,errors=0;
-let startedAt=null,timerId=null,finished=false,currentOrientation='portrait';
+const WP_CATEGORY=422,WP_PAGES=8,PAIRS=10;
 
-function shuffle(input){
-  const a=[...input];
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
-  return a;
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
+});
+
+let session=null,profile=null;
+let cardsByPostId=new Map(),pools={portrait:[],landscape:[]},catalogLoaded=false;
+let deck=[],currentOrientation='portrait';
+let firstCard=null,secondCard=null,locked=false,finished=false;
+let matched=0,moves=0,errors=0,startedAt=null,timerId=null;
+let registrationState=null;
+let previousIds=new Set(JSON.parse(sessionStorage.getItem('memoryPreviousCards')||'[]'));
+
+function isMobile(){return matchMedia('(max-width:700px), (orientation:portrait)').matches}
+function shuffle(input){const a=[...input];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function formatTime(ms){const sec=Math.max(0,Math.floor(ms/1000));const tenths=Math.floor((ms%1000)/100);return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}.${tenths}`}
+function formatRecordDate(value){
+  if(!value)return 'Fecha desconocida';
+  return new Date(value).toLocaleString('es-ES',{
+    day:'2-digit',month:'2-digit',year:'numeric',
+    hour:'2-digit',minute:'2-digit'
+  });
 }
-function formatTime(ms){
-  const sec=Math.max(0,Math.floor(ms/1000));
-  return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
-}
-function updateStats(){
-  pairsStat.textContent=`${matched}/${PAIRS}`;
-  movesStat.textContent=String(moves);
-  errorsStat.textContent=String(errors);
-  timeStat.textContent=formatTime(startedAt?Date.now()-startedAt:0);
-}
-function startClock(){if(startedAt)return;startedAt=Date.now();timerId=setInterval(updateStats,250)}
+function updateStats(){pairsStat.textContent=`${matched}/${PAIRS}`;timeStat.textContent=formatTime(startedAt?Date.now()-startedAt:0)}
+function startClock(){if(startedAt)return;startedAt=Date.now();timerId=setInterval(updateStats,100)}
 function stopClock(){if(timerId){clearInterval(timerId);timerId=null}}
 
-async function loadCards(){
-  const {data,error}=await sb.from('vintage_cards')
-    .select('id,slug,player_name,source_image_url,raw_meta')
+async function accountAction(action,payload={}){
+  const r=await fetch(ACCOUNT_AUTH_URL,{
+    method:'POST',
+    headers:{apikey:SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({action,...payload})
+  });
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok||data?.ok!==true)throw new Error(data?.error||`Error ${r.status}`);
+  return data;
+}
+async function hydrateSession(){
+  const {data}=await sb.auth.getSession();
+  session=data?.session||null;
+  if(!session)return false;
+  const {data:p,error}=await sb.from('profiles').select('id,display_name,player_id,role').eq('id',session.user.id).maybeSingle();
+  if(error||!p){await sb.auth.signOut();session=null;return false}
+  profile=p;
+  playerChip.textContent=p.display_name||'Jugador';
+  playerChip.style.display='block';
+  adminRankingBtn.style.display=p.role==='admin'?'block':'none';
+  return true;
+}
+async function loadAuthPlayers(){
+  authStatus.textContent='Cargando jugadores…';
+  const [reg,av]=await Promise.all([accountAction('registered_players'),accountAction('available_players')]);
+  loginPlayer.innerHTML=(reg.players||[]).map(p=>`<option value="${p.id}">${esc(p.nickname)}</option>`).join('');
+  registerPlayer.innerHTML=(av.players||[]).map(p=>`<option value="${p.id}">${esc(p.nickname)}</option>`).join('');
+  authStatus.textContent='';
+}
+function showAuthTab(which){
+  loginPane.style.display=which==='login'?'block':'none';
+  registerPane.style.display=which==='register'?'block':'none';
+  loginTab.classList.toggle('active',which==='login');registerTab.classList.toggle('active',which==='register');authStatus.textContent='';
+}
+async function doLogin(){
+  try{
+    authStatus.textContent='Entrando…';
+    const data=await accountAction('login',{player_id:Number(loginPlayer.value),password:loginPassword.value});
+    await sb.auth.setSession({access_token:data.session.access_token,refresh_token:data.session.refresh_token});
+    if(!(await hydrateSession()))throw new Error('No se pudo cargar el perfil');
+    authOverlay.classList.remove('open');await newGame();
+  }catch(e){authStatus.textContent=e.message}
+}
+async function requestRegistration(){
+  try{
+    const player_id=Number(registerPlayer.value),password=registerPassword.value;
+    if(!password)throw new Error('Escribe una contraseña');
+    authStatus.textContent='Enviando solicitud…';
+    const data=await accountAction('request_registration',{player_id});
+    registrationState={player_id,password,request_id:data.request_id};
+    registerStep1.style.display='none';registerStep2.style.display='block';
+    authStatus.textContent=data.message||'Solicitud enviada.';
+  }catch(e){authStatus.textContent=e.message}
+}
+async function completeRegistration(){
+  try{
+    if(!registrationState)throw new Error('Solicitud no válida');
+    authStatus.textContent='Validando código…';
+    const data=await accountAction('complete_registration',{
+      player_id:registrationState.player_id,request_id:registrationState.request_id,
+      code:registerCode.value.trim(),password:registrationState.password
+    });
+    if(data.signed_in&&data.session){
+      await sb.auth.setSession({access_token:data.session.access_token,refresh_token:data.session.refresh_token});
+      if(!(await hydrateSession()))throw new Error('Cuenta creada, pero no se pudo cargar el perfil');
+      authOverlay.classList.remove('open');await newGame();
+    }else{
+      authStatus.textContent='Cuenta creada. Entra con tu jugador y contraseña.';
+      resetRegistration();showAuthTab('login');await loadAuthPlayers();
+    }
+  }catch(e){authStatus.textContent=e.message}
+}
+function resetRegistration(){registrationState=null;registerCode.value='';registerStep1.style.display='block';registerStep2.style.display='none'}
+
+function extractOrientation(post){
+  const html=post?.content?.rendered||'';if(!html)return null;
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  const img=doc.querySelector('img'),w=Number(img?.getAttribute('width')),h=Number(img?.getAttribute('height'));
+  if(!(w>0&&h>0)||w===h)return null;
+  return h>w?'portrait':'landscape';
+}
+
+function imageLoads(url,timeout=7000){
+  return new Promise(resolve=>{
+    const img=new Image();let done=false;
+    const finish=ok=>{if(done)return;done=true;clearTimeout(t);resolve(ok)}
+    const t=setTimeout(()=>finish(false),timeout);
+    img.onload=()=>finish(img.naturalWidth>0&&img.naturalHeight>0);
+    img.onerror=()=>finish(false);
+    img.src=url;
+  });
+}
+
+async function loadCatalog(){
+  if(catalogLoaded)return;
+  const {data,error}=await sb.from('vintage_cards').select('id,player_name,source_image_url,raw_meta')
     .eq('enabled',true).eq('parse_status','ready').not('source_image_url','is',null);
   if(error)throw error;
-  allCards=(data||[]).filter(x=>x.player_name&&x.source_image_url&&Number(x?.raw_meta?.wp_post_id));
-  cardsByPostId=new Map(allCards.map(c=>[Number(c.raw_meta.wp_post_id),c]));
-  if(allCards.length<PAIRS)throw new Error(`Solo hay ${allCards.length} cromos disponibles.`);
+  const cards=(data||[]).filter(c=>c.player_name&&c.source_image_url&&Number(c?.raw_meta?.wp_post_id));
+  cardsByPostId=new Map(cards.map(c=>[Number(c.raw_meta.wp_post_id),c]));
+
+  const orientationByPost=new Map();
+  for(const page of shuffle(Array.from({length:WP_PAGES},(_,i)=>i+1))){
+    const r=await fetch(`${WP_API}?categories=${WP_CATEGORY}&per_page=100&page=${page}&_fields=id,content`,{cache:'force-cache'});
+    if(!r.ok)continue;
+    for(const post of await r.json()){
+      const o=extractOrientation(post);
+      if(o)orientationByPost.set(Number(post.id),o);
+    }
+  }
+
+  pools={portrait:[],landscape:[]};
+  for(const [postId,o] of orientationByPost){
+    const c=cardsByPostId.get(postId);
+    if(c)pools[o].push(c);
+  }
+  catalogLoaded=true;
 }
 
-function extractOrientationFromPost(post){
-  const html=post?.content?.rendered||'';
-  if(!html)return null;
-  const doc=new DOMParser().parseFromString(html,'text/html');
-  const img=doc.querySelector('img');
-  const w=Number(img?.getAttribute('width'));
-  const h=Number(img?.getAttribute('height'));
-  if(!(w>0&&h>0)||w===h)return null;
-  return w>h?'landscape':'portrait';
+async function selectHealthyCards(orientation){
+  const base=shuffle(pools[orientation].filter(c=>!previousIds.has(String(c.id))));
+  const fallback=shuffle(pools[orientation].filter(c=>previousIds.has(String(c.id))));
+  const candidates=[...base,...fallback];
+  const good=[];
+
+  // comprobamos de verdad que la imagen abre antes de meterla en la partida
+  for(let i=0;i<candidates.length&&good.length<PAIRS;i+=8){
+    const batch=candidates.slice(i,i+8);
+    const checks=await Promise.all(batch.map(async c=>({c,ok:await imageLoads(c.source_image_url)})));
+    for(const x of checks)if(x.ok&&good.length<PAIRS)good.push(x.c);
+  }
+  if(good.length<PAIRS)throw new Error(`No hay suficientes cromos ${orientation==='portrait'?'verticales':'horizontales'} con imagen disponible.`);
+  return good;
 }
 
-async function loadOrientationPage(page){
-  const url=`${WP_API}?categories=${WP_CATEGORY}&per_page=100&page=${page}&_fields=id,content`;
-  const r=await fetch(url,{cache:'force-cache'});
-  if(!r.ok)throw new Error(`No se pudo consultar el catálogo de orientación (${r.status}).`);
-  const posts=await r.json();
-  for(const post of posts||[]){
-    const orientation=extractOrientationFromPost(post);
-    if(orientation)orientationCache.set(Number(post.id),orientation);
+function setCardPosition(el,index){
+  const mobile=isMobile();
+  const zone=document.querySelector('.board-zone');
+  const zw=zone.clientWidth,zh=zone.clientHeight;
+  const gap=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gap'))||6;
+
+  if(mobile){
+    const cols=4,rows=5;
+    const ratio=currentOrientation==='portrait'?3/4:4/3;
+    const byW=(zw-gap*(cols-1))/cols;
+    const byH=((zh-gap*(rows-1))/rows)*ratio;
+    const cw=Math.max(20,Math.min(byW,byH));
+    const ch=cw/ratio;
+    const gridW=cols*cw+(cols-1)*gap,gridH=rows*ch+(rows-1)*gap;
+    const ox=(zw-gridW)/2,oy=(zh-gridH)/2;
+    const col=index%cols,row=Math.floor(index/cols);
+    el.style.width=`${cw}px`;el.style.height=`${ch}px`;
+    el.style.left=`${ox+col*(cw+gap)}px`;el.style.top=`${oy+row*(ch+gap)}px`;
+    return;
+  }
+
+  if(currentOrientation==='portrait'){
+    // 20 cartas: 18 centrales 6x3 + 1 lateral izquierda y 1 lateral derecha centradas
+    const ratio=3/4,cols=8,rows=3;
+    const byW=(zw-gap*(cols-1))/cols;
+    const byH=((zh-gap*(rows-1))/rows)*ratio;
+    const cw=Math.max(24,Math.min(byW,byH));
+    const ch=cw/ratio;
+    const gridW=8*cw+7*gap,gridH=3*ch+2*gap;
+    const ox=(zw-gridW)/2,oy=(zh-gridH)/2;
+
+    let col,row;
+    if(index===0){col=0;row=1}
+    else if(index===19){col=7;row=1}
+    else{
+      const n=index-1;
+      col=1+(n%6);row=Math.floor(n/6);
+    }
+    el.style.width=`${cw}px`;el.style.height=`${ch}px`;
+    el.style.left=`${ox+col*(cw+gap)}px`;el.style.top=`${oy+row*(ch+gap)}px`;
+  }else{
+    // horizontales: 5x4 aprovecha mejor 16:9
+    const ratio=4/3,cols=5,rows=4;
+    const byW=(zw-gap*(cols-1))/cols;
+    const byH=((zh-gap*(rows-1))/rows)*ratio;
+    const cw=Math.max(24,Math.min(byW,byH));
+    const ch=cw/ratio;
+    const gridW=cols*cw+(cols-1)*gap,gridH=rows*ch+(rows-1)*gap;
+    const ox=(zw-gridW)/2,oy=(zh-gridH)/2;
+    const col=index%cols,row=Math.floor(index/cols);
+    el.style.width=`${cw}px`;el.style.height=`${ch}px`;
+    el.style.left=`${ox+col*(cw+gap)}px`;el.style.top=`${oy+row*(ch+gap)}px`;
   }
 }
 
-function currentPools(){
-  const portrait=[],landscape=[];
-  for(const [postId,orientation] of orientationCache){
-    const card=cardsByPostId.get(Number(postId));
-    if(!card)continue;
-    if(orientation==='portrait')portrait.push(card);
-    else if(orientation==='landscape')landscape.push(card);
-  }
-  return {portrait,landscape};
-}
-
-async function chooseUniformCards(){
-  let pools=currentPools();
-  let preferred=Math.random()<.5?'portrait':'landscape';
-  const pages=shuffle(Array.from({length:WP_PAGES},(_,i)=>i+1));
-
-  for(const page of pages){
-    if(pools[preferred].length>=PAIRS)break;
-    await loadOrientationPage(page);
-    pools=currentPools();
-  }
-
-  if(pools[preferred].length<PAIRS){
-    const other=preferred==='portrait'?'landscape':'portrait';
-    if(pools[other].length>=PAIRS)preferred=other;
-  }
-  if(pools[preferred].length<PAIRS)throw new Error('No se han encontrado diez cromos de una misma orientación.');
-
-  currentOrientation=preferred;
-  return shuffle(pools[preferred]).slice(0,PAIRS);
-}
-
-async function newGame(){
-  closeFinish();stopClock();
-  firstCard=secondCard=null;locked=false;matched=0;moves=0;errors=0;startedAt=null;finished=false;updateStats();
-  const area=document.getElementById('gameArea');
-  area.className='loading';
-  area.innerHTML='<div><div class="spinner"></div><b>Barajando cromos…</b><span>Buscando diez del mismo formato.</span></div>';
-  orientationBadge.textContent='Seleccionando orientación…';
-  try{
-    if(!allCards.length)await loadCards();
-    const chosen=await chooseUniformCards();
-    orientationBadge.textContent=currentOrientation==='portrait'?'Partida · solo cromos verticales':'Partida · solo cromos horizontales';
-    deck=shuffle(chosen.flatMap((card,pairIndex)=>[
-      {...card,pairIndex,instance:`${pairIndex}-a`},
-      {...card,pairIndex,instance:`${pairIndex}-b`}
-    ]));
-    renderBoard();
-  }catch(err){
-    console.error(err);
-    area.className='error';
-    area.innerHTML=`<h2>No se pudieron cargar los cromos</h2><p>${escapeHtml(err?.message||'Error desconocido')}</p><button class="restart" onclick="allCards=[];orientationCache.clear();newGame()">Reintentar</button>`;
-  }
+function fitBoard(){
+  [...document.querySelectorAll('.memory-card')].forEach((el,i)=>setCardPosition(el,i));
 }
 
 function renderBoard(){
-  const area=document.getElementById('gameArea');
-  area.className=`board ${currentOrientation}`;
-  area.innerHTML=deck.map((card,index)=>`
-    <button class="memory-card" data-index="${index}" data-pair="${card.pairIndex}" onclick="flipCard(this)" aria-label="Carta boca abajo">
+  board.innerHTML=deck.map(card=>`
+    <button class="memory-card ${currentOrientation==='landscape'?'horizontal':''}" data-pair="${card.pairIndex}" onclick="flipCard(this)">
       <span class="card-inner">
-        <span class="face back-face"><span>Patxanguilles<br>Álbum Vintage</span></span>
-        <span class="face front-face"><img src="${escapeHtml(card.source_image_url)}" alt="Cromo de ${escapeHtml(card.player_name)}" draggable="false"></span>
+        <span class="face back-face"><img src="carta-dorso.png" alt="" draggable="false"></span>
+        <span class="face front-face"><img src="${esc(card.source_image_url)}" alt="Cromo de ${esc(card.player_name)}" draggable="false"></span>
       </span>
     </button>`).join('');
+  requestAnimationFrame(fitBoard);
+}
+
+async function newGame(){
+  if(!session||!profile)return;
+  stopClock();matched=moves=errors=0;startedAt=null;finished=false;locked=false;firstCard=secondCard=null;updateStats();
+  loading.style.display='grid';
+  loading.innerHTML='<div class="loading-card"><div class="spinner"></div><b>Preparando el álbum…</b></div>';
+
+  try{
+    await loadCatalog();
+
+    // Elegimos orientación al azar, pero alternamos cuando sea posible para que ambas versiones aparezcan con frecuencia.
+    const lastOrientation=sessionStorage.getItem('memoryLastOrientation');
+    currentOrientation=lastOrientation==='portrait'?'landscape':lastOrientation==='landscape'?'portrait':(Math.random()<.5?'portrait':'landscape');
+    if(pools[currentOrientation].length<PAIRS)currentOrientation=currentOrientation==='portrait'?'landscape':'portrait';
+
+    const chosen=await selectHealthyCards(currentOrientation);
+    previousIds=new Set(chosen.map(c=>String(c.id)));
+    sessionStorage.setItem('memoryPreviousCards',JSON.stringify([...previousIds]));
+    sessionStorage.setItem('memoryLastOrientation',currentOrientation);
+
+    orientationChip.textContent=currentOrientation==='portrait'?'Cromos verticales':'Cromos horizontales';
+
+    deck=shuffle(chosen.flatMap((card,pairIndex)=>[
+      {...card,pairIndex,instance:`${pairIndex}a`},{...card,pairIndex,instance:`${pairIndex}b`}
+    ]));
+    renderBoard();loading.style.display='none';
+  }catch(e){
+    console.error(e);
+    loading.innerHTML=`<div class="loading-card"><b>Error</b><div style="margin-top:6px">${esc(e.message)}</div><button class="primary" onclick="catalogLoaded=false;newGame()">Reintentar</button></div>`;
+  }
 }
 
 function flipCard(el){
   if(locked||finished||el===firstCard||el.classList.contains('matched'))return;
-  startClock();el.classList.add('flipped');el.setAttribute('aria-label','Carta descubierta');
+  startClock();el.classList.add('flipped');
   if(!firstCard){firstCard=el;return}
-  secondCard=el;moves++;locked=true;updateStats();
-
+  secondCard=el;moves++;locked=true;
   if(firstCard.dataset.pair===secondCard.dataset.pair){
     setTimeout(()=>{
       firstCard.classList.add('matched');secondCard.classList.add('matched');
-      firstCard.disabled=secondCard.disabled=true;
-      matched++;firstCard=secondCard=null;locked=false;updateStats();
-      if(matched===PAIRS)finishGame();
-    },300);
+      firstCard.disabled=secondCard.disabled=true;matched++;
+      firstCard=secondCard=null;locked=false;updateStats();
+      if(matched===PAIRS)completeGame();
+    },240);
   }else{
     errors++;
     setTimeout(()=>{
       firstCard.classList.remove('flipped');secondCard.classList.remove('flipped');
-      firstCard.setAttribute('aria-label','Carta boca abajo');secondCard.setAttribute('aria-label','Carta boca abajo');
       firstCard=secondCard=null;locked=false;updateStats();
-    },760);
+    },1180);
   }
 }
 
-function finishGame(){
+async function completeGame(){
   finished=true;stopClock();updateStats();
-  const duration=startedAt?Date.now()-startedAt:0;
-  finishTime.textContent=formatTime(duration);
-  finishMoves.textContent=String(moves);
-  finishErrors.textContent=String(errors);
-  finish.classList.add('open');
+  const durationMs=Date.now()-startedAt;
+
+  document.querySelectorAll('.memory-card').forEach(c=>c.classList.add('flipped'));
+  completeBanner.classList.remove('show');void completeBanner.offsetWidth;completeBanner.classList.add('show');
+
+  let result=null,errorText='';
+  try{
+    const {data,error}=await sb.rpc('submit_memory_score',{
+      p_duration_ms:Math.round(durationMs),
+      p_orientation:currentOrientation,
+      p_pairs:10,p_moves:moves,p_errors:errors
+    });
+    if(error)throw error;
+    result=Array.isArray(data)?data[0]:data;
+  }catch(e){errorText=e.message||'No se pudo guardar el resultado'}
+
+  setTimeout(()=>{
+    finishTime.textContent=formatTime(durationMs);
+    finishModeLabel.textContent=currentOrientation==='portrait'?'10 parejas · cromos verticales':'10 parejas · cromos horizontales';
+    finishRank.textContent=result?.rank_position||'—';
+    saveStatus.textContent=result?'Resultado guardado.':errorText;
+    finishOverlay.classList.add('open');
+  },3000);
 }
-function closeFinish(){finish.classList.remove('open')}
-function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-newGame();
+function closeFinish(){finishOverlay.classList.remove('open')}
+
+function openRanking(){rankingOverlay.classList.add('open');loadRanking()}
+function closeRanking(){
+  rankingOverlay.classList.remove('open');
+  if(finished)finishOverlay.classList.add('open');
+}
+async function loadRanking(){
+  rankingList.innerHTML='<div class="rank-empty">Cargando…</div>';
+  try{
+    const {data,error}=await sb.rpc('get_memory_leaderboard',{p_limit:50});
+    if(error)throw error;
+    if(!data?.length){rankingList.innerHTML='<div class="rank-empty">Todavía no hay tiempos.</div>';return}
+    rankingList.innerHTML=data.map((r,i)=>`
+      <div class="rank-row ${profile&&Number(r.player_id)===Number(profile.player_id)?'me':''}">
+        <div class="rank-num">${i+1}</div>
+        <img class="rank-avatar" src="${esc(r.photo_url||'')}" alt="" onerror="this.style.visibility='hidden'">
+        <div class="rank-name">${esc(r.nickname||'Jugador')}
+          <div class="rank-meta">${formatRecordDate(r.record_created_at)} · ${Number(r.best_moves||0)} movimientos</div>
+        </div>
+        <div class="rank-time">${formatTime(Number(r.best_duration_ms||0))}</div>
+      </div>`).join('');
+  }catch(e){rankingList.innerHTML=`<div class="rank-empty">${esc(e.message||'No se pudo cargar')}</div>`}
+}
+
+/* ADMIN */
+function openAdminRanking(){
+  if(profile?.role!=='admin')return;
+  rankingOverlay.classList.remove('open');adminOverlay.classList.add('open');loadAdminScores();
+}
+function closeAdminRanking(){adminOverlay.classList.remove('open')}
+async function loadAdminScores(){
+  adminList.innerHTML='<div class="rank-empty">Cargando…</div>';adminStatus.textContent='';
+  const {data,error}=await sb.rpc('admin_list_memory_scores',{p_limit:500});
+  if(error){adminList.innerHTML=`<div class="rank-empty">${esc(error.message)}</div>`;return}
+  if(!data?.length){adminList.innerHTML='<div class="rank-empty">No hay resultados.</div>';return}
+  adminList.innerHTML=data.map(r=>`
+    <div class="admin-row">
+      <div><b>${esc(r.nickname)}</b> · ${formatTime(r.duration_ms)}
+        <small>#${r.score_id} · ${r.orientation==='portrait'?'vertical':'horizontal'} · ${new Date(r.created_at).toLocaleString()}</small>
+      </div>
+      <div class="admin-actions">
+        <button class="mini" onclick="editScore(${r.score_id},${r.duration_ms})">Editar</button>
+        <button class="mini delete" onclick="deleteScore(${r.score_id})">Borrar</button>
+      </div>
+    </div>`).join('');
+}
+async function editScore(id,currentMs){
+  const current=(currentMs/1000).toFixed(1);
+  const val=prompt('Nuevo tiempo en segundos:',current);
+  if(val===null)return;
+  const sec=Number(String(val).replace(',','.'));
+  if(!Number.isFinite(sec)||sec<1){alert('Tiempo no válido');return}
+  const {data,error}=await sb.rpc('admin_update_memory_score',{p_score_id:id,p_duration_ms:Math.round(sec*1000)});
+  if(error){alert(error.message);return}
+  adminStatus.textContent='Tiempo actualizado.';loadAdminScores();
+}
+async function deleteScore(id){
+  if(!confirm('¿Borrar esta partida del ranking?'))return;
+  const {error}=await sb.rpc('admin_delete_memory_score',{p_score_id:id});
+  if(error){alert(error.message);return}
+  adminStatus.textContent='Resultado borrado.';loadAdminScores();
+}
+async function resetRanking(){
+  if(!confirm('Esto BORRARÁ TODOS los tiempos de Memoria Vintage. ¿Seguro?'))return;
+  if(!confirm('Última confirmación: ¿resetear completamente el ranking?'))return;
+  const {data,error}=await sb.rpc('admin_reset_memory_ranking');
+  if(error){alert(error.message);return}
+  adminStatus.textContent=`Ranking reseteado. ${data||0} resultados eliminados.`;loadAdminScores();
+}
+
+async function boot(){
+  fitBoard();
+  if(await hydrateSession()){
+    loading.style.display='grid';await newGame();
+  }else{
+    loading.style.display='none';authOverlay.classList.add('open');
+    try{await loadAuthPlayers()}catch(e){authStatus.textContent=e.message}
+  }
+}
+addEventListener('resize',()=>requestAnimationFrame(fitBoard));
+addEventListener('orientationchange',()=>setTimeout(fitBoard,160));
+boot();
 </script>
 </body>
 </html>
