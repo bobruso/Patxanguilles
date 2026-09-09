@@ -1,0 +1,54 @@
+name: Export Vintage Catalogue
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/vintage-importer-export.yml'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: tools/vintage-importer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start local capture server
+        run: |
+          nohup node capture-server.mjs > capture-server.log 2>&1 &
+          echo $! > capture-server.pid
+          sleep 1
+
+      - name: Scrape complete Album Vintage catalogue
+        env:
+          SUPABASE_URL: http://127.0.0.1:3131
+          SUPABASE_SECRET_KEY: local-capture-only
+        run: node import-vintage.mjs --from=1 --to=71 --delay-ms=120
+
+      - name: Build JSON export
+        if: always()
+        run: |
+          node -e "const fs=require('fs');const p='vintage-cards.ndjson';const rows=fs.existsSync(p)?fs.readFileSync(p,'utf8').trim().split(/\n+/).filter(Boolean).map(JSON.parse):[];fs.writeFileSync('vintage-cards.json',JSON.stringify(rows,null,2));console.log('exported',rows.length,'rows')"
+          cat capture-server.log || true
+
+      - name: Upload catalogue artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vintage-cards-catalogue
+          path: |
+            tools/vintage-importer/vintage-cards.json
+            tools/vintage-importer/vintage-cards.ndjson
+          retention-days: 7

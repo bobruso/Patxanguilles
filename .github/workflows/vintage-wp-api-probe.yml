@@ -1,0 +1,23 @@
+name: Probe Vintage WordPress API
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/vintage-wp-api-probe.yml'
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe REST API
+        run: |
+          set -e
+          echo '--- categories ---'
+          curl -fsSL --max-time 20 'https://odioeternoalfutbolmoderno.es/wp-json/wp/v2/categories?search=album%20vintage&per_page=20' | head -c 8000
+          echo
+          echo '--- posts sample ---'
+          curl -fsSL --max-time 20 -D /tmp/headers.txt 'https://odioeternoalfutbolmoderno.es/wp-json/wp/v2/posts?per_page=3&_embed=1' -o /tmp/posts.json
+          grep -i '^x-wp-total\|^x-wp-totalpages' /tmp/headers.txt || true
+          head -c 12000 /tmp/posts.json

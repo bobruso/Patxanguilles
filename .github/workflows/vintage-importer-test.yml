@@ -1,0 +1,30 @@
+name: Test Vintage Importer
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/vintage-importer/**'
+      - '.github/workflows/vintage-importer-test.yml'
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools/vintage-importer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Scrape first 10 cards without writing
+        run: node import-vintage.mjs --from=1 --to=1 --dry-run --limit=10 --delay-ms=250
