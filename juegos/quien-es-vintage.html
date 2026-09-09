@@ -46,9 +46,9 @@ function normalizeMasks(mask){
   if(!mask)return[];let m=mask;
   if(typeof m==='string'){try{m=JSON.parse(m)}catch{return[]}}
   if(!Array.isArray(m))m=[m];
-  return m.map(x=>{
-    if(!x||typeof x!=='object')return null;
-    let {x,y,w,h}=x;
+  return m.map(item=>{
+    if(!item||typeof item!=='object')return null;
+    let {x,y,w,h}=item;
     if([x,y,w,h].some(v=>!Number.isFinite(Number(v))))return null;
     x=Number(x);y=Number(y);w=Number(w);h=Number(h);
     if(Math.max(x,y,w,h)<=1){x*=100;y*=100;w*=100;h*=100}
