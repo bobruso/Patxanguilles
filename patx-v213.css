@@ -10,4 +10,14 @@ body.patx-match-gallery-open{overflow:hidden!important}
 .patx-match-gallery-prev{left:14px}.patx-match-gallery-next{right:14px}
 .patx-match-gallery-count{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);padding:5px 9px;border-radius:999px;background:rgba(0,0,0,.66);color:#fff;font-size:11px;font-weight:850}
 .patx-match-photo-clickable,.patx-row-photo-clickable,.calendar-match-thumb{cursor:zoom-in!important}
+
+/* v223 · Temporada móvil: fondo fotográfico y botón de resultado sin saltos de línea. */
+#season .season-add-result-btn{min-width:132px!important;padding-left:16px!important;padding-right:16px!important;white-space:nowrap!important;flex-shrink:0!important}
+#season .season-add-result-btn span{white-space:nowrap!important}
+@media(max-width:900px){
+  body:has(#season.active){background:#07100b url('background-home-mobile.png') center center/cover fixed no-repeat!important}
+  body:has(#season.active) #mobileDayVideoBg{display:none!important;visibility:hidden!important}
+  #season .season-add-result-btn{min-width:138px!important;padding-left:14px!important;padding-right:14px!important}
+}
+
 @media(max-width:700px){.patx-match-gallery-stage{width:100vw;height:100dvh}.patx-match-gallery-image{max-width:100vw;max-height:100dvh;border-radius:0}.patx-match-gallery-close{top:10px;right:10px;width:39px;height:39px;font-size:26px}.patx-match-gallery-prev,.patx-match-gallery-next{width:38px;height:50px;font-size:31px}.patx-match-gallery-prev{left:6px}.patx-match-gallery-next{right:6px}}
