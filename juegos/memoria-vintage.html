@@ -332,7 +332,7 @@ button,select,input{font:inherit}
   <div class="modal" style="text-align:center">
     <div style="font-size:42px">🃏</div>
     <h2>Elige dificultad</h2>
-    <p style="margin-bottom:16px">Dos tamaños de álbum. La versión difícil cuenta para el ranking.</p>
+    <p style="margin-bottom:16px">Dos modalidades, cada una con su propio ranking.</p>
     <button class="primary" onclick="chooseDifficulty('hard')">DIFÍCIL · 10 PAREJAS</button>
     <button class="secondary" onclick="chooseDifficulty('easy')">FÁCIL · 6 PAREJAS</button>
   </div>
@@ -375,6 +375,10 @@ button,select,input{font:inherit}
     <div class="user-row">
       <b>Ranking · Memoria Vintage</b>
       <button class="tab" style="padding:6px 9px" onclick="closeRanking()">Cerrar</button>
+    </div>
+    <div class="tabs">
+      <button id="rankEasyTab" class="tab" onclick="loadRanking(6)">Fácil · 6 parejas</button>
+      <button id="rankHardTab" class="tab active" onclick="loadRanking(10)">Difícil · 10 parejas</button>
     </div>
     <div id="rankingList" class="ranking-list"><div class="rank-empty">Cargando…</div></div>
     <button id="adminRankingBtn" class="secondary" style="display:none" onclick="openAdminRanking()">Administrar ranking</button>
@@ -614,64 +618,160 @@ function setCardPosition(el,index){
   const gap=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gap'))||6;
   const ratio=currentOrientation==='portrait'?3/4:4/3;
 
+  // FÁCIL · 6 parejas / 12 cartas
   if(difficultyMode==='easy'){
-    let cols,rows;
+    let cols,rows,scale=1;
+
     if(mobile){
-      if(currentOrientation==='landscape'){cols=2;rows=6}
-      else{cols=3;rows=4}
+      if(currentOrientation==='landscape'){
+        // Horizontal móvil: 2 x 6, ligeramente más pequeño
+        // para dejar margen inferior y evitar que se corte la última fila.
+        cols=2;
+        rows=6;
+        scale=.88;
+      }else{
+        cols=3;
+        rows=4;
+      }
     }else{
-      cols=4;rows=3;
+      cols=4;
+      rows=3;
     }
 
     const byW=(zw-gap*(cols-1))/cols;
     const byH=((zh-gap*(rows-1))/rows)*ratio;
-    const cw=Math.max(20,Math.min(byW,byH)),ch=cw/ratio;
-    const gridW=cols*cw+(cols-1)*gap,gridH=rows*ch+(rows-1)*gap;
-    const ox=(zw-gridW)/2,oy=(zh-gridH)/2;
-    const col=index%cols,row=Math.floor(index/cols);
-    el.style.width=`${cw}px`;el.style.height=`${ch}px`;
-    el.style.left=`${ox+col*(cw+gap)}px`;el.style.top=`${oy+row*(ch+gap)}px`;
+    const cw=Math.max(20,Math.min(byW,byH)*scale);
+    const ch=cw/ratio;
+    const gridW=cols*cw+(cols-1)*gap;
+    const gridH=rows*ch+(rows-1)*gap;
+    const ox=(zw-gridW)/2;
+    let oy=(zh-gridH)/2;
+
+    // Móvil + Fácil + cromos verticales:
+    // subimos ligeramente todo el bloque para que la última fila
+    // no roce ni se salga por el borde inferior.
+    if(mobile && currentOrientation==='portrait'){
+      oy=Math.max(0,oy-12);
+    }
+
+    const col=index%cols;
+    const row=Math.floor(index/cols);
+
+    el.style.width=`${cw}px`;
+    el.style.height=`${ch}px`;
+    el.style.left=`${ox+col*(cw+gap)}px`;
+    el.style.top=`${oy+row*(ch+gap)}px`;
     return;
   }
 
+  // DIFÍCIL · 10 parejas / 20 cartas
   if(mobile){
+    if(currentOrientation==='landscape'){
+      // Horizontal móvil:
+      // 1 x 3 x 3 x 3 x 3 x 3 x 3 x 1
+      // Carta suelta superior e inferior centradas.
+      const cols=3;
+      const rows=8;
+
+      // Dejamos algo de aire vertical para que las 8 filas entren cómodas.
+      const byW=(zw-gap*(cols-1))/cols;
+      const byH=((zh-gap*(rows-1))/rows)*ratio;
+      const cw=Math.max(18,Math.min(byW,byH)*.94);
+      const ch=cw/ratio;
+
+      const gridW=cols*cw+(cols-1)*gap;
+      const gridH=rows*ch+(rows-1)*gap;
+      const ox=(zw-gridW)/2;
+      const oy=(zh-gridH)/2;
+
+      let col,row;
+
+      if(index===0){
+        col=1;
+        row=0;
+      }else if(index===19){
+        col=1;
+        row=7;
+      }else{
+        const n=index-1; // 0..17
+        col=n%3;
+        row=1+Math.floor(n/3); // filas 1..6
+      }
+
+      el.style.width=`${cw}px`;
+      el.style.height=`${ch}px`;
+      el.style.left=`${ox+col*(cw+gap)}px`;
+      el.style.top=`${oy+row*(ch+gap)}px`;
+      return;
+    }
+
+    // Vertical móvil difícil: 4 x 5
     const cols=4,rows=5;
     const byW=(zw-gap*(cols-1))/cols;
     const byH=((zh-gap*(rows-1))/rows)*ratio;
-    const cw=Math.max(20,Math.min(byW,byH)),ch=cw/ratio;
-    const gridW=cols*cw+(cols-1)*gap,gridH=rows*ch+(rows-1)*gap;
-    const ox=(zw-gridW)/2,oy=(zh-gridH)/2;
-    const col=index%cols,row=Math.floor(index/cols);
-    el.style.width=`${cw}px`;el.style.height=`${ch}px`;
-    el.style.left=`${ox+col*(cw+gap)}px`;el.style.top=`${oy+row*(ch+gap)}px`;
+    const cw=Math.max(20,Math.min(byW,byH));
+    const ch=cw/ratio;
+    const gridW=cols*cw+(cols-1)*gap;
+    const gridH=rows*ch+(rows-1)*gap;
+    const ox=(zw-gridW)/2;
+    const oy=(zh-gridH)/2;
+    const col=index%cols;
+    const row=Math.floor(index/cols);
+
+    el.style.width=`${cw}px`;
+    el.style.height=`${ch}px`;
+    el.style.left=`${ox+col*(cw+gap)}px`;
+    el.style.top=`${oy+row*(ch+gap)}px`;
     return;
   }
 
+  // Escritorio difícil · vertical:
+  // 18 centrales 6x3 + una lateral izquierda + una lateral derecha.
   if(currentOrientation==='portrait'){
     const byW=(zw-gap*7)/8;
     const byH=((zh-gap*2)/3)*ratio;
-    const cw=Math.max(24,Math.min(byW,byH)),ch=cw/ratio;
-    const gridW=8*cw+7*gap,gridH=3*ch+2*gap;
-    const ox=(zw-gridW)/2,oy=(zh-gridH)/2;
+    const cw=Math.max(24,Math.min(byW,byH));
+    const ch=cw/ratio;
+    const gridW=8*cw+7*gap;
+    const gridH=3*ch+2*gap;
+    const ox=(zw-gridW)/2;
+    const oy=(zh-gridH)/2;
+
     let col,row;
-    if(index===0){col=0;row=1}
-    else if(index===19){col=7;row=1}
-    else{const n=index-1;col=1+(n%6);row=Math.floor(n/6)}
-    el.style.width=`${cw}px`;el.style.height=`${ch}px`;
-    el.style.left=`${ox+col*(cw+gap)}px`;el.style.top=`${oy+row*(ch+gap)}px`;
+    if(index===0){
+      col=0;row=1;
+    }else if(index===19){
+      col=7;row=1;
+    }else{
+      const n=index-1;
+      col=1+(n%6);
+      row=Math.floor(n/6);
+    }
+
+    el.style.width=`${cw}px`;
+    el.style.height=`${ch}px`;
+    el.style.left=`${ox+col*(cw+gap)}px`;
+    el.style.top=`${oy+row*(ch+gap)}px`;
   }else{
+    // Escritorio difícil · horizontal: 5 x 4.
     const cols=5,rows=4;
     const byW=(zw-gap*(cols-1))/cols;
     const byH=((zh-gap*(rows-1))/rows)*ratio;
-    const cw=Math.max(24,Math.min(byW,byH)),ch=cw/ratio;
-    const gridW=cols*cw+(cols-1)*gap,gridH=rows*ch+(rows-1)*gap;
-    const ox=(zw-gridW)/2,oy=(zh-gridH)/2;
-    const col=index%cols,row=Math.floor(index/cols);
-    el.style.width=`${cw}px`;el.style.height=`${ch}px`;
-    el.style.left=`${ox+col*(cw+gap)}px`;el.style.top=`${oy+row*(ch+gap)}px`;
+    const cw=Math.max(24,Math.min(byW,byH));
+    const ch=cw/ratio;
+    const gridW=cols*cw+(cols-1)*gap;
+    const gridH=rows*ch+(rows-1)*gap;
+    const ox=(zw-gridW)/2;
+    const oy=(zh-gridH)/2;
+    const col=index%cols;
+    const row=Math.floor(index/cols);
+
+    el.style.width=`${cw}px`;
+    el.style.height=`${ch}px`;
+    el.style.left=`${ox+col*(cw+gap)}px`;
+    el.style.top=`${oy+row*(ch+gap)}px`;
   }
 }
-
 function fitBoard(){
   [...document.querySelectorAll('.memory-card')].forEach((el,i)=>setCardPosition(el,i));
 }
@@ -747,40 +847,50 @@ async function completeGame(){
   completeBanner.classList.remove('show');void completeBanner.offsetWidth;completeBanner.classList.add('show');
 
   let result=null,errorText='';
-  if(difficultyMode==='hard'){
-    try{
-      const {data,error}=await sb.rpc('submit_memory_score',{
-        p_duration_ms:Math.round(durationMs),
-        p_orientation:currentOrientation,
-        p_pairs:10,p_moves:moves,p_errors:errors
-      });
-      if(error)throw error;
-      result=Array.isArray(data)?data[0]:data;
-    }catch(e){errorText=e.message||'No se pudo guardar el resultado'}
+  try{
+    const {data,error}=await sb.rpc('submit_memory_score',{
+      p_duration_ms:Math.round(durationMs),
+      p_orientation:currentOrientation,
+      p_pairs:PAIRS,
+      p_moves:moves,
+      p_errors:errors
+    });
+    if(error)throw error;
+    result=Array.isArray(data)?data[0]:data;
+  }catch(e){
+    errorText=e.message||'No se pudo guardar el resultado';
   }
 
   setTimeout(()=>{
     finishTime.textContent=formatTime(durationMs);
-    finishRank.textContent=difficultyMode==='hard'?(result?.rank_position||'—'):'—';
-    saveStatus.textContent=difficultyMode==='hard'
-      ? (result?'Resultado guardado.':errorText)
-      : 'Modo Fácil · partida de práctica, no cuenta para el ranking.';
+    finishRank.textContent=result?.rank_position||'—';
+    saveStatus.textContent=result
+      ? `Resultado guardado en ${PAIRS===6?'Fácil · 6 parejas':'Difícil · 10 parejas'}.`
+      : errorText;
     finishOverlay.classList.add('open');
   },3000);
 }
 function closeFinish(){finishOverlay.classList.remove('open')}
 
-function openRanking(){rankingOverlay.classList.add('open');loadRanking()}
+function openRanking(){
+  rankingOverlay.classList.add('open');
+  loadRanking(PAIRS===6?6:10);
+}
 function closeRanking(){
   rankingOverlay.classList.remove('open');
   if(finished)finishOverlay.classList.add('open');
 }
-async function loadRanking(){
+async function loadRanking(pairs=10){
+  rankEasyTab.classList.toggle('active',pairs===6);
+  rankHardTab.classList.toggle('active',pairs===10);
   rankingList.innerHTML='<div class="rank-empty">Cargando…</div>';
   try{
-    const {data,error}=await sb.rpc('get_memory_leaderboard',{p_limit:50});
+    const {data,error}=await sb.rpc('get_memory_leaderboard',{p_pairs:pairs,p_limit:50});
     if(error)throw error;
-    if(!data?.length){rankingList.innerHTML='<div class="rank-empty">Todavía no hay tiempos.</div>';return}
+    if(!data?.length){
+      rankingList.innerHTML=`<div class="rank-empty">Todavía no hay tiempos en ${pairs===6?'Fácil · 6 parejas':'Difícil · 10 parejas'}.</div>`;
+      return;
+    }
     rankingList.innerHTML=data.map((r,i)=>`
       <div class="rank-row ${profile&&Number(r.player_id)===Number(profile.player_id)?'me':''}">
         <div class="rank-num">${i+1}</div>
@@ -790,7 +900,9 @@ async function loadRanking(){
         </div>
         <div class="rank-time">${formatTime(Number(r.best_duration_ms||0))}</div>
       </div>`).join('');
-  }catch(e){rankingList.innerHTML=`<div class="rank-empty">${esc(e.message||'No se pudo cargar')}</div>`}
+  }catch(e){
+    rankingList.innerHTML=`<div class="rank-empty">${esc(e.message||'No se pudo cargar')}</div>`;
+  }
 }
 
 /* ADMIN */
@@ -807,7 +919,7 @@ async function loadAdminScores(){
   adminList.innerHTML=data.map(r=>`
     <div class="admin-row">
       <div><b>${esc(r.nickname)}</b> · ${formatTime(r.duration_ms)}
-        <small>#${r.score_id} · ${r.orientation==='portrait'?'vertical':'horizontal'} · ${new Date(r.created_at).toLocaleString()}</small>
+        <small>#${r.score_id} · ${Number(r.pairs)===6?'Fácil · 6':'Difícil · 10'} · ${r.orientation==='portrait'?'vertical':'horizontal'} · ${new Date(r.created_at).toLocaleString()}</small>
       </div>
       <div class="admin-actions">
         <button class="mini" onclick="editScore(${r.score_id},${r.duration_ms})">Editar</button>
