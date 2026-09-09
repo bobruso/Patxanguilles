@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Comprobación Retos · Patxanguilles</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f5f1ff;color:#261c55;font-family:Inter,system-ui,sans-serif}.wrap{width:min(820px,100%);margin:auto;padding:28px 16px 60px}h1{font-size:clamp(34px,8vw,58px);letter-spacing:-.05em;margin:8px 0}.lead{color:#716993;line-height:1.5}.summary{margin:22px 0;padding:18px 20px;border-radius:20px;background:#fff;box-shadow:0 7px 0 #ddd4ff;font-weight:900}.summary.ok{background:#d8f7e5;box-shadow:0 7px 0 #99dab4;color:#155d3b}.summary.bad{background:#ffd9e0;box-shadow:0 7px 0 #e7a0ae;color:#7c233a}.grid{display:grid;gap:8px}.row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:10px;background:#fff;padding:11px 13px;border-radius:14px}.dot{width:12px;height:12px;border-radius:50%;background:#bbb}.row.ok .dot{background:#35bd78}.row.bad .dot{background:#e34f6d}.status{font-size:11px;font-weight:950}.error{margin-top:5px;font-size:11px;color:#9a4254;white-space:pre-wrap}.back{display:inline-block;margin-top:22px;color:#5b46d9;text-decoration:none;font-weight:900}.sandbox{position:fixed;left:-10000px;top:-10000px;width:600px;height:500px}
+  </style>
+  <script>
+    window.__retosLoadErrors=[];
+    window.addEventListener('error',event=>{
+      window.__retosLoadErrors.push({message:event.message||'Error de script',file:event.filename||'',line:event.lineno||0});
+    });
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <div style="font-size:10px;font-weight:950;letter-spacing:.15em;color:#6b55f5">HERRAMIENTA LOCAL</div>
+    <h1>Comprobación de minijuegos</h1>
+    <p class="lead">No inicia partidas, no usa Supabase y no consume intentos. Comprueba que los 27 juegos activos cargan, se registran y cumplen el contrato básico del motor.</p>
+    <div id="summary" class="summary">Comprobando…</div>
+    <div id="results" class="grid"></div>
+    <a class="back" href="./">← Volver al Reto del día</a>
+  </main>
+  <div id="sandbox" class="sandbox"></div>
+
+  <script src="./js/core/game-registry.js"></script>
+  <script src="./js/games/stop-seven.js"></script>
+  <script src="./js/games/reaction.js"></script>
+  <script src="./js/games/center-hit.js"></script>
+  <script src="./js/games/speed-tap.js"></script>
+  <script src="./js/games/color-reflex.js"></script>
+  <script src="./js/games/quick-maths.js"></script>
+  <script src="./js/games/grid-memory.js"></script>
+  <script src="./js/games/sequence.js"></script>
+  <script src="./js/games/football-trivia.js"></script>
+  <script src="./js/games/higher-lower.js"></script>
+  <script src="./js/games/cups.js"></script>
+  <script src="./js/games/memory-cards.js"></script>
+  <script src="./js/games/tower-stack.js"></script>
+  <script src="./js/games/zig-zag.js"></script>
+  <script src="./js/games/lane-rush.js"></script>
+  <script src="./js/games/arrow-rush.js"></script>
+  <script src="./js/games/drop-zone.js"></script>
+  <script src="./js/games/orbit-pins.js"></script>
+  <script src="./js/games/rhythm-tap.js"></script>
+  <script src="./js/games/shape-gate.js"></script>
+  <script src="./js/games/snake-sprint.js"></script>
+  <script src="./js/games/odd-one.js"></script>
+  <script src="./js/games/flash-count.js"></script>
+  <script src="./js/games/balance.js"></script>
+  <script src="./js/games/target-lock.js"></script>
+  <script src="./js/games/swipe-sort.js"></script>
+  <script src="./js/games/catch-drop.js"></script>
+
+  <script>
+    (()=>{
+      const ids=['stop-seven','reaction','center-hit','speed-tap','color-reflex','quick-maths','grid-memory','sequence','football-trivia','higher-lower','cups','memory-cards','tower-stack','zig-zag','lane-rush','arrow-rush','drop-zone','orbit-pins','rhythm-tap','shape-gate','snake-sprint','odd-one','flash-count','balance','target-lock','swipe-sort','catch-drop'];
+      const results=document.getElementById('results');
+      const summary=document.getElementById('summary');
+      const sandbox=document.getElementById('sandbox');
+      let passed=0;
+
+      function row(id,ok,message=''){
+        const el=document.createElement('div');el.className=`row ${ok?'ok':'bad'}`;
+        el.innerHTML=`<span class="dot"></span><div><strong>${id}</strong>${message?`<div class="error"></div>`:''}</div><span class="status">${ok?'OK':'ERROR'}</span>`;
+        if(message)el.querySelector('.error').textContent=message;
+        results.appendChild(el);
+      }
+
+      for(const id of ids){
+        try{
+          if(!window.PatxGameRegistry?.has(id))throw new Error('No se registró el juego. Revisa si el script tiene un error de carga o sintaxis.');
+          const host=document.createElement('div');sandbox.appendChild(host);
+          const game=window.PatxGameRegistry.create(id,{container:host,config:{},seed:12345,attemptId:null,onFinish:()=>{}});
+          game.destroy();host.remove();passed++;row(id,true);
+        }catch(error){row(id,false,error?.message||String(error));}
+      }
+
+      const loadErrors=window.__retosLoadErrors||[];
+      const ok=passed===ids.length&&loadErrors.length===0;
+      summary.className=`summary ${ok?'ok':'bad'}`;
+      summary.textContent=ok?`✓ ${passed}/${ids.length} juegos cargan y se construyen correctamente.`:`✕ ${passed}/${ids.length} juegos han pasado. Hay ${loadErrors.length} error(es) de carga adicional(es).`;
+      if(loadErrors.length){
+        loadErrors.forEach(error=>row('SCRIPT',false,`${error.message}${error.file?` · ${error.file}:${error.line}`:''}`));
+      }
+    })();
+  </script>
+</body>
+</html>
