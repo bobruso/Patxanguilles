@@ -20,7 +20,7 @@ function field($,labels){
   return result;
 }
 function parsePost(post){
-  const html=post?.content?.rendered||'';$=null;
+  const html=post?.content?.rendered||'';
   const $=cheerio.load(html);
   const title=decodeHtml(post?.title?.rendered||post?.slug||'');
   const playerName=field($,['Nombre'])||title;
