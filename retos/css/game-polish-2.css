@@ -1,0 +1,85 @@
+/* Patxanguilles Retos — per-game polish pass 2 */
+
+/* Shared HUD rows */
+.maths-head,.memory-head,.sequence-head,.hl-head,.speed-tap-topline{
+  width:min(520px,94vw);display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px auto 0;
+}
+
+/* Speed Tap */
+.speed-tap-surface{cursor:pointer;touch-action:none}
+.speed-tap-target{
+  width:220px;height:220px;border-radius:50%;margin:28px auto 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.92);box-shadow:0 10px 0 rgba(16,97,84,.15),0 22px 40px rgba(20,89,82,.14);user-select:none;
+}
+.speed-tap-target.is-hit{animation:tapPop .12s ease}
+.speed-tap-count{font-size:88px;font-weight:1000;line-height:.85;letter-spacing:-.07em;color:#07584f}
+.speed-tap-label{font-size:10px;font-weight:950;letter-spacing:.16em;margin-top:10px;color:#3e7c75}
+.speed-tap-progress{width:min(420px,84vw);height:12px;border-radius:999px;background:rgba(255,255,255,.45);overflow:hidden;margin:0 auto 14px}
+.speed-tap-progress>div{height:100%;background:#fff;transform-origin:left center;will-change:transform}
+.speed-tap-surface.is-finished .speed-tap-target{background:#fff2ae}
+@keyframes tapPop{50%{transform:scale(.94)}}
+
+/* Quick Maths */
+.maths-timer{width:min(520px,94vw);height:10px;margin:14px auto 18px;border-radius:999px;background:rgba(255,255,255,.45);overflow:hidden}
+.maths-timer>div{height:100%;background:#ffe253;transform-origin:left center;will-change:transform}
+.math-question{background:#fff;border-radius:26px;padding:28px 34px!important;min-width:min(340px,86vw);box-shadow:0 8px 0 rgba(73,47,159,.14);margin:18px auto 22px!important}
+.answer-option.is-correct{background:#baf3d6!important;color:#165b3c!important;box-shadow:0 6px 0 #72c89d!important;animation:answerPop .2s ease}
+.answer-option.is-wrong{background:#ffd0da!important;color:#76243a!important;box-shadow:0 6px 0 #e49aaa!important}
+@keyframes answerPop{50%{transform:scale(1.04)}}
+
+/* Grid Memory */
+.memory-grid{position:relative}
+.memory-cell{transition:transform .11s ease,background .15s ease,box-shadow .15s ease!important}
+.memory-cell.is-lit{transform:scale(.94);animation:memoryGlow .36s ease}
+.memory-cell.is-picked{transform:scale(.94)}
+.memory-cell.is-correct{background:#ffe45d!important;box-shadow:0 6px 0 #dda511!important}
+.memory-phase,.sequence-phase{
+  display:inline-flex;align-items:center;justify-content:center;min-width:112px;padding:7px 12px;border-radius:999px;margin:2px auto 12px;
+  background:rgba(255,255,255,.55);font-size:10px;font-weight:1000;letter-spacing:.13em;color:var(--game-ink,#21194a);
+}
+.memory-phase.memorize,.sequence-phase.watch{background:#fff0a5}.memory-phase.repeat,.sequence-phase.play{background:#d9f7ff}
+.memory-phase.success,.sequence-phase.success{background:#c5f4d9;color:#155c3a}.memory-phase.fail,.sequence-phase.fail{background:#ffd0da;color:#7a2339}
+@keyframes memoryGlow{50%{filter:brightness(1.12);transform:scale(.89)}}
+
+/* Sequence */
+.sequence-grid{gap:14px!important}
+.sequence-pad{position:relative;overflow:hidden;min-height:120px;transition:transform .12s ease,filter .12s ease!important}
+.sequence-pad span{position:relative;z-index:2;font-size:20px;font-weight:1000}
+.sequence-pad:before{content:"";position:absolute;inset:0;opacity:.92}
+.sequence-pad.pad-0:before{background:#ff7388}.sequence-pad.pad-1:before{background:#70d8ff}.sequence-pad.pad-2:before{background:#72dfae}.sequence-pad.pad-3:before{background:#ffe15a}
+.sequence-pad span{color:#28304a}
+.sequence-pad.is-lit{transform:scale(.92)!important;filter:brightness(1.14) saturate(1.08)!important;box-shadow:0 3px 0 rgba(55,37,138,.12)!important}
+.sequence-pad.is-wrong{outline:5px solid #e44a68!important;animation:shake .28s ease}.sequence-pad.is-correct{outline:5px solid #28a96f!important}
+@keyframes shake{25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+
+/* Higher or Lower */
+.hl-card{width:min(310px,82vw);min-height:190px;margin:24px auto 18px;border-radius:30px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 9px 0 rgba(73,48,157,.14);transition:background .2s ease,transform .2s ease}
+.hl-card-label{font-size:9px;font-weight:1000;letter-spacing:.14em;color:#8073aa}
+.hl-card .hl-number{margin:8px 0 0!important;color:#44308d}
+.hl-card.is-correct{background:#c7f4da;transform:scale(1.03)}.hl-card.is-wrong{background:#ffd1db;transform:scale(.98)}
+.hl-actions button{display:flex;align-items:center;justify-content:center;gap:10px;min-height:76px!important}
+.hl-actions button .hl-arrow{font-size:28px;line-height:1}.hl-actions button.is-correct{background:#c7f4da!important;box-shadow:0 6px 0 #76c99b!important}.hl-actions button.is-wrong{background:#ffd1db!important;box-shadow:0 6px 0 #df95a5!important}
+
+/* Reaction */
+.reaction-ready .game-big{position:relative}.reaction-ready .game-big:after{content:"";display:block;width:54px;height:9px;margin:18px auto 0;border-radius:999px;background:repeating-linear-gradient(90deg,currentColor 0 10px,transparent 10px 18px);opacity:.28;animation:waitDots 1s linear infinite}
+.reaction-go .game-tap{background:#fff!important;color:#075c35!important;animation:goButton .34s ease infinite alternate}
+.reaction-false .game-tap{background:#fff!important;color:#8c1f38!important}
+@keyframes waitDots{to{background-position:18px 0}}@keyframes goButton{to{transform:scale(1.05)}}
+
+/* Trivia refinements */
+.trivia-question{position:relative}.trivia-question:before{content:"?";position:absolute;right:16px;top:-19px;width:39px;height:39px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#ffe34f;color:#614c00;font-size:20px;font-weight:1000;box-shadow:0 4px 0 #d6a815}
+.trivia-answers button:hover:not(:disabled){filter:brightness(.99);transform:translateY(-2px)}
+.trivia-answers button.selected{outline:4px solid rgba(255,255,255,.72)!important}
+
+/* Make help copy feel intentional */
+.game-help{background:rgba(255,255,255,.28);padding:9px 13px;border-radius:14px;max-width:480px!important;font-weight:750!important}
+
+@media(max-width:520px){
+  .speed-tap-target{width:180px;height:180px;margin-top:22px}.speed-tap-count{font-size:72px}
+  .math-question{padding:22px 24px!important;min-width:0;width:min(330px,88vw)}
+  .sequence-pad{min-height:105px}.hl-card{min-height:165px}.hl-actions button{min-height:68px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .speed-tap-target,.answer-option,.memory-cell,.sequence-pad,.hl-card,.reaction-go .game-tap{animation:none!important;transition:none!important}
+}
