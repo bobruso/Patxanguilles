@@ -7,8 +7,8 @@
 <title>Memoria Vintage · Patxanguilles</title>
 <style>
 :root{
-  --bg:#080a09;--panel:#111512;--panel2:#181d19;--text:#f7f3e8;--muted:#a9afa8;
-  --red:#d72832;--gold:#d8b65d;--gold2:#8e6d2a;--line:rgba(255,255,255,.12)
+  --bg:#080a09;--panel:#111512;--text:#f7f3e8;--muted:#a9afa8;
+  --gold:#d8b65d;--line:rgba(255,255,255,.12)
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:#080a09;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -35,12 +35,20 @@ button{font:inherit}
   border:1px solid rgba(216,182,93,.24);border-radius:24px;padding:18px;
   box-shadow:0 26px 80px rgba(0,0,0,.45)
 }
-.instructions{text-align:center;color:#c7cbc5;font-size:13px;margin:0 0 14px}
+.instructions{text-align:center;color:#c7cbc5;font-size:13px;margin:0 0 9px}
+.orientation{
+  width:max-content;max-width:100%;margin:0 auto 14px;padding:5px 9px;border-radius:999px;
+  border:1px solid rgba(216,182,93,.24);background:rgba(216,182,93,.07);
+  color:#d9c88f;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase
+}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
 .stat{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:12px;padding:9px;text-align:center}
-.stat b{display:block;font-size:18px;color:#fff}.stat span{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:2px}
-.board{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;max-width:1050px;margin:auto;perspective:1200px}
-.memory-card{position:relative;aspect-ratio:3/4;border:0;padding:0;background:transparent;cursor:pointer;perspective:900px;min-width:0}
+.stat b{display:block;font-size:18px;color:#fff}
+.stat span{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;max-width:1100px;margin:auto;perspective:1200px}
+.board.portrait .memory-card{aspect-ratio:3/4}
+.board.landscape .memory-card{aspect-ratio:4/3}
+.memory-card{position:relative;border:0;padding:0;background:transparent;cursor:pointer;perspective:900px;min-width:0}
 .memory-card:disabled{cursor:default}
 .card-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.2,.7,.2,1)}
 .memory-card.flipped .card-inner,.memory-card.matched .card-inner{transform:rotateY(180deg)}
@@ -60,28 +68,44 @@ button{font:inherit}
 .memory-card.matched .front-face{box-shadow:0 0 0 2px #ead07a,0 0 25px rgba(230,193,91,.42)}
 .memory-card.matched{animation:matchPop .42s ease}
 @keyframes matchPop{50%{transform:scale(1.055)}}
-.loading{min-height:420px;display:grid;place-items:center;text-align:center;color:#d1d5cf}.loading b{display:block;font-size:24px;margin-bottom:5px}.spinner{width:38px;height:38px;border:4px solid rgba(255,255,255,.12);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}@keyframes spin{to{transform:rotate(360deg)}}
+.loading{min-height:420px;display:grid;place-items:center;text-align:center;color:#d1d5cf}
+.loading b{display:block;font-size:24px;margin-bottom:5px}
+.spinner{width:38px;height:38px;border:4px solid rgba(255,255,255,.12);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
 .finish{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(0,0,0,.78);backdrop-filter:blur(7px);z-index:30}
 .finish.open{display:grid}
 .finish-card{width:min(450px,100%);text-align:center;border-radius:24px;padding:28px 22px;background:linear-gradient(145deg,#1b1b16,#090a09);border:1px solid rgba(216,182,93,.45);box-shadow:0 30px 90px #000}
-.finish-icon{font-size:60px}.finish h2{font:900 34px/1 Georgia,serif;margin:8px 0}.finish p{color:#b9bdb8}.finish-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.finish-grid div{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:12px;padding:10px}.finish-grid b{display:block;font-size:20px}.finish-grid span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}.primary{border:0;border-radius:13px;padding:13px 18px;background:#eee6d0;color:#12110d;font-weight:950;cursor:pointer;width:100%}
+.finish-icon{font-size:60px}.finish h2{font:900 34px/1 Georgia,serif;margin:8px 0}.finish p{color:#b9bdb8}
+.finish-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+.finish-grid div{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:12px;padding:10px}
+.finish-grid b{display:block;font-size:20px}.finish-grid span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
+.primary{border:0;border-radius:13px;padding:13px 18px;background:#eee6d0;color:#12110d;font-weight:950;cursor:pointer;width:100%}
 .error{max-width:650px;margin:35px auto;text-align:center;padding:25px;border-radius:18px;border:1px solid rgba(215,40,50,.38);background:rgba(90,13,18,.2)}
-@media(max-width:820px){.shell{padding:10px 8px 24px}.panel{padding:11px;border-radius:17px}.board{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.topbar{margin-bottom:9px}.brand strong{font-size:23px}.back,.restart{padding:8px 10px;font-size:12px}.stats{gap:5px}.stat{padding:7px 4px}.stat b{font-size:16px}.instructions{font-size:11px;margin-bottom:10px}}
-@media(max-width:410px){.board{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.panel{padding:7px}.front-face,.back-face{border-width:1px;border-radius:8px}.stats{grid-template-columns:repeat(4,1fr)}.stat span{font-size:7px}.back-face span{font-size:6px;bottom:6px}}
+@media(max-width:820px){
+  .shell{padding:10px 8px 24px}.panel{padding:11px;border-radius:17px}
+  .board{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+  .topbar{margin-bottom:9px}.brand strong{font-size:23px}.back,.restart{padding:8px 10px;font-size:12px}
+  .stats{gap:5px}.stat{padding:7px 4px}.stat b{font-size:16px}.instructions{font-size:11px;margin-bottom:7px}
+}
+@media(max-width:410px){
+  .board{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.panel{padding:7px}
+  .front-face,.back-face{border-width:1px;border-radius:8px}.stat span{font-size:7px}.back-face span{font-size:6px;bottom:6px}
+}
 </style>
 </head>
 <body>
 <div class="shell">
   <div class="topbar">
-    <button class="back" onclick="location.href='../index.html'">← Volver</button>
+    <button class="back" onclick="location.href='./'">← Juegos</button>
     <div class="brand"><small>Patxanguilles Antifeixistes</small><strong>Memoria Vintage</strong></div>
     <button class="restart" onclick="newGame()">↻ Nueva</button>
   </div>
 
   <main class="panel">
-    <p class="instructions">Encuentra las <b>12 parejas</b> de cromos. Son 24 cartas y cada partida mezcla futbolistas diferentes.</p>
+    <p class="instructions">Encuentra las <b>10 parejas</b>. Cada partida utiliza exclusivamente cromos horizontales o exclusivamente cromos verticales.</p>
+    <div id="orientationBadge" class="orientation">Seleccionando orientación…</div>
     <div class="stats">
-      <div class="stat"><b id="pairsStat">0/12</b><span>Parejas</span></div>
+      <div class="stat"><b id="pairsStat">0/10</b><span>Parejas</span></div>
       <div class="stat"><b id="movesStat">0</b><span>Movimientos</span></div>
       <div class="stat"><b id="errorsStat">0</b><span>Errores</span></div>
       <div class="stat"><b id="timeStat">0:00</b><span>Tiempo</span></div>
@@ -94,7 +118,7 @@ button{font:inherit}
   <div class="finish-card">
     <div class="finish-icon">🏆</div>
     <h2>¡Álbum completado!</h2>
-    <p>Las doce parejas han vuelto a encontrarse. Milagro estadístico.</p>
+    <p>Las diez parejas han vuelto a encontrarse.</p>
     <div class="finish-grid">
       <div><b id="finishTime">0:00</b><span>Tiempo</span></div>
       <div><b id="finishMoves">0</b><span>Movimientos</span></div>
@@ -108,13 +132,14 @@ button{font:inherit}
 <script>
 const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
+const WP_API='https://odioeternoalfutbolmoderno.es/wp-json/wp/v2/posts';
+const WP_CATEGORY=422;
+const WP_PAGES=8;
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
-const PAIRS=12;
-let allCards=[];
-let deck=[];
-let firstCard=null,secondCard=null,locked=false;
-let matched=0,moves=0,errors=0;
-let startedAt=null,timerId=null,finished=false;
+const PAIRS=10;
+let allCards=[],cardsByPostId=new Map(),orientationCache=new Map(),deck=[];
+let firstCard=null,secondCard=null,locked=false,matched=0,moves=0,errors=0;
+let startedAt=null,timerId=null,finished=false,currentOrientation='portrait';
 
 function shuffle(input){
   const a=[...input];
@@ -126,41 +151,89 @@ function formatTime(ms){
   return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
 }
 function updateStats(){
-  document.getElementById('pairsStat').textContent=`${matched}/${PAIRS}`;
-  document.getElementById('movesStat').textContent=String(moves);
-  document.getElementById('errorsStat').textContent=String(errors);
-  document.getElementById('timeStat').textContent=formatTime(startedAt?Date.now()-startedAt:0);
+  pairsStat.textContent=`${matched}/${PAIRS}`;
+  movesStat.textContent=String(moves);
+  errorsStat.textContent=String(errors);
+  timeStat.textContent=formatTime(startedAt?Date.now()-startedAt:0);
 }
-function startClock(){
-  if(startedAt)return;
-  startedAt=Date.now();
-  timerId=setInterval(updateStats,250);
-}
+function startClock(){if(startedAt)return;startedAt=Date.now();timerId=setInterval(updateStats,250)}
 function stopClock(){if(timerId){clearInterval(timerId);timerId=null}}
 
 async function loadCards(){
   const {data,error}=await sb.from('vintage_cards')
-    .select('id,slug,player_name,source_image_url')
-    .eq('enabled',true)
-    .eq('parse_status','ready')
-    .not('source_image_url','is',null);
+    .select('id,slug,player_name,source_image_url,raw_meta')
+    .eq('enabled',true).eq('parse_status','ready').not('source_image_url','is',null);
   if(error)throw error;
-  allCards=(data||[]).filter(x=>x.player_name&&x.source_image_url);
-  if(allCards.length<PAIRS)throw new Error(`Solo hay ${allCards.length} cromos disponibles; hacen falta al menos ${PAIRS}.`);
+  allCards=(data||[]).filter(x=>x.player_name&&x.source_image_url&&Number(x?.raw_meta?.wp_post_id));
+  cardsByPostId=new Map(allCards.map(c=>[Number(c.raw_meta.wp_post_id),c]));
+  if(allCards.length<PAIRS)throw new Error(`Solo hay ${allCards.length} cromos disponibles.`);
 }
-function preload(urls){return Promise.allSettled(urls.map(src=>new Promise(resolve=>{const i=new Image();i.onload=i.onerror=resolve;i.src=src})))}
+
+function extractOrientationFromPost(post){
+  const html=post?.content?.rendered||'';
+  if(!html)return null;
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  const img=doc.querySelector('img');
+  const w=Number(img?.getAttribute('width'));
+  const h=Number(img?.getAttribute('height'));
+  if(!(w>0&&h>0)||w===h)return null;
+  return w>h?'landscape':'portrait';
+}
+
+async function loadOrientationPage(page){
+  const url=`${WP_API}?categories=${WP_CATEGORY}&per_page=100&page=${page}&_fields=id,content`;
+  const r=await fetch(url,{cache:'force-cache'});
+  if(!r.ok)throw new Error(`No se pudo consultar el catálogo de orientación (${r.status}).`);
+  const posts=await r.json();
+  for(const post of posts||[]){
+    const orientation=extractOrientationFromPost(post);
+    if(orientation)orientationCache.set(Number(post.id),orientation);
+  }
+}
+
+function currentPools(){
+  const portrait=[],landscape=[];
+  for(const [postId,orientation] of orientationCache){
+    const card=cardsByPostId.get(Number(postId));
+    if(!card)continue;
+    if(orientation==='portrait')portrait.push(card);
+    else if(orientation==='landscape')landscape.push(card);
+  }
+  return {portrait,landscape};
+}
+
+async function chooseUniformCards(){
+  let pools=currentPools();
+  let preferred=Math.random()<.5?'portrait':'landscape';
+  const pages=shuffle(Array.from({length:WP_PAGES},(_,i)=>i+1));
+
+  for(const page of pages){
+    if(pools[preferred].length>=PAIRS)break;
+    await loadOrientationPage(page);
+    pools=currentPools();
+  }
+
+  if(pools[preferred].length<PAIRS){
+    const other=preferred==='portrait'?'landscape':'portrait';
+    if(pools[other].length>=PAIRS)preferred=other;
+  }
+  if(pools[preferred].length<PAIRS)throw new Error('No se han encontrado diez cromos de una misma orientación.');
+
+  currentOrientation=preferred;
+  return shuffle(pools[preferred]).slice(0,PAIRS);
+}
 
 async function newGame(){
   closeFinish();stopClock();
-  firstCard=secondCard=null;locked=false;matched=0;moves=0;errors=0;startedAt=null;finished=false;
-  updateStats();
+  firstCard=secondCard=null;locked=false;matched=0;moves=0;errors=0;startedAt=null;finished=false;updateStats();
   const area=document.getElementById('gameArea');
   area.className='loading';
-  area.innerHTML='<div><div class="spinner"></div><b>Barajando cromos…</b><span>Buscando doce futbolistas.</span></div>';
+  area.innerHTML='<div><div class="spinner"></div><b>Barajando cromos…</b><span>Buscando diez del mismo formato.</span></div>';
+  orientationBadge.textContent='Seleccionando orientación…';
   try{
     if(!allCards.length)await loadCards();
-    const chosen=shuffle(allCards).slice(0,PAIRS);
-    await preload(chosen.map(c=>c.source_image_url));
+    const chosen=await chooseUniformCards();
+    orientationBadge.textContent=currentOrientation==='portrait'?'Partida · solo cromos verticales':'Partida · solo cromos horizontales';
     deck=shuffle(chosen.flatMap((card,pairIndex)=>[
       {...card,pairIndex,instance:`${pairIndex}-a`},
       {...card,pairIndex,instance:`${pairIndex}-b`}
@@ -169,13 +242,13 @@ async function newGame(){
   }catch(err){
     console.error(err);
     area.className='error';
-    area.innerHTML=`<h2>No se pudieron cargar los cromos</h2><p>${escapeHtml(err?.message||'Error desconocido')}</p><button class="restart" onclick="allCards=[];newGame()">Reintentar</button>`;
+    area.innerHTML=`<h2>No se pudieron cargar los cromos</h2><p>${escapeHtml(err?.message||'Error desconocido')}</p><button class="restart" onclick="allCards=[];orientationCache.clear();newGame()">Reintentar</button>`;
   }
 }
 
 function renderBoard(){
   const area=document.getElementById('gameArea');
-  area.className='board';
+  area.className=`board ${currentOrientation}`;
   area.innerHTML=deck.map((card,index)=>`
     <button class="memory-card" data-index="${index}" data-pair="${card.pairIndex}" onclick="flipCard(this)" aria-label="Carta boca abajo">
       <span class="card-inner">
@@ -187,11 +260,10 @@ function renderBoard(){
 
 function flipCard(el){
   if(locked||finished||el===firstCard||el.classList.contains('matched'))return;
-  startClock();
-  el.classList.add('flipped');
-  el.setAttribute('aria-label','Carta descubierta');
+  startClock();el.classList.add('flipped');el.setAttribute('aria-label','Carta descubierta');
   if(!firstCard){firstCard=el;return}
   secondCard=el;moves++;locked=true;updateStats();
+
   if(firstCard.dataset.pair===secondCard.dataset.pair){
     setTimeout(()=>{
       firstCard.classList.add('matched');secondCard.classList.add('matched');
@@ -212,14 +284,13 @@ function flipCard(el){
 function finishGame(){
   finished=true;stopClock();updateStats();
   const duration=startedAt?Date.now()-startedAt:0;
-  document.getElementById('finishTime').textContent=formatTime(duration);
-  document.getElementById('finishMoves').textContent=String(moves);
-  document.getElementById('finishErrors').textContent=String(errors);
-  setTimeout(()=>document.getElementById('finish').classList.add('open'),500);
+  finishTime.textContent=formatTime(duration);
+  finishMoves.textContent=String(moves);
+  finishErrors.textContent=String(errors);
+  finish.classList.add('open');
 }
-function closeFinish(){document.getElementById('finish').classList.remove('open')}
+function closeFinish(){finish.classList.remove('open')}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-
 newGame();
 </script>
 </body>

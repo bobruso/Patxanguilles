@@ -59,20 +59,24 @@ for(const file of pages){
 }
 
 const integration=await readFile(path.join(ROOT,'patx-v214.js'),'utf8');
-try{new Function(integration);ok('patx-v214.js: integración Home/Admin compila')}catch(err){fail(`patx-v214.js: error de sintaxis: ${err.message}`)}
-if(!/id='homeGamesBtn'|id="homeGamesBtn"|homeGamesBtn/.test(integration))fail('patx-v214.js: falta integración del botón Juegos');else ok('patx-v214.js: botón Juegos presente');
-if(!/adminVintageMasksBtn/.test(integration))fail('patx-v214.js: falta acceso admin al editor de máscaras');else ok('patx-v214.js: acceso admin a máscaras presente');
+try{new Function(integration);ok('patx-v214.js: integración Home compila')}catch(err){fail(`patx-v214.js: error de sintaxis: ${err.message}`)}
+if(!/homeGamesBtn/.test(integration))fail('patx-v214.js: falta integración del botón Juegos');else ok('patx-v214.js: botón Juegos presente');
+
+const hub=await readFile(path.join(ROOT,'juegos/index.html'),'utf8');
+if(!/href=["']memoria-vintage\.html["']/.test(hub))fail('Hub: Memoria Vintage no está enlazado');else ok('Hub: Memoria Vintage disponible');
+if(/href=["']cabezones\/["']/.test(hub)||/href=["']quien-es-vintage\.html["']/.test(hub))fail('Hub: hay juegos en desarrollo todavía clicables');else ok('Hub: juegos en desarrollo bloqueados');
+if((hub.match(/PRÓXIMAMENTE/g)||[]).length<2)fail('Hub: faltan etiquetas PRÓXIMAMENTE');else ok('Hub: próximos juegos etiquetados');
 
 const memory=await readFile(path.join(ROOT,'juegos/memoria-vintage.html'),'utf8');
-if(!/const\s+PAIRS\s*=\s*12\b/.test(memory))fail('Memoria Vintage no está configurado a 12 parejas');else ok('Memoria Vintage: 12 parejas confirmadas');
+if(!/const\s+PAIRS\s*=\s*10\b/.test(memory))fail('Memoria Vintage no está configurado a 10 parejas');else ok('Memoria Vintage: 10 parejas confirmadas');
+if(!/extractOrientationFromPost/.test(memory)||!/width/.test(memory)||!/height/.test(memory))fail('Memoria Vintage: falta clasificación de orientación por metadatos del cromo');else ok('Memoria Vintage: orientación uniforme basada en metadatos');
+if(!/board \$\{currentOrientation\}/.test(memory))fail('Memoria Vintage: el tablero no adapta la proporción al formato');else ok('Memoria Vintage: tablero adapta horizontal/vertical');
 
 const quiz=await readFile(path.join(ROOT,'juegos/quien-es-vintage.html'),'utf8');
-if(!/ROUNDS\s*=\s*10\s*,\s*CHOICES\s*=\s*6/.test(quiz))fail('¿Quién es? no está configurado a 10 rondas y 6 respuestas');else ok('¿Quién es?: 10 rondas y 6 respuestas confirmadas');
+if(!/ROUNDS\s*=\s*10\s*,\s*CHOICES\s*=\s*6/.test(quiz))fail('¿Quién es? no está configurado a 10 rondas y 6 respuestas');else ok('¿Quién es?: archivo de desarrollo conserva 10 rondas y 6 respuestas');
 
 const heads=await readFile(path.join(ROOT,'juegos/cabezones/index.html'),'utf8');
-if(!/<canvas[^>]+id=["']game["']/i.test(heads))fail('Patxanguilles Heads: falta canvas de juego');else ok('Patxanguilles Heads: canvas encontrado');
-if(!/setMode\(['"]cpu['"]\)/.test(heads)||!/setMode\(['"]local['"]\)/.test(heads))fail('Patxanguilles Heads: faltan modos CPU/local');else ok('Patxanguilles Heads: modos CPU y 2P local presentes');
-if(!/data-touch-player=["']1["']/.test(heads)||!/data-touch-player=["']2["']/.test(heads))fail('Patxanguilles Heads: faltan controles táctiles independientes para los dos jugadores');else ok('Patxanguilles Heads: controles táctiles 2P presentes');
+if(!/<canvas[^>]+id=["']game["']/i.test(heads))fail('Patxanguilles Heads: falta canvas de juego');else ok('Patxanguilles Heads: archivo de desarrollo conserva canvas');
 
 const maskEditor=await readFile(path.join(ROOT,'juegos/admin-mascaras-vintage.html'),'utf8');
 if(!/admin_set_vintage_card_mask/.test(maskEditor))fail('Editor de máscaras: no llama a la RPC protegida');else ok('Editor de máscaras: RPC protegida presente');
