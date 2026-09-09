@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "es.patxanguillesantifeixistes.app",
+      "sha256_cert_fingerprints": [
+        "7E:BB:68:A0:39:B8:CD:8A:2B:24:C9:33:A8:BE:A4:24:91:C6:5B:78:5B:76:68:24:B4:CC:97:B4:AF:2C:83:B2"
+      ]
+    }
+  }
+]
