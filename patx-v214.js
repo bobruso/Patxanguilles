@@ -18,7 +18,7 @@
     if(value==='custom'){
       value=String(control.querySelector('[data-fitness-custom]')?.value||'').trim();
       if(!value){
-        if(typeof toast==='function')toast('Escribe tu estado de forma');
+        if(typeof toast==='function')toast('Escribe un estado de forma');
         return;
       }
     }
@@ -66,95 +66,4 @@
       }
     }
   };
-
-  /* v221 · acceso a la zona de minijuegos desde la Home.
-     Se inyecta aquí para no tocar el index.html principal. */
-  function injectGamesHomeButton(){
-    const grid=document.querySelector('#home .home-options');
-    if(!grid||document.getElementById('homeGamesBtn'))return;
-
-    if(!document.getElementById('homeGamesBtnStyle')){
-      const style=document.createElement('style');
-      style.id='homeGamesBtnStyle';
-      style.textContent=`
-        #homeGamesBtn{
-          background:linear-gradient(145deg,#173f2b,#0b1812)!important;
-          border-color:rgba(118,221,150,.28)!important;
-        }
-        #homeGamesBtn .games-home-art{
-          position:relative;
-          width:100%;height:100%;min-height:135px;
-          display:grid;place-items:center;
-          overflow:hidden;
-          background:
-            radial-gradient(circle at 62% 42%,rgba(255,255,255,.13),transparent 4%),
-            radial-gradient(circle at 50% 50%,rgba(47,203,103,.22),transparent 58%),
-            repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 32px),
-            repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 32px);
-        }
-        #homeGamesBtn .games-home-art:before{
-          content:'⚽';position:absolute;left:16%;bottom:14%;font-size:clamp(38px,5vw,66px);
-          transform:rotate(-12deg);filter:drop-shadow(0 10px 10px rgba(0,0,0,.45));
-        }
-        #homeGamesBtn .games-home-art:after{
-          content:'🎮';position:absolute;right:13%;top:17%;font-size:clamp(42px,5vw,70px);
-          transform:rotate(9deg);filter:drop-shadow(0 10px 10px rgba(0,0,0,.45));
-        }
-        #homeGamesBtn .games-home-vs{
-          position:relative;z-index:2;
-          font:1000 clamp(20px,2.5vw,34px)/1 system-ui,sans-serif;
-          letter-spacing:.08em;color:#f4e6b8;
-          text-shadow:0 3px 14px rgba(0,0,0,.8);
-        }
-        @media(max-width:700px){
-          #homeGamesBtn .games-home-art{min-height:100px}
-        }
-      `;
-      document.head.appendChild(style);
-    }
-
-    const btn=document.createElement('button');
-    btn.id='homeGamesBtn';
-    btn.type='button';
-    btn.className='mode greenline home-image-card';
-    btn.setAttribute('aria-label','Abrir minijuegos');
-    btn.innerHTML=`
-      <span class="home-card-copy">
-        <span class="icon">🎮</span>
-        <strong>Juegos</strong>
-        <span>Minijuegos Patxanguilles</span>
-      </span>
-      <span class="home-card-image games-home-art" aria-hidden="true"><span class="games-home-vs">PLAY</span></span>
-    `;
-    btn.addEventListener('click',()=>{window.location.href='juegos/'});
-    grid.appendChild(btn);
-  }
-
-  /* El editor de máscaras solo se muestra dentro del panel de administración. */
-  function injectVintageMaskAdminButton(){
-    const actions=document.querySelector('#adminContent .admin-actions');
-    if(!actions||document.getElementById('adminVintageMasksBtn'))return;
-    const btn=document.createElement('button');
-    btn.id='adminVintageMasksBtn';
-    btn.type='button';
-    btn.className='secondary';
-    btn.textContent='Editar máscaras de cromos';
-    btn.addEventListener('click',()=>{window.location.href='juegos/admin-mascaras-vintage.html'});
-    actions.appendChild(btn);
-  }
-
-  function installAdminMaskHook(){
-    const original=window.renderAdminPanel;
-    if(typeof original!=='function'||original.__vintageMaskHook)return;
-    const wrapped=function(){
-      const result=original.apply(this,arguments);
-      setTimeout(injectVintageMaskAdminButton,0);
-      return result;
-    };
-    wrapped.__vintageMaskHook=true;
-    window.renderAdminPanel=wrapped;
-  }
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{injectGamesHomeButton();installAdminMaskHook()},{once:true});
-  else{injectGamesHomeButton();installAdminMaskHook()}
 })();
