@@ -1,7 +1,7 @@
 /* Patxanguilles Retos — per-game polish pass 2 */
 
 /* Shared HUD rows */
-.maths-head,.memory-head,.sequence-head,.hl-head,.speed-tap-topline,.color-head{
+.maths-head,.memory-head,.sequence-head,.hl-head,.speed-tap-topline,.color-head,.arrow-head,.odd-head,.flash-head,.shape-head,.lock-head{
   width:min(520px,94vw);display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px auto 0;
 }
 
@@ -83,6 +83,31 @@
 .center-track{width:100%!important;margin:0!important;height:42px!important}.center-zone{width:12%!important}.center-zone span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:7px;font-weight:1000;letter-spacing:.08em;color:#7b5a00;white-space:nowrap}.center-marker{width:22px!important;top:4px!important;bottom:4px!important;background:#5b45e3!important}.center-marker.is-stopped{animation:markerStop .28s ease}.center-feedback{font-size:18px;font-weight:1000;margin:2px 0 12px}.center-hit-surface.is-perfect .center-feedback{color:#12653f}.center-hit-surface.is-near .center-feedback{color:#745700}.center-hit-surface.is-miss .center-feedback{color:#81263d}
 @keyframes markerStop{50%{transform:translateX(-50%) scale(1.35)}}
 
+/* Arrow Rush */
+.arrow-timer,.odd-timer,.shape-timer{width:min(520px,94vw);height:10px;margin:14px auto 18px;border-radius:999px;background:rgba(255,255,255,.45);overflow:hidden}
+.arrow-timer>div,.odd-timer>div,.shape-timer>div{height:100%;background:#fff;transform-origin:left center;will-change:transform}
+.arrow-card,.shape-card{width:min(280px,80vw);min-height:180px;margin:12px auto 18px;border-radius:30px;background:#fff;box-shadow:0 9px 0 rgba(89,40,75,.13);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .18s ease,background .18s ease}
+.arrow-card-label,.shape-card-label{font-size:9px;font-weight:1000;letter-spacing:.15em;color:#98647a}.arrow-card .arrow-cue,.shape-card .shape-target{margin:8px 0 0!important}
+.arrow-card.is-correct,.shape-card.is-correct{background:#c8f4da;transform:scale(1.025)}.arrow-card.is-wrong,.shape-card.is-wrong{background:#ffd1dc;transform:scale(.98)}
+.arrow-pad button.is-correct,.shape-actions button.is-correct{background:#c8f4da!important;box-shadow:0 6px 0 #76c99b!important}.arrow-pad button.is-wrong,.shape-actions button.is-wrong{background:#ffd1dc!important;box-shadow:0 6px 0 #df95a5!important}
+
+/* Odd One */
+.odd-title{font-size:10px;font-weight:1000;letter-spacing:.14em;background:rgba(255,255,255,.5);padding:7px 11px;border-radius:999px;margin-top:2px}.odd-grid{margin-top:18px!important}.odd-grid button{font-size:42px!important;transition:transform .12s ease,background .12s ease!important}.odd-grid button:hover:not(:disabled){transform:translateY(-2px)}.odd-grid button.is-correct{background:#c6f4d8!important;box-shadow:0 6px 0 #77c99c!important}.odd-grid button.is-wrong{background:#ffd0da!important;box-shadow:0 6px 0 #dd95a4!important;animation:shake .28s ease}
+
+/* Flash Count */
+.flash-stage{width:min(320px,84vw);min-height:220px;margin:20px auto 18px;border-radius:30px;background:#fff;box-shadow:0 9px 0 rgba(134,86,19,.13);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.flash-stage .flash-orb{margin:0 auto 20px!important;width:126px!important;height:126px!important;background:#eee8ff!important;border:14px solid #fff6c2;box-shadow:0 0 0 8px rgba(255,216,61,.12)!important;display:flex;align-items:center;justify-content:center}
+.flash-stage .flash-orb span{width:34px;height:34px;border-radius:50%;background:#c7bbff;transition:transform .08s ease,background .08s ease}.flash-stage .flash-orb.on{background:#ffe664!important;box-shadow:0 0 0 12px rgba(255,226,80,.18),0 0 44px rgba(255,215,65,.45)!important}.flash-stage .flash-orb.on span{background:#fff;transform:scale(1.6)}
+.flash-caption{font-size:11px;font-weight:1000;letter-spacing:.16em;color:#6a5680}.flash-answers button.is-correct{background:#c6f4d8!important;box-shadow:0 6px 0 #77c99c!important}.flash-answers button.is-wrong{background:#ffd0da!important;box-shadow:0 6px 0 #dd95a4!important}
+
+/* Shape Gate */
+.shape-card .shape-target{font-size:clamp(76px,22vw,126px)!important;color:#4e3696}.shape-actions button{font-size:38px!important}
+
+/* Target Lock */
+.lock-caption{font-size:10px;font-weight:1000;letter-spacing:.14em;background:rgba(255,255,255,.5);padding:7px 11px;border-radius:999px;margin-top:14px}.lock-target{margin:22px auto 18px!important;background:#fff!important;border-radius:50%!important;box-shadow:0 10px 0 rgba(49,48,127,.14)!important}.lock-core{border-color:#5a45dd!important;background:#efeaff!important}.lock-core-dot{position:absolute;left:50%;top:50%;width:18px;height:18px;border-radius:50%;background:#5a45dd;transform:translate(-50%,-50%)}.lock-ring{border-color:#ffe24d!important;box-shadow:0 0 0 6px rgba(255,226,77,.12)}
+.lock-grade{min-width:150px;padding:8px 13px;border-radius:999px;background:rgba(255,255,255,.48);font-size:10px;font-weight:1000;letter-spacing:.12em;margin-bottom:12px}.lock-grade.perfect{background:#c7f4d9;color:#145d3a}.lock-grade.good{background:#fff0a5;color:#735600}.lock-grade.miss{background:#ffd1dc;color:#7a233a}.lock-target.is-perfect{animation:targetPerfect .35s ease}.lock-target.is-good{transform:scale(1.02)}.lock-target.is-miss{filter:saturate(.65)}
+@keyframes targetPerfect{50%{transform:scale(1.08)}}
+
 /* Reaction */
 .reaction-ready .game-big{position:relative}.reaction-ready .game-big:after{content:"";display:block;width:54px;height:9px;margin:18px auto 0;border-radius:999px;background:repeating-linear-gradient(90deg,currentColor 0 10px,transparent 10px 18px);opacity:.28;animation:waitDots 1s linear infinite}
 .reaction-go .game-tap{background:#fff!important;color:#075c35!important;animation:goButton .34s ease infinite alternate}
@@ -97,6 +122,7 @@
 /* Make help copy feel intentional */
 .game-help{background:rgba(255,255,255,.28);padding:9px 13px;border-radius:14px;max-width:480px!important;font-weight:750!important}
 .result-score-button-ready{animation:scoreReady .72s ease 2;box-shadow:0 0 0 5px rgba(255,210,46,.18),0 7px 0 #dca30a!important}
+.score-ready-after-practice{box-shadow:0 0 0 5px rgba(255,210,46,.14),0 7px 0 #e7a810!important}
 @keyframes scoreReady{50%{transform:translateY(-3px) scale(1.02)}}
 
 @media(max-width:520px){
@@ -104,8 +130,9 @@
   .math-question{padding:22px 24px!important;min-width:0;width:min(330px,88vw)}
   .sequence-pad{min-height:105px}.hl-card{min-height:165px}.hl-actions button{min-height:68px!important}
   .color-prompt{padding:15px 16px 18px}.stop-clock{min-height:160px}.center-track-wrap{padding:14px 10px}.center-zone span{display:none}
+  .arrow-card,.shape-card{min-height:155px}.flash-stage{min-height:195px}.flash-stage .flash-orb{width:104px!important;height:104px!important}.lock-target{width:170px!important;height:170px!important}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .speed-tap-target,.answer-option,.memory-cell,.sequence-pad,.hl-card,.reaction-go .game-tap,.stop-clock,.center-marker,.result-score-button-ready{animation:none!important;transition:none!important}
+  .speed-tap-target,.answer-option,.memory-cell,.sequence-pad,.hl-card,.reaction-go .game-tap,.stop-clock,.center-marker,.result-score-button-ready,.odd-grid button,.lock-target{animation:none!important;transition:none!important}
 }
