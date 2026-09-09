@@ -130,6 +130,31 @@
     grid.appendChild(btn);
   }
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',injectGamesHomeButton,{once:true});
-  else injectGamesHomeButton();
+  /* El editor de máscaras solo se muestra dentro del panel de administración. */
+  function injectVintageMaskAdminButton(){
+    const actions=document.querySelector('#adminContent .admin-actions');
+    if(!actions||document.getElementById('adminVintageMasksBtn'))return;
+    const btn=document.createElement('button');
+    btn.id='adminVintageMasksBtn';
+    btn.type='button';
+    btn.className='secondary';
+    btn.textContent='Editar máscaras de cromos';
+    btn.addEventListener('click',()=>{window.location.href='juegos/admin-mascaras-vintage.html'});
+    actions.appendChild(btn);
+  }
+
+  function installAdminMaskHook(){
+    const original=window.renderAdminPanel;
+    if(typeof original!=='function'||original.__vintageMaskHook)return;
+    const wrapped=function(){
+      const result=original.apply(this,arguments);
+      setTimeout(injectVintageMaskAdminButton,0);
+      return result;
+    };
+    wrapped.__vintageMaskHook=true;
+    window.renderAdminPanel=wrapped;
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{injectGamesHomeButton();installAdminMaskHook()},{once:true});
+  else{injectGamesHomeButton();installAdminMaskHook()}
 })();
