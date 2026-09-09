@@ -3,12 +3,11 @@
 
   window.PatxGameRegistry.register('football-trivia', ({ container, config = {}, attemptId = null, onFinish }) => {
     const service = window.PatxChallengeService;
-    const startTimeoutMs = Number(config.start_timeout_ms || 9000);
-    const minTimeoutMs = Number(config.min_timeout_ms || 5000);
-    const decrementMs = Number(config.timeout_decrement_ms || 400);
+    const timeoutMs = Number(config.question_timeout_ms || 15000);
+    const wanted = Math.min(10, Number(config.questions || 10));
+    const maxPerCorrect = Number(config.points_max_per_correct || 1000);
+    const minPerCorrect = Number(config.points_min_per_correct || 250);
 
-    // Banco de práctica separado del reto oficial: permite aprender la mecánica
-    // sin revelar la secuencia diaria ni enviar soluciones del intento real al cliente.
     const demoQuestions = [
       {question_id:-1,question:'¿Quién marcó el gol de la victoria en la final del Mundial de 2014?',answers:['Miroslav Klose','André Schürrle','Thomas Müller','Mario Götze'],category:'Mundial',difficulty:'media',correct_index:3},
       {question_id:-2,question:'¿Cuál fue la primera selección africana en alcanzar unas semifinales de un Mundial?',answers:['Senegal','Marruecos','Camerún','Ghana'],category:'Mundial',difficulty:'media',correct_index:1},
@@ -19,177 +18,213 @@
       {question_id:-7,question:'¿Quién ejecutó el famoso penalti a lo Panenka en la final de la Eurocopa de 1976?',answers:['Uli Hoeneß','Franz Beckenbauer','Antonín Panenka','Zdeněk Nehoda'],category:'Historia',difficulty:'media',correct_index:2},
       {question_id:-8,question:'¿Qué dorsal hizo especialmente famoso Johan Cruyff?',answers:['9','10','7','14'],category:'Jugadores',difficulty:'media',correct_index:3},
       {question_id:-9,question:'¿Qué selección representó Pavel Nedvěd?',answers:['Austria','Polonia','Eslovaquia','República Checa'],category:'Jugadores',difficulty:'media',correct_index:3},
-      {question_id:-10,question:'¿Quién entrenaba al Porto campeón de Europa en 2004?',answers:['José Mourinho','Luiz Felipe Scolari','Carlo Ancelotti','André Villas-Boas'],category:'Champions',difficulty:'media',correct_index:0},
-      {question_id:-11,question:'¿Desde cuál de estas reanudaciones no puede existir fuera de juego directamente?',answers:['Balón a tierra','Saque de esquina','Tiro libre directo','Tiro libre indirecto'],category:'Reglas',difficulty:'media',correct_index:1},
-      {question_id:-12,question:'¿Qué club ha ganado más Copas Libertadores?',answers:['Peñarol','River Plate','Boca Juniors','Independiente'],category:'Libertadores',difficulty:'media',correct_index:3}
+      {question_id:-10,question:'¿Quién entrenaba al Porto campeón de Europa en 2004?',answers:['José Mourinho','Luiz Felipe Scolari','Carlo Ancelotti','André Villas-Boas'],category:'Champions',difficulty:'media',correct_index:0}
     ];
 
-    let questions = [], index = 0, streak = 0, startedAt = 0, questionStartedAt = 0;
-    let timeout = 0, raf = 0, finished = false, locked = false;
-    let currentTimeoutMs = startTimeoutMs;
+    let questions = [];
+    let index = 0;
+    let correctCount = 0;
+    let totalScore = 0;
+    let startedAt = 0;
+    let questionStartedAt = 0;
+    let timeout = 0;
+    let raf = 0;
+    let finished = false;
+    let locked = true;
 
     container.innerHTML = `
-      <div class="trivia-surface streak-trivia-surface">
+      <div class="trivia-surface scored-trivia-surface">
         <div class="trivia-top">
           <span data-progress>Preparando…</span>
           <span data-category></span>
         </div>
-        <div class="trivia-streak-row">
-          <span class="trivia-streak" data-streak>RACHA · 0</span>
-          <span class="trivia-seconds" data-seconds>${(startTimeoutMs/1000).toFixed(1)} s</span>
+        <div class="trivia-score-row">
+          <span class="trivia-score-pill" data-correct>ACIERTOS · 0 / ${wanted}</span>
+          <span class="trivia-score-pill strong" data-score>0 PTS</span>
+          <span class="trivia-score-pill timer" data-seconds>15.0 s</span>
         </div>
         <div class="trivia-timer"><div data-timer></div></div>
         <div class="trivia-question" data-question>Cargando preguntas…</div>
         <div class="trivia-answers" data-answers></div>
-        <div class="trivia-help" data-help>${attemptId ? 'Una respuesta incorrecta termina el intento.' : 'Práctica · una respuesta incorrecta termina la racha.'}</div>
+        <div class="trivia-feedback" data-feedback aria-live="assertive"></div>
+        <div class="trivia-help" data-help>${attemptId ? 'Cada respuesta se corrige en el servidor.' : 'Práctica · no puntúa.'}</div>
       </div>`;
 
     const progress = container.querySelector('[data-progress]');
     const category = container.querySelector('[data-category]');
-    const streakEl = container.querySelector('[data-streak]');
+    const correctEl = container.querySelector('[data-correct]');
+    const scoreEl = container.querySelector('[data-score]');
     const secondsEl = container.querySelector('[data-seconds]');
     const timerBar = container.querySelector('[data-timer]');
     const questionEl = container.querySelector('[data-question]');
     const answersEl = container.querySelector('[data-answers]');
+    const feedbackEl = container.querySelector('[data-feedback]');
     const help = container.querySelector('[data-help]');
 
-    const esc = value => String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-    function timeoutFor(roundIndex){ return Math.max(minTimeoutMs, startTimeoutMs - roundIndex * decrementMs); }
+    const esc = value => String(value ?? '')
+      .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+
     function clearTimers(){ clearTimeout(timeout); cancelAnimationFrame(raf); }
+
+    function pointsFor(responseMs){
+      const clamped = Math.max(0, Math.min(timeoutMs, Number(responseMs)||0));
+      const range = Math.max(0, maxPerCorrect-minPerCorrect);
+      return Math.max(minPerCorrect, maxPerCorrect-Math.floor((clamped/timeoutMs)*range));
+    }
 
     function tick(now){
       if (finished || locked) return;
-      const elapsed = now - questionStartedAt;
-      const remainingMs = Math.max(0, currentTimeoutMs - elapsed);
-      timerBar.style.transform = `scaleX(${Math.max(0, remainingMs/currentTimeoutMs)})`;
+      const elapsed = now-questionStartedAt;
+      const remainingMs = Math.max(0, timeoutMs-elapsed);
+      timerBar.style.transform = `scaleX(${Math.max(0,remainingMs/timeoutMs)})`;
       secondsEl.textContent = `${(remainingMs/1000).toFixed(1)} s`;
       if (remainingMs > 0) raf = requestAnimationFrame(tick);
     }
 
-    function paintAnswer(chosenIndex, correctIndex){
+    function setFeedback(type,title,sub=''){
+      feedbackEl.className = `trivia-feedback show ${type}`;
+      feedbackEl.innerHTML = `<strong>${esc(title)}</strong>${sub?`<span>${esc(sub)}</span>`:''}`;
+    }
+
+    function clearFeedback(){
+      feedbackEl.className='trivia-feedback';
+      feedbackEl.innerHTML='';
+    }
+
+    function paintAnswers(chosenIndex,correctIndex){
       [...answersEl.querySelectorAll('button')].forEach((btn,i)=>{
-        btn.disabled = true;
-        if (i === chosenIndex) btn.classList.add('selected');
-        if (i === Number(correctIndex)) btn.classList.add('right');
-        if (chosenIndex >= 0 && i === chosenIndex && i !== Number(correctIndex)) btn.classList.add('wrong');
+        btn.disabled=true;
+        btn.classList.remove('right','wrong','selected');
+        if(i===Number(correctIndex)) btn.classList.add('right');
+        else btn.classList.add('wrong');
+        if(i===chosenIndex) btn.classList.add('selected');
       });
     }
 
-    function finish(finalStreak = streak, reason = 'fail'){
-      if (finished) return;
-      finished = true;
-      locked = true;
+    function updateScoreboard(){
+      correctEl.textContent=`ACIERTOS · ${correctCount} / ${wanted}`;
+      scoreEl.textContent=`${Math.round(totalScore)} PTS`;
+    }
+
+    function finish(){
+      if(finished)return;
+      finished=true;
+      locked=true;
       clearTimers();
-      streak = Number(finalStreak) || 0;
-      streakEl.textContent = `RACHA · ${streak}`;
-      setTimeout(()=>{
-        if (finished) {
-          questionEl.textContent = streak === 0 ? 'Racha terminada' : `Racha de ${streak}`;
-          answersEl.innerHTML = '';
-          help.textContent = reason === 'complete' ? 'Has completado todas las preguntas disponibles.' : 'El primer fallo termina la partida.';
-          onFinish({score:attemptId ? 0 : streak,duration:performance.now()-startedAt,metadata:{streak,reason}});
-        }
-      }, 380);
+      questionEl.textContent=`${correctCount} de ${wanted} correctas`;
+      answersEl.innerHTML='';
+      setFeedback(correctCount===wanted?'correct':'neutral','TRIVIAL COMPLETADO',`${Math.round(totalScore)} puntos`);
+      help.textContent='La puntuación combina aciertos y velocidad de respuesta.';
+      setTimeout(()=>onFinish({
+        score:attemptId?0:totalScore,
+        duration:performance.now()-startedAt,
+        metadata:{correct_count:correctCount,total_score:Math.round(totalScore),questions:wanted}
+      }),650);
     }
 
-    function advance(nextTimeout){
-      index += 1;
-      if (index >= questions.length) return finish(streak,'complete');
-      currentTimeoutMs = Number(nextTimeout) || timeoutFor(index);
-      setTimeout(renderQuestion, 430);
+    function next(){
+      index+=1;
+      if(index>=questions.length || index>=wanted)return setTimeout(finish,450);
+      setTimeout(renderQuestion,850);
     }
 
-    async function resolveOfficial(q, answerIndex, responseMs){
+    async function resolveOfficial(q,answerIndex,responseMs){
       try{
-        const result = await service.answerTriviaQuestion(attemptId, q.question_id, answerIndex, responseMs);
-        if (!result) throw new Error('No se pudo corregir la respuesta.');
-        const correct = Boolean(result.correct);
-        streak = Number(result.streak) || 0;
-        streakEl.textContent = `RACHA · ${streak}`;
-        paintAnswer(answerIndex, result.correct_index);
-        if (!correct) {
-          help.textContent = answerIndex < 0 ? `Tiempo agotado · racha final ${streak}` : `Incorrecto · racha final ${streak}`;
-          return setTimeout(()=>finish(streak,'fail'), 760);
+        const result=await service.answerTriviaQuestion(attemptId,q.question_id,answerIndex,responseMs);
+        if(!result)throw new Error('No se pudo corregir la respuesta.');
+        const isCorrect=Boolean(result.correct);
+        correctCount=Number(result.correct_count)||0;
+        totalScore=Number(result.total_score)||0;
+        paintAnswers(answerIndex,result.correct_index);
+        updateScoreboard();
+        if(isCorrect){
+          setFeedback('correct','¡CORRECTO!',`+${Number(result.points_awarded)||0} puntos`);
+          help.textContent='La respuesta correcta está en verde.';
+        }else{
+          setFeedback(answerIndex<0?'timeout':'wrong',answerIndex<0?'¡TIEMPO!':'¡FALLO!','0 puntos');
+          help.textContent='La respuesta correcta está en verde; las demás, en rojo.';
         }
-        help.textContent = `¡Correcto! Racha ${streak}`;
-        if (result.finished) return setTimeout(()=>finish(streak,'complete'), 650);
-        advance(result.next_timeout_ms);
+        if(result.finished)return setTimeout(finish,1250);
+        next();
       }catch(error){
-        console.error('[Trivial] Error corrigiendo respuesta', error);
-        help.textContent = 'No se pudo corregir por conexión. Reintentando…';
-        setTimeout(()=>{
-          if (!finished) resolveOfficial(q,answerIndex,responseMs);
-        },900);
+        console.error('[Trivial] Error corrigiendo respuesta',error);
+        help.textContent='No se pudo corregir por conexión. Reintentando…';
+        setTimeout(()=>{if(!finished)resolveOfficial(q,answerIndex,responseMs);},900);
       }
     }
 
-    function resolveDemo(q, answerIndex){
-      const correctIndex = Number(q.correct_index);
-      const correct = answerIndex === correctIndex;
-      paintAnswer(answerIndex, correctIndex);
-      if (!correct) {
-        help.textContent = answerIndex < 0 ? `Tiempo agotado · racha final ${streak}` : `Incorrecto · racha final ${streak}`;
-        return setTimeout(()=>finish(streak,'fail'), 700);
+    function resolveDemo(q,answerIndex,responseMs){
+      const correctIndex=Number(q.correct_index);
+      const isCorrect=answerIndex===correctIndex && responseMs<=timeoutMs;
+      const awarded=isCorrect?pointsFor(responseMs):0;
+      if(isCorrect)correctCount+=1;
+      totalScore+=awarded;
+      paintAnswers(answerIndex,correctIndex);
+      updateScoreboard();
+      if(isCorrect){
+        setFeedback('correct','¡CORRECTO!',`+${awarded} puntos`);
+        help.textContent='Más rapidez = más puntos.';
+      }else{
+        setFeedback(answerIndex<0?'timeout':'wrong',answerIndex<0?'¡TIEMPO!':'¡FALLO!','0 puntos');
+        help.textContent='La respuesta correcta está en verde; las demás, en rojo.';
       }
-      streak += 1;
-      streakEl.textContent = `RACHA · ${streak}`;
-      help.textContent = `¡Correcto! Racha ${streak}`;
-      advance(timeoutFor(index+1));
+      next();
     }
 
     function answer(answerIndex){
-      if (locked || finished) return;
-      locked = true;
+      if(locked||finished)return;
+      locked=true;
       clearTimers();
-      const q = questions[index];
-      const responseMs = Math.max(0, Math.min(currentTimeoutMs, Math.round(performance.now()-questionStartedAt)));
-      if (attemptId) resolveOfficial(q,Number(answerIndex),responseMs);
-      else resolveDemo(q,Number(answerIndex));
+      const q=questions[index];
+      const responseMs=Math.max(0,Math.min(timeoutMs,Math.round(performance.now()-questionStartedAt)));
+      if(attemptId)resolveOfficial(q,Number(answerIndex),responseMs);
+      else resolveDemo(q,Number(answerIndex),responseMs);
     }
 
     function renderQuestion(){
-      if (finished) return;
-      locked = false;
-      const q = questions[index];
-      progress.textContent = `Pregunta ${index+1} · sigue hasta fallar`;
-      category.textContent = `${q.category || 'Fútbol'} · ${q.difficulty || 'media'}`;
-      streakEl.textContent = `RACHA · ${streak}`;
-      questionEl.textContent = q.question;
-      const opts = Array.isArray(q.answers) ? q.answers : [];
-      answersEl.innerHTML = opts.map((text,i)=>`<button type="button" data-answer="${i}"><span>${String.fromCharCode(65+i)}</span><b>${esc(text)}</b></button>`).join('');
-      help.textContent = currentTimeoutMs <= minTimeoutMs ? 'Tienes 5 segundos. El tiempo ya no bajará más.' : `Tienes ${(currentTimeoutMs/1000).toFixed(1)} segundos.`;
-      timerBar.style.transform = 'scaleX(1)';
-      secondsEl.textContent = `${(currentTimeoutMs/1000).toFixed(1)} s`;
-      questionStartedAt = performance.now();
-      raf = requestAnimationFrame(tick);
-      timeout = setTimeout(()=>answer(-1),currentTimeoutMs);
+      if(finished)return;
+      locked=false;
+      clearFeedback();
+      const q=questions[index];
+      progress.textContent=`Pregunta ${index+1} / ${wanted}`;
+      category.textContent=`${q.category||'Fútbol'} · ${q.difficulty||'media'}`;
+      questionEl.textContent=q.question;
+      const opts=Array.isArray(q.answers)?q.answers:[];
+      answersEl.innerHTML=opts.map((text,i)=>`<button type="button" data-answer="${i}"><span>${String.fromCharCode(65+i)}</span><b>${esc(text)}</b></button>`).join('');
+      help.textContent='Tienes 15 segundos. Acertar rápido da más puntos.';
+      timerBar.style.transform='scaleX(1)';
+      secondsEl.textContent='15.0 s';
+      questionStartedAt=performance.now();
+      raf=requestAnimationFrame(tick);
+      timeout=setTimeout(()=>answer(-1),timeoutMs);
     }
 
     function press(event){
-      const button = event.target.closest('[data-answer]');
-      if (!button || button.disabled) return;
+      const button=event.target.closest('[data-answer]');
+      if(!button||button.disabled)return;
       event.preventDefault();
       answer(Number(button.dataset.answer));
     }
+
     answersEl.addEventListener('pointerdown',press,{passive:false});
 
     async function load(){
       try{
-        questions = attemptId ? await service.getTriviaQuestions(attemptId) : demoQuestions.slice();
-        if (!Array.isArray(questions) || !questions.length) throw new Error('No hay preguntas disponibles.');
-        index = 0; streak = 0; currentTimeoutMs = timeoutFor(0);
-        renderQuestion();
+        questions=attemptId?await service.getTriviaQuestions(attemptId):demoQuestions.slice(0,wanted);
+        if(!Array.isArray(questions)||questions.length<wanted)throw new Error('No hay suficientes preguntas disponibles.');
+        questions=questions.slice(0,wanted);
+        index=0;correctCount=0;totalScore=0;updateScoreboard();renderQuestion();
       }catch(error){
-        locked = true;
-        questionEl.textContent = 'No se pudieron cargar las preguntas';
-        answersEl.innerHTML = '';
-        help.textContent = error.message || 'Error de conexión.';
+        locked=true;
+        questionEl.textContent='No se pudieron cargar las preguntas';
+        answersEl.innerHTML='';
+        help.textContent=error.message||'Error de conexión.';
       }
     }
 
-    return {
-      start(){ startedAt=performance.now(); load(); },
-      destroy(){ finished=true; clearTimers(); answersEl.removeEventListener('pointerdown',press); }
+    return{
+      start(){startedAt=performance.now();load();},
+      destroy(){finished=true;clearTimers();answersEl.removeEventListener('pointerdown',press);}
     };
   });
 })();
