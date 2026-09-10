@@ -19,12 +19,12 @@ body{min-height:100dvh;background:radial-gradient(circle at 50% 0,rgba(188,148,4
 <body>
 <div class="shell">
 <header class="top"><button class="back" onclick="location.href='../index.html'">← Volver</button><div class="title"><small>Patxanguilles Antifeixistes</small><h1>Juegos</h1></div><div style="width:70px"></div></header>
-<p class="intro">El archivo vintage ya está abierto. El resto de trastornos futbolísticos siguen en el taller.</p>
+<p class="intro">El archivo vintage ya está abierto. Entrena tu memoria o descubre quién se esconde detrás de cada cromo.</p>
 <main class="grid">
 <a class="game" href="memoria-vintage.html"><div class="art memory-art" id="memoryCover"><div class="memory-fallback"></div><img class="memory-slide active" src="https://odioeternoalfutbolmoderno.es/wp-content/uploads/2023/12/Abelardo.jpeg" fetchpriority="high" alt=""><img class="memory-slide" alt=""></div><div class="body"><div class="kicker">Memoria · disponible</div><h2>Memoria Vintage</h2><p>Encuentra diez parejas entre 20 cromos elegidos al azar. Cada partida usa un único formato: todos horizontales o todos verticales.</p><div class="meta"><span class="tag">10 parejas</span><span class="tag">20 cartas</span><span class="tag">+700 cromos</span></div><div class="play">JUGAR</div></div></a>
 <div class="game heads disabled" aria-disabled="true"><div class="art"><div class="icon">⚽🤯</div></div><div class="body"><div class="kicker">Arcade</div><h2>Patxanguilles Heads</h2><p>Fútbol 1 contra 1 con cabezas absurdamente grandes, físicas, saltos, chutes y modo online en preparación.</p><div class="meta"><span class="tag">VS CPU</span><span class="tag">2P</span><span class="tag">Online</span></div><div class="play">PRÓXIMAMENTE</div></div></div>
-<div class="game quiz disabled" aria-disabled="true"><div class="art"><div class="icon">🕵️‍♂️</div></div><div class="body"><div class="kicker">Quiz visual</div><h2>¿Quién es?</h2><p>Reconoce al futbolista del cromo con el nombre oculto. El sistema de detección del nombre sigue en preparación.</p><div class="meta"><span class="tag">6 respuestas</span><span class="tag">10 rondas</span><span class="tag">OCR</span></div><div class="play">PRÓXIMAMENTE</div></div></div>
-</main><div class="note">Memoria Vintage disponible. Los otros juegos aparecerán cuando estén listos.</div></div>
+<a class="game quiz" href="./quien-es-vintage.html"><div class="art"><div class="icon">🕵️‍♂️</div></div><div class="body"><div class="kicker">Quiz visual · disponible</div><h2>¿Quién es?</h2><p>Reconoce al futbolista del cromo con el nombre oculto. Elige entre seis compatriotas y descubre la carta original al responder.</p><div class="meta"><span class="tag">6 respuestas</span><span class="tag">10 rondas</span><span class="tag">Compatriotas</span></div><div class="play">JUGAR</div></div></a>
+</main><div class="note">Memoria Vintage y ¿Quién es? disponibles. Patxanguilles Heads sigue en preparación.</div></div>
 <script>
 (async()=>{
   const slides=[...document.querySelectorAll('.memory-slide')];
