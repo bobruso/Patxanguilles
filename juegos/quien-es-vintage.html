@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1d241c">
+<meta name="theme-color" content="#081426">
 <title>¿Quién es? · Patxanguilles</title>
 <style>
 :root{
@@ -127,6 +127,68 @@ button:focus-visible{outline:3px solid #b48a38;outline-offset:3px}
 .card-col{height:100%}
 @media(max-width:720px){.card{max-height:100%}.card.landscape{height:100%;width:auto;max-width:94vw}.stage{grid-template-rows:minmax(0,1fr) auto}.side{padding-bottom:env(safe-area-inset-bottom)}}
 @media(max-height:520px){html,body{overflow:auto}.game{min-height:560px;height:100dvh}.stage{overflow:auto}}
+
+/* Blue game surface and mobile layout with space above and below the controls. */
+:root{--ink:#edf4ff}
+html,body{background:#081426;color:var(--ink)}
+body{background:radial-gradient(ellipse at top,#183459,#081426 75%)}
+.top{top:calc(16px + env(safe-area-inset-top))}
+.top-actions{display:flex;gap:6px}
+.btn{background:#152c49;color:#edf4ff;border-color:#416080}
+.stats{top:calc(66px + env(safe-area-inset-top));background:#142b48;border-color:#416080}
+.stat span{color:#b9cee7}
+.stage{top:calc(112px + env(safe-area-inset-top))}
+.answer{background:#163250;color:#f1f6ff;border-color:#42678a}
+.answer:hover:not(:disabled){background:#234969}
+.answer.correct{background:#168449;border-color:#68f1a1;color:#fff}
+.answer.wrong{background:#9c3146;border-color:#ff95a6;color:#fff}
+.feedback{background:#10263f;border-color:#345777;color:#c8daed;min-height:60px;gap:10px;flex-wrap:wrap}
+.feedback.success{background:#0b442f;border-color:#44dd8b;color:#a0ffc7}
+.feedback.failure{background:#491b2b;border-color:#df6a83;color:#ffccd6}
+.feedback strong{font-size:clamp(24px,3vw,34px);line-height:1.1}
+.feedback span{font-size:16px;font-weight:800}
+.modal,.loading-card{background:#142b48;color:#edf4ff;border-color:#416080}
+.loading,.overlay{background:rgba(5,15,30,.82)}
+.small{color:#b9cee7}.score{color:#85bdff}.primary{background:#2864ad;color:#fff}
+.spinner{border-color:#345777;border-top-color:#85bdff}
+button:focus-visible{outline-color:#87c6ff}
+@media(max-width:720px){
+ .top{left:12px;right:12px;top:calc(16px + env(safe-area-inset-top));gap:6px}
+ .title{font-size:19px}.btn{min-height:36px;padding:0 7px;font-size:10px}
+ .top-actions{gap:4px}
+ .stats{top:calc(64px + env(safe-area-inset-top))}
+ .stat{min-width:68px}.stat b{font-size:14px}.stat span{font-size:8px}
+ .stage{inset:calc(112px + env(safe-area-inset-top)) 12px calc(24px + env(safe-area-inset-bottom));grid-template-rows:minmax(0,min(38dvh,330px)) auto;gap:12px;align-content:start;align-items:start}
+ .card-col{height:100%}.card.portrait,.card.landscape{height:100%;width:auto;max-width:100%}
+ .side{padding-bottom:0;max-width:520px;justify-self:center}
+ .prompt{font-size:17px;margin-bottom:9px}
+ .answers{gap:7px}.answer{min-height:46px;padding:8px 10px;font-size:13px}
+ .feedback{min-height:58px;margin-top:9px;padding:9px 12px;font-size:12px;gap:8px}
+ .feedback strong{font-size:27px}.feedback span{font-size:15px}
+}
+@media(max-height:650px) and (max-width:720px){
+ .stage{grid-template-rows:minmax(0,30dvh) auto;gap:8px}
+ .answer{min-height:42px}.prompt{font-size:15px;margin-bottom:6px}
+}
+@media(max-height:520px){html,body{overflow:auto}.game{height:620px;min-height:620px}.stage{overflow:visible}}
+
+.modal{position:relative;max-height:calc(100dvh - 32px);overflow:auto}
+#finish .modal{padding-top:54px}
+.finish-exit{position:absolute;right:12px;top:12px}
+.secondary{background:#193d63;border:1px solid #49749c}
+.save-status{font-size:13px;color:#bed4eb;min-height:18px}
+#ranking{z-index:60}.ranking-modal{width:min(640px,96vw);text-align:left;padding:20px}
+.ranking-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ranking-heading h2{font:800 22px/1.2 system-ui}
+.rank-description,.rank-meta{color:#abc5df;font-size:12px}
+.ranking-list{display:grid;gap:7px;margin:18px 0}
+.rank-row{display:grid;grid-template-columns:24px 36px minmax(0,1fr) auto;gap:8px;align-items:center;padding:12px 9px;background:#0d2036;border-radius:12px}
+.rank-num{color:#8dbfff}.rank-avatar{width:36px;height:36px;object-fit:cover;border-radius:50%}
+.rank-avatar[hidden]{display:block!important;visibility:hidden}
+.rank-name{font-size:14px;overflow-wrap:anywhere}.rank-meta{font-size:10px;margin-top:4px}.rank-points{font-size:14px;color:#95ffc1;white-space:nowrap}
+#rankingLogin label{display:block;margin-top:12px}#rankingLogin select,#rankingLogin input{width:100%;min-height:44px;margin-top:5px;padding:8px;border-radius:8px;border:1px solid #54779a;background:#091b30;color:#fff;font:inherit}
+#rankingLogin a{display:block;color:#99caff;font-size:13px;margin:12px 0}
+@media(max-width:360px){.ranking-modal{padding:14px}.rank-row{gap:5px;padding:10px 6px}.rank-points{font-size:12px}}
 </style>
 </head>
 <body>
@@ -134,7 +196,7 @@ button:focus-visible{outline:3px solid #b48a38;outline-offset:3px}
   <div class="top">
     <button class="btn" onclick="location.href='./'">← Juegos</button>
     <div class="title">¿Quién es?</div>
-    <button class="btn" id="newGame">↻ Nueva</button>
+    <div class="top-actions"><button class="btn" id="soundBtn" aria-pressed="true" aria-label="Silenciar música y efectos">♫ Sonido</button><button class="btn" id="newGame">↻ Nueva</button></div>
   </div>
   <div class="stats">
     <div class="stat"><b id="roundStat">0/10</b><span>Ronda</span></div>
@@ -147,7 +209,7 @@ button:focus-visible{outline:3px solid #b48a38;outline-offset:3px}
       <div class="prompt">¿Qué futbolista aparece en este cromo?</div>
       <div id="answers" class="answers"></div>
       <div id="feedback" class="feedback" role="status" aria-live="polite">Preparando el primer cromo…</div>
-      <button id="nextBtn" class="next" >Siguiente cromo →</button>
+
     </div>
   </div>
 </div>
@@ -160,16 +222,36 @@ button:focus-visible{outline:3px solid #b48a38;outline-offset:3px}
   </div>
 </div>
 
-<div id="finish" class="overlay">
+<div id="finish" class="overlay" role="dialog" aria-modal="true" aria-label="Resultado de la partida">
   <div class="modal">
+    <button class="btn finish-exit" onclick="location.href='./'">Salir</button>
     <div style="font-size:48px">🏆</div>
     <h2>Fin de la partida</h2>
     <div id="finalCorrect" class="score">0/10</div>
     <div id="finalPoints" style="margin-top:4px"></div>
+    <p id="saveStatus" class="save-status" role="status"></p>
+    <button class="btn" id="saveScore" hidden>Entrar y guardar</button>
     <button class="primary" id="playAgain">Jugar otra vez</button>
+    <button class="primary secondary" id="viewRanking">Ver ranking</button>
   </div>
 </div>
 
+<div id="ranking" class="overlay" role="dialog" aria-modal="true" aria-labelledby="rankingTitle">
+ <div class="modal ranking-modal">
+  <div class="ranking-heading"><h2 id="rankingTitle">Ranking · ¿Quién es?</h2><button class="btn" id="closeRanking">Cerrar</button></div>
+  <p class="rank-description">Mejor partida de cada jugador · 10 cromos</p>
+  <div id="rankingList" class="ranking-list" role="status"></div>
+  <form id="rankingLogin" hidden>
+   <label for="rankingPlayer">Jugador</label><select id="rankingPlayer" required></select>
+   <label for="rankingPassword">Contraseña</label><input id="rankingPassword" type="password" autocomplete="current-password" required>
+   <button class="primary" id="rankingLoginBtn">Entrar</button>
+   <p id="rankingAuthStatus" role="status"></p>
+   <a href="./memoria-vintage.html">¿Aún no tienes cuenta? Regístrate en Memoria Vintage</a>
+  </form>
+  <button class="btn" id="refreshRanking">Actualizar ranking</button>
+ </div>
+</div>
+<script defer src="./vendor/supabase-2.116.0.js"></script>
 <script type="module" src="./quien-es-game.mjs"></script>
 </body>
 </html>
