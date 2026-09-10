@@ -38,12 +38,12 @@
     if(!document.getElementById('homeGamesBtnStyle')){
       const style=document.createElement('style');
       style.id='homeGamesBtnStyle';
-      style.textContent=`#homeGamesBtn{background:linear-gradient(145deg,#242a30,#0e1115)!important;border-color:rgba(255,255,255,.22)!important}#homeGamesBtn .games-home-art{position:relative;width:100%;height:100%;min-height:135px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#22352a,#0e1812)}@media(max-width:700px){#homeGamesBtn .games-home-art{min-height:100px}}`;
+      style.textContent=`#homeGamesBtn{background:linear-gradient(145deg,#242a30,#0e1115)!important;border-color:rgba(255,255,255,.22)!important}#homeGamesBtn .games-home-art{position:relative;width:100%;height:100%;min-height:135px;display:block;overflow:hidden;background:#0e1812}#homeGamesBtn .games-home-art img{display:block;width:100%;height:100%;min-height:135px;object-fit:cover;object-position:center center}@media(max-width:700px){#homeGamesBtn .games-home-art,#homeGamesBtn .games-home-art img{min-height:100px}}`;
       document.head.appendChild(style);
     }
     const btn=document.createElement('button');
     btn.id='homeGamesBtn';btn.type='button';btn.className='mode greenline home-image-card';btn.setAttribute('aria-label','Abrir juegos');
-    btn.innerHTML=`<span class="home-card-copy"><span class="icon">🎮</span><strong>Juegos</strong><span>Memoria Vintage y próximos minijuegos</span></span><span class="home-card-image games-home-art" aria-hidden="true"></span>`;
+    btn.innerHTML=`<span class="home-card-copy"><span class="icon">🎮</span><strong>Juegos</strong><span>Memoria Vintage y próximos minijuegos</span></span><span class="home-card-image games-home-art" aria-hidden="true"><img src="juegos boton imagen.jpg" alt=""></span>`;
     btn.addEventListener('click',()=>{window.location.href='juegos/';});
     grid.appendChild(btn);
   }
