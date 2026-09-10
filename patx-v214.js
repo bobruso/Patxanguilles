@@ -2,6 +2,19 @@
   const SUPABASE_URL_V214='https://cnnhstlguewrxjihhlqc.supabase.co';
   const SUPABASE_KEY_V214='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
 
+  function overrideFridayPopupPhotoForToday(){
+    const original=window.fridayPhotoForToday;
+    if(typeof original!=='function'||window.__patxFridayPopupPhotoOverride)return;
+    window.__patxFridayPopupPhotoOverride=true;
+    window.fridayPhotoForToday=function(){
+      const now=new Date();
+      if(now.getFullYear()===2026&&now.getMonth()===8&&now.getDate()===11){
+        return {src:'5.jpg',alt:'Momento histórico de fútbol'};
+      }
+      return original();
+    };
+  }
+
   window.saveQuickFitnessStatus=async function(name){
     const map=(typeof playerIdByName!=='undefined')?playerIdByName:null;
     const id=map?.[name];
@@ -102,6 +115,7 @@
   }
 
   function initV214Extras(){
+    overrideFridayPopupPhotoForToday();
     injectGamesHomeButton();
     injectLatestHistory();
     setupCoachLobbyV224();
