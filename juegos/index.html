@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07100b">
+<link rel="preload" as="image" href="https://odioeternoalfutbolmoderno.es/wp-content/uploads/2023/12/Abelardo.jpeg">
 <title>Juegos · Patxanguilles</title>
 <style>
 :root{--gold:#d8b65d;--text:#f4f5f1;--muted:#a5ada7;--line:rgba(255,255,255,.13)}
@@ -20,7 +21,7 @@ body{min-height:100dvh;background:radial-gradient(circle at 50% 0,rgba(188,148,4
 <header class="top"><button class="back" onclick="location.href='../index.html'">← Volver</button><div class="title"><small>Patxanguilles Antifeixistes</small><h1>Juegos</h1></div><div style="width:70px"></div></header>
 <p class="intro">El archivo vintage ya está abierto. El resto de trastornos futbolísticos siguen en el taller.</p>
 <main class="grid">
-<a class="game" href="memoria-vintage.html"><div class="art memory-art" id="memoryCover"><div class="memory-fallback"></div><img class="memory-slide active" alt=""><img class="memory-slide" alt=""></div><div class="body"><div class="kicker">Memoria · disponible</div><h2>Memoria Vintage</h2><p>Encuentra diez parejas entre 20 cromos elegidos al azar. Cada partida usa un único formato: todos horizontales o todos verticales.</p><div class="meta"><span class="tag">10 parejas</span><span class="tag">20 cartas</span><span class="tag">+700 cromos</span></div><div class="play">JUGAR</div></div></a>
+<a class="game" href="memoria-vintage.html"><div class="art memory-art" id="memoryCover"><div class="memory-fallback"></div><img class="memory-slide active" src="https://odioeternoalfutbolmoderno.es/wp-content/uploads/2023/12/Abelardo.jpeg" fetchpriority="high" alt=""><img class="memory-slide" alt=""></div><div class="body"><div class="kicker">Memoria · disponible</div><h2>Memoria Vintage</h2><p>Encuentra diez parejas entre 20 cromos elegidos al azar. Cada partida usa un único formato: todos horizontales o todos verticales.</p><div class="meta"><span class="tag">10 parejas</span><span class="tag">20 cartas</span><span class="tag">+700 cromos</span></div><div class="play">JUGAR</div></div></a>
 <div class="game heads disabled" aria-disabled="true"><div class="art"><div class="icon">⚽🤯</div></div><div class="body"><div class="kicker">Arcade</div><h2>Patxanguilles Heads</h2><p>Fútbol 1 contra 1 con cabezas absurdamente grandes, físicas, saltos, chutes y modo online en preparación.</p><div class="meta"><span class="tag">VS CPU</span><span class="tag">2P</span><span class="tag">Online</span></div><div class="play">PRÓXIMAMENTE</div></div></div>
 <div class="game quiz disabled" aria-disabled="true"><div class="art"><div class="icon">🕵️‍♂️</div></div><div class="body"><div class="kicker">Quiz visual</div><h2>¿Quién es?</h2><p>Reconoce al futbolista del cromo con el nombre oculto. El sistema de detección del nombre sigue en preparación.</p><div class="meta"><span class="tag">6 respuestas</span><span class="tag">10 rondas</span><span class="tag">OCR</span></div><div class="play">PRÓXIMAMENTE</div></div></div>
 </main><div class="note">Memoria Vintage disponible. Los otros juegos aparecerán cuando estén listos.</div></div>
@@ -44,8 +45,6 @@ body{min-height:100dvh;background:radial-gradient(circle at 50% 0,rgba(188,148,4
   }catch(e){console.warn('No se pudo cargar el carrusel vintage',e)}
   if(!urls.length)return;
   let index=0,current=0;
-  function setSlide(el,url){el.src=url;el.onload=()=>{el.classList.add('active')}}
-  slides[0].classList.remove('active');setSlide(slides[0],urls[0]);
   setInterval(()=>{
     index=(index+1)%urls.length;
     const next=1-current;
