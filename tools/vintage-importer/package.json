@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dry": "node import-vintage.mjs --dry-run --from=1 --to=1",
-    "import": "node import-vintage.mjs"
+    "import": "node import-vintage.mjs",
+    "download:test": "node download-vintage-images.mjs --limit=5",
+    "download": "node download-vintage-images.mjs"
   },
   "dependencies": {
     "cheerio": "1.0.0"

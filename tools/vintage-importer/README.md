@@ -44,6 +44,44 @@ node import-vintage.mjs --from=11 --to=20
 
 El importador hace `upsert` por `slug`, así que repetir una importación actualiza los registros existentes en lugar de duplicarlos.
 
+## 3. Copia de seguridad automática de todas las imágenes
+
+El catálogo de Supabase conserva `source_image_url`, pero actualmente las imágenes siguen alojadas en la web de origen. Para conservar una copia independiente puedes descargar automáticamente todos los cromos.
+
+Primero prueba con solo 5 imágenes:
+
+```bash
+npm run download:test
+```
+
+Si funciona, descarga el catálogo completo:
+
+```bash
+npm run download
+```
+
+Se creará:
+
+```text
+vintage-download/
+  originals/     # imágenes originales, sin recomprimir
+  manifest.json  # URL de origen, archivo local, peso y SHA-256
+  failed.json    # descargas que hayan fallado
+```
+
+El descargador está preparado para **reanudar**: si se corta Internet o cierras la consola, vuelve a ejecutar `npm run download` y saltará los archivos que ya estén descargados. Hace varios reintentos, limita la concurrencia para no golpear el servidor y guarda cada archivo primero como `.part` para no considerar válidas descargas incompletas.
+
+Opciones útiles:
+
+```bash
+node download-vintage-images.mjs --limit=20
+node download-vintage-images.mjs --concurrency=2
+node download-vintage-images.mjs --output=D:\Backup\Patxanguilles-cromos
+node download-vintage-images.mjs --overwrite
+```
+
+Para una copia de seguridad real conviene guardar **primero los originales**. La compresión para la web se puede hacer después sobre una segunda copia, sin destruir este archivo maestro.
+
 ## Campos principales
 
 - `title`: título de la entrada.
@@ -61,4 +99,4 @@ El importador hace `upsert` por `slug`, así que repetir una importación actual
 
 ## Buenas prácticas
 
-El script incorpora pausa entre peticiones y reintentos ante respuestas 429/5xx. Antes de republicar masivamente las imágenes, conviene contar con permiso del sitio de origen y decidir si se usarán sus URLs originales o copias autorizadas en Storage.
+El importador y el descargador incorporan pausas/reintentos para no hacer peticiones agresivas. Antes de republicar masivamente las imágenes desde un almacenamiento propio, conviene contar con los permisos correspondientes; para copia de seguridad, conserva también el `manifest.json` con las URLs originales.
