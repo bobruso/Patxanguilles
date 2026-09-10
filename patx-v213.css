@@ -47,9 +47,10 @@ body.patx-match-gallery-open{overflow:hidden!important}
 #homeGamesBtn .games-home-art:before,#homeGamesBtn .games-home-art:after,#homeGamesBtn .games-home-vs{display:none!important}
 #homeGamesBtn .games-home-art{background:linear-gradient(145deg,#22352a,#0e1812)!important}
 
-/* Escritorio: 2x2 centrado. */
+/* Escritorio: 2x2 centrado y contenedor ajustado a dos columnas. */
 @media(min-width:901px){
-  #home .home-options{grid-template-columns:repeat(2,minmax(0,1fr))!important;width:min(880px,100%)!important;margin-left:auto!important;margin-right:auto!important}
+  #home .hero{width:min(960px,94vw)!important;max-width:960px!important;padding:30px!important}
+  #home .home-options{grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;max-width:900px!important;margin-left:auto!important;margin-right:auto!important;gap:18px!important}
 }
 
 /* Modo Entrenador: cabecera manual + Crear sala en la misma línea. */
