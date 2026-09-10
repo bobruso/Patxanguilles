@@ -83,8 +83,12 @@
       <button class="tab" style="padding:6px 9px" onclick="closeRanking()">Cerrar</button>
     </div>
     <div class="tabs">
-      <button id="rankEasyTab" class="tab" onclick="loadRanking(6)">APP · 6 PAREJAS</button>
-      <button id="rankHardTab" class="tab active" onclick="loadRanking(10)">ORDENADOR · 10 PAREJAS</button>
+      <button id="rankEasyTab" class="tab" onclick="loadRanking(6)">RANKING APP</button>
+      <button id="rankHardTab" class="tab active" onclick="loadRanking(10)">RANKING WEB</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 10px;font-size:10px;line-height:1.25;color:#766650;text-align:center">
+      <div>En la app jugamos con 6 parejas de cromos.</div>
+      <div>En la web jugamos con 10 parejas de cromos.</div>
     </div>
     <div id="rankingList" class="ranking-list"><div class="rank-empty">Cargando…</div></div>
     <button id="adminRankingBtn" class="secondary" style="display:none" onclick="openAdminRanking()">Administrar ranking</button>
