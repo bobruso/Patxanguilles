@@ -56,7 +56,7 @@ function answer(button,id){
  const token=epoch;advanceTimer=setTimeout(()=>{if(token===epoch)nextRound()},2000);
 }
 export async function nextRound(){if(busy||!answered||!current)return;busy=true;index++;const token=epoch;try{await render(token)}catch(e){if(token===epoch)error(e)}}
-$('newGame').addEventListener('click',startGame);$('playAgain').addEventListener('click',startGame);$('retryBtn').addEventListener('click',()=>{broken.clear();startGame()});
+$('playAgain').addEventListener('click',startGame);$('retryBtn').addEventListener('click',()=>{broken.clear();startGame()});
 // Synthesized chiptune: no downloads or third-party audio. Starts on a user gesture.
 let audioCtx,master,musicTimer,soundEnabled=true,noteIndex=0;
 function tone(freq,when,length,volume=.08,type='square'){

@@ -189,6 +189,18 @@ button:focus-visible{outline-color:#87c6ff}
 #rankingLogin label{display:block;margin-top:12px}#rankingLogin select,#rankingLogin input{width:100%;min-height:44px;margin-top:5px;padding:8px;border-radius:8px;border:1px solid #54779a;background:#091b30;color:#fff;font:inherit}
 #rankingLogin a{display:block;color:#99caff;font-size:13px;margin:12px 0}
 @media(max-width:360px){.ranking-modal{padding:14px}.rank-row{gap:5px;padding:10px 6px}.rank-points{font-size:12px}}
+
+/* Equal side columns keep the heading at the exact viewport centre. */
+.top{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+.top>.btn{justify-self:start}.top-actions{justify-self:end}.title{white-space:nowrap}
+@media(min-width:721px){
+ .stats{padding:8px 14px;gap:14px}
+ .stat{min-width:106px;padding:5px 12px}
+ .stat b{font-size:24px;line-height:1.15}
+ .stat span{font-size:11px;line-height:1.5;letter-spacing:.09em}
+ .stage{top:calc(150px + env(safe-area-inset-top))}
+ .card.portrait{height:min(70dvh,calc(100dvh - 176px),680px)}
+}
 </style>
 </head>
 <body>
@@ -196,7 +208,7 @@ button:focus-visible{outline-color:#87c6ff}
   <div class="top">
     <button class="btn" onclick="location.href='./'">← Juegos</button>
     <div class="title">¿Quién es?</div>
-    <div class="top-actions"><button class="btn" id="soundBtn" aria-pressed="true" aria-label="Silenciar música y efectos">♫ Sonido</button><button class="btn" id="newGame">↻ Nueva</button></div>
+    <div class="top-actions"><button class="btn" id="soundBtn" aria-pressed="true" aria-label="Silenciar música y efectos">♫ Sonido</button></div>
   </div>
   <div class="stats">
     <div class="stat"><b id="roundStat">0/10</b><span>Ronda</span></div>
