@@ -22,78 +22,56 @@ body.patx-match-gallery-open{overflow:hidden!important}
 @media(max-width:700px){
   #season .topbar{gap:8px!important;align-items:flex-start!important}
   #season .topbar>div:first-child{min-width:0!important}
-  #season .season-add-result-btn{
-    width:96px!important;
-    min-width:96px!important;
-    max-width:96px!important;
-    padding:10px 8px!important;
-    white-space:normal!important;
-    line-height:1.05!important;
-  }
-  #season .season-add-result-btn>span{
-    display:block!important;
-    width:100%!important;
-    white-space:normal!important;
-    text-align:center!important;
-    line-height:1.05!important;
-  }
-  #season .season-add-result-btn small{
-    white-space:normal!important;
-    line-height:1.05!important;
-  }
+  #season .season-add-result-btn{width:88px!important;min-width:88px!important;max-width:88px!important;padding:9px 7px!important;white-space:normal!important;line-height:1.05!important}
+  #season .season-add-result-btn>span{display:block!important;width:100%!important;white-space:normal!important;text-align:center!important;line-height:1.05!important}
+  #season .season-add-result-btn>span::before{content:'Añadir';display:block}
+  #season .season-add-result-btn>span{font-size:0!important}
+  #season .season-add-result-btn>span::after{content:'resultado';display:block;font-size:12px!important}
+  #season .season-add-result-btn>span::before{font-size:12px!important}
+  #season .season-add-result-btn small{white-space:normal!important;line-height:1.05!important;font-size:8px!important}
 }
 
-/* v224 TEST · Evita el parpadeo/repaint de la clasificación al hacer scroll rápido en Android.
-   La tabla no se vuelve a cargar: el problema viene del coste de composición de capas y blur. */
+/* v224 TEST · Scroll estable de la clasificación móvil. */
 @media(max-width:900px){
-  #season.active>.card{
-    -webkit-backdrop-filter:none!important;
-    backdrop-filter:none!important;
-    background:rgba(7,10,9,.94)!important;
-    transform:translateZ(0);
-    backface-visibility:hidden;
-  }
-  #season .season-players-panel,
-  #season .table-wrap,
-  #season .standings{
-    backface-visibility:hidden;
-    transform:translateZ(0);
-  }
-  #season .table-wrap{
-    overflow-x:hidden!important;
-    overflow-y:visible!important;
-    -webkit-overflow-scrolling:touch;
-  }
+  #season.active>.card{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(7,10,9,.94)!important;transform:translateZ(0);backface-visibility:hidden}
+  #season .season-players-panel,#season .table-wrap,#season .standings{backface-visibility:hidden;transform:translateZ(0)}
+  #season .table-wrap{overflow-x:hidden!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch}
 }
 
-/* v224 TEST · Home: corte diagonal entre texto e imagen + sombra hacia la fotografía.
-   Solo se aplica a los tres botones originales; Juegos conserva su aspecto actual. */
-#home .home-options>.home-image-card:not(#homeGamesBtn){
-  --home-cut:#111820;
+/* v224 TEST · Home: los cuatro accesos usan el mismo diseño recto. */
+#home .home-image-card .home-card-image:before{clip-path:none!important;filter:none!important;left:0!important;width:28px!important;background:linear-gradient(90deg,rgba(10,14,12,.72),rgba(10,14,12,0))!important}
+#home .home-options>.redline.home-image-card .home-card-image:before{background:linear-gradient(90deg,rgba(120,8,16,.76),rgba(120,8,16,0))!important}
+#home .home-options>.purpleline.home-image-card .home-card-image:before{background:linear-gradient(90deg,rgba(71,30,78,.76),rgba(71,30,78,0))!important}
+#home .home-options>.goldline.home-image-card .home-card-image:before{background:linear-gradient(90deg,rgba(130,91,14,.76),rgba(130,91,14,0))!important}
+#homeGamesBtn .home-card-image:before{background:linear-gradient(90deg,rgba(17,24,20,.78),rgba(17,24,20,0))!important}
+#homeGamesBtn .games-home-art:before,#homeGamesBtn .games-home-art:after,#homeGamesBtn .games-home-vs{display:none!important}
+#homeGamesBtn .games-home-art{background:linear-gradient(145deg,#22352a,#0e1812)!important}
+
+/* Escritorio: 2x2 centrado. */
+@media(min-width:901px){
+  #home .home-options{grid-template-columns:repeat(2,minmax(0,1fr))!important;width:min(880px,100%)!important;margin-left:auto!important;margin-right:auto!important}
 }
-#home .home-options>.redline.home-image-card:not(#homeGamesBtn){--home-cut:#7b0b12}
-#home .home-options>.purpleline.home-image-card:not(#homeGamesBtn){--home-cut:#4a2454}
-#home .home-options>.goldline.home-image-card:not(#homeGamesBtn){--home-cut:#8b6415}
-#home .home-options>.home-image-card:not(#homeGamesBtn) .home-card-image:before{
-  content:""!important;
-  position:absolute!important;
-  top:0!important;
-  bottom:0!important;
-  left:-22px!important;
-  width:66px!important;
-  height:auto!important;
-  z-index:3!important;
-  pointer-events:none!important;
-  background:linear-gradient(90deg,var(--home-cut) 0 52%,rgba(0,0,0,.48) 72%,rgba(0,0,0,0) 100%)!important;
-  clip-path:polygon(0 0,58% 0,100% 100%,0 100%)!important;
-  filter:drop-shadow(11px 0 10px rgba(0,0,0,.48));
-}
-@media(max-width:700px){
-  #home .home-options>.home-image-card:not(#homeGamesBtn) .home-card-image:before{
-    left:-18px!important;
-    width:54px!important;
-    filter:drop-shadow(8px 0 8px rgba(0,0,0,.46));
-  }
-}
+
+/* Modo Entrenador: cabecera manual + Crear sala en la misma línea. */
+#coachLobby .coach-draft-intro{display:none!important}
+#coachLobby .coach-manual-label{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;column-gap:14px!important;align-items:center!important}
+#coachLobby .coach-manual-label>span{grid-column:1!important}
+#coachLobby .coach-manual-label>#coachCreateRoomBtn{grid-column:2!important;grid-row:1/3!important;align-self:center!important;justify-self:end!important;white-space:nowrap!important}
+#coachLobby .coach-setup-footer{display:none!important}
+.coach-limit-toast{position:fixed;z-index:200000;padding:7px 10px;border-radius:9px;background:rgba(10,13,16,.94);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:850;box-shadow:0 8px 24px rgba(0,0,0,.38);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .14s ease,transform .14s ease}
+.coach-limit-toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:700px){#coachLobby .coach-manual-label{grid-template-columns:1fr auto!important;column-gap:8px!important}#coachLobby .coach-manual-label>#coachCreateRoomBtn{padding:10px 11px!important;font-size:11px!important}.coach-limit-toast{font-size:10px}}
+
+/* Reproductor más compacto. */
+.music-controls{gap:5px!important;padding:6px 7px!important}
+.music-controls .music-transport{gap:1px!important}
+.music-controls:not(.compact) .music-now-playing{width:150px!important;max-width:150px!important;min-width:0!important}
+.music-controls:not(.compact) #musicVolume{width:62px!important;margin-left:0!important}
+.music-controls.compact{max-width:155px!important;width:auto!important}
+.music-controls.compact .music-now-playing{width:78px!important;max-width:78px!important;min-width:0!important}
+.music-controls.compact #musicPrev{display:none!important}
+.music-controls.compact #musicNext{display:inline-flex!important}
+.music-controls.compact #musicVolume,.music-controls.compact .music-volume-label,.music-controls.compact .music-now-label,.music-controls.compact .music-track-artist{display:none!important}
+.music-controls.compact .music-track-title{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
 
 @media(max-width:700px){.patx-match-gallery-stage{width:100vw;height:100dvh}.patx-match-gallery-image{max-width:100vw;max-height:100dvh;border-radius:0}.patx-match-gallery-close{top:10px;right:10px;width:39px;height:39px;font-size:26px}.patx-match-gallery-prev,.patx-match-gallery-next{width:38px;height:50px;font-size:31px}.patx-match-gallery-prev{left:6px}.patx-match-gallery-next{right:6px}}
