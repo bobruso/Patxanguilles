@@ -1,6 +1,6 @@
 # Publicación de cartas de jugadores en GitHub Pages
 
-Estado: diseño preparado; publicación y migración masiva **no implementadas**.
+Estado: migración puntual completada para 24 cartas activas. La automatización futura está preparada en local, pero su despliegue requiere autorización separada y el secreto `GITHUB_TOKEN`.
 
 ## Flujo actual verificado
 
@@ -8,11 +8,11 @@ Estado: diseño preparado; publicación y migración masiva **no implementadas**
 2. El jugador abre «Crear carta» desde el perfil. El navegador envía un `FormData` a la Edge Function `generate-player-card` con `player_id`, selfie, nombre, apodo, altura, peso y posición.
 3. La respuesta contiene `generation_id`, `card_url`, `attempts_used` y `remaining`. El primer intento se guarda automáticamente llamando de nuevo a la misma función con `action=save`; los intentos posteriores sólo se guardan cuando el usuario pulsa «Guardar carta».
 4. La función `get_card_generation_usage(p_player_id)` informa de intentos y estado de procesamiento.
-5. El código fuente de `generate-player-card` y las migraciones que crean su tabla de generaciones no están en este repositorio. Por tanto, el nombre de esa tabla, el campo de la URL temporal y el proveedor que genera la imagen deben confirmarse al descargar la función antes de implementar.
-6. Una consulta pública de sólo lectura confirmó que `players.card_url` apunta actualmente a objetos del bucket público `player-photos`, con dos familias de rutas:
+5. El código fuente desplegado de `generate-player-card` v13 ya se recuperó en `supabase/functions/generate-player-card/index.ts`. Usa `card_generations.image_url`, el bucket `player-photos` y OpenAI `gpt-image-2`.
+6. Antes de la migración, `players.card_url` apuntaba a objetos del bucket público `player-photos`, con dos familias de rutas:
    - `generated/{player_id}/card-{generation_id}.png`
    - `cards/{player_id}/{timestamp}.png` para reemplazos manuales del administrador.
-7. El frontend también permite que un administrador suba una carta directamente a `player-photos/cards/{player_id}/{timestamp}.{ext}` y actualice `players.card_url`.
+7. Tras la migración, las 24 cartas activas apuntan a `https://patxanguillesantifeixistes.es/player-cards/...`; los originales permanecen en Supabase para rollback.
 
 ### Consumidores de `players.card_url`
 
@@ -35,7 +35,7 @@ Ruta canónica propuesta:
 player-cards/{card_id}.jpg
 ```
 
-`card_id` debe ser la clave primaria estable de la generación (el actual `generation_id` si ésa es su clave real). No se usan apodos ni nombres. Cada generación tiene una ruta inmutable; repetir la misma publicación usa exactamente la misma ruta y no crea duplicados.
+Las cartas generadas usan la clave primaria estable `generation_id`; las administrativas, que no tienen generación, usan `player_id` con prefijo explícito. No se usan apodos, nombres ni timestamps públicos. Cada generación tiene una ruta inmutable; repetir la publicación usa exactamente la misma ruta y no crea duplicados.
 
 URL pública:
 
@@ -86,12 +86,6 @@ En Supabase Dashboard → Edge Functions → Secrets, o mediante `supabase secre
 
 ```text
 GITHUB_TOKEN=<fine-grained token o token de instalación de GitHub App>
-GITHUB_OWNER=bobruso
-GITHUB_REPO=Patxanguilles
-GITHUB_BRANCH=main
-GITHUB_PAGES_BASE_URL=https://patxanguillesantifeixistes.es
-GITHUB_CARD_PATH_PREFIX=player-cards
-GITHUB_API_VERSION=2026-03-10
 ```
 
 Permisos mínimos del token: acceso únicamente al repositorio `bobruso/Patxanguilles` y `Contents: Read and write`. No conceder `Workflows: write`, administración ni acceso a otros repositorios. Nunca añadir el token a `index.html`, variables públicas, commits o respuestas/logs de la función. A largo plazo, una GitHub App de instalación limitada al repositorio facilita rotación y tokens de corta duración.
@@ -110,9 +104,9 @@ Los dos álbumes cumplen el objetivo principal:
 
 El álbum integrado ya usa `loading="lazy"`. El independiente queda también marcado como lazy sin cambiar su aspecto. Consultar `card_url` para todas las filas transfiere sólo texto pequeño; no descarga los bytes de las imágenes.
 
-### Optimización pendiente fuera del álbum
+### Precarga intencionada del draft
 
-`preloadCoachDraftCards` sí crea una cola con todas las cartas de los jugadores seleccionados y las descarga con dos workers al entrar en el draft. Conviene limitarla a la carta que puede mostrarse a continuación o a una ventana pequeña. Ese cambio debe probarse aparte porque afecta al timing visual del fichaje y de la presentación final.
+`preloadCoachDraftCards` crea una cola con las cartas de los jugadores seleccionados y las descarga con dos workers al entrar en el draft. Se conserva sin cambios: esta precarga es necesaria para que la generación posterior del vídeo de alineaciones sea inmediata.
 
 ## Orden de implantación recomendado
 
@@ -126,10 +120,9 @@ El álbum integrado ya usa `loading="lazy"`. El independiente queda también mar
 
 ## Riesgos abiertos
 
-- El código backend ausente impide validar todavía la tabla y las políticas exactas.
+- El publicador automático todavía no está desplegado y `GITHUB_TOKEN` todavía debe configurarse manualmente.
 - Un commit por carta es adecuado para el volumen actual, pero no para lotes grandes; una migración masiva debería agrupar cambios con Git Data API o un workflow controlado.
 - GitHub Pages tiene latencia de despliegue y caché: no actualizar `players.card_url` hasta confirmar la URL pública.
 - La rama protegida puede rechazar escrituras directas; en ese caso se necesita una rama/bot y workflow de publicación, no más permisos en el token.
 - `players.card_url` es actualmente legible públicamente. Las cartas publicadas en Pages también serán públicas.
 - La autenticación actual de `generate-player-card` desde el frontend usa la publishable key como bearer, no un JWT de usuario. La futura publicación no debe heredar esa señal como autorización suficiente.
-

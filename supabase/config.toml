@@ -1,0 +1,5 @@
+[functions.generate-player-card]
+verify_jwt = true
+
+[functions.publish-player-card]
+verify_jwt = true
