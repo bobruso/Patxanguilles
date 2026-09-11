@@ -547,7 +547,7 @@ function render(){
     const b=document.createElement('button');
     b.className=`slot slot-${i+1}`;
     b.title=`Ver carta de ${item.nickname}`;
-    b.innerHTML=`<img src="${escapeHtml(item.card_url)}" alt="Carta de ${escapeHtml(item.nickname)}">`;
+    b.innerHTML=`<img src="${escapeHtml(item.card_url)}" alt="Carta de ${escapeHtml(item.nickname)}" loading="lazy" decoding="async">`;
     b.onclick=()=>openCard(item.card_url,item.nickname);
     page.appendChild(b);
   });

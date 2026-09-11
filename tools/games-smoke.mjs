@@ -64,16 +64,33 @@ if(!/homeGamesBtn/.test(integration))fail('patx-v214.js: falta integración del 
 
 const hub=await readFile(path.join(ROOT,'juegos/index.html'),'utf8');
 if(!/href=["']memoria-vintage\.html["']/.test(hub))fail('Hub: Memoria Vintage no está enlazado');else ok('Hub: Memoria Vintage disponible');
-if(/href=["']cabezones\/["']/.test(hub)||/href=["']quien-es-vintage\.html["']/.test(hub))fail('Hub: hay juegos en desarrollo todavía clicables');else ok('Hub: juegos en desarrollo bloqueados');
-if((hub.match(/PRÓXIMAMENTE/g)||[]).length<2)fail('Hub: faltan etiquetas PRÓXIMAMENTE');else ok('Hub: próximos juegos etiquetados');
+if(!/href=["'](?:\.\/)?quien-es-vintage\.html["']/.test(hub))fail('Hub: ¿Quién es? no está enlazado');else ok('Hub: ¿Quién es? disponible');
+if(/href=["'](?:\.\/)?cabezones\/["']/.test(hub))fail('Hub: Patxanguilles Heads todavía es clicable');else ok('Hub: Patxanguilles Heads permanece bloqueado');
+if((hub.match(/PRÓXIMAMENTE/g)||[]).length<1)fail('Hub: falta la etiqueta PRÓXIMAMENTE del juego bloqueado');else ok('Hub: juego bloqueado etiquetado como PRÓXIMAMENTE');
 
 const memory=await readFile(path.join(ROOT,'juegos/memoria-vintage.html'),'utf8');
-if(!/const\s+PAIRS\s*=\s*10\b/.test(memory))fail('Memoria Vintage no está configurado a 10 parejas');else ok('Memoria Vintage: 10 parejas confirmadas');
-if(!/extractOrientationFromPost/.test(memory)||!/width/.test(memory)||!/height/.test(memory))fail('Memoria Vintage: falta clasificación de orientación por metadatos del cromo');else ok('Memoria Vintage: orientación uniforme basada en metadatos');
-if(!/board \$\{currentOrientation\}/.test(memory))fail('Memoria Vintage: el tablero no adapta la proporción al formato');else ok('Memoria Vintage: tablero adapta horizontal/vertical');
+const memoryCore=await readFile(path.join(ROOT,'juegos/memoria-vintage-v17-core.js'),'utf8');
+const memoryGame=await readFile(path.join(ROOT,'juegos/memoria-vintage-v17-game.js'),'utf8');
+if(!/let\s+PAIRS\s*=\s*10\b/.test(memoryCore)||!/PAIRS\s*=\s*isMobile\(\)\s*\?\s*6\s*:\s*10/.test(memoryCore))fail('Memoria Vintage no conserva 6 parejas en móvil y 10 en escritorio');else ok('Memoria Vintage: 6 parejas móvil / 10 escritorio confirmadas');
+if(!/extractOrientation\(/.test(memoryCore)||!/width/.test(memoryCore)||!/height/.test(memoryCore))fail('Memoria Vintage: falta clasificación de orientación por metadatos del cromo');else ok('Memoria Vintage: orientación uniforme basada en metadatos');
+if(!/currentOrientation===['"]landscape['"]/.test(memoryGame)||!/renderBoard\(/.test(memoryGame))fail('Memoria Vintage: el tablero no adapta la proporción al formato');else ok('Memoria Vintage: tablero adapta horizontal/vertical');
 
-const quiz=await readFile(path.join(ROOT,'juegos/quien-es-vintage.html'),'utf8');
-if(!/ROUNDS\s*=\s*10\s*,\s*CHOICES\s*=\s*6/.test(quiz))fail('¿Quién es? no está configurado a 10 rondas y 6 respuestas');else ok('¿Quién es?: archivo de desarrollo conserva 10 rondas y 6 respuestas');
+const quizGame=await readFile(path.join(ROOT,'juegos/quien-es-game.mjs'),'utf8');
+const quizCore=await readFile(path.join(ROOT,'juegos/quien-es-core.mjs'),'utf8');
+if(!/ROUNDS\s*=\s*10\b/.test(quizGame)||!/others\.slice\(0,5\)/.test(quizCore))fail('¿Quién es? no está configurado a 10 rondas y 6 respuestas');else ok('¿Quién es?: 10 rondas y 6 respuestas confirmadas');
+
+const quizCatalog=JSON.parse(await readFile(path.join(ROOT,'juegos/quien-es-data.json'),'utf8'));
+const quizCards=Array.isArray(quizCatalog)?quizCatalog:quizCatalog.cards;
+if(!Array.isArray(quizCards)||!quizCards.length){
+  fail('¿Quién es?: el catálogo no contiene cartas');
+}else{
+  const storagePrefix='supabase.co/storage/v1/object/public/vintage-cards';
+  const storageUrls=quizCards.flatMap(card=>[card.quiz_url,card.reveal_url]).filter(url=>String(url).includes(storagePrefix));
+  if(storageUrls.length)fail(`¿Quién es?: quedan ${storageUrls.length} URLs de Supabase Storage para quiz/reveal`);else ok('¿Quién es?: quiz/reveal ya no dependen de Supabase Storage');
+  const invalidLocalPaths=quizCards.flatMap(card=>[['quiz',card.quiz_url],['reveal',card.reveal_url]].map(([kind,url])=>({card,kind,url})))
+    .filter(({kind,url})=>!new RegExp(`^\\./vintage-cards/${kind}/[^/]+\\.jpg$`,'i').test(String(url)));
+  if(invalidLocalPaths.length)fail(`¿Quién es?: ${invalidLocalPaths.length} rutas quiz/reveal no son rutas JPG locales válidas`);else ok(`¿Quién es?: ${quizCards.length} cartas usan rutas locales de GitHub Pages`);
+}
 
 const heads=await readFile(path.join(ROOT,'juegos/cabezones/index.html'),'utf8');
 if(!/<canvas[^>]+id=["']game["']/i.test(heads))fail('Patxanguilles Heads: falta canvas de juego');else ok('Patxanguilles Heads: archivo de desarrollo conserva canvas');
