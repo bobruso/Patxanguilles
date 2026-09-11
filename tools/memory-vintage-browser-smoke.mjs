@@ -111,7 +111,10 @@ const additionalId=manifest.assets.find(asset=>!quizIds.has(asset.id))?.id;
 if(catalog.length!==704)throw new Error(`Supabase devolvió ${catalog.length} registros; se esperaban 704`);
 if(!additionalId)throw new Error('No hay carta adicional a Quién es para la prueba');
 
-const {server,baseUrl}=await localServer();
+const requestedBaseUrl=process.argv[2]?.replace(/\/$/,'');
+const local=requestedBaseUrl?null:await localServer();
+const server=local?.server||null;
+const baseUrl=requestedBaseUrl||local.baseUrl;
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'});
 try{
   await runViewport(browser,baseUrl,catalog,{width:1280,height:900},20,'Escritorio',additionalId);
@@ -119,5 +122,5 @@ try{
   console.log('Smoke browser de Memoria Vintage superado.');
 }finally{
   await browser.close();
-  await new Promise(resolve=>server.close(resolve));
+  if(server)await new Promise(resolve=>server.close(resolve));
 }
