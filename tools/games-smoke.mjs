@@ -72,8 +72,16 @@ const memory=await readFile(path.join(ROOT,'juegos/memoria-vintage.html'),'utf8'
 const memoryCore=await readFile(path.join(ROOT,'juegos/memoria-vintage-v17-core.js'),'utf8');
 const memoryGame=await readFile(path.join(ROOT,'juegos/memoria-vintage-v17-game.js'),'utf8');
 if(!/let\s+PAIRS\s*=\s*10\b/.test(memoryCore)||!/PAIRS\s*=\s*isMobile\(\)\s*\?\s*6\s*:\s*10/.test(memoryCore))fail('Memoria Vintage no conserva 6 parejas en móvil y 10 en escritorio');else ok('Memoria Vintage: 6 parejas móvil / 10 escritorio confirmadas');
-if(!/extractOrientation\(/.test(memoryCore)||!/width/.test(memoryCore)||!/height/.test(memoryCore))fail('Memoria Vintage: falta clasificación de orientación por metadatos del cromo');else ok('Memoria Vintage: orientación uniforme basada en metadatos');
+if(!/inspectImage\(/.test(memoryCore)||!/naturalWidth/.test(memoryCore)||!/naturalHeight/.test(memoryCore))fail('Memoria Vintage: falta clasificación de orientación usando la copia local');else ok('Memoria Vintage: orientación uniforme basada en dimensiones del reveal local');
 if(!/currentOrientation===['"]landscape['"]/.test(memoryGame)||!/renderBoard\(/.test(memoryGame))fail('Memoria Vintage: el tablero no adapta la proporción al formato');else ok('Memoria Vintage: tablero adapta horizontal/vertical');
+const memoryRuntime=`${memory}\n${memoryCore}\n${memoryGame}`;
+if(/odioeternoalfutbolmoderno\.es/i.test(memoryRuntime))fail('Memoria Vintage: queda una dependencia runtime de Odio Eterno');else ok('Memoria Vintage: sin peticiones runtime a Odio Eterno');
+if(/supabase\.co\/storage\/.*vintage-cards/i.test(memoryRuntime))fail('Memoria Vintage: quedan imágenes runtime de Supabase Storage');else ok('Memoria Vintage: sin imágenes runtime de Supabase Storage');
+if(/source_image_url/.test(memoryRuntime))fail('Memoria Vintage: todavía usa source_image_url');else ok('Memoria Vintage: no usa source_image_url');
+if(!/\.\/vintage-cards\/reveal\/\$\{card\.slug\}-\$\{String\(card\.id\)\.slice\(0,8\)\}\.jpg/.test(memoryCore))fail('Memoria Vintage: no construye la ruta reveal local estable');else ok('Memoria Vintage: construye rutas reveal locales por slug + UUID corto');
+const memoryManifest=JSON.parse(await readFile(path.join(ROOT,'juegos/memory-vintage-assets.json'),'utf8'));
+if(!Array.isArray(memoryManifest.assets)||!memoryManifest.assets.length)fail('Memoria Vintage: manifiesto local vacío o inválido');else ok(`Memoria Vintage: manifiesto local con ${memoryManifest.assets.length} cromos validados`);
+if(!/memory-vintage-assets\.json/.test(memoryCore))fail('Memoria Vintage: no cruza el catálogo maestro con el manifiesto local');else ok('Memoria Vintage: cruza vintage_cards con el manifiesto local');
 
 const quizGame=await readFile(path.join(ROOT,'juegos/quien-es-game.mjs'),'utf8');
 const quizCore=await readFile(path.join(ROOT,'juegos/quien-es-core.mjs'),'utf8');

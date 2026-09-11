@@ -170,7 +170,7 @@ function renderBoard(){
     <button class="memory-card ${currentOrientation==='landscape'?'horizontal':''}" data-pair="${card.pairIndex}" onclick="flipCard(this)">
       <span class="card-inner">
         <span class="face back-face"></span>
-        <span class="face front-face"><img src="${esc(card.source_image_url)}" alt="Cromo de ${esc(card.player_name)}" draggable="false"></span>
+        <span class="face front-face"><img src="${esc(card.image_url)}" alt="Cromo de ${esc(card.player_name)}" draggable="false"></span>
       </span>
     </button>`).join('');
   requestAnimationFrame(fitBoard);
@@ -189,8 +189,6 @@ async function newGame(){
     // Elegimos orientación al azar, pero alternamos cuando sea posible para que ambas versiones aparezcan con frecuencia.
     const lastOrientation=sessionStorage.getItem('memoryLastOrientation');
     currentOrientation=lastOrientation==='portrait'?'landscape':lastOrientation==='landscape'?'portrait':(Math.random()<.5?'portrait':'landscape');
-    if(pools[currentOrientation].length<PAIRS)currentOrientation=currentOrientation==='portrait'?'landscape':'portrait';
-
     const chosen=await selectHealthyCards(currentOrientation);
     previousIds=new Set(chosen.map(c=>String(c.id)));
     sessionStorage.setItem('memoryPreviousCards',JSON.stringify([...previousIds]));

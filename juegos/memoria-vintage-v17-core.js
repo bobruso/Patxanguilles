@@ -1,8 +1,6 @@
 const SUPABASE_URL='https://cnnhstlguewrxjihhlqc.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
 const ACCOUNT_AUTH_URL=`${SUPABASE_URL}/functions/v1/account-auth`;
-const WP_API='https://odioeternoalfutbolmoderno.es/wp-json/wp/v2/posts';
-const WP_CATEGORY=422,WP_PAGES=8;
 let PAIRS=10;
 let difficultyMode='hard';
 function setModeForDevice(){
@@ -119,7 +117,7 @@ const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
 });
 
 let session=null,profile=null;
-let cardsByPostId=new Map(),pools={portrait:[],landscape:[]},catalogLoaded=false;
+let catalogCards=[],pools={portrait:[],landscape:[]},catalogLoaded=false;
 let deck=[],currentOrientation='portrait';
 let firstCard=null,secondCard=null,locked=false,finished=false;
 let matched=0,moves=0,errors=0,startedAt=null,timerId=null;
@@ -241,48 +239,38 @@ async function completeRegistration(){
 }
 function resetRegistration(){registrationState=null;registerCode.value='';registerStep1.style.display='block';registerStep2.style.display='none'}
 
-function extractOrientation(post){
-  const html=post?.content?.rendered||'';if(!html)return null;
-  const doc=new DOMParser().parseFromString(html,'text/html');
-  const img=doc.querySelector('img'),w=Number(img?.getAttribute('width')),h=Number(img?.getAttribute('height'));
-  if(!(w>0&&h>0)||w===h)return null;
-  return h>w?'portrait':'landscape';
+function localRevealUrl(card){
+  return `./vintage-cards/reveal/${card.slug}-${String(card.id).slice(0,8)}.jpg`;
 }
 
-function imageLoads(url,timeout=7000){
+function inspectImage(url,timeout=7000){
   return new Promise(resolve=>{
     const img=new Image();let done=false;
-    const finish=ok=>{if(done)return;done=true;clearTimeout(t);resolve(ok)}
-    const t=setTimeout(()=>finish(false),timeout);
-    img.onload=()=>finish(img.naturalWidth>0&&img.naturalHeight>0);
-    img.onerror=()=>finish(false);
+    const finish=result=>{if(done)return;done=true;clearTimeout(t);resolve(result)}
+    const t=setTimeout(()=>finish(null),timeout);
+    img.onload=()=>finish(img.naturalWidth>0&&img.naturalHeight>0&&img.naturalWidth!==img.naturalHeight
+      ?(img.naturalHeight>img.naturalWidth?'portrait':'landscape')
+      :null);
+    img.onerror=()=>finish(null);
     img.src=url;
   });
 }
 
 async function loadCatalog(){
   if(catalogLoaded)return;
-  const {data,error}=await sb.from('vintage_cards').select('id,player_name,source_image_url,raw_meta')
-    .eq('enabled',true).eq('parse_status','ready').not('source_image_url','is',null);
+  const [{data,error},manifestResponse]=await Promise.all([
+    sb.from('vintage_cards').select('id,slug,player_name').eq('enabled',true).eq('parse_status','ready'),
+    fetch('./memory-vintage-assets.json',{cache:'no-cache'})
+  ]);
   if(error)throw error;
-  const cards=(data||[]).filter(c=>c.player_name&&c.source_image_url&&Number(c?.raw_meta?.wp_post_id));
-  cardsByPostId=new Map(cards.map(c=>[Number(c.raw_meta.wp_post_id),c]));
-
-  const orientationByPost=new Map();
-  for(const page of shuffle(Array.from({length:WP_PAGES},(_,i)=>i+1))){
-    const r=await fetch(`${WP_API}?categories=${WP_CATEGORY}&per_page=100&page=${page}&_fields=id,content`,{cache:'force-cache'});
-    if(!r.ok)continue;
-    for(const post of await r.json()){
-      const o=extractOrientation(post);
-      if(o)orientationByPost.set(Number(post.id),o);
-    }
-  }
-
+  if(!manifestResponse.ok)throw new Error(`No se pudo cargar el manifiesto local de cromos (${manifestResponse.status}).`);
+  const manifest=await manifestResponse.json();
+  const orientationById=new Map((manifest.assets||[]).map(asset=>[String(asset.id),asset.orientation]));
+  catalogCards=(data||[])
+    .filter(c=>c.id&&c.slug&&c.player_name&&['portrait','landscape'].includes(orientationById.get(String(c.id))))
+    .map(c=>({...c,orientation:orientationById.get(String(c.id)),image_url:localRevealUrl(c)}));
   pools={portrait:[],landscape:[]};
-  for(const [postId,o] of orientationByPost){
-    const c=cardsByPostId.get(postId);
-    if(c)pools[o].push(c);
-  }
+  for(const card of catalogCards)pools[card.orientation].push(card);
   catalogLoaded=true;
 }
 
@@ -291,14 +279,14 @@ async function selectHealthyCards(orientation){
   const fallback=shuffle(pools[orientation].filter(c=>previousIds.has(String(c.id))));
   const candidates=[...base,...fallback];
   const good=[];
-
-  // comprobamos de verdad que la imagen abre antes de meterla en la partida
   for(let i=0;i<candidates.length&&good.length<PAIRS;i+=8){
     const batch=candidates.slice(i,i+8);
-    const checks=await Promise.all(batch.map(async c=>({c,ok:await imageLoads(c.source_image_url)})));
-    for(const x of checks)if(x.ok&&good.length<PAIRS)good.push(x.c);
+    const checks=await Promise.all(batch.map(async card=>({card,orientation:await inspectImage(card.image_url)})));
+    for(const result of checks){
+      if(result.orientation===orientation&&good.length<PAIRS)good.push(result.card);
+    }
   }
-  if(good.length<PAIRS)throw new Error(`No hay suficientes cromos ${orientation==='portrait'?'verticales':'horizontales'} con imagen disponible.`);
+  if(good.length<PAIRS)throw new Error(`No hay suficientes cromos ${orientation==='portrait'?'verticales':'horizontales'} con imagen local disponible.`);
   return good;
 }
 
