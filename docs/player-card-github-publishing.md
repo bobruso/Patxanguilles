@@ -1,6 +1,6 @@
 # Publicación de cartas de jugadores en GitHub Pages
 
-Estado: migración puntual completada para 24 cartas activas. La automatización futura está preparada en local, pero su despliegue requiere autorización separada y el secreto `GITHUB_TOKEN`.
+Estado: migración puntual completada para 24 cartas activas y automatización futura desplegada. `publish-player-card` v1 y `generate-player-card` v15 están activos con verificación JWT; `GITHUB_TOKEN` está configurado en Supabase.
 
 ## Flujo actual verificado
 
@@ -120,7 +120,7 @@ El álbum integrado ya usa `loading="lazy"`. El independiente queda también mar
 
 ## Riesgos abiertos
 
-- El publicador automático todavía no está desplegado y `GITHUB_TOKEN` todavía debe configurarse manualmente.
+- El token fine-grained caduca según el plazo elegido en GitHub. Debe rotarse antes de su vencimiento para que la publicación automática no se interrumpa.
 - Un commit por carta es adecuado para el volumen actual, pero no para lotes grandes; una migración masiva debería agrupar cambios con Git Data API o un workflow controlado.
 - GitHub Pages tiene latencia de despliegue y caché: no actualizar `players.card_url` hasta confirmar la URL pública.
 - La rama protegida puede rechazar escrituras directas; en ese caso se necesita una rama/bot y workflow de publicación, no más permisos en el token.

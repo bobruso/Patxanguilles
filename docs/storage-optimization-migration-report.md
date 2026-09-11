@@ -94,15 +94,19 @@ Debe ser un token fine-grained limitado exclusivamente a `bobruso/Patxanguilles`
 
 Álbum, perfil, draft, presentación de alineaciones y bienvenida leen únicamente `players.card_url`; no requieren cambios de arquitectura. La precarga `preloadCoachDraftCards` se conserva deliberadamente sin cambios porque alimenta la generación inmediata del vídeo de alineaciones. El álbum mantiene su paginación actual de nueve cartas.
 
-## Validaciones y trabajo pendiente
+## Validaciones finales
 
 Completado: publicación y hash de 24 cartas, migración de esquema, actualización transaccional de 24 URLs, metadatos de 19 generaciones, creación/verificación de 24 derivados web, inventario de Storage y advisors.
 
-Pendiente de una autorización separada para automatización futura:
+La automatización futura también quedó activada tras la autorización específica del propietario:
 
-1. Configurar `GITHUB_TOKEN` con alcance mínimo.
-2. Desplegar `publish-player-card` y la versión adaptada de `generate-player-card`. El intento de despliegue se detuvo porque activar exportaciones futuras a GitHub excede la autorización de la migración puntual.
-3. Probar una generación nueva tras el despliegue; consume un intento y coste de OpenAI y requiere elegir un jugador de prueba.
+1. `GITHUB_TOKEN` configurado manualmente en Supabase con alcance limitado al repositorio.
+2. `publish-player-card` v1 desplegado y activo con `verify_jwt=true`.
+3. `generate-player-card` v15 desplegado y activo con `verify_jwt=true`; genera JPEG opaco Q84 y publica al guardar.
+4. Prueba idempotente realizada con la generación 22: respuesta HTTP 200, URL esperada de Pages, cero intentos de publicación añadidos y ningún consumo de OpenAI.
+5. El código fuente leído de ambas funciones desplegadas coincide exactamente con los archivos versionados.
+
+Queda como prueba opcional crear una carta nueva de extremo a extremo. Esa prueba consumiría un intento real y coste de OpenAI, por lo que no se ejecutó automáticamente.
 
 Los advisors no atribuyen avisos nuevos a `complete_card_publication`. Mantienen avisos preexistentes del proyecto sobre funciones `SECURITY DEFINER`, políticas RLS, claves foráneas sin índice y protección de contraseñas filtradas; deben tratarse en una revisión de seguridad separada.
 
