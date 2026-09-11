@@ -1,6 +1,6 @@
 # Publicación de cartas de jugadores en GitHub Pages
 
-Estado: migración puntual completada para 24 cartas activas y automatización futura desplegada. `publish-player-card` v1 y `generate-player-card` v15 están activos con verificación JWT; `GITHUB_TOKEN` está configurado en Supabase.
+Estado: migración puntual completada para 24 cartas activas y automatización futura desplegada. `publish-player-card` v2 y `generate-player-card` v15 están activos con verificación JWT; `GITHUB_TOKEN` está configurado en Supabase.
 
 ## Flujo actual verificado
 

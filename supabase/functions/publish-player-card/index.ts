@@ -99,7 +99,7 @@ async function githubRequest(token: string, path: string, init: RequestInit = {}
 }
 
 async function waitForPages(url: string, expectedSha256: string) {
-  for (let attempt = 0; attempt < 8; attempt += 1) {
+  for (let attempt = 0; attempt < 10; attempt += 1) {
     const response = await fetch(`${url}?v=${expectedSha256}`, { cache: "no-store" });
     if (response.ok) {
       const bytes = new Uint8Array(await response.arrayBuffer());

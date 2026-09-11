@@ -54,7 +54,7 @@ Las 24 cartas activas son completamente opacas; ninguna necesitó PNG. Las carta
 - URLs activas de carta en GitHub Pages: **24**; URLs activas de carta restantes en Supabase: **0**.
 - Tráfico normal de cartas retirado de Supabase: **60,80 MiB** por descarga completa del conjunto activo original.
 - Generaciones activas marcadas como `published`: **19**; generaciones históricas conservadas como `generated`: **16**.
-- Storage después: **111 objetos**, 198.759.353 bytes. El incremento de 24 objetos/4.715.566 bytes corresponde a los derivados de foto web.
+- Storage después de la migración: **111 objetos**, 198.759.353 bytes. El incremento de 24 objetos/4.715.566 bytes corresponde a los derivados de foto web.
 - Objetos originales preservados: **87/87**, comprobados por nombre tras la migración; backup local íntegro disponible.
 - Fallos de publicación o verificación: **0**.
 
@@ -101,12 +101,19 @@ Completado: publicación y hash de 24 cartas, migración de esquema, actualizaci
 La automatización futura también quedó activada tras la autorización específica del propietario:
 
 1. `GITHUB_TOKEN` configurado manualmente en Supabase con alcance limitado al repositorio.
-2. `publish-player-card` v1 desplegado y activo con `verify_jwt=true`.
+2. `publish-player-card` v2 desplegado y activo con `verify_jwt=true`.
 3. `generate-player-card` v15 desplegado y activo con `verify_jwt=true`; genera JPEG opaco Q84 y publica al guardar.
 4. Prueba idempotente realizada con la generación 22: respuesta HTTP 200, URL esperada de Pages, cero intentos de publicación añadidos y ningún consumo de OpenAI.
 5. El código fuente leído de ambas funciones desplegadas coincide exactamente con los archivos versionados.
 
-Queda como prueba opcional crear una carta nueva de extremo a extremo. Esa prueba consumiría un intento real y coste de OpenAI, por lo que no se ejecutó automáticamente.
+La prueba real de extremo a extremo se ejecutó después con Pau (jugador 32):
+
+- OpenAI generó la generación 40 como JPEG; consumió el primer intento y dejó dos disponibles.
+- El token escribió `player-cards/generation-40.jpg` en GitHub; GitHub Pages sirve 350.095 bytes con SHA-256 `d35e123876fa21d1e9b0154c3c98004afd8efe894ef7a7d88c67eaa6a6de009f`.
+- Pages tardó más que la ventana inicial de 54 segundos. El fallback preservó correctamente la carta anterior, el reintento no consumió OpenAI y finalizó la generación como `published`.
+- La carta administrativa original de Pau se restauró como carta visible después de validar el circuito; la generación 40 queda como evidencia histórica publicada.
+- Storage queda en **112 objetos** y **199.133.985 bytes** al conservar también el JPEG temporal de la prueba, conforme a la regla de no borrar originales.
+- La espera de Pages se amplió de 8 a 10 reintentos (máximo 82,5 segundos), por debajo del timeout de petición de 150 segundos documentado por Supabase.
 
 Los advisors no atribuyen avisos nuevos a `complete_card_publication`. Mantienen avisos preexistentes del proyecto sobre funciones `SECURITY DEFINER`, políticas RLS, claves foráneas sin índice y protección de contraseñas filtradas; deben tratarse en una revisión de seguridad separada.
 
