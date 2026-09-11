@@ -1,10 +1,9 @@
 {
-  "version": 225,
-  "label": "v225",
+  "version": 226,
+  "label": "v226",
   "title": "Nueva versión disponible",
   "summary": [
-    "Sistema de actualización automática y control de versiones.",
-    "Mejoras en la actualización de recursos dentro de la APK.",
-    "Correcciones y mejoras recientes de Patxanguilles."
+    "El aviso de nueva versión centra el flujo en completar la actualización.",
+    "Se elimina la salida secundaria que permitía continuar sin actualizar."
   ]
 }

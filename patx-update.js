@@ -68,9 +68,8 @@
       '.patx-update-summary{margin:0 auto 22px;padding-left:20px;max-width:420px;text-align:left;color:#d7dcda;line-height:1.45}',
       '.patx-update-summary li+li{margin-top:7px}',
       '.patx-update-actions{display:grid;gap:10px}',
-      '.patx-update-primary,.patx-update-history{min-height:46px;border-radius:10px;font:900 13px Arial,sans-serif;letter-spacing:.06em;cursor:pointer}',
+      '.patx-update-primary{min-height:46px;border-radius:10px;font:900 13px Arial,sans-serif;letter-spacing:.06em;cursor:pointer}',
       '.patx-update-primary{border:0;background:#b9141d;color:#fff}',
-      '.patx-update-history{border:1px solid rgba(255,255,255,.26);background:transparent;color:#fff}',
       '.patx-update-status{min-height:18px;margin:13px 0 0;color:#f0c9ca;font-size:12px;line-height:1.35}',
       '@media(max-width:600px){.patx-update-card{padding:25px 18px;border-radius:20px}}'
     ].join('');
@@ -151,7 +150,6 @@
       '<ul class="patx-update-summary">' + summary + '</ul>' +
       '<div class="patx-update-actions">' +
         '<button class="patx-update-primary" type="button">ACTUALIZAR</button>' +
-        '<button class="patx-update-history" type="button">Conoce los últimos cambios</button>' +
       '</div>' +
       '<p class="patx-update-status" aria-live="polite"></p>' +
     '</div>';
@@ -160,11 +158,6 @@
     const primary = modal.querySelector('.patx-update-primary');
     const status = modal.querySelector('.patx-update-status');
     primary.addEventListener('click', function () { updateNow(primary, status); });
-    modal.querySelector('.patx-update-history').addEventListener('click', function () {
-      modal.classList.remove('open');
-      continueToHome();
-      if (typeof window.show === 'function') window.show('changeHistory');
-    });
     modal.classList.add('open');
   }
 
