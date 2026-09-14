@@ -975,7 +975,7 @@ body{padding:6px;overflow:hidden}
 <div class="shell">
   <div class="topbar">
     <button id="backBtn" class="ghost">← Juegos</button>
-    <div class="brand"><small>Prototipo local · v20</small><strong>Patxanguilles Cabuts</strong></div>
+    <div class="brand"><small>Prototipo local · v21</small><strong>Patxanguilles Cabuts</strong></div>
     <div></div>
   </div>
 
@@ -1637,9 +1637,33 @@ UI.p1.onchange=()=>{
 UI.p2.onchange=updateNames;
 
 function optionName(select){return select.options[select.selectedIndex]?.text||'Jugador'}
+const CUSTOM_HEAD_SETS={
+  jorge:{
+    preview:'assets/jorge_idle.png',
+    idle:'jorge_idle',angry:'jorge_angry',happy:'jorge_happy',hurt:'jorge_hurt'
+  },
+  nacho:{
+    preview:'assets/nacho_idle.png',
+    idle:'nacho_idle',angry:'nacho_angry',happy:'nacho_happy',hurt:'nacho_hurt'
+  },
+  toni:{
+    preview:'assets/toni_idle.png',
+    idle:'toni_idle',angry:'toni_idle',happy:'toni_idle',hurt:'toni_idle'
+  }
+};
+
+function normalizedPlayerName(name){
+  return String(name||'').trim().toLowerCase();
+}
+
+function getCustomHeadSetByName(name){
+  return CUSTOM_HEAD_SETS[normalizedPlayerName(name)]||null;
+}
+
 function playerPreviewSource(select){
   const name=optionName(select);
-  if(name.trim().toLowerCase()==='jorge')return 'assets/jorge_idle.png';
+  const custom=getCustomHeadSetByName(name);
+  if(custom?.preview)return custom.preview;
   const data=selectedPlayer(select);
   return data?.photo_url||'';
 }
@@ -2794,6 +2818,13 @@ function preloadScene(){
   this.load.image('jorge_angry','assets/jorge_angry.png');
   this.load.image('jorge_happy','assets/jorge_happy.png');
   this.load.image('jorge_hurt','assets/jorge_hurt.png');
+
+  this.load.image('nacho_idle','assets/nacho_idle.png');
+  this.load.image('nacho_angry','assets/nacho_angry.png');
+  this.load.image('nacho_happy','assets/nacho_happy.png');
+  this.load.image('nacho_hurt','assets/nacho_hurt.png');
+
+  this.load.image('toni_idle','assets/toni_idle.png');
 }
 
 function createScene(){
@@ -3219,13 +3250,17 @@ function setPlayerHeadTexture(player,textureKey){
 }
 
 function configureCustomHead(player,name){
-  if(String(name).trim().toLowerCase()==='jorge'){
-    player.customHeadSet='jorge';
+  const key=normalizedPlayerName(name);
+  const set=CUSTOM_HEAD_SETS[key];
+
+  if(set){
+    player.customHeadSet=key;
     player.emotion='idle';
     player.emotionTimer=0;
-    setPlayerHeadTexture(player,'jorge_idle');
+    setPlayerHeadTexture(player,set.idle);
     return true;
   }
+
   player.customHeadSet=null;
   return false;
 }
@@ -3237,7 +3272,10 @@ function forceEmotion(player,emotion,duration=1.8){
 }
 
 function updateHeadExpression(player,dt){
-  if(player.customHeadSet!=='jorge')return;
+  if(!player.customHeadSet)return;
+
+  const set=CUSTOM_HEAD_SETS[player.customHeadSet];
+  if(!set)return;
 
   player.emotionTimer=Math.max(0,(player.emotionTimer||0)-dt);
 
@@ -3246,20 +3284,9 @@ function updateHeadExpression(player,dt){
     state=player.emotion;
   }else if(player.stun>0){
     state='hurt';
-  }else{
-    // Falta todavía el PNG específico CORRIENDO. Mientras tanto mantenemos
-    // la cabeza estándar y damos vida con bob/tilt desde el render.
-    state='idle';
   }
 
-  const key={
-    idle:'jorge_idle',
-    angry:'jorge_angry',
-    happy:'jorge_happy',
-    hurt:'jorge_hurt'
-  }[state] || 'jorge_idle';
-
-  setPlayerHeadTexture(player,key);
+  setPlayerHeadTexture(player,set[state]||set.idle);
 }
 
 async function applyPhoto(player,data,key){
@@ -4254,7 +4281,7 @@ function reassemblePlayer(p,instant=false){
 }
 
 function getAttachedHeadSize(p){
-  if(p.customHeadSet==='jorge')return 120;
+  if(p.customHeadSet)return 120;
   if(p.photoObject)return 86;
   return 86;
 }
@@ -6262,7 +6289,7 @@ function updatePlayerVisual(p,dt){
   if(p.photoObject){
     p.photoObject.setPosition(hx,hy);
     p.photoObject.setVisible(!p.headDetached);
-    if(p.customHeadSet==='jorge'){
+    if(p.customHeadSet){
       const running=onGround&&speed>.45;
       const airborne=!onGround;
       const headPulse=1 + (running?Math.abs(Math.sin(p.runPhase))*0.012:0);
