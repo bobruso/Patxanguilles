@@ -635,13 +635,347 @@ body{padding:6px;overflow:hidden}
   }
 }
 
+
+/* ===== V20 · MENÚS MÓVILES A PANTALLA COMPLETA ===== */
+@media(max-width:900px){
+
+  /* El overlay ya no deja margen alrededor de los menús principales. */
+  .overlay{
+    padding:0!important;
+    overflow:hidden!important;
+    place-items:stretch!important;
+  }
+
+  /* Estas tres pantallas ocupan TODO el área disponible.
+     No tienen scroll interno ni aspecto de tarjeta flotante. */
+  #menuMain,
+  #menuPlayers,
+  #menuSettings{
+    width:100%!important;
+    height:100%!important;
+    max-width:none!important;
+    max-height:none!important;
+    margin:0!important;
+    overflow:hidden!important;
+    scrollbar-width:none!important;
+  }
+
+  #menuMain::-webkit-scrollbar,
+  #menuPlayers::-webkit-scrollbar,
+  #menuSettings::-webkit-scrollbar{
+    display:none!important;
+  }
+
+  #menuMain.active,
+  #menuPlayers.active,
+  #menuSettings.active{
+    display:flex!important;
+    align-items:stretch!important;
+    justify-content:stretch!important;
+  }
+
+  #menuMain > .menu-card,
+  #menuPlayers > .menu-card,
+  #menuSettings > .menu-card{
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:
+      max(8px,env(safe-area-inset-top))
+      max(12px,env(safe-area-inset-right))
+      max(8px,env(safe-area-inset-bottom))
+      max(12px,env(safe-area-inset-left))!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    background:
+      radial-gradient(circle at 78% 42%,rgba(51,158,133,.14),transparent 24%),
+      radial-gradient(circle at 24% 68%,rgba(199,49,44,.10),transparent 30%),
+      linear-gradient(145deg,#0a100b,#050906)!important;
+    overflow:hidden!important;
+  }
+
+  /* ---------- PORTADA ---------- */
+  #menuMain > .menu-card{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:clamp(4px,1.5vh,12px)!important;
+  }
+
+  #menuMain .logo-placeholder{
+    flex:0 0 auto!important;
+    width:min(520px,72%)!important;
+    margin:0 auto clamp(5px,1.6vh,14px)!important;
+  }
+
+  #menuMain .logo-ball{
+    font-size:clamp(26px,7vh,46px)!important;
+  }
+
+  #menuMain .logo-shield{
+    margin-top:-7px!important;
+    padding:clamp(5px,1.2vh,9px) clamp(15px,3vw,24px)!important;
+  }
+
+  #menuMain .logo-shield strong{
+    font-size:clamp(20px,5vh,31px)!important;
+  }
+
+  #menuMain .logo-shield span{
+    font-size:clamp(12px,3.2vh,19px)!important;
+    margin-top:3px!important;
+  }
+
+  /* La nota del logo no aporta nada durante el juego y roba altura. */
+  #menuMain .logo-note{
+    display:none!important;
+  }
+
+  #menuMain .main-buttons{
+    flex:0 1 auto!important;
+    width:min(470px,66%)!important;
+    margin:0 auto!important;
+    gap:clamp(4px,1.15vh,8px)!important;
+  }
+
+  #menuMain .arcade-btn{
+    min-height:clamp(31px,8vh,43px)!important;
+    padding:4px 12px!important;
+    font-size:clamp(8px,2.1vh,11px)!important;
+  }
+
+  #menuMain .menu-small-note{
+    margin-top:2px!important;
+    min-height:0!important;
+    font-size:7px!important;
+  }
+
+  /* ---------- SELECTOR DE JUGADORES ---------- */
+  #menuPlayers > .menu-card{
+    display:flex!important;
+    flex-direction:column!important;
+  }
+
+  #menuPlayers .menu-banner{
+    flex:0 0 auto!important;
+    width:min(520px,64%)!important;
+    margin:0 auto clamp(3px,1vh,7px)!important;
+    padding:clamp(4px,.9vh,7px) 12px!important;
+    font-size:clamp(14px,3.6vh,20px)!important;
+  }
+
+  #menuPlayers .player-select-grid{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:clamp(6px,1.6vw,14px)!important;
+    align-items:center!important;
+    margin:0!important;
+  }
+
+  #menuPlayers .selector-card{
+    min-height:0!important;
+    padding:clamp(3px,.8vh,7px)!important;
+    border-top:0!important;
+    border-bottom:0!important;
+    background:rgba(255,255,255,.025)!important;
+    border-radius:10px!important;
+  }
+
+  #menuPlayers .selector-label{
+    font-size:clamp(7px,1.8vh,10px)!important;
+  }
+
+  #menuPlayers .selector-carousel{
+    grid-template-columns:clamp(30px,7vw,46px) 1fr clamp(30px,7vw,46px)!important;
+    gap:3px!important;
+    margin:clamp(2px,.7vh,5px) 0!important;
+  }
+
+  #menuPlayers .arrow-btn{
+    width:clamp(30px,7vw,46px)!important;
+    height:clamp(36px,10vh,54px)!important;
+    font-size:clamp(27px,7vh,38px)!important;
+  }
+
+  #menuPlayers .avatar-ring{
+    width:clamp(70px,20vh,112px)!important;
+    height:clamp(70px,20vh,112px)!important;
+    padding:4px!important;
+  }
+
+  #menuPlayers .selector-name{
+    font-size:clamp(11px,3vh,16px)!important;
+    margin-top:3px!important;
+  }
+
+  #menuPlayers .selector-sub{
+    font-size:clamp(6px,1.6vh,9px)!important;
+    margin-top:2px!important;
+  }
+
+  #menuPlayers .menu-actions{
+    flex:0 0 auto!important;
+    width:min(520px,70%)!important;
+    margin:clamp(3px,.9vh,7px) auto 0!important;
+    gap:7px!important;
+  }
+
+  #menuPlayers .menu-actions .arcade-btn{
+    min-height:clamp(30px,7vh,38px)!important;
+    padding:3px 10px!important;
+    font-size:clamp(8px,1.9vh,10px)!important;
+  }
+
+  /* ---------- MODALIDAD / CONFIGURACIÓN ---------- */
+  #menuSettings > .menu-card{
+    display:flex!important;
+    flex-direction:column!important;
+  }
+
+  #menuSettings .menu-banner{
+    flex:0 0 auto!important;
+    width:min(520px,64%)!important;
+    margin:0 auto clamp(3px,.8vh,6px)!important;
+    padding:clamp(4px,.8vh,7px) 12px!important;
+    font-size:clamp(14px,3.4vh,19px)!important;
+  }
+
+  #menuSettings .settings-grid{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    display:grid!important;
+    grid-template-columns:1.08fr .92fr!important;
+    gap:clamp(5px,1vw,9px)!important;
+    align-items:stretch!important;
+  }
+
+  #menuSettings .option-panel{
+    min-height:0!important;
+    overflow:hidden!important;
+    padding:clamp(4px,1vh,8px)!important;
+    border:1px solid rgba(255,255,255,.06)!important;
+    background:rgba(0,0,0,.16)!important;
+  }
+
+  #menuSettings .option-heading{
+    font-size:clamp(7px,1.6vh,9px)!important;
+    margin-bottom:clamp(2px,.5vh,4px)!important;
+  }
+
+  #menuSettings .option-carousel{
+    grid-template-columns:clamp(28px,5vw,40px) 1fr clamp(28px,5vw,40px)!important;
+    gap:2px!important;
+  }
+
+  #menuSettings .mini-arrow{
+    font-size:clamp(25px,6vh,34px)!important;
+  }
+
+  #menuSettings .stadium-preview{
+    height:clamp(70px,22vh,118px)!important;
+    border-width:3px!important;
+  }
+
+  #menuSettings .option-name{
+    font-size:clamp(9px,2.3vh,12px)!important;
+    margin-top:3px!important;
+  }
+
+  #menuSettings .option-desc{
+    min-height:0!important;
+    margin-top:1px!important;
+    font-size:clamp(5.5px,1.35vh,7px)!important;
+    line-height:1.15!important;
+  }
+
+  #menuSettings .option-heading[style]{
+    margin-top:clamp(4px,1.1vh,8px)!important;
+  }
+
+  #menuSettings .ball-options{
+    gap:clamp(5px,1.3vw,9px)!important;
+    margin:clamp(3px,.8vh,6px) 0!important;
+  }
+
+  #menuSettings .ball-chip{
+    width:clamp(34px,9vh,48px)!important;
+    height:clamp(34px,9vh,48px)!important;
+    border-width:3px!important;
+    font-size:clamp(16px,4vh,22px)!important;
+  }
+
+  #menuSettings .toggle-list{
+    gap:clamp(3px,.8vh,6px)!important;
+    margin-top:clamp(3px,.8vh,6px)!important;
+  }
+
+  #menuSettings .setting-toggle{
+    padding:clamp(3px,.7vh,6px)!important;
+    gap:5px!important;
+  }
+
+  #menuSettings .setting-toggle .icon{
+    width:clamp(24px,5vw,32px)!important;
+    font-size:clamp(16px,4vh,21px)!important;
+  }
+
+  #menuSettings .setting-toggle strong{
+    font-size:clamp(7px,1.7vh,9px)!important;
+  }
+
+  #menuSettings .setting-toggle small{
+    font-size:clamp(5px,1.25vh,6.5px)!important;
+    line-height:1.15!important;
+  }
+
+  #menuSettings .switch-dot{
+    width:clamp(23px,6vh,31px)!important;
+    height:clamp(23px,6vh,31px)!important;
+    border-width:2px!important;
+  }
+
+  /* El texto informativo grande del panel derecho se compacta mucho. */
+  #menuSettings .option-panel > div[style*="margin-top:16px"]{
+    margin-top:clamp(4px,1vh,8px)!important;
+    padding:clamp(4px,.8vh,7px)!important;
+    font-size:clamp(5px,1.25vh,6.5px)!important;
+    line-height:1.2!important;
+  }
+
+  #menuSettings .menu-actions{
+    flex:0 0 auto!important;
+    width:min(520px,70%)!important;
+    margin:clamp(3px,.9vh,7px) auto 0!important;
+    gap:7px!important;
+  }
+
+  #menuSettings .menu-actions .arcade-btn{
+    min-height:clamp(30px,7vh,38px)!important;
+    padding:3px 10px!important;
+    font-size:clamp(8px,1.9vh,10px)!important;
+  }
+
+  /* Evita que un navegador móvil fuerce desplazamiento por 1-2 px. */
+  #menuMain *,
+  #menuPlayers *,
+  #menuSettings *{
+    box-sizing:border-box!important;
+  }
+}
+
 </style>
 </head>
 <body>
 <div class="shell">
   <div class="topbar">
     <button id="backBtn" class="ghost">← Juegos</button>
-    <div class="brand"><small>Prototipo local · v19</small><strong>Patxanguilles Cabuts</strong></div>
+    <div class="brand"><small>Prototipo local · v20</small><strong>Patxanguilles Cabuts</strong></div>
     <div></div>
   </div>
 
