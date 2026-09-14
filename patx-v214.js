@@ -2,19 +2,6 @@
   const SUPABASE_URL_V214='https://cnnhstlguewrxjihhlqc.supabase.co';
   const SUPABASE_KEY_V214='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
 
-  function overrideFridayPopupPhotoForToday(){
-    const original=window.fridayPhotoForToday;
-    if(typeof original!=='function'||window.__patxFridayPopupPhotoOverride)return;
-    window.__patxFridayPopupPhotoOverride=true;
-    window.fridayPhotoForToday=function(){
-      const now=new Date();
-      if(now.getFullYear()===2026&&now.getMonth()===8&&now.getDate()===11){
-        return {src:'5.jpg',alt:'Momento histórico de fútbol'};
-      }
-      return original();
-    };
-  }
-
   window.saveQuickFitnessStatus=async function(name){
     const map=(typeof playerIdByName!=='undefined')?playerIdByName:null;
     const id=map?.[name];
@@ -64,15 +51,17 @@
   function injectLatestHistory(){
     const history=document.querySelector('#changeHistory .history-wrap');
     const header=history?.querySelector('.history-header');
-    if(!history||!header||history.querySelector('[data-history-version="227"]'))return;
+    if(!history||!header||history.querySelector('[data-history-version="228"]'))return;
+    const versionLabel=header.querySelector('.history-version');
+    if(versionLabel)versionLabel.textContent='VERSIÓN v224';
     const html=`
+<section class="history-change-section" data-history-version="228"><div class="history-section-number">228</div><div class="history-section-content"><h2>Patxanguilles Cabuts y análisis GPS comparativo</h2><ul><li>Patxanguilles Heads pasa a llamarse <b>Patxanguilles Cabuts</b> y queda habilitado desde la sección Juegos, con acceso directo a la nueva versión del arcade.</li><li>Los informes GPS bloquean la interacción del mapa satélite para que el scroll de la página no se convierta en zoom al pasar por encima del campo.</li><li>La ocupación del campo, la distancia por intensidad y las zonas de frecuencia cardíaca usan ahora colores diferenciados para facilitar la lectura visual.</li><li>La recuperación cardíaca muestra solo las 10 ventanas más destacadas y la intensidad durante los 60 minutos pasa a un gráfico de barras dobles más fácil de interpretar.</li><li>Cada FIT puede compararse con los FIT anteriores del mismo jugador: medias históricas, diferencias de esfuerzo, distancia, pulso, sprints, fatiga y una puntuación global del partido sobre 100.</li></ul></div></section>
 <section class="history-change-section" data-history-version="227"><div class="history-section-number">227</div><div class="history-section-content"><h2>GPS más preciso y análisis ampliado</h2><ul><li>Los archivos FIT se proyectan automáticamente sobre el campo calibrado de Santa Ana y se evita guardar un autoajuste silencioso cuando la calibración no está disponible.</li><li>La velocidad máxima pasa a usar un pico validado mediante media móvil de tres muestras, evitando que una lectura aislada infle el dato.</li><li>El comparador distingue métricas absolutas y relativas, muestra el umbral individual de sprint y deja de declarar ganador por sprints personalizados.</li><li>Los informes incorporan ventanas de recuperación cardíaca, una lectura visual de distancia por intensidad y el recorrido sobre imagen satélite del campo real.</li><li>Las fotos normales del partido y el reconocimiento OCR de convocatorias quedan completamente separados para poder añadir varias fotos sin falsos errores de formato F7.</li></ul></div></section>
 <section class="history-change-section" data-history-version="224"><div class="history-section-number">224</div><div class="history-section-content"><h2>Home, móvil, entrenador y Juegos</h2><ul><li>La Home de escritorio pasa a una distribución 2×2 más compacta, con nuevas imágenes para Temporada y Juegos y un diseño visual unificado.</li><li>Se ajusta el botón «Añadir resultado» en móvil y se mejora la estabilidad visual de la clasificación al hacer scroll rápido.</li><li>El Modo Entrenador simplifica la pantalla inicial, recoloca «Crear sala» y muestra un aviso flotante al alcanzar el límite de 14 jugadores o 10 en Fútbol Sala.</li><li>El reproductor de música ocupa menos espacio y mantiene el botón de siguiente canción en modo minimizado.</li><li>Memoria Vintage estrena portada con carrusel de cromos, transiciones suaves, ajuste por altura y una carta precargada para evitar la espera inicial.</li><li>Se incorpora una herramienta interna para hacer una copia de seguridad local y reanudable del archivo completo de cromos vintage.</li></ul></div></section>
 <section class="history-change-section" data-history-version="223"><div class="history-section-number">223</div><div class="history-section-content"><h2>Móvil, Temporada e informes GPS</h2><ul><li>En móvil, al entrar en Temporada 26/27, tanto en Fútbol 7 como en Fútbol Sala, se sustituye el fondo de vídeo por <code>background-home-mobile.png</code>.</li><li>El botón «Añadir resultado» se ensancha para evitar que el texto se parta en dos líneas, especialmente en Fútbol Sala.</li><li>En los informes GPS se elimina la etiqueta visible «CAMPO CALIBRADO».</li><li>El botón o gesto Atrás de Android cierra correctamente el informe GPS y devuelve al usuario a la ficha del partido.</li></ul></div></section>
 <section class="history-change-section" data-history-version="222"><div class="history-section-number">222</div><div class="history-section-content"><h2>Android y mejoras de integración</h2><ul><li>La web queda asociada con la aplicación Android de Patxanguilles mediante la configuración de enlaces de aplicación.</li><li>Se siguen afinando los minijuegos y sus pruebas de funcionamiento antes de publicarlos.</li><li>Memoria Vintage recibe nuevos ajustes de dificultad, ranking y distribución de cartas.</li></ul></div></section>
 <section class="history-change-section" data-history-version="221"><div class="history-section-number">221</div><div class="history-section-content"><h2>Juegos y Memoria Vintage</h2><ul><li>Se incorpora una nueva sección Juegos accesible desde la Home.</li><li>Se publica Memoria Vintage utilizando el archivo de cromos históricos importado desde Odio Eterno al Fútbol Moderno.</li><li>El juego pasa a tener dos dificultades: Fácil · 6 parejas y Difícil · 10 parejas, cada una con su propio ranking.</li><li>Se adapta la disposición de las cartas para móvil, tanto en vertical como en horizontal, evitando cortes y aprovechando mejor la pantalla.</li><li>Se prepara la infraestructura de otros minijuegos, como ¿Quién es? y Patxanguilles Heads, pero permanecen ocultos o desactivados hasta estar terminados.</li><li>Se añaden herramientas internas para importar, preparar y enmascarar nombres de los cromos vintage.</li></ul></div></section>`;
-    const currentHistory=history.querySelector('[data-current-history]');
-    (currentHistory||header).insertAdjacentHTML('afterend',html);
+    header.insertAdjacentHTML('afterend',html);
   }
 
   function setupCoachLobbyV224(){
@@ -115,7 +104,6 @@
   }
 
   function initV214Extras(){
-    overrideFridayPopupPhotoForToday();
     injectGamesHomeButton();
     injectLatestHistory();
     setupCoachLobbyV224();

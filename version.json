@@ -1,12 +1,12 @@
 {
-  "version": 227,
-  "label": "v227",
+  "version": 228,
+  "label": "v228",
   "title": "Nueva versión disponible",
   "summary": [
-    "Los informes GPS usan automáticamente el campo calibrado y evitan guardar autoajustes incorrectos.",
-    "La velocidad máxima se valida con una media móvil de 3 muestras para eliminar picos aislados.",
-    "El comparador separa métricas absolutas de sprints y umbrales relativos.",
-    "Se añaden ventanas de recuperación cardíaca, distancia por intensidad y recorrido sobre el campo real.",
-    "Se separan definitivamente las fotos normales del partido del OCR de convocatorias."
+    "Patxanguilles Heads pasa a llamarse Patxanguilles Cabuts y ya se puede abrir desde Juegos.",
+    "El mapa satélite de los informes GPS queda bloqueado para no interferir con el scroll de la página.",
+    "Ocupación, intensidad y zonas de pulso estrenan colores diferenciados y una lectura visual más clara.",
+    "La recuperación cardíaca se resume en las 10 ventanas más destacadas y la intensidad usa un gráfico de barras dobles.",
+    "Los FIT se comparan con el histórico del mismo jugador e incluyen una puntuación física global del partido sobre 100."
   ]
 }
