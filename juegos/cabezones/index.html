@@ -213,6 +213,43 @@ button,select{font:inherit}
 }
 
 
+
+/* V19 · aviso beta */
+.beta-overlay{
+  position:absolute;inset:0;z-index:140;display:grid;place-items:center;
+  background:rgba(0,0,0,.76);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
+}
+.beta-overlay.hidden{display:none}
+.beta-card{
+  width:min(520px,88%);padding:22px 24px;text-align:center;
+  border-radius:20px;background:linear-gradient(180deg,rgba(24,31,26,.98),rgba(7,11,8,.98));
+  border:2px solid rgba(255,219,88,.72);
+  box-shadow:0 18px 60px rgba(0,0,0,.62),0 0 36px rgba(255,196,45,.14)
+}
+.beta-badge{
+  display:inline-block;padding:6px 11px;margin-bottom:10px;border-radius:999px;
+  background:#b72727;color:#fff4c5;border:1px solid rgba(255,255,255,.22);
+  font-size:9px;font-weight:1000;letter-spacing:.16em
+}
+.beta-title{
+  margin:0 0 9px;font:1000 31px/1 Georgia,serif;color:#f6df83;text-transform:uppercase
+}
+.beta-text{
+  margin:0 auto 15px;max-width:430px;color:#c1cbc4;font-size:11px;line-height:1.5
+}
+.beta-btn{
+  width:100%;min-height:46px;border-radius:12px;border:3px solid #fff1a4;
+  background:linear-gradient(#d74327,#a71e18);color:#fff;
+  font-size:12px;font-weight:1000;cursor:pointer;box-shadow:0 5px 0 #5f0d0a
+}
+@media(max-width:900px){
+  .beta-card{width:min(520px,74%);padding:14px 16px}
+  .beta-title{font-size:22px}
+  .beta-text{font-size:9px;margin-bottom:10px}
+  .beta-btn{min-height:38px;font-size:10px}
+}
+
 /* ===== V14 · LOBBY / CABUTS ===== */
 .lobby-card{width:min(760px,96%);padding:18px 20px}
 .lobby-card .ball{font-size:38px}
@@ -604,7 +641,7 @@ body{padding:6px;overflow:hidden}
 <div class="shell">
   <div class="topbar">
     <button id="backBtn" class="ghost">← Juegos</button>
-    <div class="brand"><small>Prototipo local · v18</small><strong>Patxanguilles Cabuts</strong></div>
+    <div class="brand"><small>Prototipo local · v19</small><strong>Patxanguilles Cabuts</strong></div>
     <div></div>
   </div>
 
@@ -642,6 +679,19 @@ body{padding:6px;overflow:hidden}
         <button class="mobile-jump" data-p="1" data-a="jump">▲<span class="mobile-control-label">SALTO</span></button>
         <button class="mobile-kick" data-p="1" data-a="kick">⚽<span class="mobile-control-label">CHUTAR</span></button>
         <button id="mobileSpecialBtn" class="mobile-special" data-p="1" data-a="special">⚡<span class="mobile-control-label">ESPECIAL</span></button>
+      </div>
+    </div>
+
+    <div id="betaOverlay" class="beta-overlay">
+      <div class="beta-card">
+        <div class="beta-badge">VERSIÓN DE PRUEBA</div>
+        <h2 class="beta-title">Fase Beta</h2>
+        <p class="beta-text">
+          Patxanguilles Cabuts sigue en desarrollo. Pueden aparecer errores,
+          físicas extrañas, poderes descontrolados o algún futbolista que pierda
+          temporalmente la cabeza.
+        </p>
+        <button id="betaContinueBtn" class="beta-btn">ENTRAR AL JUEGO</button>
       </div>
     </div>
 
@@ -879,6 +929,7 @@ const UI={
   back:$('backBtn'),cpu:$('cpuBtn'),local:$('localBtn'),online:$('onlineBtn'),history:$('historyBtn'),
   p1:$('player1'),p2:$('player2'),hud1:$('hudP1'),hud2:$('hudP2'),sr:$('scoreRed'),sb:$('scoreBlack'),clock:$('clock'),
   overlay:$('overlay'),status:$('status'),error:$('errorBox'),result:$('result'),start:$('startBtn'),sound:$('soundBtn'),p2Touch:$('p2Touch'),
+  betaOverlay:$('betaOverlay'),betaContinue:$('betaContinueBtn'),
   power1:$('power1'),power2:$('power2'),bar1:$('bar1'),bar2:$('bar2'),powerCard1:$('powerCard1'),powerCard2:$('powerCard2'),
   powerPct1:$('powerPct1'),powerPct2:$('powerPct2'),special1:$('special1Btn'),special2:$('special2Btn'),mobileSpecial:$('mobileSpecialBtn'),
   netChip:$('netChip'),weatherChip:$('weatherChip'),mobileLocalWarning:$('mobileLocalWarning'),
@@ -1186,6 +1237,12 @@ async function setMode(v){
   if(v==='local'&&IS_MOBILE_UI)return;
   if(v!=='online'&&net.channel)await leaveNetworkRoom();
   mode=v;
+
+  // Cada entrada nueva al selector empieza con una pareja diferente.
+  if(!(v==='online'&&net.role==='guest')){
+    randomizeInitialPlayers();
+  }
+
   updateLobbyState();
   showMenu('players');
 }
@@ -1217,6 +1274,13 @@ function updateLobbyState(){
     }
   }
 }
+
+UI.betaContinue.onclick=()=>{
+  UI.betaOverlay.classList.add('hidden');
+  ensureAudio();
+  tone(520,.07,.018,'triangle');
+  tone(760,.08,.015,'triangle',.04);
+};
 
 UI.cpu.onclick=()=>setMode('cpu');
 UI.local.onclick=()=>setMode('local');
@@ -1259,6 +1323,25 @@ function cycleSelect(select,delta){
   select.dispatchEvent(new Event('change'));
   updatePlayerSelectorUI();
 }
+
+function randomizeInitialPlayers(){
+  const count=UI.p1.options.length;
+  if(count<=0)return;
+
+  if(count===1){
+    UI.p1.selectedIndex=0;
+    UI.p2.selectedIndex=0;
+  }else{
+    const first=Math.floor(Math.random()*count);
+    let second=Math.floor(Math.random()*(count-1));
+    if(second>=first)second++;
+    UI.p1.selectedIndex=first;
+    UI.p2.selectedIndex=second;
+  }
+
+  updateNames();
+}
+
 function updatePlayerSelectorUI(){
   renderAvatar(UI.avatar1,UI.p1);renderAvatar(UI.avatar2,UI.p2);
   UI.selectorName1.textContent=optionName(UI.p1).toUpperCase();
@@ -1391,10 +1474,17 @@ async function loadPlayers(){
       UI.p1.innerHTML=opts;
       UI.p2.innerHTML=opts;
 
-      const a=players.findIndex(p=>p.nickname==='Jorge');
-      const b=players.findIndex(p=>p.nickname==='Jota');
-      if(a>=0)UI.p1.selectedIndex=a;
-      if(b>=0)UI.p2.selectedIndex=b;
+      // V19: selección inicial aleatoria, evitando repetir jugador.
+      if(players.length===1){
+        UI.p1.selectedIndex=0;
+        UI.p2.selectedIndex=0;
+      }else if(players.length>1){
+        const first=Math.floor(Math.random()*players.length);
+        let second=Math.floor(Math.random()*(players.length-1));
+        if(second>=first)second++;
+        UI.p1.selectedIndex=first;
+        UI.p2.selectedIndex=second;
+      }
     }
 
     updateNames();
@@ -2733,7 +2823,7 @@ function createPlayer(x,color,facing){
     chargeFxTimer:0,chargePhase:Math.random()*Math.PI*2,
     punchStreak:0,punchStreakTimer:0,
     headDetached:false,detachedHeadBody:null,detachedHeadObject:null,detachedHeadTimer:0,
-    disassembled:false,disassemblyTimer:0,disassemblyPieces:[],
+    disassembled:false,disassemblyTimer:0,disassemblyEndsAt:0,disassemblyPieces:[],
     celebrateTimer:0,celebratePhase:Math.random()*Math.PI*2,
     excelenteTimer:0,
     jumpCd:0,headerCd:0,stun:0,
@@ -2937,6 +3027,7 @@ function resetPlayerState(p){
   p.punchStreak=0;p.punchStreakTimer=0;
   if(p.headDetached)reattachHead(p,true);
   if(p.disassembled)reassemblePlayer(p,true);
+  p.disassemblyEndsAt=0;
   p.celebrateTimer=0;
   p.excelenteTimer=0;
   p.kickPending=false;p.kickResolved=false;p.auraFlash=0;p.auraParticleTimer=0;
@@ -3083,7 +3174,6 @@ function updateBuffs(p,dt){
   }
 
   updateDetachedHead(p,dt);
-  updateDisassembly(p,dt);
   p.power=Math.min(100,p.power+dt*2.35);
 }
 
@@ -3668,6 +3758,7 @@ function disassemblePlayer(victim,attacker,point,emotion='hurt',labelText='🥋 
 
   victim.disassembled=true;
   victim.disassemblyTimer=2.35;
+  victim.disassemblyEndsAt=performance.now()+2350;
   victim.stun=Math.max(victim.stun,2.35);
   forceEmotion(victim,emotion,2.35);
   updateHeadExpression(victim,0);
@@ -3741,6 +3832,7 @@ function updateDisassembly(p,dt){
   if(!p.disassembled)return;
 
   p.disassemblyTimer=Math.max(0,p.disassemblyTimer-dt);
+  const now=performance.now();
 
   for(const piece of p.disassemblyPieces||[]){
     const o=piece.obj;
@@ -3770,11 +3862,15 @@ function updateDisassembly(p,dt){
     }
   }
 
-  if(p.disassemblyTimer<=0){
+  // Se usa tanto dt como reloj absoluto. Si Chrome móvil congela el frame,
+  // al regresar igualmente se recompone.
+  const dtExpired=p.disassemblyTimer<=0;
+  const clockExpired=p.disassemblyEndsAt>0&&now>=p.disassemblyEndsAt;
+
+  if(dtExpired||clockExpired){
     reassemblePlayer(p,false);
   }
 }
-
 function reassemblePlayer(p,instant=false){
   if(!p.disassembled)return;
 
@@ -3785,16 +3881,35 @@ function reassemblePlayer(p,instant=false){
 
   p.disassembled=false;
   p.disassemblyTimer=0;
+  p.disassemblyEndsAt=0;
+
   p.body.isSensor=false;
   p.torso.isSensor=false;
   p.headPart.isSensor=false;
+
+  // Limpieza de cualquier estado que pudiera seguir bloqueando al personaje.
+  p.stun=0;
+  p.kickPending=false;
+  p.kickResolved=false;
+  p.meleePending=false;
+  p.meleeResolved=false;
+  p.meleeTarget=null;
+  p.strikeMode='foot';
+
   p.emotion='idle';
   p.emotionTimer=0;
+  updateHeadExpression(p,0);
 
-  if(p.photoObject)p.photoObject.setVisible(true);
-  else p.head.setVisible(true);
-  p.name.setVisible(true);
-  p.buffText.setVisible(true);
+  if(p.photoObject){
+    p.photoObject.setVisible(true).setAlpha(1);
+  }else{
+    p.head.setVisible(true).setAlpha(1);
+  }
+
+  p.visual.setVisible(true).setAlpha(1);
+  p.aura.setVisible(true).setAlpha(1);
+  p.name.setVisible(true).setAlpha(1);
+  p.buffText.setVisible(true).setAlpha(1);
 
   if(!instant){
     spawnBurst(p.body.position.x,p.body.position.y-65,0xffb3cc,25,145);
@@ -5210,6 +5325,15 @@ function updateScene(time,delta){
 
   updatePlayerVisual(this.player1,dt);
   updatePlayerVisual(this.player2,dt);
+
+  // Watchdog adicional: nunca dejar un jugador invisible por un desmontaje
+  // que haya perdido su temporizador en un navegador móvil.
+  for(const p of [this.player1,this.player2]){
+    if(p.disassembled&&p.disassemblyEndsAt>0&&performance.now()>p.disassemblyEndsAt+500){
+      reassemblePlayer(p,false);
+    }
+  }
+
   updateBallVisual();
   updatePowerUI();
 }
@@ -5527,6 +5651,9 @@ function drawLegIK(g,hx,hy,footX,footY,facing,shorts,sock,bootColor,front=false)
 }
 
 function updatePlayerVisual(p,dt){
+  // V19: el desmontaje se actualiza aquí porque este render corre SIEMPRE
+  // en PC, móvil, host e invitado online.
+  updateDisassembly(p,dt);
   updateHeadExpression(p,dt);
 
   if(p.disassembled){
