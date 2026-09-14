@@ -1,10 +1,99 @@
-/* PATX_GPS_JORNADA_V225 · mejoras inspiradas en xPitch, solo presentación */
+/* PATX GPS v228 · mejoras de legibilidad e interacción del informe */
 .v225-intensity-heading{margin:18px 0 9px;padding-top:14px;border-top:1px solid rgba(255,255,255,.09)}
-.v225-intensity-heading strong{display:block;font-size:14px;letter-spacing:.02em}.v225-intensity-heading span{display:block;margin-top:4px;color:#8f9a93;font-size:11px;line-height:1.45}
-.patx-gps-zone-table.v225-intensity-table{display:grid;gap:8px}.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row{grid-template-columns:minmax(110px,170px) minmax(100px,1fr) minmax(62px,auto) minmax(58px,auto);align-items:center;padding:9px 10px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.025)}
-.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row>b{font-size:15px}.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row>small{color:#849087;text-align:right}
-.v225-hr-recovery{margin-top:18px}.v225-recovery-summary{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}.v225-recovery-pill{padding:8px 10px;border-radius:10px;background:#101913;border:1px solid rgba(255,255,255,.08)}.v225-recovery-pill span{display:block;color:#8d9991;font-size:10px;text-transform:uppercase;letter-spacing:.06em}.v225-recovery-pill strong{display:block;margin-top:2px;font-size:15px}
-.v225-recovery-list{display:grid;gap:6px}.v225-recovery-row{display:grid;grid-template-columns:64px 82px minmax(110px,1fr) 64px;gap:8px;align-items:center;padding:9px 10px;background:#0f1712;border:1px solid rgba(255,255,255,.07);border-radius:9px;font-size:12px}.v225-recovery-row .v225-drop{font-weight:900}.v225-recovery-row .v225-hr-pair{color:#dce4df}.v225-recovery-row .v225-duration{text-align:right;color:#98a39c}
-.v225-real-pitch{margin:18px 0 0}.v225-real-pitch-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-bottom:10px}.v225-real-pitch-head span{display:block;color:#8e9992;font-size:11px;line-height:1.4}.v225-real-pitch-map{height:390px;min-height:300px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#101813}.v225-real-pitch-note{margin:8px 2px 0;color:#7f8b83;font-size:10px;line-height:1.45}.v225-real-pitch-status{padding:15px;border-radius:10px;background:#101813;color:#9aa59e;border:1px solid rgba(255,255,255,.08);font-size:12px}
-.v225-compare-legend{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 18px}.v225-compare-legend>div{padding:12px 14px;border-radius:12px;background:#101813;border:1px solid rgba(255,255,255,.08)}.v225-compare-legend strong{display:block;font-size:12px;margin-bottom:4px}.v225-compare-legend span{display:block;color:#8f9a93;font-size:11px;line-height:1.45}.compare-table tr.v225-relative-row td{background:rgba(255,255,255,.015)}.compare-table tr.v225-relative-row td:not(:first-child){font-weight:700}.compare-table tr.v225-threshold-row td{font-size:12px;color:#aab4ad}.compare-table tr.v225-threshold-row td:first-child{padding-left:22px}.compare-table tr.v225-relative-row .compare-better,.compare-table tr.v225-threshold-row .compare-better{color:inherit!important;background:transparent!important}.compare-table tr.v225-relative-row .compare-delta,.compare-table tr.v225-threshold-row .compare-delta{display:none!important}.v225-summary-note{display:block;margin-top:7px;color:#8b9690;font-size:11px}
-@media(max-width:700px){.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row{grid-template-columns:1fr auto;gap:7px}.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row>div{grid-column:1/-1;grid-row:2}.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row>small{display:none}.v225-recovery-row{grid-template-columns:55px 72px 1fr}.v225-recovery-row .v225-duration{grid-column:3;text-align:left;font-size:10px}.v225-real-pitch-map{height:320px}.v225-compare-legend{grid-template-columns:1fr}}
+.v225-intensity-heading strong{display:block;font-size:14px;letter-spacing:.02em}
+.v225-intensity-heading span{display:block;margin-top:4px;color:#8f9a93;font-size:11px;line-height:1.45}
+.patx-gps-zone-table.v225-intensity-table{display:grid;gap:8px}
+.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row{grid-template-columns:minmax(110px,170px) minmax(100px,1fr) minmax(62px,auto) minmax(58px,auto);align-items:center;padding:9px 10px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.025)}
+.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row>b{font-size:15px}
+.patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row>small{color:#849087;text-align:right}
+
+/* Ocupación del campo: cada zona con un color propio */
+.patx-gps-breakdown-grid>.patx-gps-section:first-child .patx-gps-bars:not(.compact) .patx-gps-bar-row:nth-child(1) em{background:linear-gradient(90deg,#286bba,#4aa8ff)}
+.patx-gps-breakdown-grid>.patx-gps-section:first-child .patx-gps-bars:not(.compact) .patx-gps-bar-row:nth-child(2) em{background:linear-gradient(90deg,#9a7a20,#f1c84b)}
+.patx-gps-breakdown-grid>.patx-gps-section:first-child .patx-gps-bars:not(.compact) .patx-gps-bar-row:nth-child(3) em{background:linear-gradient(90deg,#a93442,#ff6675)}
+.patx-gps-breakdown-grid>.patx-gps-section:first-child .patx-gps-bars.compact .patx-gps-bar-row:nth-child(1) em{background:linear-gradient(90deg,#228b78,#55d6be)}
+.patx-gps-breakdown-grid>.patx-gps-section:first-child .patx-gps-bars.compact .patx-gps-bar-row:nth-child(2) em{background:linear-gradient(90deg,#7259ba,#a78bfa)}
+.patx-gps-breakdown-grid>.patx-gps-section:first-child .patx-gps-bars.compact .patx-gps-bar-row:nth-child(3) em{background:linear-gradient(90deg,#b86321,#ff9f43)}
+
+/* Distancia por intensidad: frío -> caliente */
+.v225-intensity-table .patx-gps-zone-row:nth-child(1) em{background:linear-gradient(90deg,#21649f,#4ea8ff)}
+.v225-intensity-table .patx-gps-zone-row:nth-child(2) em{background:linear-gradient(90deg,#237f57,#50d890)}
+.v225-intensity-table .patx-gps-zone-row:nth-child(3) em{background:linear-gradient(90deg,#9a7a20,#f0c84b)}
+.v225-intensity-table .patx-gps-zone-row:nth-child(4) em{background:linear-gradient(90deg,#b85b25,#ff914d)}
+.v225-intensity-table .patx-gps-zone-row:nth-child(5) em{background:linear-gradient(90deg,#a62b39,#ff5c67)}
+
+/* Zonas de frecuencia cardiaca Z1 -> Z5 */
+.patx-gps-hr-zones .patx-gps-hr-row:nth-child(1) em{background:linear-gradient(90deg,#21649f,#4ea8ff)}
+.patx-gps-hr-zones .patx-gps-hr-row:nth-child(2) em{background:linear-gradient(90deg,#237f57,#50d890)}
+.patx-gps-hr-zones .patx-gps-hr-row:nth-child(3) em{background:linear-gradient(90deg,#9a7a20,#f0c84b)}
+.patx-gps-hr-zones .patx-gps-hr-row:nth-child(4) em{background:linear-gradient(90deg,#b85b25,#ff914d)}
+.patx-gps-hr-zones .patx-gps-hr-row:nth-child(5) em{background:linear-gradient(90deg,#a62b39,#ff5c67)}
+
+.v225-hr-recovery{margin-top:18px}
+.v225-recovery-summary{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}
+.v225-recovery-pill{padding:8px 10px;border-radius:10px;background:#101913;border:1px solid rgba(255,255,255,.08)}
+.v225-recovery-pill span{display:block;color:#8d9991;font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+.v225-recovery-pill strong{display:block;margin-top:2px;font-size:15px}
+.v228-recovery-caption{margin:2px 0 9px;color:#9aa69f;font-size:11px}
+.v225-recovery-list{display:grid;gap:6px}
+.v225-recovery-row{display:grid;grid-template-columns:92px 82px minmax(110px,1fr) 64px;gap:8px;align-items:center;padding:9px 10px;background:#0f1712;border:1px solid rgba(255,255,255,.07);border-radius:9px;font-size:12px}
+.v225-recovery-row .v225-drop{font-weight:900;color:#67d99a}
+.v225-recovery-row .v225-hr-pair{color:#dce4df}
+.v225-recovery-row .v225-duration{text-align:right;color:#98a39c}
+
+/* Gráfico doble de intensidad */
+.v228-fatigue-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.v228-fatigue-top>strong{font-size:18px}
+.v228-fatigue-top>span{padding:5px 8px;border-radius:999px;background:#111a15;border:1px solid rgba(255,255,255,.08);font-size:10px;color:#cbd4ce}
+.v228-fatigue-explainer{margin:0 0 10px;color:#a3aea7;font-size:11px;line-height:1.5}
+.v228-fatigue-explainer b{color:#e3e9e5}
+.v228-fatigue-legend{display:flex;gap:16px;flex-wrap:wrap;margin:9px 0 10px;color:#a7b1aa;font-size:10px;font-weight:800}
+.v228-fatigue-legend span{display:flex;align-items:center;gap:6px}
+.v228-fatigue-legend i{display:inline-block;width:20px;height:7px;border-radius:999px}
+.v228-fatigue-legend i.speed{background:linear-gradient(90deg,#286bba,#4aa8ff)}
+.v228-fatigue-legend i.effort{background:linear-gradient(90deg,#b86321,#ff9f43)}
+.v228-fatigue-chart-scroll{overflow-x:auto;overscroll-behavior-x:contain;padding-bottom:3px}
+.v228-fatigue-chart{position:relative;min-width:720px;height:265px;padding:18px 12px 42px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:#09100c;overflow:hidden}
+.v228-fatigue-groups{position:absolute;left:12px;right:12px;top:18px;bottom:42px;display:flex;align-items:stretch;gap:8px}
+.v228-fatigue-group{flex:1;min-width:54px;display:grid;grid-template-rows:1fr 34px;gap:4px}
+.v228-fatigue-bars{display:flex;align-items:flex-end;justify-content:center;gap:5px;height:100%;position:relative}
+.v228-fatigue-bar{position:relative;width:min(18px,38%);min-height:2px;border-radius:5px 5px 2px 2px;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset}
+.v228-fatigue-bar.speed{background:linear-gradient(180deg,#69baff,#286bba)}
+.v228-fatigue-bar.effort{background:linear-gradient(180deg,#ffad61,#b85b25)}
+.v228-fatigue-bar span{position:absolute;left:50%;bottom:calc(100% + 3px);transform:translateX(-50%);font-size:8px;color:#cbd5cf;white-space:nowrap;font-weight:800}
+.v228-fatigue-group>strong{align-self:end;text-align:center;color:#89958e;font-size:8px;line-height:1.2;font-weight:800}
+.v228-fatigue-baseline{position:absolute;z-index:3;left:0;right:0;bottom:var(--baseline);border-top:1px dashed rgba(255,255,255,.34);pointer-events:none}
+.v228-fatigue-baseline span{position:absolute;right:3px;bottom:3px;padding:2px 4px;border-radius:4px;background:rgba(9,16,12,.86);color:#aab5ae;font-size:8px}
+
+/* Campo real bloqueado: el scroll de la página no se secuestra */
+.v225-real-pitch{margin:18px 0 0}
+.v225-real-pitch-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-bottom:10px}
+.v225-real-pitch-head span{display:block;color:#8e9992;font-size:11px;line-height:1.4}
+.v225-real-pitch-map{height:390px;min-height:300px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#101813;cursor:default!important;touch-action:pan-y!important}
+.v225-real-pitch-map.leaflet-container{touch-action:pan-y!important}
+.v225-real-pitch-map .leaflet-grab,.v225-real-pitch-map.leaflet-grab{cursor:default!important}
+.v225-real-pitch-note{margin:8px 2px 0;color:#7f8b83;font-size:10px;line-height:1.45}
+.v225-real-pitch-status{padding:15px;border-radius:10px;background:#101813;color:#9aa59e;border:1px solid rgba(255,255,255,.08);font-size:12px}
+
+.v225-compare-legend{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 18px}
+.v225-compare-legend>div{padding:12px 14px;border-radius:12px;background:#101813;border:1px solid rgba(255,255,255,.08)}
+.v225-compare-legend strong{display:block;font-size:12px;margin-bottom:4px}
+.v225-compare-legend span{display:block;color:#8f9a93;font-size:11px;line-height:1.45}
+.compare-table tr.v225-relative-row td{background:rgba(255,255,255,.015)}
+.compare-table tr.v225-relative-row td:not(:first-child){font-weight:700}
+.compare-table tr.v225-threshold-row td{font-size:12px;color:#aab4ad}
+.compare-table tr.v225-threshold-row td:first-child{padding-left:22px}
+.compare-table tr.v225-relative-row .compare-better,.compare-table tr.v225-threshold-row .compare-better{color:inherit!important;background:transparent!important}
+.compare-table tr.v225-relative-row .compare-delta,.compare-table tr.v225-threshold-row .compare-delta{display:none!important}
+.v225-summary-note{display:block;margin-top:7px;color:#8b9690;font-size:11px}
+
+@media(max-width:700px){
+  .patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row{grid-template-columns:1fr auto;gap:7px}
+  .patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row>div{grid-column:1/-1;grid-row:2}
+  .patx-gps-zone-table.v225-intensity-table .patx-gps-zone-row>small{display:none}
+  .v225-recovery-row{grid-template-columns:76px 72px 1fr}
+  .v225-recovery-row .v225-duration{grid-column:3;text-align:left;font-size:10px}
+  .v225-real-pitch-map{height:320px}
+  .v225-compare-legend{grid-template-columns:1fr}
+  .v228-fatigue-chart{min-width:680px}
+}
