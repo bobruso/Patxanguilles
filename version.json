@@ -1,9 +1,12 @@
 {
-  "version": 226,
-  "label": "v226",
+  "version": 227,
+  "label": "v227",
   "title": "Nueva versión disponible",
   "summary": [
-    "El aviso de nueva versión centra el flujo en completar la actualización.",
-    "Se elimina la salida secundaria que permitía continuar sin actualizar."
+    "Los informes GPS usan automáticamente el campo calibrado y evitan guardar autoajustes incorrectos.",
+    "La velocidad máxima se valida con una media móvil de 3 muestras para eliminar picos aislados.",
+    "El comparador separa métricas absolutas de sprints y umbrales relativos.",
+    "Se añaden ventanas de recuperación cardíaca, distancia por intensidad y recorrido sobre el campo real.",
+    "Se separan definitivamente las fotos normales del partido del OCR de convocatorias."
   ]
 }

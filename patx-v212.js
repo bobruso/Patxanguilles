@@ -424,6 +424,7 @@
   }
 
   window.importResultLineupImage=async function(input){
+    if(input?.id!=='resultCallupImage')return;/* PATX_MATCH_PHOTO_GUARD_V225 */
     const file=input?.files?.[0];
     if(!file)return;
     try{

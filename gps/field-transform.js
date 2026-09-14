@@ -51,17 +51,21 @@ export function buildFieldTransform(rawCorners){
     A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v);
   }
   const h=solveLinear(A,b);if(!h)return null;
+  /* PATX_FIELD_UNPROJECT_V225 · inversa física u/v -> lat/lon */
+  const RA=[],Rb=[];for(let i=0;i<4;i++){const[u,v]=targets[i],{x,y}=local[i];RA.push([u,v,1,0,0,0,-x*u,-x*v]);Rb.push(x);RA.push([0,0,0,u,v,1,-y*u,-y*v]);Rb.push(y)}const rh=solveLinear(RA,Rb);if(!rh)return null;
   const project=(lat,lon)=>{
     const x=(Number(lon)-lon0)*rad*cos*R,y=(Number(lat)-lat0)*rad*R,den=h[6]*x+h[7]*y+1;
     if(!Number.isFinite(den)||Math.abs(den)<1e-10)return{u:NaN,v:NaN};
     return{u:(h[0]*x+h[1]*y+h[2])/den,v:(h[3]*x+h[4]*y+h[5])/den};
   };
+  const unproject=(u,v)=>{u=Number(u);v=Number(v);const den=rh[6]*u+rh[7]*v+1;if(!Number.isFinite(u)||!Number.isFinite(v)||!Number.isFinite(den)||Math.abs(den)<1e-10)return{lat:NaN,lon:NaN};const x=(rh[0]*u+rh[1]*v+rh[2])/den,y=(rh[3]*u+rh[4]*v+rh[5])/den;return{lat:lat0+y/(rad*R),lon:lon0+x/(rad*cos*R)}};
   const goalACentre={lat:(corners[0].lat+corners[3].lat)/2,lon:(corners[0].lon+corners[3].lon)/2};
   const goalBCentre={lat:(corners[1].lat+corners[2].lat)/2,lon:(corners[1].lon+corners[2].lon)/2};
   const leftMid={lat:(corners[0].lat+corners[1].lat)/2,lon:(corners[0].lon+corners[1].lon)/2};
   const rightMid={lat:(corners[3].lat+corners[2].lat)/2,lon:(corners[3].lon+corners[2].lon)/2};
   return{
     project,
+    unproject,
     fieldCalibrated:true,
     lengthM:haversineMeters(goalACentre.lat,goalACentre.lon,goalBCentre.lat,goalBCentre.lon),
     widthM:haversineMeters(leftMid.lat,leftMid.lon,rightMid.lat,rightMid.lon),
