@@ -160,6 +160,217 @@ function enhanceFatigue(a){
     <p class="patx-gps-note">Las ventanas duran aproximadamente ${Math.round(Number(profile.windowS||0)/60)} minutos y avanzan cada ${Math.round(Number(profile.stepS||0)/60)} minutos, por eso se solapan. El objetivo es ver la tendencia del propio jugador a lo largo del partido, no comparar jugadores entre sí.</p>`;
 }
 
+
+const meanFinite=values=>{const a=(values||[]).map(Number).filter(Number.isFinite);return a.length?a.reduce((s,v)=>s+v,0)/a.length:null};
+const clampScore=(v,min=0,max=100)=>Math.max(min,Math.min(max,v));
+const signedPct=v=>finite(v)?`${Number(v)>=0?'+':''}${Math.round(Number(v))}%`:'—';
+const signedPp=v=>finite(v)?`${Number(v)>=0?'+':''}${Math.round(Number(v))} pp`:'—';
+const signedCount=v=>finite(v)?`${Number(v)>=0?'+':''}${Number(v).toFixed(Math.abs(Number(v))<10?1:0)}`:'—';
+const km=v=>finite(v)?`${(Number(v)/1000).toFixed(2)} km`:'—';
+
+function historyAnalysisFromRow(row){
+  const detail=row?.analysis_detail||{};
+  return{
+    durationS:Number(row?.duration_s)||0,
+    movingTimeS:Number(row?.moving_time_s)||0,
+    distanceM:Number(row?.distance_m)||0,
+    topSpeedKmh:finite(detail?.speed?.smoothedTopSpeedKmh)?Number(detail.speed.smoothedTopSpeedKmh):Number(row?.top_speed_kmh)||0,
+    sprintCount:Number(row?.sprint_count)||0,
+    highIntensityDistanceM:Number(row?.high_intensity_distance_m)||0,
+    avgHr:row?.avg_hr==null?null:Number(row.avg_hr),
+    maxHr:row?.max_hr==null?null:Number(row.max_hr),
+    analysisDetail:detail
+  };
+}
+
+function historyMetrics(a){
+  const speed=a?.analysisDetail?.speed||{},work=a?.analysisDetail?.workload||{},pos=a?.analysisDetail?.positional||{};
+  const fatigue=buildFatigueProfile(speed,a?.durationS);
+  const distancePerMin=finite(work?.distancePerMin)?Number(work.distancePerMin):
+    (finite(a?.distanceM)&&finite(a?.movingTimeS)&&Number(a.movingTimeS)>0?Number(a.distanceM)/(Number(a.movingTimeS)/60):null);
+  return{
+    distanceM:finite(a?.distanceM)?Number(a.distanceM):null,
+    highIntensityDistanceM:finite(a?.highIntensityDistanceM)?Number(a.highIntensityDistanceM):null,
+    sprintCount:finite(a?.sprintCount)?Number(a.sprintCount):null,
+    topSpeedKmh:finite(a?.topSpeedKmh)?Number(a.topSpeedKmh):null,
+    avgHr:finite(a?.avgHr)?Number(a.avgHr):null,
+    maxHr:finite(a?.maxHr)?Number(a.maxHr):null,
+    distancePerMin:finite(distancePerMin)?Number(distancePerMin):null,
+    fatigueRetention:fatigue?.available&&finite(fatigue?.summary?.retention)?Number(fatigue.summary.retention):null,
+    attackShare:Array.isArray(pos?.thirds)&&finite(pos.thirds[2])?Number(pos.thirds[2]):null,
+    role:String(pos?.role?.top||'')
+  };
+}
+
+function historyAverages(metrics){
+  const keys=['distanceM','highIntensityDistanceM','sprintCount','topSpeedKmh','avgHr','maxHr','distancePerMin','fatigueRetention','attackShare'];
+  return Object.fromEntries(keys.map(k=>[k,meanFinite(metrics.map(m=>m[k]))]));
+}
+
+function ratioDelta(current,average){
+  return finite(current)&&finite(average)&&Number(average)>0?Number(current)/Number(average)-1:null;
+}
+
+function weightedDelta(parts){
+  let sum=0,w=0;
+  for(const p of parts){
+    if(!finite(p?.delta)||!(Number(p?.weight)>0))continue;
+    sum+=Math.max(-.65,Math.min(.65,Number(p.delta)))*Number(p.weight);
+    w+=Number(p.weight);
+  }
+  return w?sum/w:null;
+}
+
+function physicalScore(current,avg){
+  const parts=[
+    {delta:ratioDelta(current.distanceM,avg.distanceM),weight:.20},
+    {delta:ratioDelta(current.highIntensityDistanceM,avg.highIntensityDistanceM),weight:.18},
+    {delta:ratioDelta(current.sprintCount,avg.sprintCount),weight:.14},
+    {delta:ratioDelta(current.distancePerMin,avg.distancePerMin),weight:.12},
+    {delta:ratioDelta(current.topSpeedKmh,avg.topSpeedKmh),weight:.10},
+    {delta:ratioDelta(current.avgHr,avg.avgHr),weight:.08},
+    {delta:ratioDelta(current.maxHr,avg.maxHr),weight:.04},
+    {delta:ratioDelta(current.fatigueRetention,avg.fatigueRetention),weight:.14}
+  ];
+  const delta=weightedDelta(parts);
+  if(!finite(delta))return null;
+  // 70/100 representa aproximadamente el partido medio del propio jugador.
+  // Un +15% global en los indicadores principales produce aproximadamente 85/100.
+  return clampScore(Math.round(70+Number(delta)*100));
+}
+
+function effortDelta(current,avg){
+  return weightedDelta([
+    {delta:ratioDelta(current.distanceM,avg.distanceM),weight:.30},
+    {delta:ratioDelta(current.highIntensityDistanceM,avg.highIntensityDistanceM),weight:.25},
+    {delta:ratioDelta(current.sprintCount,avg.sprintCount),weight:.15},
+    {delta:ratioDelta(current.distancePerMin,avg.distancePerMin),weight:.15},
+    {delta:ratioDelta(current.avgHr,avg.avgHr),weight:.15}
+  ]);
+}
+
+function scoreClass(score){
+  if(!finite(score))return'is-neutral';
+  if(Number(score)>=85)return'is-excellent';
+  if(Number(score)>=75)return'is-high';
+  if(Number(score)>=62)return'is-normal';
+  if(Number(score)>=48)return'is-low';
+  return'is-very-low';
+}
+
+function historyHeadline(current,avg,score,effort){
+  const d=ratioDelta(current.distanceM,avg.distanceM);
+  const hi=ratioDelta(current.highIntensityDistanceM,avg.highIntensityDistanceM);
+  const sp=finite(current.sprintCount)&&finite(avg.sprintCount)?Number(current.sprintCount)-Number(avg.sprintCount):null;
+  const fatigue=finite(current.fatigueRetention)&&finite(avg.fatigueRetention)?Number(current.fatigueRetention)-Number(avg.fatigueRetention):null;
+  const attack=finite(current.attackShare)&&finite(avg.attackShare)?Number(current.attackShare)-Number(avg.attackShare):null;
+  const hr=ratioDelta(current.avgHr,avg.avgHr);
+  const offensive=/delantero|extremo|mediapunta/i.test(current.role);
+
+  if(offensive&&finite(attack)&&attack>.08&&finite(fatigue)&&fatigue>.04)return'Has jugado más arriba de lo habitual y, aun así, has mantenido mejor el ritmo.';
+  if(finite(d)&&d>.10&&finite(hi)&&hi>.10&&finite(fatigue)&&fatigue>.03)return'Este partido has corrido más, a mayor intensidad y has aguantado mejor que de costumbre.';
+  if(finite(sp)&&sp>=2&&finite(attack)&&attack>.05)return'Más vocación ofensiva de lo habitual: más sprints y más presencia en campo rival.';
+  if(finite(effort)&&effort>.10&&finite(fatigue)&&fatigue<-.06)return'Partido exigente: has trabajado más de lo normal y el desgaste final también ha sido mayor.';
+  if(finite(hr)&&hr>.06&&finite(d)&&d<-.05)return'Más exigencia cardiovascular pese a recorrer menos distancia de lo habitual.';
+  if(finite(score)&&score>=85)return'Partido físicamente muy por encima de tu media habitual.';
+  if(finite(score)&&score>=75)return'Has estado por encima de tu nivel físico medio en este partido.';
+  if(finite(score)&&score<50)return'Partido de menor carga física que tu media habitual.';
+  return'Partido bastante parecido a tu perfil físico habitual.';
+}
+
+function comparisonCard(label,value,detail,tone=''){
+  return `<div class="v228-history-metric ${tone}"><span>${esc(label)}</span><strong>${esc(value)}</strong><small>${esc(detail)}</small></div>`;
+}
+
+let historyRowsPromise=null,historyRowsKey='';
+
+async function loadHistoricalRows(){
+  const sb=window.__patxGpsSupabase;
+  const q=new URLSearchParams(location.search),playerId=q.get('player'),matchId=q.get('match');
+  const currentDate=window.__patxGpsMatch?.match_date||null;
+  if(!sb||!playerId||!matchId)return[];
+  const key=`${playerId}:${matchId}:${currentDate||''}`;
+  if(historyRowsPromise&&historyRowsKey===key)return historyRowsPromise;
+  historyRowsKey=key;
+  historyRowsPromise=(async()=>{
+    const{data:rows,error}=await sb.from('match_player_gps')
+      .select('match_id,player_id,source_format,duration_s,moving_time_s,distance_m,top_speed_kmh,sprint_count,high_intensity_distance_m,avg_hr,max_hr,analysis_detail')
+      .eq('player_id',playerId)
+      .eq('source_format','fit');
+    if(error)throw error;
+    const candidates=(rows||[]).filter(r=>String(r.match_id)!==String(matchId));
+    if(!candidates.length)return[];
+    const ids=[...new Set(candidates.map(r=>r.match_id).filter(v=>v!=null))];
+    const{data:matches,error:me}=await sb.from('matches').select('id,match_date').in('id',ids);
+    if(me)throw me;
+    const dateById=new Map((matches||[]).map(m=>[String(m.id),m.match_date||null]));
+    const filtered=candidates.filter(r=>{
+      if(!currentDate)return true;
+      const d=dateById.get(String(r.match_id));
+      return d&&String(d)<String(currentDate);
+    });
+    filtered.sort((a,b)=>String(dateById.get(String(b.match_id))||'').localeCompare(String(dateById.get(String(a.match_id))||'')));
+    return filtered;
+  })().catch(err=>{console.warn('[GPS histórico]',err);return[]});
+  return historyRowsPromise;
+}
+
+async function enhanceHistory(a){
+  const existing=document.querySelector('.v228-history-comparison');if(existing)existing.remove();
+  if(String(a?.sourceFormat||'fit').toLowerCase()!=='fit')return;
+  const rows=await loadHistoricalRows();
+  if(!rows.length)return;
+
+  const historical=rows.map(historyAnalysisFromRow).map(historyMetrics);
+  const avg=historyAverages(historical),current=historyMetrics(a);
+  const score=physicalScore(current,avg),effort=effortDelta(current,avg);
+  if(!finite(score))return;
+
+  const distanceDelta=ratioDelta(current.distanceM,avg.distanceM);
+  const highDelta=ratioDelta(current.highIntensityDistanceM,avg.highIntensityDistanceM);
+  const sprintDelta=finite(current.sprintCount)&&finite(avg.sprintCount)?Number(current.sprintCount)-Number(avg.sprintCount):null;
+  const avgHrDelta=finite(current.avgHr)&&finite(avg.avgHr)?Number(current.avgHr)-Number(avg.avgHr):null;
+  const topDelta=ratioDelta(current.topSpeedKmh,avg.topSpeedKmh);
+  const fatigueDelta=finite(current.fatigueRetention)&&finite(avg.fatigueRetention)?(Number(current.fatigueRetention)-Number(avg.fatigueRetention))*100:null;
+  const attackDelta=finite(current.attackShare)&&finite(avg.attackShare)?(Number(current.attackShare)-Number(avg.attackShare))*100:null;
+  const headline=historyHeadline(current,avg,score,effort);
+
+  const cards=[];
+  if(finite(effort))cards.push(comparisonCard('Esfuerzo global',signedPct(Number(effort)*100),`índice combinado vs media de ${rows.length} FIT${rows.length===1?'':'s'}`,Number(effort)>=.05?'is-up':Number(effort)<=-.05?'is-down':''));
+  if(finite(distanceDelta))cards.push(comparisonCard('Distancia',signedPct(Number(distanceDelta)*100),`${km(current.distanceM)} · media ${km(avg.distanceM)}`,Number(distanceDelta)>=.05?'is-up':Number(distanceDelta)<=-.05?'is-down':''));
+  if(finite(highDelta))cards.push(comparisonCard('Alta intensidad',signedPct(Number(highDelta)*100),`${Math.round(Number(current.highIntensityDistanceM)||0)} m · media ${Math.round(Number(avg.highIntensityDistanceM)||0)} m`,Number(highDelta)>=.08?'is-up':Number(highDelta)<=-.08?'is-down':''));
+  if(finite(sprintDelta))cards.push(comparisonCard('Sprints',signedCount(sprintDelta),`${Math.round(Number(current.sprintCount)||0)} · media ${Number(avg.sprintCount).toFixed(1)}`,Number(sprintDelta)>=1?'is-up':Number(sprintDelta)<=-1?'is-down':''));
+  if(finite(avgHrDelta))cards.push(comparisonCard('FC media',`${Number(avgHrDelta)>=0?'+':''}${Math.round(Number(avgHrDelta))} ppm`,`${Math.round(Number(current.avgHr))} ppm · media ${Math.round(Number(avg.avgHr))}`,Number(avgHrDelta)>=5?'is-up':Number(avgHrDelta)<=-5?'is-down':''));
+  if(finite(topDelta))cards.push(comparisonCard('Velocidad máxima',signedPct(Number(topDelta)*100),`${Number(current.topSpeedKmh).toFixed(1)} km/h · media ${Number(avg.topSpeedKmh).toFixed(1)}`,Number(topDelta)>=.04?'is-up':Number(topDelta)<=-.04?'is-down':''));
+  if(finite(fatigueDelta))cards.push(comparisonCard('Retención / fatiga',signedPp(fatigueDelta),`${Math.round(Number(current.fatigueRetention)*100)}% · media ${Math.round(Number(avg.fatigueRetention)*100)}%`,Number(fatigueDelta)>=4?'is-up':Number(fatigueDelta)<=-4?'is-down':''));
+  if(finite(attackDelta))cards.push(comparisonCard('Presencia atacante',signedPp(attackDelta),`${Math.round(Number(current.attackShare)*100)}% · media ${Math.round(Number(avg.attackShare)*100)}%`,Number(attackDelta)>=6?'is-up':Number(attackDelta)<=-6?'is-down':''));
+
+  const section=document.createElement('section');
+  section.className=`patx-gps-section patx-gps-wide v228-history-comparison ${scoreClass(score)}`;
+  section.innerHTML=`<div class="v228-history-head">
+    <div>
+      <div class="patx-gps-section-head"><span>TU HISTÓRICO GPS</span><h4>Este partido frente a tus FIT anteriores</h4></div>
+      <p>Comparación contra la media de <b>${rows.length} FIT${rows.length===1?'':'s'} anterior${rows.length===1?'':'es'}</b> del mismo jugador. El partido actual no entra en la media.</p>
+    </div>
+  </div>
+  <div class="v228-history-score-row">
+    <div class="v228-history-score" style="--score:${score}">
+      <div><strong>${score}</strong><span>/100</span></div>
+      <small>PUNTUACIÓN PARTIDO</small>
+    </div>
+    <div class="v228-history-verdict">
+      <span>LECTURA GLOBAL</span>
+      <h3>${esc(headline)}</h3>
+      <p>La nota combina volumen de carrera, intensidad, sprints, velocidad, demanda cardiovascular y capacidad de mantener el ritmo. <b>70/100 equivale aproximadamente a tu partido medio histórico.</b> No puntúa técnica, resultado ni calidad futbolística.</p>
+    </div>
+  </div>
+  <div class="v228-history-metrics">${cards.join('')}</div>`;
+
+  const anchor=document.querySelector('.patx-gps-stats');
+  if(anchor)anchor.after(section);
+}
+
+
 function loadLeaflet(){
   if(window.L?.map)return Promise.resolve(window.L);
   if(leafletPromise)return leafletPromise;
@@ -225,6 +436,7 @@ function enhance(a){
   enhanceIntensity(a);
   enhanceHeartRate(a);
   enhanceFatigue(a);
+  enhanceHistory(a);
   enhanceRealPitch(a);
 }
 window.addEventListener('patx-gps-analysis-updated',()=>requestAnimationFrame(()=>enhance(window.__patxGpsAnalysis)));
