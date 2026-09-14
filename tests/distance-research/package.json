@@ -1,0 +1,16 @@
+{
+  "name": "patxanguilles-distance-research",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "research": "node compare-distance-methods.mjs",
+    "test": "node --test research.test.mjs"
+  },
+  "dependencies": {
+    "@garmin/fitsdk": "21.214.0",
+    "fit-file-parser": "5.0.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

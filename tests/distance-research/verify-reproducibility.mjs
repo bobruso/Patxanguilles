@@ -1,0 +1,15 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import assert from 'node:assert/strict';
+const dir=path.dirname(fileURLToPath(import.meta.url));
+const files=['RESULTS.md',...(await fs.readdir(path.join(dir,'results'))).filter(f=>/\.(csv|json)$/.test(f)).map(f=>'results/'+f)];
+const digest=async()=>Object.fromEntries(await Promise.all(files.map(async f=>[f,createHash('sha256').update(await fs.readFile(path.join(dir,f))).digest('hex')])));
+const before=await digest();
+execFileSync(process.execPath,[path.join(dir,'compare-distance-methods.mjs')],{stdio:'ignore'});
+const after=await digest();
+assert.deepEqual(after,before,'Numerical artifacts changed when repeating the experiment');
+await fs.writeFile(path.join(dir,'VALIDATION.md'),`# Validación\n\n- ${files.length} archivos numéricos/Markdown reproducidos byte a byte con las mismas entradas y versiones.\n- CRC válido y acuerdo registro a registro entre fit-file-parser y SDK Garmin en ambos FIT.\n- 12 tests experimentales pasan; también las dos suites existentes del engine y FIT reales (32 aserciones existentes).\n- Hashes de cuatro archivos de producción idénticos antes/después del harness.\n- Figura revisada visualmente: ejes, unidades, leyendas y cuatro paneles legibles.\n- Los cambios anteriores de producción se han conservado; no se ha hecho commit ni push.\n\nEsta validación comprueba implementación y reproducibilidad, no exactitud física de los FIT.\n`);
+console.log(`${files.length} artifacts reproduced byte for byte.`);

@@ -1,0 +1,3690 @@
+{
+  "version": 1,
+  "node": "v24.20.0",
+  "parser": "fit-file-parser@5.0.2",
+  "methods": 81,
+  "syntheticSeeds": {
+    "train": [
+      1,
+      2,
+      3
+    ],
+    "holdout": [
+      101,
+      102,
+      103
+    ]
+  },
+  "syntheticCells": 56862,
+  "timePolicy": "seconds relative to earliest FIT record; no absolute timestamps exported",
+  "commonStartSec": 3,
+  "commonEndSec": 867,
+  "commonDurationSec": 864,
+  "commonObservedSec": 808,
+  "commonObservedIntervals": [
+    [
+      3,
+      233
+    ],
+    [
+      242,
+      273
+    ],
+    [
+      290,
+      466
+    ],
+    [
+      478,
+      643
+    ],
+    [
+      652,
+      682
+    ],
+    [
+      690,
+      866
+    ]
+  ],
+  "gapPolicy": "split at any missing coordinate or nonpositive dt or dt > 10 s; preserve 1–7 s Smart chords; linear boundary clipping, never across gaps",
+  "processingPolicy": "filter complete observed runs, then clip windows (context retained); paired common-observed excludes COROS gaps from both distances",
+  "geometryPolicy": "local equirectangular metres R=6371000; no coordinates serialized",
+  "productionHashesBefore": {
+    "gps/football-gps-engine.js": "977d0042d51975e026af07ce383f52c61f72296e52736b4ffa156f0fd1300d41",
+    "gps/fit-analysis.js": "534767697088b3e4669522dbabe0bf1eab6d7f35116aeceb93d31e6009c3a6bf",
+    "gps/gps-panel.css": "95cedee12a1fdb8cc1e9c228aca3b0285ffb75b9d7cf1b4b9c1f0ee04d46a90f",
+    "gps/player-gps-panel.js": "ac694fb1e77c50d8785e04b900dedf057235446e1de522642750387976f7f043"
+  },
+  "productionHashesAfter": {
+    "gps/football-gps-engine.js": "977d0042d51975e026af07ce383f52c61f72296e52736b4ffa156f0fd1300d41",
+    "gps/fit-analysis.js": "534767697088b3e4669522dbabe0bf1eab6d7f35116aeceb93d31e6009c3a6bf",
+    "gps/gps-panel.css": "95cedee12a1fdb8cc1e9c228aca3b0285ffb75b9d7cf1b4b9c1f0ee04d46a90f",
+    "gps/player-gps-panel.js": "ac694fb1e77c50d8785e04b900dedf057235446e1de522642750387976f7f043"
+  },
+  "devices": [
+    {
+      "name": "COROS",
+      "records": 868,
+      "gpsPoints": 816,
+      "startSec": 0,
+      "endSec": 867,
+      "recordDurationSec": 867,
+      "sessionDurationSec": 866.92,
+      "sessionTimerSec": 866.92,
+      "sessionDistanceM": 1278.7,
+      "recordFitDeltaM": 1278.7,
+      "firstFitM": 0,
+      "medianDt": 1,
+      "p95Dt": 1,
+      "maxDt": 1,
+      "missingCount": 52,
+      "missingRuns": 7,
+      "missingDurationSec": 51,
+      "observableGpsSeconds": 810,
+      "legacyBridgedRawM": 1278.5755927856774,
+      "observedRawM": 1273.5691689855043,
+      "gaps": [
+        {
+          "startSec": 233,
+          "endSec": 242,
+          "durationSec": 9,
+          "bridgeM": 0.9867701123608291
+        },
+        {
+          "startSec": 273,
+          "endSec": 290,
+          "durationSec": 17,
+          "bridgeM": 0.9481431699562204
+        },
+        {
+          "startSec": 466,
+          "endSec": 478,
+          "durationSec": 12,
+          "bridgeM": 1.2479348155893875
+        },
+        {
+          "startSec": 643,
+          "endSec": 652,
+          "durationSec": 9,
+          "bridgeM": 1.1029440347549146
+        },
+        {
+          "startSec": 682,
+          "endSec": 690,
+          "durationSec": 8,
+          "bridgeM": 0.7206316675100847
+        }
+      ],
+      "noiseEstimates": [
+        {
+          "windows": 0,
+          "sigma": null
+        },
+        {
+          "windows": 0,
+          "sigma": null
+        },
+        {
+          "windows": 0,
+          "sigma": null
+        },
+        {
+          "windows": 0,
+          "sigma": null
+        },
+        {
+          "windows": 0,
+          "sigma": null
+        },
+        {
+          "windows": 0,
+          "sigma": null
+        }
+      ],
+      "events": [
+        {
+          "offsetSec": 0,
+          "event": "timer",
+          "type": "start"
+        },
+        {
+          "offsetSec": 867,
+          "event": "timer",
+          "type": "stop_all"
+        }
+      ],
+      "laps": [
+        {
+          "startSec": 0,
+          "endSec": 699,
+          "distanceM": 1000,
+          "timerSec": 698.64
+        },
+        {
+          "startSec": 699,
+          "endSec": 867,
+          "distanceM": 278.7,
+          "timerSec": 168.28
+        }
+      ],
+      "inventory": {
+        "file": "COROS_PACE_4.FIT",
+        "sha256": "c9a8630c5f897b1d3cd570b56e836bd80b0e7168fb692524f7e763853f3e0b41",
+        "bytes": 18783,
+        "discardedTimestampRecords": 0,
+        "officialSdk": {
+          "version": "21.214.0",
+          "profile": {
+            "major": 21,
+            "minor": 214,
+            "patch": 0,
+            "type": "Release"
+          },
+          "integrity": true,
+          "errors": 0,
+          "recordsCompared": 868,
+          "maxPositionDifferenceDegrees": 0,
+          "maxSpeedDifferenceMps": 0,
+          "maxDistanceDifferenceM": 0,
+          "groups": {
+            "fileIdMesgs": {
+              "count": 1,
+              "fields": {
+                "type": 1,
+                "manufacturer": 1,
+                "timeCreated": 1,
+                "product": 1,
+                "productName": 1
+              }
+            },
+            "developerDataIdMesgs": {
+              "count": 1,
+              "fields": {
+                "manufacturerId": 1,
+                "developerDataIndex": 1,
+                "applicationId": 1
+              }
+            },
+            "deviceInfoMesgs": {
+              "count": 1,
+              "fields": {
+                "timestamp": 1,
+                "manufacturer": 1,
+                "productName": 1
+              }
+            },
+            "activityMesgs": {
+              "count": 1,
+              "fields": {
+                "timestamp": 1,
+                "totalTimerTime": 1,
+                "localTimestamp": 1,
+                "numSessions": 1,
+                "type": 1,
+                "event": 1,
+                "eventType": 1
+              }
+            },
+            "eventMesgs": {
+              "count": 2,
+              "fields": {
+                "timestamp": 2,
+                "event": 2,
+                "eventType": 2,
+                "eventGroup": 2
+              }
+            },
+            "recordMesgs": {
+              "count": 868,
+              "fields": {
+                "activityType": 868,
+                "timestamp": 868,
+                "distance": 868,
+                "positionLat": 816,
+                "positionLong": 816,
+                "heartRate": 867,
+                "speed": 864
+              }
+            },
+            "lapMesgs": {
+              "count": 2,
+              "fields": {
+                "messageIndex": 2,
+                "timestamp": 2,
+                "startTime": 2,
+                "totalTimerTime": 2,
+                "totalElapsedTime": 2,
+                "totalDistance": 2,
+                "sport": 2,
+                "maxHeartRate": 2,
+                "minHeartRate": 2,
+                "avgHeartRate": 2,
+                "maxSpeed": 2,
+                "avgSpeed": 2,
+                "avgCadence": 2,
+                "avgStepLength": 2,
+                "maxCadence": 2,
+                "totalDescent": 2,
+                "totalAscent": 2,
+                "avgPower": 2,
+                "avgStanceTime": 2,
+                "avgStanceTimePercent": 2,
+                "avgVerticalOscillation": 2,
+                "avgVerticalRatio": 2
+              }
+            },
+            "sessionMesgs": {
+              "count": 1,
+              "fields": {
+                "sport": 1,
+                "startTime": 1,
+                "timestamp": 1,
+                "totalElapsedTime": 1,
+                "totalTimerTime": 1,
+                "totalDistance": 1,
+                "totalCalories": 1,
+                "maxHeartRate": 1,
+                "minHeartRate": 1,
+                "avgHeartRate": 1,
+                "avgTemperature": 1,
+                "totalAscent": 1,
+                "totalDescent": 1,
+                "maxCadence": 1,
+                "avgCadence": 1,
+                "avgStepLength": 1,
+                "maxSpeed": 1,
+                "avgSpeed": 1,
+                "avgPower": 1,
+                "avgStanceTime": 1,
+                "avgStanceTimeBalance": 1,
+                "avgVerticalOscillation": 1,
+                "avgVerticalRatio": 1
+              }
+            }
+          }
+        },
+        "nonIncreasingTimestamps": 0,
+        "fields": {
+          "activity": {
+            "count": 1,
+            "fields": {
+              "timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "total_timer_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "local_timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "num_sessions": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "event": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "event_type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "file_ids": {
+            "count": 1,
+            "fields": {
+              "type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "manufacturer": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "time_created": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "product": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "product_name": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "messages": {
+            "count": 1,
+            "fields": {
+              "file_id": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "developer_data_id": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "device_info": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "activity": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "event": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "record": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "lap": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "session": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "sessions": {
+            "count": 1,
+            "fields": {
+              "sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "start_time": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "total_elapsed_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_timer_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_distance": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_calories": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "min_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_temperature": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_ascent": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "total_descent": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "max_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_step_length": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_speed": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_speed": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_power": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "avg_stance_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "avg_stance_time_balance": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "avg_vertical_oscillation": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "avg_vertical_ratio": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              }
+            }
+          },
+          "laps": {
+            "count": 2,
+            "fields": {
+              "message_index": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "timestamp": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "start_time": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "total_timer_time": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "total_elapsed_time": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "total_distance": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "sport": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "max_heart_rate": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "min_heart_rate": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "avg_heart_rate": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "max_speed": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "avg_speed": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "avg_cadence": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "avg_step_length": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "max_cadence": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "total_descent": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "total_ascent": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "avg_power": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "avg_stance_time": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "avg_stance_time_percent": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "avg_vertical_oscillation": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "avg_vertical_ratio": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              }
+            }
+          },
+          "records": {
+            "count": 868,
+            "fields": {
+              "activity_type": {
+                "present": 868,
+                "finite": 868,
+                "zero": 0
+              },
+              "timestamp": {
+                "present": 868,
+                "finite": 0,
+                "zero": 0
+              },
+              "distance": {
+                "present": 868,
+                "finite": 868,
+                "zero": 5
+              },
+              "position_lat": {
+                "present": 816,
+                "finite": 816,
+                "zero": 0
+              },
+              "position_long": {
+                "present": 816,
+                "finite": 816,
+                "zero": 0
+              },
+              "heart_rate": {
+                "present": 867,
+                "finite": 867,
+                "zero": 0
+              },
+              "speed": {
+                "present": 864,
+                "finite": 864,
+                "zero": 41
+              }
+            }
+          },
+          "events": {
+            "count": 2,
+            "fields": {
+              "timestamp": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "event": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "event_type": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "event_group": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              }
+            }
+          },
+          "device_infos": {
+            "count": 1,
+            "fields": {
+              "timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "manufacturer": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "product_name": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "developer_data_ids": {
+            "count": 1,
+            "fields": {
+              "manufacturer_id": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "developer_data_index": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "application_id": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          }
+        },
+        "binary": {
+          "0": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "4": 1,
+              "8": 1
+            },
+            "developerFields": {}
+          },
+          "18": {
+            "count": 1,
+            "fields": {
+              "2": 1,
+              "5": 1,
+              "7": 1,
+              "8": 1,
+              "9": 1,
+              "11": 1,
+              "14": 1,
+              "15": 1,
+              "16": 1,
+              "17": 1,
+              "18": 1,
+              "19": 1,
+              "20": 1,
+              "22": 1,
+              "23": 1,
+              "57": 1,
+              "64": 1,
+              "89": 1,
+              "91": 1,
+              "132": 1,
+              "133": 1,
+              "134": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "19": {
+            "count": 2,
+            "fields": {
+              "2": 2,
+              "7": 2,
+              "8": 2,
+              "9": 2,
+              "13": 2,
+              "14": 2,
+              "15": 2,
+              "16": 2,
+              "17": 2,
+              "18": 2,
+              "19": 2,
+              "21": 2,
+              "22": 2,
+              "25": 2,
+              "63": 2,
+              "77": 2,
+              "78": 2,
+              "79": 2,
+              "118": 2,
+              "120": 2,
+              "253": 2,
+              "254": 2
+            },
+            "developerFields": {}
+          },
+          "20": {
+            "count": 868,
+            "fields": {
+              "0": 867,
+              "1": 867,
+              "3": 867,
+              "5": 868,
+              "6": 865,
+              "42": 868,
+              "253": 868
+            },
+            "developerFields": {}
+          },
+          "21": {
+            "count": 2,
+            "fields": {
+              "0": 2,
+              "1": 2,
+              "4": 2,
+              "253": 2
+            },
+            "developerFields": {}
+          },
+          "23": {
+            "count": 1,
+            "fields": {
+              "2": 1,
+              "27": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "34": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "207": {
+            "count": 1,
+            "fields": {
+              "1": 1,
+              "2": 1,
+              "3": 1
+            },
+            "developerFields": {}
+          }
+        }
+      }
+    },
+    {
+      "name": "GARMIN",
+      "records": 451,
+      "gpsPoints": 451,
+      "startSec": 3,
+      "endSec": 879,
+      "recordDurationSec": 876,
+      "sessionDurationSec": 876.524,
+      "sessionTimerSec": 876.524,
+      "sessionDistanceM": 1359.71,
+      "recordFitDeltaM": 1358.99,
+      "firstFitM": 0.72,
+      "medianDt": 2,
+      "p95Dt": 4,
+      "maxDt": 7,
+      "missingCount": 0,
+      "missingRuns": 0,
+      "missingDurationSec": 0,
+      "observableGpsSeconds": 876,
+      "legacyBridgedRawM": 1384.3344731459586,
+      "observedRawM": 1384.3344731459586,
+      "gaps": [],
+      "noiseEstimates": [
+        {
+          "windows": 0,
+          "sigma": null
+        }
+      ],
+      "events": [
+        {
+          "offsetSec": 3,
+          "event": "timer",
+          "type": "start"
+        },
+        {
+          "offsetSec": 879,
+          "event": "timer",
+          "type": "stop_all"
+        }
+      ],
+      "laps": [
+        {
+          "startSec": 3,
+          "endSec": 3,
+          "distanceM": 1359.71,
+          "timerSec": 876.524
+        }
+      ],
+      "inventory": {
+        "file": "GARMIN_FORERUNNER_165.fit",
+        "sha256": "3d6ecb6c353a8550e248357d37d35ebd86c2b19e91a179a8bd6b3538e4e6096f",
+        "bytes": 27301,
+        "discardedTimestampRecords": 0,
+        "officialSdk": {
+          "version": "21.214.0",
+          "profile": {
+            "major": 21,
+            "minor": 214,
+            "patch": 0,
+            "type": "Release"
+          },
+          "integrity": true,
+          "errors": 0,
+          "recordsCompared": 451,
+          "maxPositionDifferenceDegrees": 0,
+          "maxSpeedDifferenceMps": 0,
+          "maxDistanceDifferenceM": 0,
+          "groups": {
+            "22": {
+              "count": 5,
+              "fields": {
+                "0": 5,
+                "1": 5,
+                "2": 5,
+                "3": 3,
+                "4": 5,
+                "5": 5,
+                "253": 5
+              }
+            },
+            "79": {
+              "count": 1,
+              "fields": {
+                "0": 1,
+                "1": 1,
+                "2": 1,
+                "3": 1,
+                "4": 1,
+                "5": 1,
+                "6": 1,
+                "7": 1,
+                "8": 1,
+                "9": 1,
+                "10": 1,
+                "15": 1,
+                "16": 1,
+                "17": 1,
+                "18": 1,
+                "19": 1,
+                "20": 1,
+                "21": 1,
+                "22": 1,
+                "23": 1,
+                "25": 1,
+                "26": 1,
+                "27": 1,
+                "28": 1,
+                "29": 1,
+                "30": 1,
+                "33": 1,
+                "34": 1,
+                "35": 1,
+                "36": 1,
+                "37": 1,
+                "38": 1,
+                "39": 1,
+                "40": 1,
+                "41": 1,
+                "42": 1,
+                "44": 1,
+                "253": 1
+              }
+            },
+            "104": {
+              "count": 3,
+              "fields": {
+                "0": 3,
+                "2": 3,
+                "3": 3,
+                "4": 3,
+                "253": 3
+              }
+            },
+            "140": {
+              "count": 1,
+              "fields": {
+                "0": 1,
+                "1": 1,
+                "2": 1,
+                "3": 1,
+                "4": 1,
+                "5": 1,
+                "6": 1,
+                "7": 1,
+                "8": 1,
+                "9": 1,
+                "10": 1,
+                "11": 1,
+                "12": 1,
+                "13": 1,
+                "20": 1,
+                "22": 1,
+                "23": 1,
+                "24": 1,
+                "25": 1,
+                "26": 1,
+                "27": 1,
+                "28": 1,
+                "29": 1,
+                "30": 1,
+                "31": 1,
+                "32": 1,
+                "33": 1,
+                "34": 1,
+                "35": 1,
+                "36": 1,
+                "37": 1,
+                "38": 1,
+                "39": 1,
+                "40": 1,
+                "41": 1,
+                "42": 1,
+                "43": 1,
+                "44": 1,
+                "45": 1,
+                "46": 1,
+                "48": 1,
+                "51": 1,
+                "52": 1,
+                "53": 1,
+                "54": 1,
+                "55": 1,
+                "56": 1,
+                "59": 1,
+                "60": 1,
+                "61": 1,
+                "63": 1,
+                "64": 1,
+                "65": 1,
+                "66": 1,
+                "67": 1,
+                "253": 1
+              }
+            },
+            "141": {
+              "count": 1,
+              "fields": {
+                "0": 1,
+                "253": 1
+              }
+            },
+            "233": {
+              "count": 881,
+              "fields": {
+                "2": 881
+              }
+            },
+            "288": {
+              "count": 1,
+              "fields": {
+                "0": 1,
+                "1": 1,
+                "253": 1
+              }
+            },
+            "325": {
+              "count": 31,
+              "fields": {
+                "0": 31,
+                "1": 31,
+                "2": 31,
+                "3": 31,
+                "4": 31,
+                "5": 31,
+                "253": 31
+              }
+            },
+            "326": {
+              "count": 16,
+              "fields": {
+                "0": 16,
+                "1": 1,
+                "253": 16
+              }
+            },
+            "327": {
+              "count": 4,
+              "fields": {
+                "0": 4,
+                "1": 4,
+                "2": 4,
+                "3": 4,
+                "4": 4,
+                "5": 4,
+                "6": 4,
+                "253": 4
+              }
+            },
+            "394": {
+              "count": 1,
+              "fields": {
+                "0": 1,
+                "1": 1,
+                "2": 1,
+                "253": 1
+              }
+            },
+            "499": {
+              "count": 1,
+              "fields": {
+                "0": 1,
+                "1": 1,
+                "2": 1,
+                "3": 1,
+                "4": 1,
+                "253": 1
+              }
+            },
+            "fileIdMesgs": {
+              "count": 1,
+              "fields": {
+                "serialNumber": 1,
+                "timeCreated": 1,
+                "manufacturer": 1,
+                "product": 1,
+                "type": 1
+              }
+            },
+            "fileCreatorMesgs": {
+              "count": 1,
+              "fields": {
+                "softwareVersion": 1
+              }
+            },
+            "activityMesgs": {
+              "count": 1,
+              "fields": {
+                "timestamp": 1,
+                "totalTimerTime": 1,
+                "localTimestamp": 1,
+                "numSessions": 1,
+                "type": 1,
+                "event": 1,
+                "eventType": 1
+              }
+            },
+            "sessionMesgs": {
+              "count": 1,
+              "fields": {
+                "81": 1,
+                "138": 1,
+                "151": 1,
+                "152": 1,
+                "178": 1,
+                "184": 1,
+                "188": 1,
+                "timestamp": 1,
+                "startTime": 1,
+                "startPositionLat": 1,
+                "startPositionLong": 1,
+                "totalElapsedTime": 1,
+                "totalTimerTime": 1,
+                "totalDistance": 1,
+                "totalCycles": 1,
+                "necLat": 1,
+                "necLong": 1,
+                "swcLat": 1,
+                "swcLong": 1,
+                "endPositionLat": 1,
+                "endPositionLong": 1,
+                "sportProfileName": 1,
+                "enhancedAvgSpeed": 1,
+                "enhancedMaxSpeed": 1,
+                "messageIndex": 1,
+                "totalCalories": 1,
+                "totalAscent": 1,
+                "totalDescent": 1,
+                "firstLapIndex": 1,
+                "numLaps": 1,
+                "metabolicCalories": 1,
+                "event": 1,
+                "eventType": 1,
+                "sport": 1,
+                "subSport": 1,
+                "avgHeartRate": 1,
+                "maxHeartRate": 1,
+                "avgCadence": 1,
+                "maxCadence": 1,
+                "totalTrainingEffect": 1,
+                "trigger": 1,
+                "avgTemperature": 1,
+                "maxTemperature": 1,
+                "avgFractionalCadence": 1,
+                "maxFractionalCadence": 1,
+                "totalAnaerobicTrainingEffect": 1,
+                "minTemperature": 1
+              }
+            },
+            "timeInZoneMesgs": {
+              "count": 2,
+              "fields": {
+                "timestamp": 2,
+                "timeInHrZone": 2,
+                "referenceMesg": 2,
+                "referenceIndex": 2,
+                "hrZoneHighBoundary": 2,
+                "hrCalcType": 2,
+                "maxHeartRate": 2,
+                "restingHeartRate": 2
+              }
+            },
+            "lapMesgs": {
+              "count": 1,
+              "fields": {
+                "27": 1,
+                "28": 1,
+                "29": 1,
+                "30": 1,
+                "145": 1,
+                "155": 1,
+                "timestamp": 1,
+                "startTime": 1,
+                "startPositionLat": 1,
+                "startPositionLong": 1,
+                "endPositionLat": 1,
+                "endPositionLong": 1,
+                "totalElapsedTime": 1,
+                "totalTimerTime": 1,
+                "totalDistance": 1,
+                "totalCycles": 1,
+                "enhancedAvgSpeed": 1,
+                "enhancedMaxSpeed": 1,
+                "enhancedMinAltitude": 1,
+                "enhancedMaxAltitude": 1,
+                "messageIndex": 1,
+                "totalCalories": 1,
+                "totalAscent": 1,
+                "totalDescent": 1,
+                "event": 1,
+                "eventType": 1,
+                "avgHeartRate": 1,
+                "maxHeartRate": 1,
+                "avgCadence": 1,
+                "maxCadence": 1,
+                "intensity": 1,
+                "lapTrigger": 1,
+                "sport": 1,
+                "subSport": 1,
+                "avgTemperature": 1,
+                "maxTemperature": 1,
+                "avgFractionalCadence": 1,
+                "maxFractionalCadence": 1,
+                "minTemperature": 1
+              }
+            },
+            "timestampCorrelationMesgs": {
+              "count": 1,
+              "fields": {
+                "timestamp": 1,
+                "systemTimestamp": 1,
+                "localTimestamp": 1
+              }
+            },
+            "eventMesgs": {
+              "count": 2,
+              "fields": {
+                "timestamp": 2,
+                "data": 2,
+                "event": 2,
+                "eventType": 2,
+                "eventGroup": 2
+              }
+            },
+            "deviceInfoMesgs": {
+              "count": 12,
+              "fields": {
+                "timestamp": 12,
+                "serialNumber": 2,
+                "manufacturer": 8,
+                "product": 8,
+                "softwareVersion": 10,
+                "deviceIndex": 12,
+                "sourceType": 12,
+                "deviceType": 10
+              }
+            },
+            "deviceSettingsMesgs": {
+              "count": 1,
+              "fields": {
+                "3": 1,
+                "10": 1,
+                "11": 1,
+                "13": 1,
+                "14": 1,
+                "15": 1,
+                "22": 1,
+                "26": 1,
+                "35": 1,
+                "41": 1,
+                "42": 1,
+                "43": 1,
+                "45": 1,
+                "48": 1,
+                "52": 1,
+                "53": 1,
+                "63": 1,
+                "64": 1,
+                "65": 1,
+                "67": 1,
+                "68": 1,
+                "75": 1,
+                "81": 1,
+                "82": 1,
+                "83": 1,
+                "84": 1,
+                "87": 1,
+                "96": 1,
+                "101": 1,
+                "104": 1,
+                "107": 1,
+                "108": 1,
+                "110": 1,
+                "111": 1,
+                "112": 1,
+                "124": 1,
+                "125": 1,
+                "126": 1,
+                "127": 1,
+                "128": 1,
+                "133": 1,
+                "138": 1,
+                "139": 1,
+                "141": 1,
+                "142": 1,
+                "143": 1,
+                "144": 1,
+                "145": 1,
+                "149": 1,
+                "151": 1,
+                "159": 1,
+                "160": 1,
+                "161": 1,
+                "163": 1,
+                "164": 1,
+                "165": 1,
+                "171": 1,
+                "175": 1,
+                "176": 1,
+                "178": 1,
+                "179": 1,
+                "180": 1,
+                "181": 1,
+                "186": 1,
+                "187": 1,
+                "188": 1,
+                "189": 1,
+                "190": 1,
+                "191": 1,
+                "192": 1,
+                "194": 1,
+                "195": 1,
+                "196": 1,
+                "198": 1,
+                "200": 1,
+                "202": 1,
+                "203": 1,
+                "204": 1,
+                "205": 1,
+                "206": 1,
+                "207": 1,
+                "208": 1,
+                "209": 1,
+                "210": 1,
+                "211": 1,
+                "217": 1,
+                "219": 1,
+                "221": 1,
+                "237": 1,
+                "239": 1,
+                "243": 1,
+                "244": 1,
+                "utcOffset": 1,
+                "timeOffset": 1,
+                "autoActivityDetect": 1,
+                "autosyncMinSteps": 1,
+                "autosyncMinTime": 1,
+                "activeTimeZone": 1,
+                "timeMode": 1,
+                "timeZoneOffset": 1,
+                "backlightMode": 1,
+                "activityTrackerEnabled": 1,
+                "moveAlertEnabled": 1,
+                "dateMode": 1,
+                "mountingSide": 1
+              }
+            },
+            "userProfileMesgs": {
+              "count": 1,
+              "fields": {
+                "24": 1,
+                "43": 1,
+                "44": 1,
+                "45": 1,
+                "52": 1,
+                "53": 1,
+                "54": 1,
+                "57": 1,
+                "60": 1,
+                "62": 1,
+                "65": 1,
+                "66": 1,
+                "67": 1,
+                "69": 1,
+                "70": 1,
+                "wakeTime": 1,
+                "sleepTime": 1,
+                "weight": 1,
+                "friendlyName": 1,
+                "gender": 1,
+                "height": 1,
+                "language": 1,
+                "elevSetting": 1,
+                "weightSetting": 1,
+                "restingHeartRate": 1,
+                "hrSetting": 1,
+                "speedSetting": 1,
+                "distSetting": 1,
+                "activityClass": 1,
+                "positionSetting": 1,
+                "temperatureSetting": 1,
+                "heightSetting": 1
+              }
+            },
+            "sportMesgs": {
+              "count": 1,
+              "fields": {
+                "5": 1,
+                "6": 1,
+                "9": 1,
+                "13": 1,
+                "15": 1,
+                "name": 1,
+                "sport": 1,
+                "subSport": 1
+              }
+            },
+            "trainingSettingsMesgs": {
+              "count": 1,
+              "fields": {
+                "2": 1,
+                "4": 1,
+                "8": 1,
+                "30": 1,
+                "254": 1
+              }
+            },
+            "zonesTargetMesgs": {
+              "count": 1,
+              "fields": {
+                "9": 1,
+                "10": 1,
+                "13": 1,
+                "254": 1,
+                "maxHeartRate": 1,
+                "hrCalcType": 1,
+                "pwrCalcType": 1
+              }
+            },
+            "recordMesgs": {
+              "count": 451,
+              "fields": {
+                "107": 451,
+                "135": 451,
+                "136": 451,
+                "143": 451,
+                "timestamp": 451,
+                "positionLat": 451,
+                "positionLong": 451,
+                "distance": 451,
+                "enhancedSpeed": 451,
+                "enhancedAltitude": 451,
+                "cycleLength16": 2,
+                "heartRate": 451,
+                "cadence": 451,
+                "temperature": 451,
+                "fractionalCadence": 451
+              }
+            }
+          }
+        },
+        "nonIncreasingTimestamps": 0,
+        "fields": {
+          "file_creator": {
+            "count": 1,
+            "fields": {
+              "software_version": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              }
+            }
+          },
+          "activity": {
+            "count": 1,
+            "fields": {
+              "timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "total_timer_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "local_timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "num_sessions": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "event": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "event_type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "timestamp_correlation": {
+            "count": 1,
+            "fields": {
+              "timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "system_timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "local_timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "device_settings": {
+            "count": 1,
+            "fields": {
+              "utc_offset": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "time_offset": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "auto_activity_detect": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "autosync_min_steps": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "autosync_min_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "active_time_zone": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "time_mode": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "time_zone_offset": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "backlight_mode": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "activity_tracker_enabled": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "move_alert_enabled": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "date_mode": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "mounting_side": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "user_profile": {
+            "count": 1,
+            "fields": {
+              "wake_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "sleep_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "weight": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "friendly_name": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "gender": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "height": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "language": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "elev_setting": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "weight_setting": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "resting_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "hr_setting": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "speed_setting": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "dist_setting": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "activity_class": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "position_setting": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "temperature_setting": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "height_setting": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "training_settings": {
+            "count": 1,
+            "fields": {}
+          },
+          "zones_target": {
+            "count": 1,
+            "fields": {
+              "max_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "hr_calc_type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "pwr_calc_type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "sports": {
+            "count": 1,
+            "fields": {
+              "name": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "sub_sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "file_ids": {
+            "count": 1,
+            "fields": {
+              "serial_number": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "time_created": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "manufacturer": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "product": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "time_in_zone": {
+            "count": 2,
+            "fields": {
+              "timestamp": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "time_in_hr_zone": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "time_in_power_zone": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "power_zone_high_boundary": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "reference_mesg": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "reference_index": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "hr_zone_high_boundary": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "hr_calc_type": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "max_heart_rate": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "resting_heart_rate": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              }
+            }
+          },
+          "activity_metrics": {
+            "count": 1,
+            "fields": {
+              "vo2_max": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "first_vo2_max": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "recovery_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_ascent": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "total_descent": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "new_max_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "aerobic_training_effect": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "anaerobic_training_effect": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "primary_benefit": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              }
+            }
+          },
+          "user_metrics": {
+            "count": 1,
+            "fields": {
+              "timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "start_of_activity": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "first_vo2_max": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "end_of_previous_activity": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "vo2_max": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "weight": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "remaining_recovery_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "age": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "height": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "gender": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "max_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              }
+            }
+          },
+          "messages": {
+            "count": 1,
+            "fields": {
+              "file_id": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "file_creator": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "activity": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "activity_metrics": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "session": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "time_in_zone": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "lap": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "timestamp_correlation": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "event": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "device_info": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "device_settings": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "user_profile": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "user_metrics": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "training_settings": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "zones_target": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "record": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          },
+          "sessions": {
+            "count": 1,
+            "fields": {
+              "timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "start_time": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "start_position_lat": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "start_position_long": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_elapsed_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_timer_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_distance": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_cycles": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "nec_lat": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "nec_long": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "swc_lat": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "swc_long": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "end_position_lat": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "end_position_long": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "sport_profile_name": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_left_power_phase": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_left_power_phase_peak": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_right_power_phase": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_right_power_phase_peak": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_power_position": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "max_power_position": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "enhanced_avg_speed": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "enhanced_max_speed": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "message_index": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "total_calories": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_ascent": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "total_descent": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "first_lap_index": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "num_laps": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "est_sweat_loss": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "metabolic_calories": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "event": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "event_type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "sub_sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_training_effect": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "trigger": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_temperature": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_temperature": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_fractional_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_fractional_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_cadence_position": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "max_cadence_position": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "total_anaerobic_training_effect": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "min_temperature": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "primary_benefit": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              }
+            }
+          },
+          "laps": {
+            "count": 1,
+            "fields": {
+              "timestamp": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "start_time": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "start_position_lat": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "start_position_long": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "end_position_lat": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "end_position_long": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_elapsed_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_timer_time": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_distance": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_cycles": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_left_power_phase": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_left_power_phase_peak": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_right_power_phase": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_right_power_phase_peak": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_power_position": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "max_power_position": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "enhanced_avg_speed": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "enhanced_max_speed": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "enhanced_min_altitude": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "enhanced_max_altitude": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "message_index": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "total_calories": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "total_ascent": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "total_descent": {
+                "present": 1,
+                "finite": 1,
+                "zero": 1
+              },
+              "event": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "event_type": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_heart_rate": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "intensity": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "lap_trigger": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "sub_sport": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "avg_temperature": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_temperature": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_fractional_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "max_fractional_cadence": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              },
+              "avg_cadence_position": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "max_cadence_position": {
+                "present": 1,
+                "finite": 0,
+                "zero": 0
+              },
+              "min_temperature": {
+                "present": 1,
+                "finite": 1,
+                "zero": 0
+              }
+            }
+          },
+          "records": {
+            "count": 451,
+            "fields": {
+              "timestamp": {
+                "present": 451,
+                "finite": 0,
+                "zero": 0
+              },
+              "position_lat": {
+                "present": 451,
+                "finite": 451,
+                "zero": 0
+              },
+              "position_long": {
+                "present": 451,
+                "finite": 451,
+                "zero": 0
+              },
+              "distance": {
+                "present": 451,
+                "finite": 451,
+                "zero": 0
+              },
+              "enhanced_speed": {
+                "present": 451,
+                "finite": 451,
+                "zero": 7
+              },
+              "enhanced_altitude": {
+                "present": 451,
+                "finite": 451,
+                "zero": 0
+              },
+              "cycle_length16": {
+                "present": 2,
+                "finite": 2,
+                "zero": 1
+              },
+              "heart_rate": {
+                "present": 451,
+                "finite": 451,
+                "zero": 0
+              },
+              "cadence": {
+                "present": 451,
+                "finite": 451,
+                "zero": 317
+              },
+              "temperature": {
+                "present": 451,
+                "finite": 451,
+                "zero": 0
+              },
+              "fractional_cadence": {
+                "present": 451,
+                "finite": 451,
+                "zero": 374
+              }
+            }
+          },
+          "events": {
+            "count": 2,
+            "fields": {
+              "timestamp": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "data": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              },
+              "event": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "event_type": {
+                "present": 2,
+                "finite": 0,
+                "zero": 0
+              },
+              "event_group": {
+                "present": 2,
+                "finite": 2,
+                "zero": 2
+              }
+            }
+          },
+          "device_infos": {
+            "count": 12,
+            "fields": {
+              "timestamp": {
+                "present": 12,
+                "finite": 0,
+                "zero": 0
+              },
+              "serial_number": {
+                "present": 2,
+                "finite": 2,
+                "zero": 0
+              },
+              "manufacturer": {
+                "present": 8,
+                "finite": 0,
+                "zero": 0
+              },
+              "product": {
+                "present": 8,
+                "finite": 8,
+                "zero": 0
+              },
+              "software_version": {
+                "present": 10,
+                "finite": 10,
+                "zero": 0
+              },
+              "device_index": {
+                "present": 12,
+                "finite": 10,
+                "zero": 0
+              },
+              "source_type": {
+                "present": 12,
+                "finite": 0,
+                "zero": 0
+              },
+              "device_type": {
+                "present": 10,
+                "finite": 0,
+                "zero": 0
+              }
+            }
+          }
+        },
+        "binary": {
+          "0": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "7": 1
+            },
+            "developerFields": {}
+          },
+          "2": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "8": 1,
+              "9": 1,
+              "10": 1,
+              "11": 1,
+              "12": 1,
+              "13": 1,
+              "14": 1,
+              "15": 1,
+              "22": 1,
+              "23": 1,
+              "25": 1,
+              "26": 1,
+              "28": 1,
+              "30": 1,
+              "31": 1,
+              "34": 1,
+              "35": 1,
+              "36": 1,
+              "38": 1,
+              "41": 1,
+              "42": 1,
+              "43": 1,
+              "44": 1,
+              "45": 1,
+              "46": 1,
+              "47": 1,
+              "48": 1,
+              "49": 1,
+              "52": 1,
+              "53": 1,
+              "54": 1,
+              "55": 1,
+              "56": 1,
+              "58": 1,
+              "59": 1,
+              "63": 1,
+              "64": 1,
+              "65": 1,
+              "67": 1,
+              "68": 1,
+              "75": 1,
+              "76": 1,
+              "77": 1,
+              "80": 1,
+              "81": 1,
+              "82": 1,
+              "83": 1,
+              "84": 1,
+              "85": 1,
+              "87": 1,
+              "90": 1,
+              "94": 1,
+              "96": 1,
+              "97": 1,
+              "98": 1,
+              "101": 1,
+              "104": 1,
+              "107": 1,
+              "108": 1,
+              "109": 1,
+              "110": 1,
+              "111": 1,
+              "112": 1,
+              "115": 1,
+              "116": 1,
+              "117": 1,
+              "124": 1,
+              "125": 1,
+              "126": 1,
+              "127": 1,
+              "128": 1,
+              "129": 1,
+              "130": 1,
+              "131": 1,
+              "132": 1,
+              "133": 1,
+              "135": 1,
+              "137": 1,
+              "138": 1,
+              "139": 1,
+              "140": 1,
+              "141": 1,
+              "142": 1,
+              "143": 1,
+              "144": 1,
+              "145": 1,
+              "148": 1,
+              "149": 1,
+              "151": 1,
+              "159": 1,
+              "160": 1,
+              "161": 1,
+              "163": 1,
+              "164": 1,
+              "165": 1,
+              "170": 1,
+              "171": 1,
+              "175": 1,
+              "176": 1,
+              "178": 1,
+              "179": 1,
+              "180": 1,
+              "181": 1,
+              "186": 1,
+              "187": 1,
+              "188": 1,
+              "189": 1,
+              "190": 1,
+              "191": 1,
+              "192": 1,
+              "194": 1,
+              "195": 1,
+              "196": 1,
+              "198": 1,
+              "200": 1,
+              "202": 1,
+              "203": 1,
+              "204": 1,
+              "205": 1,
+              "206": 1,
+              "207": 1,
+              "208": 1,
+              "209": 1,
+              "210": 1,
+              "211": 1,
+              "217": 1,
+              "218": 1,
+              "219": 1,
+              "221": 1,
+              "237": 1,
+              "238": 1,
+              "239": 1,
+              "243": 1,
+              "244": 1
+            },
+            "developerFields": {}
+          },
+          "3": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "6": 1,
+              "7": 1,
+              "8": 1,
+              "12": 1,
+              "13": 1,
+              "14": 1,
+              "17": 1,
+              "18": 1,
+              "21": 1,
+              "24": 1,
+              "28": 1,
+              "29": 1,
+              "30": 1,
+              "31": 1,
+              "32": 1,
+              "33": 1,
+              "36": 1,
+              "37": 1,
+              "38": 1,
+              "41": 1,
+              "42": 1,
+              "43": 1,
+              "44": 1,
+              "45": 1,
+              "47": 1,
+              "52": 1,
+              "53": 1,
+              "54": 1,
+              "57": 1,
+              "60": 1,
+              "62": 1,
+              "65": 1,
+              "66": 1,
+              "67": 1,
+              "69": 1,
+              "70": 1
+            },
+            "developerFields": {}
+          },
+          "7": {
+            "count": 1,
+            "fields": {
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "5": 1,
+              "7": 1,
+              "8": 1,
+              "9": 1,
+              "10": 1,
+              "11": 1,
+              "12": 1,
+              "13": 1,
+              "15": 1,
+              "16": 1,
+              "254": 1
+            },
+            "developerFields": {}
+          },
+          "12": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "3": 1,
+              "5": 1,
+              "6": 1,
+              "9": 1,
+              "10": 1,
+              "12": 1,
+              "13": 1,
+              "15": 1,
+              "19": 1
+            },
+            "developerFields": {}
+          },
+          "13": {
+            "count": 1,
+            "fields": {
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "6": 1,
+              "7": 1,
+              "8": 1,
+              "11": 1,
+              "12": 1,
+              "13": 1,
+              "14": 1,
+              "22": 1,
+              "23": 1,
+              "24": 1,
+              "27": 1,
+              "28": 1,
+              "29": 1,
+              "30": 1,
+              "31": 1,
+              "32": 1,
+              "33": 1,
+              "34": 1,
+              "43": 1,
+              "44": 1,
+              "45": 1,
+              "46": 1,
+              "47": 1,
+              "48": 1,
+              "54": 1,
+              "55": 1,
+              "57": 1,
+              "60": 1,
+              "62": 1,
+              "65": 1,
+              "71": 1,
+              "72": 1,
+              "76": 1,
+              "79": 1,
+              "83": 1,
+              "85": 1,
+              "86": 1,
+              "87": 1,
+              "93": 1,
+              "99": 1,
+              "103": 1,
+              "104": 1,
+              "105": 1,
+              "109": 1,
+              "110": 1,
+              "112": 1,
+              "113": 1,
+              "114": 1,
+              "115": 1,
+              "121": 1,
+              "123": 1,
+              "124": 1,
+              "125": 1,
+              "254": 1
+            },
+            "developerFields": {}
+          },
+          "18": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "6": 1,
+              "7": 1,
+              "8": 1,
+              "9": 1,
+              "10": 1,
+              "11": 1,
+              "14": 1,
+              "15": 1,
+              "16": 1,
+              "17": 1,
+              "18": 1,
+              "19": 1,
+              "20": 1,
+              "21": 1,
+              "22": 1,
+              "23": 1,
+              "24": 1,
+              "25": 1,
+              "26": 1,
+              "27": 1,
+              "28": 1,
+              "29": 1,
+              "30": 1,
+              "31": 1,
+              "32": 1,
+              "33": 1,
+              "34": 1,
+              "35": 1,
+              "36": 1,
+              "37": 1,
+              "38": 1,
+              "39": 1,
+              "41": 1,
+              "42": 1,
+              "43": 1,
+              "44": 1,
+              "45": 1,
+              "46": 1,
+              "47": 1,
+              "48": 1,
+              "57": 1,
+              "58": 1,
+              "78": 1,
+              "79": 1,
+              "80": 1,
+              "81": 1,
+              "89": 1,
+              "90": 1,
+              "91": 1,
+              "92": 1,
+              "93": 1,
+              "94": 1,
+              "101": 1,
+              "102": 1,
+              "103": 1,
+              "104": 1,
+              "105": 1,
+              "106": 1,
+              "107": 1,
+              "108": 1,
+              "109": 1,
+              "110": 1,
+              "112": 1,
+              "113": 1,
+              "114": 1,
+              "115": 1,
+              "116": 1,
+              "117": 1,
+              "118": 1,
+              "119": 1,
+              "120": 1,
+              "121": 1,
+              "122": 1,
+              "123": 1,
+              "124": 1,
+              "125": 1,
+              "132": 1,
+              "133": 1,
+              "134": 1,
+              "137": 1,
+              "138": 1,
+              "147": 1,
+              "148": 1,
+              "149": 1,
+              "150": 1,
+              "151": 1,
+              "152": 1,
+              "157": 1,
+              "158": 1,
+              "168": 1,
+              "169": 1,
+              "170": 1,
+              "177": 1,
+              "178": 1,
+              "179": 1,
+              "180": 1,
+              "184": 1,
+              "185": 1,
+              "188": 1,
+              "189": 1,
+              "190": 1,
+              "192": 1,
+              "193": 1,
+              "194": 1,
+              "195": 1,
+              "196": 1,
+              "197": 1,
+              "198": 1,
+              "201": 1,
+              "202": 1,
+              "205": 1,
+              "206": 1,
+              "207": 1,
+              "211": 1,
+              "212": 1,
+              "218": 1,
+              "253": 1,
+              "254": 1
+            },
+            "developerFields": {}
+          },
+          "19": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "6": 1,
+              "7": 1,
+              "8": 1,
+              "9": 1,
+              "10": 1,
+              "11": 1,
+              "12": 1,
+              "13": 1,
+              "14": 1,
+              "15": 1,
+              "16": 1,
+              "17": 1,
+              "18": 1,
+              "19": 1,
+              "20": 1,
+              "21": 1,
+              "22": 1,
+              "23": 1,
+              "24": 1,
+              "25": 1,
+              "26": 1,
+              "27": 1,
+              "28": 1,
+              "29": 1,
+              "30": 1,
+              "32": 1,
+              "33": 1,
+              "34": 1,
+              "35": 1,
+              "37": 1,
+              "38": 1,
+              "39": 1,
+              "40": 1,
+              "41": 1,
+              "50": 1,
+              "51": 1,
+              "70": 1,
+              "71": 1,
+              "72": 1,
+              "73": 1,
+              "77": 1,
+              "78": 1,
+              "79": 1,
+              "80": 1,
+              "81": 1,
+              "82": 1,
+              "90": 1,
+              "91": 1,
+              "92": 1,
+              "93": 1,
+              "94": 1,
+              "95": 1,
+              "96": 1,
+              "97": 1,
+              "98": 1,
+              "99": 1,
+              "100": 1,
+              "101": 1,
+              "102": 1,
+              "103": 1,
+              "104": 1,
+              "105": 1,
+              "106": 1,
+              "107": 1,
+              "108": 1,
+              "109": 1,
+              "110": 1,
+              "111": 1,
+              "112": 1,
+              "113": 1,
+              "114": 1,
+              "118": 1,
+              "119": 1,
+              "120": 1,
+              "124": 1,
+              "125": 1,
+              "126": 1,
+              "136": 1,
+              "137": 1,
+              "143": 1,
+              "145": 1,
+              "152": 1,
+              "155": 1,
+              "161": 1,
+              "253": 1,
+              "254": 1
+            },
+            "developerFields": {}
+          },
+          "20": {
+            "count": 451,
+            "fields": {
+              "0": 451,
+              "1": 451,
+              "3": 451,
+              "4": 451,
+              "5": 451,
+              "13": 451,
+              "53": 451,
+              "73": 451,
+              "78": 451,
+              "87": 451,
+              "107": 451,
+              "134": 451,
+              "135": 451,
+              "136": 451,
+              "143": 451,
+              "253": 451
+            },
+            "developerFields": {}
+          },
+          "21": {
+            "count": 2,
+            "fields": {
+              "0": 2,
+              "1": 2,
+              "3": 2,
+              "4": 2,
+              "15": 2,
+              "19": 2,
+              "20": 2,
+              "253": 2
+            },
+            "developerFields": {}
+          },
+          "22": {
+            "count": 5,
+            "fields": {
+              "0": 5,
+              "1": 5,
+              "2": 5,
+              "3": 5,
+              "4": 5,
+              "5": 5,
+              "6": 5,
+              "8": 5,
+              "14": 5,
+              "15": 5,
+              "16": 5,
+              "253": 5
+            },
+            "developerFields": {}
+          },
+          "23": {
+            "count": 12,
+            "fields": {
+              "0": 12,
+              "1": 12,
+              "2": 12,
+              "3": 12,
+              "4": 12,
+              "5": 12,
+              "6": 12,
+              "7": 12,
+              "8": 12,
+              "9": 12,
+              "10": 12,
+              "11": 12,
+              "13": 12,
+              "15": 12,
+              "16": 12,
+              "17": 12,
+              "18": 12,
+              "20": 12,
+              "21": 12,
+              "22": 12,
+              "23": 12,
+              "24": 12,
+              "25": 12,
+              "29": 12,
+              "30": 12,
+              "31": 12,
+              "32": 12,
+              "253": 12
+            },
+            "developerFields": {}
+          },
+          "34": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "6": 1,
+              "7": 1,
+              "8": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "49": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1
+            },
+            "developerFields": {}
+          },
+          "79": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "6": 1,
+              "7": 1,
+              "8": 1,
+              "9": 1,
+              "10": 1,
+              "14": 1,
+              "15": 1,
+              "16": 1,
+              "17": 1,
+              "18": 1,
+              "19": 1,
+              "20": 1,
+              "21": 1,
+              "22": 1,
+              "23": 1,
+              "24": 1,
+              "25": 1,
+              "26": 1,
+              "27": 1,
+              "28": 1,
+              "29": 1,
+              "30": 1,
+              "31": 1,
+              "32": 1,
+              "33": 1,
+              "34": 1,
+              "35": 1,
+              "36": 1,
+              "37": 1,
+              "38": 1,
+              "39": 1,
+              "40": 1,
+              "41": 1,
+              "42": 1,
+              "43": 1,
+              "44": 1,
+              "45": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "104": {
+            "count": 3,
+            "fields": {
+              "0": 3,
+              "2": 3,
+              "3": 3,
+              "4": 3,
+              "253": 3
+            },
+            "developerFields": {}
+          },
+          "140": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "5": 1,
+              "6": 1,
+              "7": 1,
+              "8": 1,
+              "9": 1,
+              "10": 1,
+              "11": 1,
+              "12": 1,
+              "13": 1,
+              "17": 1,
+              "18": 1,
+              "19": 1,
+              "20": 1,
+              "21": 1,
+              "22": 1,
+              "23": 1,
+              "24": 1,
+              "25": 1,
+              "26": 1,
+              "27": 1,
+              "28": 1,
+              "29": 1,
+              "30": 1,
+              "31": 1,
+              "32": 1,
+              "33": 1,
+              "34": 1,
+              "35": 1,
+              "36": 1,
+              "37": 1,
+              "38": 1,
+              "39": 1,
+              "40": 1,
+              "41": 1,
+              "42": 1,
+              "43": 1,
+              "44": 1,
+              "45": 1,
+              "46": 1,
+              "48": 1,
+              "49": 1,
+              "50": 1,
+              "51": 1,
+              "52": 1,
+              "53": 1,
+              "54": 1,
+              "55": 1,
+              "56": 1,
+              "57": 1,
+              "58": 1,
+              "59": 1,
+              "60": 1,
+              "61": 1,
+              "62": 1,
+              "63": 1,
+              "64": 1,
+              "65": 1,
+              "66": 1,
+              "67": 1,
+              "68": 1,
+              "69": 1,
+              "70": 1,
+              "71": 1,
+              "72": 1,
+              "73": 1,
+              "74": 1,
+              "75": 1,
+              "76": 1,
+              "77": 1,
+              "78": 1,
+              "79": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "141": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "162": {
+            "count": 1,
+            "fields": {
+              "1": 1,
+              "3": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "216": {
+            "count": 2,
+            "fields": {
+              "0": 2,
+              "1": 2,
+              "2": 2,
+              "5": 2,
+              "6": 2,
+              "9": 2,
+              "10": 2,
+              "11": 2,
+              "12": 2,
+              "13": 2,
+              "14": 2,
+              "15": 2,
+              "253": 2
+            },
+            "developerFields": {}
+          },
+          "233": {
+            "count": 881,
+            "fields": {
+              "2": 881
+            },
+            "developerFields": {}
+          },
+          "288": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "325": {
+            "count": 31,
+            "fields": {
+              "0": 31,
+              "1": 31,
+              "2": 31,
+              "3": 31,
+              "4": 31,
+              "5": 31,
+              "253": 31
+            },
+            "developerFields": {}
+          },
+          "326": {
+            "count": 16,
+            "fields": {
+              "0": 16,
+              "1": 16,
+              "253": 16
+            },
+            "developerFields": {}
+          },
+          "327": {
+            "count": 4,
+            "fields": {
+              "0": 4,
+              "1": 4,
+              "2": 4,
+              "3": 4,
+              "4": 4,
+              "5": 4,
+              "6": 4,
+              "253": 4
+            },
+            "developerFields": {}
+          },
+          "394": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          },
+          "499": {
+            "count": 1,
+            "fields": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "3": 1,
+              "4": 1,
+              "253": 1
+            },
+            "developerFields": {}
+          }
+        }
+      }
+    }
+  ],
+  "intervals": [
+    {
+      "category": "sprint",
+      "startSec": 547,
+      "endSec": 559,
+      "path": 49.92748160740674,
+      "net": 25.56084777100066,
+      "ratio": 0.5119594849985125,
+      "spread": 24.416758897527394,
+      "duration": 12,
+      "speed": 4.017230769230769,
+      "headingConsistency": 0.24503619594923723,
+      "turns": 2,
+      "label": "heuristic; not ground truth"
+    },
+    {
+      "category": "stationary",
+      "startSec": 601,
+      "endSec": 613,
+      "path": 3.5103333095689546,
+      "net": 0.634422996309095,
+      "ratio": 0.18073013026418222,
+      "spread": 0.7055765973784154,
+      "duration": 12,
+      "speed": 0.5817692307692307,
+      "headingConsistency": 0.040279978682698565,
+      "turns": 2,
+      "label": "heuristic; not ground truth"
+    },
+    {
+      "category": "slow",
+      "startSec": 595,
+      "endSec": 607,
+      "path": 4.7358970031210825,
+      "net": 3.9370606266439636,
+      "ratio": 0.8313231102892094,
+      "spread": 2.861541578864907,
+      "duration": 12,
+      "speed": 1.0091538461538463,
+      "headingConsistency": 0.6778290675096184,
+      "turns": 1,
+      "label": "heuristic; not ground truth"
+    },
+    {
+      "category": "turns",
+      "startSec": 27,
+      "endSec": 39,
+      "path": 7.459088929194966,
+      "net": 3.405954131075318,
+      "ratio": 0.45661798155326605,
+      "spread": 2.275350249054022,
+      "duration": 12,
+      "speed": 0.9145384615384616,
+      "headingConsistency": 0.44612365779260127,
+      "turns": 3,
+      "label": "heuristic; not ground truth"
+    },
+    {
+      "category": "straight",
+      "startSec": 556,
+      "endSec": 568,
+      "path": 16.429512720914968,
+      "net": 16.37481842796138,
+      "ratio": 0.9966709729081641,
+      "spread": 8.313368478266277,
+      "duration": 12,
+      "speed": 2.0101538461538464,
+      "headingConsistency": 0.99667198467439,
+      "turns": 0,
+      "label": "heuristic; not ground truth"
+    }
+  ]
+}
