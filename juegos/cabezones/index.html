@@ -975,7 +975,7 @@ body{padding:6px;overflow:hidden}
 <div class="shell">
   <div class="topbar">
     <button id="backBtn" class="ghost">← Juegos</button>
-    <div class="brand"><small>Prototipo local · v21</small><strong>Patxanguilles Cabuts</strong></div>
+    <div class="brand"><small>Prototipo local · v22</small><strong>Patxanguilles Cabuts</strong></div>
     <div></div>
   </div>
 
@@ -1294,6 +1294,9 @@ const SUPABASE_KEY='sb_publishable_uWEwYEMkAe3YkeAzX7ACAg_0aEYHmM6';
 const W=1220,H=620,GROUND=552,GOAL_TOP=322,GOAL_DEPTH=72,GOAL_BACK=7;
 const BALL_R=16;
 const KICK_DURATION=.36;
+const RAPID_KICK_MIN_DURATION=.105;
+const RAPID_KICK_QUEUE_MAX=8;
+const RAPID_KICK_QUEUE_LIFETIME=1.45;
 const HEADER_DURATION=.40;
 const MELEE_DURATION=.42;
 const BICYCLE_DURATION=.62;
@@ -3176,7 +3179,8 @@ function createPlayer(x,color,facing){
     body:compound,torso,headPart:head,color,facing,aura,visual,head:headFallback,name,buffText,
     chargeGfx,chargeText,
     runPhase:0,
-    kickAnim:0,kickCd:0,kickPending:false,kickResolved:false,
+    kickAnim:0,kickAnimDuration:KICK_DURATION,kickCd:0,kickPending:false,kickResolved:false,
+    rapidKickQueue:0,rapidKickLastTapAt:0,rapidKickDuration:KICK_DURATION,rapidKickQueueExpiresAt:0,
     strikeMode:'foot',headerAnim:0,headerResolved:false,
     strikeRunSpeed:0,strikeWasRunning:false,strikeWasAirborne:false,
     bicycleAnim:0,bicycleResolved:false,
@@ -3376,6 +3380,8 @@ async function startMatch(){
 
 function resetPlayerState(p){
   p.kickAnim=p.kickCd=p.jumpCd=p.headerCd=p.stun=0;
+  p.kickAnimDuration=KICK_DURATION;
+  p.rapidKickQueue=0;p.rapidKickLastTapAt=0;p.rapidKickDuration=KICK_DURATION;p.rapidKickQueueExpiresAt=0;
   p.headerAnim=0;p.headerResolved=false;p.strikeMode='foot';
   p.strikeRunSpeed=0;p.strikeWasRunning=false;p.strikeWasAirborne=false;
   p.bicycleAnim=0;p.bicycleResolved=false;
@@ -3561,6 +3567,99 @@ function meleeContextAvailable(p){
   return rivalDistance<102 && ballDistance>132 && ballFromPlayers>112;
 }
 
+
+function rapidKickDurationFromInterval(ms){
+  // Cuanto más rápido pulsa el usuario, más corta es la animación completa.
+  if(ms<=115)return .105;
+  if(ms<=155)return .125;
+  if(ms<=205)return .155;
+  if(ms<=270)return .195;
+  if(ms<=360)return .245;
+  return .31;
+}
+
+function accelerateCurrentKickForMash(p,newDuration){
+  if(p.strikeMode!=='foot'||p.kickAnim<=0)return;
+
+  const oldDuration=Math.max(RAPID_KICK_MIN_DURATION,p.kickAnimDuration||KICK_DURATION);
+  const q=Phaser.Math.Clamp(1-p.kickAnim/oldDuration,0,1);
+  const duration=Math.max(RAPID_KICK_MIN_DURATION,Math.min(oldDuration,newDuration));
+
+  // Conserva el progreso de la patada. No salta la ventana de contacto:
+  // simplemente comprime el tiempo restante de la animación.
+  p.kickAnimDuration=duration;
+  p.kickAnim=(1-q)*duration;
+  p.kickCd=Math.min(p.kickCd,.035);
+}
+
+function queueRapidStrike(p){
+  if(!p||p.stun>0||p.chargingShot)return;
+
+  const now=performance.now();
+  const interval=p.rapidKickLastTapAt>0?now-p.rapidKickLastTapAt:999;
+  p.rapidKickLastTapAt=now;
+
+  const wantedDuration=rapidKickDurationFromInterval(interval);
+  p.rapidKickDuration=Math.max(
+    RAPID_KICK_MIN_DURATION,
+    Math.min(p.rapidKickDuration||KICK_DURATION,wantedDuration)
+  );
+
+  p.rapidKickQueue=Math.min(RAPID_KICK_QUEUE_MAX,(p.rapidKickQueue||0)+1);
+  p.rapidKickQueueExpiresAt=now+RAPID_KICK_QUEUE_LIFETIME*1000;
+
+  // Si ya hay una patada en curso, una nueva pulsación acelera la recuperación
+  // para que visualmente pueda comenzar la siguiente mucho antes.
+  accelerateCurrentKickForMash(p,p.rapidKickDuration);
+
+  processRapidKickQueue(p);
+}
+
+function processRapidKickQueue(p){
+  if(!p||p.rapidKickQueue<=0||p.chargingShot||p.kickWaitingCharge||p.stun>0)return;
+
+  if(performance.now()>p.rapidKickQueueExpiresAt){
+    p.rapidKickQueue=0;
+    p.rapidKickDuration=KICK_DURATION;
+    return;
+  }
+
+  // Si la patada actual ya ha superado su ventana útil de contacto,
+  // permitimos que la siguiente pulsación corte la recuperación visual.
+  if(p.strikeMode==='foot'&&p.kickAnim>0){
+    const duration=Math.max(RAPID_KICK_MIN_DURATION,p.kickAnimDuration||KICK_DURATION);
+    const q=Phaser.Math.Clamp(1-p.kickAnim/duration,0,1);
+
+    if(q<.74)return;
+
+    p.kickAnim=0;
+    p.kickPending=false;
+    p.kickResolved=false;
+    p.kickCd=0;
+    p.pendingShotCharge=0;
+  }
+
+  // Otros ataques siguen respetando su ventana física; la pulsación queda
+  // almacenada y se ejecuta en cuanto termina.
+  if(p.kickPending||p.meleePending||p.headerAnim>0||p.bicycleAnim>0||p.kickCd>0)return;
+
+  const duration=Phaser.Math.Clamp(
+    p.rapidKickDuration||KICK_DURATION,
+    RAPID_KICK_MIN_DURATION,
+    KICK_DURATION
+  );
+
+  if(startStrike(p,{rapid:true,kickDuration:duration})){
+    p.rapidKickQueue=Math.max(0,p.rapidKickQueue-1);
+
+    if(p.rapidKickQueue<=0){
+      // No lo devolvemos a .36 inmediatamente: durante unos instantes conserva
+      // el tempo por si el usuario continúa machacando el botón.
+      p.rapidKickQueueExpiresAt=performance.now()+420;
+    }
+  }
+}
+
 function beginShotCharge(p){
   if(p.chargingShot||p.kickCd>0||p.kickPending||p.meleePending)return;
   p.kickWaitingCharge=false;
@@ -3597,7 +3696,7 @@ function releaseShotCharge(p){
     tone(380,.06,.025,'square');
     tone(620,.08,.022,'triangle',.025);
   }
-  startStrike(p);
+  startStrike(p,{charged:true});
 }
 
 function controlPlayer(p,dt,left,right,jump,kick,special,directKick=false){
@@ -3609,6 +3708,10 @@ function controlPlayer(p,dt,left,right,jump,kick,special,directKick=false){
   p.meleeAnim=Math.max(0,p.meleeAnim-dt);
   p.jumpCd=Math.max(0,p.jumpCd-dt);
   updateBuffs(p,dt);
+
+  // Ejecuta las pulsaciones pendientes tan pronto como la animación anterior
+  // entra en recuperación. Esto evita perder inputs entre frames.
+  processRapidKickQueue(p);
 
   if(special&&!p.specialHeld)armSpecial(p);
   p.specialHeld=!!special;
@@ -3640,7 +3743,7 @@ function controlPlayer(p,dt,left,right,jump,kick,special,directKick=false){
         p.pendingShotCharge=0;
         p.kickWaitingCharge=false;
         p.kickHoldTimer=0;
-        startStrike(p);
+        queueRapidStrike(p);
       }else{
         // Durante los primeros 0.5 s NO hay carga y NO se bloquea movimiento.
         p.kickWaitingCharge=true;
@@ -3655,7 +3758,7 @@ function controlPlayer(p,dt,left,right,jump,kick,special,directKick=false){
         p.kickWaitingCharge=false;
         p.kickHoldTimer=0;
         p.pendingShotCharge=0;
-        startStrike(p);
+        queueRapidStrike(p);
       }else{
         p.kickHoldTimer+=dt;
 
@@ -3680,7 +3783,7 @@ function controlPlayer(p,dt,left,right,jump,kick,special,directKick=false){
         p.kickWaitingCharge=false;
         p.kickHoldTimer=0;
         p.pendingShotCharge=0;
-        startStrike(p);
+        queueRapidStrike(p);
       }
     }
   }
@@ -3730,6 +3833,7 @@ function controlPlayer(p,dt,left,right,jump,kick,special,directKick=false){
   }
 
   updateStrikeContact(p);
+  processRapidKickQueue(p);
 }
 function armSpecial(p){
   if(p.power<100||p.specialArmed)return;
@@ -3739,8 +3843,8 @@ function armSpecial(p){
   floatingText(p.body.position.x,p.body.position.y-155,'¡ESPECIAL LISTO!','#ffe276',17);
 }
 
-function startStrike(p){
-  if(p.kickCd>0||p.kickPending||p.meleePending)return;
+function startStrike(p,opts={}){
+  if(p.kickCd>0||p.kickPending||p.meleePending)return false;
 
   const b=scene.ball.body;
   const other=getOpponent(p);
@@ -3759,7 +3863,7 @@ function startStrike(p){
 
     if(rivalDistance<190 && ballDistance>82){
       startCarnisserAttack(p,other);
-      return;
+      return true;
     }
   }
 
@@ -3781,7 +3885,7 @@ function startStrike(p){
 
     if(playerDistance<102 && ballDistance>132 && ballFromPlayers>112){
       startMeleeAttack(p,other);
-      return;
+      return true;
     }
   }
 
@@ -3806,7 +3910,13 @@ function startStrike(p){
     dxPlayer<150 &&
     Math.abs(dyPlayer)<145;
 
-  p.kickCd=.26;
+  const requestedKickDuration=Phaser.Math.Clamp(
+    Number(opts.kickDuration)||KICK_DURATION,
+    RAPID_KICK_MIN_DURATION,
+    KICK_DURATION
+  );
+  p.kickAnimDuration=requestedKickDuration;
+  p.kickCd=opts.rapid?Math.max(.028,requestedKickDuration*.24):.26;
   p.kickPending=true;
   p.kickResolved=false;
   p.headerResolved=false;
@@ -3823,7 +3933,7 @@ function startStrike(p){
     p.kickAnim=0;
     p.headerAnim=0;
     floatingText(p.body.position.x,p.body.position.y-155,'⚡ ¡CHILENA!','#ffe36a',18);
-    return;
+    return true;
   }
 
   // En el aire damos más variedad por altura:
@@ -3837,10 +3947,12 @@ function startStrike(p){
     p.bicycleAnim=0;
   }else{
     p.strikeMode='foot';
-    p.kickAnim=KICK_DURATION;
+    p.kickAnim=p.kickAnimDuration;
     p.headerAnim=0;
     p.bicycleAnim=0;
   }
+
+  return true;
 }
 
 function getBicycleProgress(p){
@@ -4422,7 +4534,8 @@ function reattachHead(p,instant=false){
 
 function getKickFootPosition(p){
   const feetY=p.body.bounds.max.y;
-  const q=Phaser.Math.Clamp(1-p.kickAnim/KICK_DURATION,0,1);
+  const duration=Math.max(RAPID_KICK_MIN_DURATION,p.kickAnimDuration||KICK_DURATION);
+  const q=Phaser.Math.Clamp(1-p.kickAnim/duration,0,1);
   const running=!!p.strikeWasRunning;
   const aerial=!!p.strikeWasAirborne;
 
@@ -4529,6 +4642,7 @@ function updateStrikeContact(p){
     p.kickPending=false;
     p.kickResolved=false;
     p.pendingShotCharge=0;
+    processRapidKickQueue(p);
   }
 }
 
