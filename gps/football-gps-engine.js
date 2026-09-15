@@ -9,7 +9,8 @@ export const GPS_ENGINE_CONFIG=Object.freeze({
   impossibleSpeedMps:13,teleportReturnRadiusM:12,teleportMinDistanceM:35,
   // Stationary drift is reduced only when a multi-sample window has little net progress.
   jitterWindowSec:6,jitterMaxNetM:2.5,jitterMaxRatio:0.28,jitterMaxSpreadM:4,
-  interpolationMaxGapSec:2.5,minimumPeakCoverage:0.9
+  interpolationMaxGapSec:2.5,minimumPeakCoverage:0.9,
+  corosDistanceCalibrationFactor:1.032
 });
 
 // FIT SDK product ids exposed by fit-file-parser without a product_name.
@@ -116,6 +117,15 @@ export function calculatePeakSpeedWindow(points,segments,durationSec){
   return best||{speedMps:null,tSec:null};
 }
 
+// First paired-activity calibration; only the selected total for a valid COROS dense profile.
+export function calibrateSelectedDistanceMeters(distanceMeters,device,recordingProfile){
+  if(!Number.isFinite(distanceMeters))return distanceMeters;
+  const coros=String(device?.manufacturer||'').trim().toLowerCase()==='coros';
+  return coros&&recordingProfile==='dense-gps'
+    ?distanceMeters*GPS_ENGINE_CONFIG.corosDistanceCalibrationFactor
+    :distanceMeters;
+}
+
 export function normalizeFitActivity(rawRecords=[],metadata={}){
   const records=rawRecords.map((r,i)=>({...r,_rawIndex:i,lat:normalizedCoordinate(r.lat??r.position_lat,true),lon:normalizedCoordinate(r.lon??r.position_long,false)}));
   const device=detectFitDevice(metadata),recording=inspectRecordingQuality(records),valid=records.filter(r=>finite(r.tSec)&&finite(r.lat)&&finite(r.lon)&&r.lat>=-90&&r.lat<=90&&r.lon>=-180&&r.lon<=180);
@@ -133,7 +143,8 @@ export function normalizeFitActivity(rawRecords=[],metadata={}){
   const sessionEnhancedMax=value(session?.enhanced_max_speed),sessionMax=value(session?.max_speed),fitMaxSpeedKmh=sessionEnhancedMax??sessionMax??(fitSpeeds.length?Math.max(...fitSpeeds):null);
   // Distance deliberately uses only the valid, teleport-cleaned GPS path. Possible jitter
   // remains informational so short football movements cannot be removed speculatively.
-  const distanceMeters=recording.denseGps&&rawDistance!=null?rawDistance:fitDistanceMeters;
+  const selectedDistanceMeters=recording.denseGps&&rawDistance!=null?rawDistance:fitDistanceMeters;
+  const distanceMeters=calibrateSelectedDistanceMeters(selectedDistanceMeters,device,profile);
   const maxSpeed3sMps=peak3.speedMps??(fitMaxSpeedKmh!=null?fitMaxSpeedKmh/3.6:null),hasEnhanced=sessionEnhancedMax!=null||records.some(r=>finite(r.enhancedSpeedKmh));
   return{version:GPS_ENGINE_VERSION,device,recording:{...recording,profile},metrics:{distanceMeters,maxSpeed3sMps,maxSpeed5sMps:peak5.speedMps,peak3sAtSec:peak3.tSec,peak5sAtSec:peak5.tSec,rawFitDistanceMeters:fitDistanceMeters,rawFitMaxSpeedKmh:fitMaxSpeedKmh,distanceSource:recording.denseGps?'gps-clean':fitDistanceMeters!=null?'fit-distance':'fallback',maxSpeedSource:peak3.speedMps!=null?'gps-3s':fitMaxSpeedKmh!=null?(hasEnhanced?'enhanced-speed':'speed'):'fallback',confidence:recording.denseGps?'high':fitMaxSpeedKmh!=null?'medium':'low'},track:points,visualTrack:points,distanceTrack:points,records:normalizedRecords,diagnostics:{rawPoints:rawRecords.length,validPoints:points.length,removedOutliers:cleaned.removed,definiteGpsErrors:cleaned.removed,removedDefiniteErrorMeters,possibleJitterSegments:segments.filter(s=>s.jitter).length,possibleJitterMeters,rawGpsDistanceMeters:uncleanGpsDistance,gpsCleanDistanceMeters:rawDistance,normalizedDistanceMeters:distanceMeters,speedFilteredDistanceMeters:speedFilteredDistance,...missing}};
 }
