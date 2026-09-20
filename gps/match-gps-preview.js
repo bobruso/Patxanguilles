@@ -1,7 +1,7 @@
 import{drawHeatmap}from'./pitch-maps.js';
-import{fromSupabaseRow}from'./fit-analysis.js';
+import{fromSupabaseRow}from'./fit-analysis-v230.js?v=230';
 
-const esc=v=>String(v??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+const esc=v=>String(v??'').replace(/[&<>'\"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[ch]));
 const km=m=>(Number(m)/1000).toFixed(2)+' km';
 const kmh=v=>Number(v).toFixed(1)+' km/h';
 
