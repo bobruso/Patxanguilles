@@ -4,8 +4,8 @@ Actualizado: 2026-09-20
 Fuente principal: GitHub `bobruso/Patxanguilles` · rama `main`
 
 ## ESTADO GENERAL
-- Versión publicada actual: **v228**.
-- `version.json` en `main` marca 228.
+- Versión publicada actual: **v229**.
+- `version.json` en `main` marca 229.
 - Publicación mediante GitHub Pages.
 - Stack: HTML + CSS + JavaScript + Supabase/PostgreSQL.
 - `index.html` raíz es muy grande; preferir módulos externos cuando sea razonable.
@@ -24,11 +24,11 @@ Distinguir siempre:
 - PREPARADO PERO NO PUBLICADO
 
 ## VERSIONADO
-- Actual: **v228**.
-- `version.json` contiene el resumen v228.
+- Actual: **v229**.
+- `version.json` contiene el resumen v229.
 - Historial visual: `patx-v214.js`.
 - Cada publicación real debe actualizar versión, historial y cache busting `?v=XXX` cuando corresponda.
-- No incrementar versión por pruebas locales.
+- No incrementar versión por pruebas.
 
 ## JUEGOS
 Ruta: `/juegos/`
@@ -58,7 +58,7 @@ Archivos clave:
 - `gps/v227-gps-enhancements.css`
 - `gps/v227-compare-enhancements.js`
 
-Nota: algunos archivos conservan nombre `v227` aunque contienen mejoras v228. No renombrarlos sin necesidad.
+Nota: algunos archivos conservan nombre `v227` aunque contienen mejoras posteriores. No renombrarlos sin necesidad.
 
 ### Campo calibrado
 - Usa `gps_pitches` en Supabase.
@@ -67,9 +67,11 @@ Nota: algunos archivos conservan nombre `v227` aunque contienen mejoras v228. No
 - `field-transform.js` incluye `unproject()` para reconstruir recorrido sobre mapa real.
 
 ### Velocidad
-- Velocidad máxima validada mediante media móvil de **3 muestras**.
-- Se conserva raw para diagnóstico.
-- No volver al pico bruto como métrica principal salvo decisión explícita.
+- Decisión vigente desde v229: **Velocidad máxima = pico máximo registrado en el FIT del dispositivo**, tanto COROS como Garmin.
+- `rawFitMaxSpeedKmh` es la fuente principal cuando está disponible, independientemente de que el FIT sea `dense-gps` o `smart-recording`.
+- La velocidad GPS raw, la velocidad suavizada y la ventana de 3 s se conservan como diagnóstico/fallback; no deben sustituir la velocidad máxima principal cuando el FIT aporta su pico.
+- Los análisis guardados antes de v229 se reinterpretan al cargarse usando `analysis_detail.gpsEngine.metrics.rawFitMaxSpeedKmh` cuando existe; no hace falta volver a subir el FIT para ver la máxima correcta.
+- No mezclar “velocidad máxima” con “mejor velocidad sostenida 3 s”.
 
 ### Zonas
 - Z1: 0–2 km/h
@@ -81,7 +83,7 @@ Nota: algunos archivos conservan nombre `v227` aunque contienen mejoras v228. No
 - Referencia absoluta alta: 18 km/h.
 - Sprints relativos: umbral personalizado.
 
-### Informe GPS v228
+### Informe GPS
 - Mapa satélite de campo real.
 - Vista bloqueada: rueda/scroll no hace zoom.
 - Colores diferenciados en ocupación, intensidad y zonas FC.
@@ -102,6 +104,7 @@ Nota: algunos archivos conservan nombre `v227` aunque contienen mejoras v228. No
 - Separar métricas absolutas e individualizadas.
 - Los sprints relativos no deben decidir automáticamente un “ganador”.
 - Para carga entre jugadores, priorizar métricas comunes.
+- La velocidad máxima comparable debe usar el pico FIT del dispositivo cuando esté disponible.
 
 ## FRECUENCIA CARDÍACA
 - Referencia Patx: `208 - 0.7 × edad`.
@@ -167,6 +170,12 @@ GPS:
 - `gps-compare.html`
 - carpeta `gps/`
 
+## v229 — RESUMEN
+- La velocidad máxima principal deja de sustituirse por una media/ventana de 3 s en FIT densos.
+- COROS y Garmin usan el **pico máximo registrado en el FIT** cuando está disponible.
+- Los análisis COROS ya guardados pueden mostrar el pico FIT correcto al cargarse sin volver a subir el archivo.
+- Previsualizaciones e informes cargados desde Supabase reinterpretan la velocidad máxima con `rawFitMaxSpeedKmh` cuando está disponible.
+
 ## v228 — RESUMEN
 - Heads → **Patxanguilles Cabuts**
 - Cabuts habilitado desde Juegos
@@ -179,18 +188,19 @@ GPS:
 
 ## NO TOCAR / REGRESIONES
 - No mezclar fotos y OCR.
-- No volver a top speed raw como principal.
+- No sustituir el pico FIT de velocidad máxima por una ventana de 3 s cuando el FIT aporta su máximo.
+- Mantener 3 s/GPS raw como diagnóstico o fallback, no como máxima principal si existe `rawFitMaxSpeedKmh`.
 - No comparar injustamente sprints personalizados.
 - No romper calibración Santa Ana.
 - No refactor general por tareas pequeñas.
 - No tocar navegación Android global sin probar Atrás.
 - No publicar a `main` antes de prueba local y aprobación.
-- No renombrar módulos `v227-*` solo porque contengan lógica v228.
+- No renombrar módulos `v227-*` solo porque contengan lógica posterior.
 
 ## ESTADO DE CIERRE
 - IMPLEMENTADO: ✅
-- PUBLICADO EN MAIN: ✅ v228
-- Conviene hacer smoke tests manuales tras cada publicación.
+- PROBADO: ✅ política FIT peak + sintaxis
+- PUBLICADO EN MAIN: ✅ v229
 
 ## SIGUIENTE SESIÓN
 1. Leer este archivo.

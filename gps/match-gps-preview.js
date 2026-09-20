@@ -8,11 +8,11 @@ const kmh=v=>Number(v).toFixed(1)+' km/h';
 export function gpsIconSvg(){return`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path></svg>`}
 
 export function gpsCompactHtml(row,{playerName='',playerId=null,matchId=null}={}){
-  if(!row)return'';
+  if(!row)return'';const analysis=fromSupabaseRow(row);
   return `<span class="patx-gps-compact" data-gps-player="${esc(playerId)}" data-gps-match="${esc(matchId)}">
     <span class="patx-gps-name-wrap" data-gps-preview-anchor tabindex="0"><span class="patx-gps-player-name">${esc(playerName)}</span><span class="patx-gps-hover-card" data-gps-hover-card><canvas data-gps-hover-map aria-label="Mapa de calor de ${esc(playerName)}"></canvas><small>Mapa de calor · previsualización</small></span></span>
     <button type="button" class="patx-gps-icon-btn" data-gps-open title="Abrir análisis GPS" aria-label="Abrir análisis GPS de ${esc(playerName)}">${gpsIconSvg()}</button>
-    <span class="patx-gps-mini-stats"><b>${km(row.distance_m)}</b><span>${kmh(row.top_speed_kmh)} máx.</span><span>${kmh(row.avg_speed_kmh)} media</span></span>
+    <span class="patx-gps-mini-stats"><b>${km(row.distance_m)}</b><span>${kmh(analysis.topSpeedKmh)} máx.</span><span>${kmh(row.avg_speed_kmh)} media</span></span>
   </span>`;
 }
 

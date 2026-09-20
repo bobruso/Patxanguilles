@@ -1,12 +1,10 @@
 {
-  "version": 228,
-  "label": "v228",
+  "version": 229,
+  "label": "v229",
   "title": "Nueva versión disponible",
   "summary": [
-    "Patxanguilles Heads pasa a llamarse Patxanguilles Cabuts y ya se puede abrir desde Juegos.",
-    "El mapa satélite de los informes GPS queda bloqueado para no interferir con el scroll de la página.",
-    "Ocupación, intensidad y zonas de pulso estrenan colores diferenciados y una lectura visual más clara.",
-    "La recuperación cardíaca se resume en las 10 ventanas más destacadas y la intensidad usa un gráfico de barras dobles.",
-    "Los FIT se comparan con el histórico del mismo jugador e incluyen una puntuación física global del partido sobre 100."
+    "La velocidad máxima GPS usa ahora el pico máximo registrado en el FIT tanto para COROS como para Garmin.",
+    "La ventana de 3 segundos y otros valores suavizados se conservan como diagnóstico, pero ya no sustituyen la máxima principal.",
+    "Los análisis COROS guardados anteriormente pueden recuperar el pico FIT correcto sin volver a subir el archivo."
   ]
 }

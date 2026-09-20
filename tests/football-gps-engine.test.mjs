@@ -1,6 +1,6 @@
 import assert from'node:assert/strict';
 import{GPS_ENGINE_CONFIG,calibrateSelectedDistanceMeters,haversineMeters,inspectRecordingQuality,normalizeFitActivity}from'../gps/football-gps-engine.js';
-import{analyzeSamples,toSupabaseRow}from'../gps/fit-analysis.js';
+import{analyzeSamples,fromSupabaseRow,toSupabaseRow}from'../gps/fit-analysis.js';
 import{playerGpsPanelHtml}from'../gps/player-gps-panel.js';
 
 const origin={lat:39.47,lon:-0.376};
@@ -41,7 +41,22 @@ assert.equal(corosDense.metrics.maxSpeed3sMps,garminDense.metrics.maxSpeed3sMps,
 const corosSamples=corosDense.records.map((r,i,a)=>({...r,dt:i?r.tSec-a[i-1].tSec:0,speedKmh:r.gpsSpeedKmh??r.speedKmh}));
 const corosAnalysis=analyzeSamples(corosSamples,Date.UTC(2026,0,1),{gpsEngine:corosDense});
 assert.equal(corosAnalysis.distanceM,corosDense.metrics.distanceMeters,'analysis receives only the final distance');
-assert.equal(corosAnalysis.topSpeedKmh,corosDense.metrics.maxSpeed3sMps*3.6,'analysis speed stays tied to the original peak');
+assert.equal(corosAnalysis.topSpeedKmh,corosDense.metrics.maxSpeed3sMps*3.6,'FIT without an explicit speed peak keeps the existing fallback');
+
+const spikyMeters=[0,2,4,14,16,18,20,22,24];
+const spikyTrack=spikyMeters.map((m,i)=>({...north(m,i),speedKmh:i===3?21.9:12,fitSpeedKmh:i===3?21.9:12}));
+const spikyDense=normalizeFitActivity(spikyTrack,{file_ids:[{manufacturer:'coros'}]});
+const spikySamples=spikyDense.records.map((r,i,a)=>({...r,dt:i?r.tSec-a[i-1].tSec:0,speedKmh:r.gpsSpeedKmh??r.speedKmh}));
+const spikyAnalysis=analyzeSamples(spikySamples,Date.UTC(2026,0,1),{gpsEngine:spikyDense});
+assert.equal(spikyAnalysis.analysisDetail.speed.topSpeedMethod,'fit-peak');
+assert.equal(spikyAnalysis.topSpeedKmh,21.9,'dense COROS uses the FIT peak, not the reconstructed 3-s speed');
+assert.notEqual(spikyAnalysis.topSpeedKmh,spikyDense.metrics.maxSpeed3sMps*3.6,'3-s sustained speed must not replace the FIT peak');
+
+const restored=fromSupabaseRow({source_format:'fit',top_speed_kmh:23.3,analysis_detail:{gpsEngine:{metrics:{rawFitMaxSpeedKmh:31.4}},speed:{topSpeedMethod:'gps-3s',topSpeedEvent:{tSec:10,speedKmh:23.3}}}});
+assert.equal(restored.topSpeedKmh,31.4,'stored analyses are reinterpreted with their FIT peak');
+assert.equal(restored.analysisDetail.speed.topSpeedMethod,'fit-peak');
+assert.equal(restored.analysisDetail.speed.topSpeedEvent,null,'old 3-s event is not mislabeled as FIT peak');
+
 const stored=toSupabaseRow('match','player',corosAnalysis);
 assert.equal(stored.distance_m,corosDense.metrics.distanceMeters,'persistence uses the final distance');
 assert.ok(!Object.keys(stored.analysis_detail.gpsEngine.metrics).some(k=>/calibrat|compens|correct|factor|before|after/i.test(k)));
@@ -70,4 +85,4 @@ const empty=normalizeFitActivity([],{});
 assert.equal(empty.metrics.distanceMeters,null);
 assert.equal(empty.recording.profile,'generic');
 
-console.log('Patxanguilles Football GPS Engine and internal distance calibration: passed');
+console.log('Patxanguilles Football GPS Engine, FIT peak policy and internal distance calibration: passed');
