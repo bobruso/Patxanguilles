@@ -1,0 +1,10 @@
+import assert from'node:assert/strict';
+import{cleanIsolatedSpeedSpike,ISOLATED_SPEED_NOISE_GAP_KMH}from'../gps/fit-analysis-v230.js';
+assert.equal(ISOLATED_SPEED_NOISE_GAP_KMH,7);
+const clean=values=>cleanIsolatedSpeedSpike(values.map((value,tSec)=>({tSec,value})));
+assert.equal(clean([33,29,28,20]).noise,null,'varios picos altos se conservan');
+assert.equal(clean([32,21,20,18]).noise?.originalKmh,32,'un máximo aislado >7 km/h se filtra');
+assert.equal(Math.max(...clean([32,21,20,18]).points.map(x=>x.value)),21,'la máxima pasa al siguiente pico válido');
+assert.equal(clean([28,21,15]).noise,null,'7 km/h exactos no se filtran');
+assert.ok(clean([28.1,21,15]).noise?.removed,'más de 7 km/h sí se filtra');
+console.log('v230 speed policy: passed');
