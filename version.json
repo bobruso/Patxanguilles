@@ -1,10 +1,6 @@
 {
-  "version": 229,
-  "label": "v229",
+  "version": 230,
+  "label": "v230",
   "title": "Nueva versión disponible",
-  "summary": [
-    "La velocidad máxima GPS usa ahora el pico máximo registrado en el FIT tanto para COROS como para Garmin.",
-    "La ventana de 3 segundos y otros valores suavizados se conservan como diagnóstico, pero ya no sustituyen la máxima principal.",
-    "Los análisis COROS guardados anteriormente pueden recuperar el pico FIT correcto sin volver a subir el archivo."
-  ]
+  "summary": []
 }
