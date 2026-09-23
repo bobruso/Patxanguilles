@@ -79,8 +79,8 @@
     anchor.setAttribute('href', presentationUrl(context));
     anchor.setAttribute('aria-label', 'Ver la presentación GPS del jugador');
     anchor.title = 'Presentación GPS';
-    /* Inside the report overlay iframe the presentation opens in its own tab, so the
-       overlay and the report keep working underneath. */
+    /* Inside the report overlay iframe the presentation opens in its own tab. Keep
+       the same-origin report as opener so closing the presentation reveals it again. */
     var embedded = false;
     try {
       embedded = window.top !== window.self;
@@ -89,9 +89,10 @@
     }
     if (embedded) {
       anchor.setAttribute('target', '_blank');
-      anchor.setAttribute('rel', 'noopener');
+      anchor.setAttribute('rel', 'opener');
     } else {
       anchor.removeAttribute('target');
+      anchor.removeAttribute('rel');
     }
     anchor.style.cssText = STYLE;
     if (!existing) {
