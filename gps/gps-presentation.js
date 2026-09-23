@@ -30,16 +30,71 @@ const chromeCtx = new SceneContext();
 
 stage.classList.add('is-booting');
 
+function reportHref() {
+  return matchId && playerId
+    ? `./gps-report.html?match=${encodeURIComponent(matchId)}&player=${encodeURIComponent(playerId)}`
+    : null;
+}
+
+function isReportWindow(win) {
+  try {
+    if (!win || win.closed) return false;
+    const url = new URL(win.location.href);
+    return url.origin === location.origin && /\/gps-report\.html$/.test(url.pathname);
+  } catch (_) {
+    return false;
+  }
+}
+
+function referrerIsReport() {
+  try {
+    if (!document.referrer) return false;
+    const url = new URL(document.referrer);
+    return url.origin === location.origin && /\/gps-report\.html$/.test(url.pathname);
+  } catch (_) {
+    return false;
+  }
+}
+
 function goBack() {
-  const fallback =
-    matchId && playerId
-      ? `./gps-report.html?match=${encodeURIComponent(matchId)}&player=${encodeURIComponent(playerId)}`
-      : './#temporada-detalle';
-  if (history.length > 1) history.back();
-  else location.assign(fallback);
+  const fallback = reportHref();
+  if (!fallback) {
+    location.assign('./#temporada-detalle');
+    return;
+  }
+
+  /* When the report overlay opened the presentation in a separate tab/window,
+     close that auxiliary context and reveal the report that is already underneath. */
+  if (isReportWindow(window.opener)) {
+    try {
+      window.opener.focus();
+    } catch (_) {}
+    window.close();
+    window.setTimeout(() => {
+      if (!window.closed) location.replace(fallback);
+    }, 120);
+    return;
+  }
+
+  /* Same-context navigation (including WebView/APK): return to the existing report
+     instead of creating a second report entry after the presentation. */
+  if (referrerIsReport() && history.length > 1) {
+    history.back();
+    return;
+  }
+
+  /* Direct links have no report behind them. Replace the presentation so Back can
+     never reopen it from the report. */
+  location.replace(fallback);
 }
 backBtn.addEventListener('click', goBack);
 errorBackBtn.addEventListener('click', goBack);
+stage.addEventListener('click', event => {
+  const cta = event.target.closest('[data-outro-cta]');
+  if (!cta) return;
+  event.preventDefault();
+  goBack();
+});
 pickerBackBtn?.addEventListener('click', () => location.assign('./#temporada-detalle'));
 replayBtn.addEventListener('click', () => startPresentation());
 
