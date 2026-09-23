@@ -1,9 +1,9 @@
 {
-  "version": 231,
-  "label": "v231",
+  "version": 232,
+  "label": "v232",
   "title": "Nueva versión disponible",
   "summary": [
-    "Nueva presentación GPS audiovisual con vistas adaptadas a escritorio y móvil.",
-    "Acceso desde el informe GPS y regreso al análisis completo."
+    "La presentación GPS vuelve correctamente al análisis al cerrarla.",
+    "El botón Partido y Atrás ya regresan a la ficha del partido sin reabrir la presentación."
   ]
 }
