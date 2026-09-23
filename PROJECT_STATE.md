@@ -4,12 +4,12 @@ Actualizado: 2026-09-23
 Fuente principal: GitHub `bobruso/Patxanguilles` · rama `main`
 
 ## ESTADO GENERAL
-- Versión actual: **v231** (presentación GPS aprobada para publicación en main).
-- `version.json` marca 231.
+- Versión publicada actual: **v232**.
+- `version.json` marca 232.
 - Publicación mediante GitHub Pages.
 - Stack: HTML + CSS + JavaScript + Supabase/PostgreSQL.
 - `index.html` raíz es muy grande; preferir módulos externos cuando sea razonable.
-- Flujo: **cambio local → localhost → aprobación → publicación en main**.
+- Flujo normal: **cambio local → localhost → aprobación → publicación en main**.
 - No usar force push ni limpiar/resetear repos locales sin autorización.
 
 ## FUENTES DE VERDAD
@@ -24,14 +24,14 @@ Distinguir siempre:
 - PREPARADO PERO NO PUBLICADO
 
 ## VERSIONADO
-- Actual: **v231**.
-- `version.json` marca v231.
-- Historial visual: `patx-v214.js`; **v230 no añade entrada visible por petición expresa del usuario**.
+- Actual: **v232**.
+- `version.json` marca v232.
+- Historial visual: `patx-v214.js` incluye v232; **v230 no añade entrada visible por petición expresa del usuario**.
 - Cada publicación real debe actualizar versión, historial y cache busting `?v=XXX` cuando corresponda.
 - No incrementar versión por pruebas.
 
 ## JUEGOS
-Ruta: `/juegos/`
+Ruta: `/juegos/`.
 
 Disponibles:
 - Memoria Vintage
@@ -42,20 +42,25 @@ Decisión vigente:
 - Nombre oficial: **PATXANGUILLES CABUTS**.
 - No volver a usar “Patxanguilles Heads” salvo referencia histórica.
 - `juegos/index.html` lo muestra habilitado.
-- Enlace: `./cabezones/`
-- Tarjeta: `Arcade · disponible` y botón `JUGAR`.
+- Enlace: `./cabezones/`.
 
 ## GPS — ESTADO ACTUAL
 Archivos clave:
 - `gps-upload.html`
 - `gps-report.html`
+- `gps-presentation.html`
 - `gps-compare.html`
 - `gps/fit-analysis.js`
 - `gps/fit-analysis-v230.js` · capa vigente para máxima de la serie validada y ruido aislado >7 km/h
 - `gps/field-transform.js`
 - `gps/player-gps-panel.js`
-- `gps/player-gps-panel-v230.js` · capa de UI v230 para el texto de máxima validada
+- `gps/player-gps-panel-v230.js` · capa UI vigente para la máxima validada
 - `gps/match-gps-preview.js`
+- `gps/report-overlay.js`
+- `gps/gps-presentation.js`
+- `gps/gps-presentation.css`
+- `gps/gps-presentation-launcher.js`
+- `gps/presentation/*.js`
 - `gps/v227-report-enhancements.js`
 - `gps/v227-gps-enhancements.css`
 - `gps/v227-compare-enhancements.js`
@@ -70,11 +75,11 @@ Nota: algunos archivos conservan nombre `v227` aunque contienen mejoras posterio
 
 ### Velocidad
 - Decisión vigente desde v230: **Velocidad máxima = pico máximo validado de la misma serie que se dibuja en “Velocidad durante el partido”**.
-- La regla es común para COROS y Garmin: tarjeta, Highlights, previsualización, comparador, histórico y gráfica deben derivar de esa misma serie validada.
-- Filtro de ruido: si existe un único punto cuyo valor supera al segundo punto más alto de toda la serie por **más de 7 km/h**, ese punto se considera ruido GPS y se corrige antes de calcular la máxima y de dibujar la gráfica. Con una diferencia de 7 km/h exactos no se elimina. Si hay dos picos altos próximos, no se descartan por esta regla.
-- `rawFitMaxSpeedKmh`, ventanas de 3/5 s y valores suavizados quedan como diagnóstico; no deben imponerse sobre la máxima de la serie validada.
+- Regla común COROS/Garmin: tarjeta, Highlights, previsualización, comparador, histórico y gráfica deben derivar de esa misma serie validada.
+- Filtro de ruido: si existe un único punto cuyo valor supera al segundo punto más alto de toda la serie por **más de 7 km/h**, se considera ruido GPS y se corrige antes de calcular la máxima y dibujar la gráfica. Con diferencia exacta de 7 km/h se conserva. Si hay dos picos altos próximos, no se descartan por esta regla.
+- `rawFitMaxSpeedKmh`, ventanas de 3/5 s y suavizados quedan como diagnóstico; no deben imponerse sobre la máxima principal.
 - Nuevos FIT: el filtro se aplica sobre todas las muestras antes del downsampling.
-- Análisis antiguos guardados: se reinterpretan desde `analysis_detail.speed.speedSeries`; no se conserva el FIT original en Supabase, por lo que cualquier métrica que requiera todas las muestras solo se recalcula plenamente al volver a analizar el archivo.
+- Análisis antiguos guardados: se reinterpretan desde `analysis_detail.speed.speedSeries`; no se conserva el FIT original en Supabase.
 
 ### Zonas
 - Z1: 0–2 km/h
@@ -96,6 +101,25 @@ Nota: algunos archivos conservan nombre `v227` aunque contienen mejoras posterio
 - Incluye **PUNTUACIÓN PARTIDO /100**; aproximadamente 70/100 representa su partido medio histórico.
 - Es una nota física/comparativa, no técnica ni de resultado.
 
+### Presentación GPS
+- **PUBLICADA desde v231**.
+- Presentación audiovisual automática adaptada a horizontal y vertical.
+- Escenas: aproximación satélite al campo, recorrido, FC, velocidad/sprints, histórico y cierre con carta/mapas oficiales.
+- No modifica cálculos GPS; consume el análisis vigente.
+- `gps-report.html` incorpora «VER PRESENTACIÓN» mediante `gps/gps-presentation-launcher.js`.
+- Desde v232, la X y «VER ANÁLISIS COMPLETO» regresan al informe correspondiente sin crear rebotes de historial.
+- Si la presentación se abrió desde el informe embebido, conserva el informe como contexto de retorno; en navegación del mismo contexto/WebView vuelve al informe existente.
+- Una apertura directa de `gps-presentation.html` sustituye la presentación por el informe al salir para no dejar la presentación detrás en el historial.
+
+### Navegación informe/presentación — v232
+Flujo esperado:
+`Ficha partido → Análisis GPS → Presentación → Análisis GPS → Ficha partido`.
+
+- `gps-report.html` ya no usa un `history.back()` ciego en «← PARTIDO» cuando está embebido: envía `patx-gps-close-report` al padre.
+- `gps/report-overlay.js` sigue siendo la pieza canónica que cierra el overlay y deja visible la ficha del partido; no se añadió un listener global nuevo de `popstate`.
+- El botón Atrás de Android/WebView, después de volver de la presentación al análisis, no debe reabrir la presentación.
+- No cambiar esta navegación por un `history.back()` genérico sin revisar overlay + WebView/APK.
+
 ### Comparador GPS
 - Separar métricas absolutas e individualizadas.
 - Los sprints relativos no deben decidir automáticamente un “ganador”.
@@ -116,8 +140,9 @@ Regla crítica: **Una foto normal NUNCA debe entrar en el OCR F7.**
 Archivo de aislamiento: `patx-v227-photo-routing.js`.
 
 ## NAVEGACIÓN / ANDROID
-Proteger botón Atrás, Home → Juegos → Juego, retorno desde informes GPS, sesión y pantallas especiales.
-Evitar listeners globales agresivos de `popstate`.
+- Proteger botón Atrás, Home → Juegos → Juego, retorno desde informes GPS, sesión y pantallas especiales.
+- Evitar listeners globales agresivos de `popstate`.
+- Para GPS, conservar el mecanismo overlay de `gps/report-overlay.js` y el flujo explícito de v232.
 
 ## SUPABASE
 Sistemas relevantes:
@@ -129,24 +154,6 @@ Migración:
 
 No crear tablas/RPC/policies sin comprobar equivalentes.
 
-## v230 — RESUMEN TÉCNICO
-- **Velocidad máxima = máximo de la misma serie validada que se dibuja en “Velocidad durante el partido”.**
-- Filtro de ruido común COROS/Garmin: si un único máximo supera al segundo valor más alto por **más de 7 km/h**, se corrige como ruido GPS. Exactamente +7 km/h se conserva.
-- Nuevos FIT: filtro sobre todas las muestras antes del downsampling.
-- Registros antiguos: reinterpretación desde `analysis_detail.speed.speedSeries`.
-- Tarjeta, Highlights, previsualización, comparador e histórico consumen la política de serie validada.
-- `rawFitMaxSpeedKmh`, 3 s, 5 s y suavizados se conservan como diagnóstico.
-- Implementación incremental mediante `gps/fit-analysis-v230.js` y `gps/player-gps-panel-v230.js`, manteniendo el núcleo v229 como base de compatibilidad.
-- **No se añadió entrada al listado/historial visual de cambios (`patx-v214.js`) por petición expresa del usuario.**
-
-## v229 — RESUMEN
-- La velocidad máxima principal dejó de sustituirse por una media/ventana de 3 s en FIT densos.
-- Fue sustituido en v230 como criterio principal por la máxima de la serie validada.
-
-## v228 — RESUMEN
-- Patxanguilles Cabuts habilitado.
-- mapa GPS bloqueado, colores diferenciados, top 10 recuperaciones FC, intensidad 60 min, histórico propio y puntuación física /100.
-
 ## NO TOCAR / REGRESIONES
 - No mezclar fotos y OCR.
 - No volver a mezclar una máxima tomada de una fuente distinta de la serie que se dibuja en el informe.
@@ -157,52 +164,19 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 - No romper calibración Santa Ana.
 - No refactor general por tareas pequeñas.
 - No tocar navegación Android global sin probar Atrás.
+- No convertir el retorno GPS v232 de nuevo en `history.back()` ciego.
 - No renombrar módulos `v227-*` solo porque contengan lógica posterior.
 
-## ESTADO DE CIERRE
-- IMPLEMENTADO: ✅ regla de máxima de la serie + filtro aislado >7 km/h
-- PROBADO: ✅ sintaxis, casos límite (>7 / =7 / varios picos) e integración lógica local
-- PUBLICADO EN MAIN: ✅ v230
-- VALIDACIÓN VISUAL REAL PENDIENTE: abrir los últimos informes COROS y Garmin y confirmar cifras/gráfica en producción.
+## ÚLTIMA PUBLICACIÓN — v232
+- IMPLEMENTADO: ✅ navegación explícita presentación → análisis → ficha de partido.
+- ARCHIVOS DE PRODUCTO: `gps/gps-presentation.js`, `gps/gps-presentation-launcher.js`, `gps-report.html`, `gps-presentation.html`.
+- VERSIONADO/HISTORIAL: `version.json`, `patx-v214.js`, `PROJECT_STATE.md`.
+- PROBADO ANTES DE PUBLICAR: ✅ revisión de rutas, sintaxis/lógica y harness dirigido de navegación; la presentación v231 ya tenía QA desktop y móvil emulado.
+- PUBLICADO EN MAIN: ✅ v232 el 2026-09-23.
+- PENDIENTE DE VALIDACIÓN REAL: probar en producción la X de presentación, «VER ANÁLISIS COMPLETO», «← PARTIDO» y Atrás físico en APK/WebView.
 
 ## SIGUIENTE SESIÓN
-1. Leer este archivo.
-2. Consultar GitHub si la tarea depende del código publicado.
-3. Trabajar solo sobre archivos afectados.
-4. Actualizar `PROJECT_STATE.md` al cerrar una fase importante o publicar una nueva versión.
-5. Verificar en los últimos COROS/Garmin que gráfica, tarjeta y Highlight comparten exactamente la misma máxima validada.
-
-## PRESENTACIÓN GPS — LOCAL 2026-09-23 (NO PUBLICADO)
-- Rediseño audiovisual local con masters automáticos 1920×1080 y 1080×1920; satélite Santa Ana, pulso, velocidad, histórico y carta oficial con mapas estáticos.
-- Integración mínima en gps-report.html: script del botón VER PRESENTACIÓN. No se ha cambiado version.json ni publicado/commiteado.
-- Código: gps-presentation.html, gps/gps-presentation.{js,css}, gps/gps-presentation-launcher.js y gps/presentation/*.js.
-- QA: localhost 8123 con análisis guardado Santa Ana partido33/jugador34; desktop 1600×900 y iPhone13 emulado; casos sintéticos de datos/recursos ausentes. Sin errores JS en recorridos normales registrados. Prueba independiente de repetición/cerrar con movimiento reducido aprobada.
-- LIMITACIONES: no se analizó un FIT crudo; falta móvil físico. La trayectoria guardada está recortada aguas arriba y no permite recuperar salidas del campo. No se modificó el análisis protegido.
-- Score: pesos y fórmula physicalScore conservados; no afirmar paridad universal con informe antiguo: este coacciona nulos a cero y usa smoothedTopSpeedKmh al construir su histórico; la presentación usa análisis v230 y excluye nulos. Revisar esta discrepancia antes de publicar, sin corregir el informe protegido en esta tarea.
-- Evidencia y revisión: docs/agent-work/gps-presentation-premium/WORKER_REPORT.md y REVIEW_ES.md. Originales del prototipo preservados en baseline/.
-
-### Ajustes visuales posteriores — 2026-09-23 LOCAL
-- Retiradas línea central del fondo y línea SVG entre escenas (rail.js queda sin importar).
-- Satélite sin velo ni cambio de brillo al iniciar; cámara empieza desde su transform actual con aceleración suavizada.
-- Histórico secuencial (score, esfuerzo, sprints, retención disponible) con pausa final; recuperación FC retirada de la presentación.
-- Corazón SVG animado centrado sobre disco rojo y etiquetas FC ampliadas. Astra corrigió la superposición y verificó centros coincidentes con error inferior a0,001px.
-- Cierre usa drawHeatmap/drawMovementTrail oficiales y estáticos; firma PATXANGUILLES ANTIFEIXISTES - MATCH PERFORMANCE, CTA al informe del mismo partido/jugador y fuegos radiales escalonados.
-- QA desktop/móvil emulado, CTA/back/replay; prueba dirigida fuegos60/120Hz y movimiento reducido15/15. Evidencia adjustments/REPORT.md y root-heart-check.mjs. Continúa TODO LOCAL, sin tocar cálculos ni publicar.
-
-### Últimos ajustes — misma vista satélite y lectura más breve (LOCAL)
-- Una única vista satélite fija del campo, sin vuelo/cambio de tiles; conserva una espera de5,5s antes del trazado como la anterior ventana de vuelo/asentamiento. Trazado real sin cambios.
-- Retención final retirada del histórico y cierre; no se cambia su uso interno en el score. Histórico dos segundos más corto: al eliminar la fila (620ms entrada+1150ms contador), pausa final5170ms; si antes no había fila, pausa3400ms. Solo esfuerzo y sprints después del score.
-- CTA con pulso continuo de iluminación CSS, sin desplazar el botón; movimiento reducido usa iluminación estática.
-- QA dirigido: mismos54 tiles y cámara antes/durante trazado real Santa Ana; histórico12,47s en fixture; sin texto de retención, pulso infinito y reducido estático; consola sin pageerrors. Evidencia final-tweaks/QA.json y capturas; sintaxis OK y módulos protegidos sin cambios.
-
-### Corrección de interpretación del satélite — LOCAL
-- Restaurada vista aérea inicial y flyTo de4,8s hacia el campo. minNativeZoom=maxNativeZoom al nivel de la primera vista: se amplía esa misma imagen, sin cargar la fotografía de otro nivel al aterrizar. En desktop probado: nivel17 durante inicio/aproximación/trazado. Conserva georreferencia y horario de dibujo; al ampliar la imagen inicial se conserva su resolución de origen.
-- Eliminado PATX MATCH PERFORMANCE encima del nombre en ambas intros.
-- Histórico otros1500ms menos: pausas3670/1900ms según antigua presencia de fila. QA dirigido:10,99s frente a12,47s anterior.
-- Evidencia restore-flight/QA.json y capturas before-flight/single-satellite: cámara cambia, nivel de imagen no; sin pageerrors. Sintaxis válida. No publicación.
-
-
-## Publicación v231 autorizada
-El usuario aprobó la presentación y pidió actualizar el repositorio el2026-09-23. Esta aprobación sustituye las restricciones LOCAL/NO PUBLICADO de las fases anteriores. Se prepara commit de producto, estado y versionado; se excluyen snapshots, capturas, logs y rail.js sin uso; se conserva el módulo de fixtures sintéticos restringido a localhost para mantener completos los imports de desarrollo. El cálculo GPS, calibración, Supabase y versionado Android no cambian. QA local previo y revisión de empaquetado; pruebas sobre análisis guardados y móvil emulado, no hardware físico.
-
-Validación de publicación: política de velocidad v230 aprobada; sintaxis y QA de presentación aprobados. tools/games-smoke.mjs mantiene3 expectativas obsoletas sobre Heads/Cabuts (juego habilitado desdev230), sin cambios en juegos durante esta entrega; no modificar ese test fuera de alcance. Se conserva la entrada histórica226 con su numeración original.
+1. Leer este archivo y consultar `main` antes de tocar código.
+2. Validar en dispositivo real el flujo GPS v232, especialmente Atrás en APK/WebView.
+3. Si aparece una regresión de navegación, revisar primero `gps/gps-presentation.js`, `gps-report.html` y `gps/report-overlay.js`; no añadir `popstate` global sin necesidad.
+4. Mantener la política de velocidad v230 y las protecciones de fotos/OCR, Santa Ana y comparador GPS.
