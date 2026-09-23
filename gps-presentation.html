@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08090b">
+  <title>Presentación GPS · Patxanguilles</title>
+  <link rel="stylesheet" href="./gps/gps-presentation.css?v=231">
+</head>
+<body>
+  <main class="patx-present-shell" aria-live="polite">
+    <div id="presentationViewport" class="patx-present-viewport">
+      <section id="presentationStage" class="patx-present-stage" data-layout="landscape" aria-label="Presentación GPS">
+        <div id="presentationSceneLayer" class="patx-present-scene-layer"></div>
+      </section>
+    </div>
+
+    <div class="patx-present-chrome">
+      <button id="presentationReplay" class="patx-present-icon-btn is-hidden" type="button" aria-label="Repetir presentación">↻</button>
+      <button id="presentationBack" class="patx-present-icon-btn" type="button" aria-label="Volver al informe">×</button>
+    </div>
+
+    <div id="presentationPicker" class="patx-present-picker" hidden>
+      <div class="patx-present-picker-panel">
+        <div class="patx-present-picker-kicker">PRESENTACIÓN GPS · PRUEBA LOCAL</div>
+        <h1>Elige un informe GPS</h1>
+        <p>No necesitas buscar IDs. Selecciona un jugador y partido. En escritorio se reproduce en horizontal y en móvil en vertical, automáticamente.</p>
+        <div id="presentationPickerList" class="patx-present-picker-list"></div>
+        <button id="presentationPickerBack" class="patx-present-picker-back" type="button">Volver a Patxanguilles</button>
+      </div>
+    </div>
+
+    <div id="presentationLoading" class="patx-present-loading">
+      <div class="patx-present-loading-mark"></div>
+      <span>PATXANGUILLES FOOTBALL GPS</span>
+      <strong>Preparando presentación…</strong>
+    </div>
+
+    <div id="presentationError" class="patx-present-error" hidden>
+      <span>PRESENTACIÓN GPS</span>
+      <strong>No se ha podido preparar la presentación.</strong>
+      <p id="presentationErrorText"></p>
+      <button id="presentationErrorBack" type="button">Volver al informe</button>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./gps/gps-presentation.js?v=231"></script>
+</body>
+</html>

@@ -1,6 +1,9 @@
 {
-  "version": 230,
-  "label": "v230",
+  "version": 231,
+  "label": "v231",
   "title": "Nueva versión disponible",
-  "summary": []
+  "summary": [
+    "Nueva presentación GPS audiovisual con vistas adaptadas a escritorio y móvil.",
+    "Acceso desde el informe GPS y regreso al análisis completo."
+  ]
 }

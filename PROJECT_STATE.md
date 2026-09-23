@@ -1,11 +1,11 @@
 # PROJECT STATE — PATXANGUILLES ANTIFEIXISTES
 
-Actualizado: 2026-09-20
+Actualizado: 2026-09-23
 Fuente principal: GitHub `bobruso/Patxanguilles` · rama `main`
 
 ## ESTADO GENERAL
-- Versión publicada actual: **v230**.
-- `version.json` en `main` marca 230.
+- Versión actual: **v231** (presentación GPS aprobada para publicación en main).
+- `version.json` marca 231.
 - Publicación mediante GitHub Pages.
 - Stack: HTML + CSS + JavaScript + Supabase/PostgreSQL.
 - `index.html` raíz es muy grande; preferir módulos externos cuando sea razonable.
@@ -24,8 +24,8 @@ Distinguir siempre:
 - PREPARADO PERO NO PUBLICADO
 
 ## VERSIONADO
-- Actual: **v230**.
-- `version.json` marca v230.
+- Actual: **v231**.
+- `version.json` marca v231.
 - Historial visual: `patx-v214.js`; **v230 no añade entrada visible por petición expresa del usuario**.
 - Cada publicación real debe actualizar versión, historial y cache busting `?v=XXX` cuando corresponda.
 - No incrementar versión por pruebas.
@@ -171,3 +171,38 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 3. Trabajar solo sobre archivos afectados.
 4. Actualizar `PROJECT_STATE.md` al cerrar una fase importante o publicar una nueva versión.
 5. Verificar en los últimos COROS/Garmin que gráfica, tarjeta y Highlight comparten exactamente la misma máxima validada.
+
+## PRESENTACIÓN GPS — LOCAL 2026-09-23 (NO PUBLICADO)
+- Rediseño audiovisual local con masters automáticos 1920×1080 y 1080×1920; satélite Santa Ana, pulso, velocidad, histórico y carta oficial con mapas estáticos.
+- Integración mínima en gps-report.html: script del botón VER PRESENTACIÓN. No se ha cambiado version.json ni publicado/commiteado.
+- Código: gps-presentation.html, gps/gps-presentation.{js,css}, gps/gps-presentation-launcher.js y gps/presentation/*.js.
+- QA: localhost 8123 con análisis guardado Santa Ana partido33/jugador34; desktop 1600×900 y iPhone13 emulado; casos sintéticos de datos/recursos ausentes. Sin errores JS en recorridos normales registrados. Prueba independiente de repetición/cerrar con movimiento reducido aprobada.
+- LIMITACIONES: no se analizó un FIT crudo; falta móvil físico. La trayectoria guardada está recortada aguas arriba y no permite recuperar salidas del campo. No se modificó el análisis protegido.
+- Score: pesos y fórmula physicalScore conservados; no afirmar paridad universal con informe antiguo: este coacciona nulos a cero y usa smoothedTopSpeedKmh al construir su histórico; la presentación usa análisis v230 y excluye nulos. Revisar esta discrepancia antes de publicar, sin corregir el informe protegido en esta tarea.
+- Evidencia y revisión: docs/agent-work/gps-presentation-premium/WORKER_REPORT.md y REVIEW_ES.md. Originales del prototipo preservados en baseline/.
+
+### Ajustes visuales posteriores — 2026-09-23 LOCAL
+- Retiradas línea central del fondo y línea SVG entre escenas (rail.js queda sin importar).
+- Satélite sin velo ni cambio de brillo al iniciar; cámara empieza desde su transform actual con aceleración suavizada.
+- Histórico secuencial (score, esfuerzo, sprints, retención disponible) con pausa final; recuperación FC retirada de la presentación.
+- Corazón SVG animado centrado sobre disco rojo y etiquetas FC ampliadas. Astra corrigió la superposición y verificó centros coincidentes con error inferior a0,001px.
+- Cierre usa drawHeatmap/drawMovementTrail oficiales y estáticos; firma PATXANGUILLES ANTIFEIXISTES - MATCH PERFORMANCE, CTA al informe del mismo partido/jugador y fuegos radiales escalonados.
+- QA desktop/móvil emulado, CTA/back/replay; prueba dirigida fuegos60/120Hz y movimiento reducido15/15. Evidencia adjustments/REPORT.md y root-heart-check.mjs. Continúa TODO LOCAL, sin tocar cálculos ni publicar.
+
+### Últimos ajustes — misma vista satélite y lectura más breve (LOCAL)
+- Una única vista satélite fija del campo, sin vuelo/cambio de tiles; conserva una espera de5,5s antes del trazado como la anterior ventana de vuelo/asentamiento. Trazado real sin cambios.
+- Retención final retirada del histórico y cierre; no se cambia su uso interno en el score. Histórico dos segundos más corto: al eliminar la fila (620ms entrada+1150ms contador), pausa final5170ms; si antes no había fila, pausa3400ms. Solo esfuerzo y sprints después del score.
+- CTA con pulso continuo de iluminación CSS, sin desplazar el botón; movimiento reducido usa iluminación estática.
+- QA dirigido: mismos54 tiles y cámara antes/durante trazado real Santa Ana; histórico12,47s en fixture; sin texto de retención, pulso infinito y reducido estático; consola sin pageerrors. Evidencia final-tweaks/QA.json y capturas; sintaxis OK y módulos protegidos sin cambios.
+
+### Corrección de interpretación del satélite — LOCAL
+- Restaurada vista aérea inicial y flyTo de4,8s hacia el campo. minNativeZoom=maxNativeZoom al nivel de la primera vista: se amplía esa misma imagen, sin cargar la fotografía de otro nivel al aterrizar. En desktop probado: nivel17 durante inicio/aproximación/trazado. Conserva georreferencia y horario de dibujo; al ampliar la imagen inicial se conserva su resolución de origen.
+- Eliminado PATX MATCH PERFORMANCE encima del nombre en ambas intros.
+- Histórico otros1500ms menos: pausas3670/1900ms según antigua presencia de fila. QA dirigido:10,99s frente a12,47s anterior.
+- Evidencia restore-flight/QA.json y capturas before-flight/single-satellite: cámara cambia, nivel de imagen no; sin pageerrors. Sintaxis válida. No publicación.
+
+
+## Publicación v231 autorizada
+El usuario aprobó la presentación y pidió actualizar el repositorio el2026-09-23. Esta aprobación sustituye las restricciones LOCAL/NO PUBLICADO de las fases anteriores. Se prepara commit de producto, estado y versionado; se excluyen snapshots, capturas, logs y rail.js sin uso; se conserva el módulo de fixtures sintéticos restringido a localhost para mantener completos los imports de desarrollo. El cálculo GPS, calibración, Supabase y versionado Android no cambian. QA local previo y revisión de empaquetado; pruebas sobre análisis guardados y móvil emulado, no hardware físico.
+
+Validación de publicación: política de velocidad v230 aprobada; sintaxis y QA de presentación aprobados. tools/games-smoke.mjs mantiene3 expectativas obsoletas sobre Heads/Cabuts (juego habilitado desdev230), sin cambios en juegos durante esta entrega; no modificar ese test fuera de alcance. Se conserva la entrada histórica226 con su numeración original.
