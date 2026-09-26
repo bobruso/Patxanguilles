@@ -5355,7 +5355,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     <div class="history-kicker">Patxanguilles Antifeixistes</div>
     <h1>Historial de cambios</h1>
     <p>Registro de las funciones, mejoras de diseño y cambios técnicos incorporados a la web desde las primeras versiones.</p>
-    <span class="history-version">VERSIÓN v231</span>
+    <span class="history-version">VERSIÓN v233</span>
   </header>
     <section class="history-change-section" data-current-history="226">
       <div class="history-section-number">226</div>
@@ -7601,7 +7601,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="admin-corner">
   <button class="admin-trigger" onclick="openAdminLogin()">ADMIN</button>
   <div class="home-version-link">
-    <a href="#" onclick="event.preventDefault();show('changeHistory')">v231 - Historial cambios</a>
+    <a href="#" onclick="event.preventDefault();show('changeHistory')">v233 - Historial cambios</a>
   </div>
 </div>
 <div class="music-controls" title="Música">
@@ -10352,58 +10352,135 @@ let publicFinalMatchEdit=false;
 let publicFinalMatchSection='all';
 let pendingResultCallupNames=[];
 
-function parseResultCallup(){
-  const text=document.getElementById('resultCallupText')?.value||'';
-  const needed=currentSeasonMode==='f7'?14:10;
-  const roster=currentSeasonMode==='f7'?F7:FS;
-  const rawLines=text.split(/\r?\n/);
-  const participantLines=[];
-  let inReserves=false;
+// Devuelve 'red', 'black' o null si la línea es un encabezado de equipo.
+// Acepta singular/plural, mayúsculas, «Equipo/Los/Las» y adornos como ❤️ 🖤 : . -
+function resultCallupTeamKey(line){
+  const source=String(line||'').replace(/[⁠ ]/g,' ').replace(/[\u200B-\u200D\uFEFF]/g,'').trim();
+  if(!source)return null;
+  const stripped=source.replace(/^\s*(?:\d{1,2}\s*[\.\)\-:ºª]\s*|[•\-–—*]\s*)/,'').trim();
+  const match=stripped.match(/^(?:(?:equipo|los|las)\s+)*(negr[oa]s?|roj[oa]s?)\b/i);
+  if(!match)return null;
+  // Si después del encabezado queda texto real, es un nombre y no un título.
+  if(/[a-záéíóúüñ]/i.test(stripped.slice(match[0].length)))return null;
+  return /^negr/i.test(match[1])?'black':'red';
+}
 
-  for(const raw of rawLines){
+// Analiza el texto pegado y separa los nombres por equipo cuando hay
+// encabezados «Negros» / «Rojos». Sin encabezados mantiene el comportamiento
+// histórico (misma lista en ambos equipos hasta corregir a mano).
+function parseResultCallupText(text,roster){
+  const lines=[];
+  let currentTeam=null,inReserves=false,headingFound=false;
+
+  for(const raw of String(text||'').split(/\r?\n/)){
     const trimmed=String(raw||'').replace(/[⁠ ]/g,' ').trim();
     if(!trimmed)continue;
     if(/^\s*reservas?\b/i.test(trimmed)){inReserves=true;continue}
     if(inReserves)continue;
-    if(/^\s*\d{1,2}\s*[\.\)\-:ºª]/.test(trimmed)||/^\s*\d{1,2}\s+[^\d]/.test(trimmed)){
-      const cleaned=cleanCoachCallupLine(trimmed);
-      if(cleaned)participantLines.push(cleaned);
-    }
+    const team=resultCallupTeamKey(raw);
+    if(team){headingFound=true;currentTeam=team;continue}
+    lines.push({raw,team:currentTeam});
   }
 
-  if(!participantLines.length){
-    for(const raw of rawLines){
-      const trimmed=String(raw||'').trim();
-      if(/^\s*reservas?\b/i.test(trimmed))break;
-      const cleaned=cleanCoachCallupLine(trimmed);
-      if(!cleaned)continue;
-      const norm=normalizeCoachCallupName(cleaned);
-      if(roster.some(r=>normalizeCoachCallupName(r)===norm))participantLines.push(cleaned);
-    }
-  }
+  const isNumbered=value=>/^\s*\d{1,2}\s*[\.\)\-:ºª]/.test(value)||/^\s*\d{1,2}\s+[^\d]/.test(value);
+  const numbered=headingFound?[]:lines.filter(l=>isNumbered(l.raw));
+  // Con encabezados, cualquier línea del bloque es candidata. Sin ellos, el
+  // criterio antiguo: primero líneas numeradas y, si no hay, solo las que ya
+  // coinciden con la plantilla.
+  const candidates=headingFound?lines:numbered.length?numbered:lines.filter(l=>{
+    const cleaned=cleanCoachCallupLine(l.raw);
+    if(!cleaned)return false;
+    const norm=normalizeCoachCallupName(cleaned);
+    return roster.some(r=>normalizeCoachCallupName(r)===norm);
+  });
+  const broad=headingFound||numbered.length>0;
 
-  const detected=[],unknown=[],seen=new Set();
-  participantLines.forEach(rawName=>{
-    const norm=normalizeCoachCallupName(rawName);
-    if(!norm||seen.has(norm))return;
-    seen.add(norm);
+  const out={headingFound,broad,total:0,red:[],black:[],unknown:[],unassigned:[],duplicates:[],conflicts:[]};
+  const seen=new Set(),assignedTeam={},unassignedSeen=new Set();
+
+  candidates.forEach(({raw,team})=>{
+    const cleaned=cleanCoachCallupLine(raw);
+    if(!cleaned)return;
+    const norm=normalizeCoachCallupName(cleaned);
+    if(!norm)return;
     const exact=roster.find(r=>normalizeCoachCallupName(r)===norm);
-    if(exact){detected.push(exact);return}
-    const close=closestCoachRosterName(rawName,roster);
-    unknown.push(close?`${rawName} → ¿${close.name}?`:rawName);
+
+    if(seen.has(norm)){
+      if(!exact)return;
+      const previous=assignedTeam[norm];
+      if(previous&&previous===team){
+        if(!out.duplicates.includes(exact))out.duplicates.push(exact);
+      }else if(previous&&team&&previous!==team){
+        if(!out.conflicts.includes(exact))out.conflicts.push(exact);
+      }
+      return;
+    }
+
+    if(!exact){
+      seen.add(norm);
+      if(broad){
+        const close=closestCoachRosterName(cleaned,roster);
+        out.unknown.push(close?`${cleaned} → ¿${close.name}?`:cleaned);
+      }
+      return;
+    }
+
+    // Nombres que aparecen antes del primer encabezado: no se asignan solos.
+    if(!team&&headingFound){
+      if(!unassignedSeen.has(norm)){unassignedSeen.add(norm);out.unassigned.push(exact)}
+      return;
+    }
+
+    seen.add(norm);
+    if(team){
+      assignedTeam[norm]=team;
+      out[team].push(exact);
+    }else{
+      assignedTeam[norm]='both';
+      out.red.push(exact);out.black.push(exact);
+    }
   });
 
-  pendingResultCallupNames=detected.slice(0,needed);
-  renderChecks('redChecks',pendingResultCallupNames,'red');
-  renderChecks('blackChecks',pendingResultCallupNames,'black');
+  // Un nombre visto antes del primer encabezado solo se avisa como «sin
+  // asignar» si no aparece después dentro de un equipo.
+  out.unassigned=out.unassigned.filter(name=>!assignedTeam[normalizeCoachCallupName(name)]);
+  out.total=new Set([...out.red,...out.black]).size;
+  return out;
+}
+
+function parseResultCallup(){
+  const text=document.getElementById('resultCallupText')?.value||'';
+  const needed=currentSeasonMode==='f7'?14:10;
+  const roster=currentSeasonMode==='f7'?F7:FS;
+  const parsed=parseResultCallupText(text,roster);
+  // El aviso debe contar todo lo detectado, no solo lo que cabe en las casillas.
+  const detectedTotal=parsed.total;
+
+  if(!parsed.headingFound){
+    parsed.red=parsed.red.slice(0,needed);
+    parsed.black=parsed.red.slice();
+  }
+
+  pendingResultCallupNames=[...new Set([...parsed.red,...parsed.black])];
+  renderChecks('redChecks',parsed.red,'red');
+  renderChecks('blackChecks',parsed.black,'black');
 
   const status=document.getElementById('resultCallupStatus');
   if(status){
-    const messages=[`He detectado ${detected.length} de ${needed} jugadores.`];
-    if(detected.length<needed)messages.push(`Faltan ${needed-detected.length}; puedes añadirlos manualmente debajo.`);
-    if(detected.length>needed)messages.push(`Hay ${detected.length-needed} jugadores de más; revisa la convocatoria.`);
-    if(unknown.length)messages.push(`No he seleccionado automáticamente: ${unknown.join(', ')}.`);
-    messages.push('Ahora marca qué jugadores fueron Rojos y cuáles Negros.');
+    const total=detectedTotal;
+    const messages=[];
+    if(parsed.headingFound){
+      messages.push(`He detectado ${total} de ${needed} jugadores: ${parsed.red.length} en Rojos y ${parsed.black.length} en Negros.`);
+    }else{
+      messages.push(`He detectado ${total} de ${needed} jugadores.`);
+    }
+    if(total<needed)messages.push(`Faltan ${needed-total}; puedes añadirlos manualmente debajo.`);
+    if(total>needed)messages.push(`Hay ${total-needed} jugadores de más; revisa la convocatoria.`);
+    if(parsed.conflicts.length)messages.push(`⚠️ ${parsed.conflicts.join(', ')} aparece en los dos equipos; se queda con el primero. Corrígelo si hace falta.`);
+    if(parsed.duplicates.length)messages.push(`He ignorado nombres repetidos: ${parsed.duplicates.join(', ')}.`);
+    if(parsed.unassigned.length)messages.push(`Fuera de los bloques de equipo, sin asignar: ${parsed.unassigned.join(', ')}.`);
+    if(parsed.unknown.length)messages.push(`No he seleccionado automáticamente: ${parsed.unknown.join(', ')}.`);
+    messages.push('Revisa las casillas y corrige manualmente lo que no cuadre.');
     status.textContent=messages.join(' ');
     status.style.display='';
   }
@@ -11363,4 +11440,4 @@ document.addEventListener('keydown',e=>{
   window.addEventListener('scroll',closeTip,true);
 })();
 </script>
-<script src="./patx-v212.js?v=231"></script><script src="./patx-v213.js?v=231"></script><script src="./patx-v214.js?v=231"></script><script src="./patx-v227-photo-routing.js?v=227"></script></body></html>
+<script src="./patx-v212.js?v=231"></script><script src="./patx-v213.js?v=231"></script><script src="./patx-v214.js?v=233"></script><script src="./patx-v227-photo-routing.js?v=227"></script></body></html>

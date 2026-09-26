@@ -1,0 +1,50 @@
+{
+  "sample": "Negros 🖤\n. Julio\n. César\n. Rico\n. Santi\n. Manel\n. Rafeta\n. Rosana\n\nRojos ❤️\n. Xavi\n. Nelo\n. Datxu\n. Jota\n. Guillem\n. Rafa\n. Nacho",
+  "result": {
+    "red": [
+      "Datxu",
+      "Guillem",
+      "Jota",
+      "Nacho",
+      "Nelo",
+      "Rafa",
+      "Xavi"
+    ],
+    "black": [
+      "César",
+      "Julio",
+      "Manel",
+      "Rafeta",
+      "Rico",
+      "Rosana",
+      "Santi"
+    ],
+    "statusText": "He detectado 14 de 14 jugadores: 7 en Rojos y 7 en Negros. Revisa las casillas y corrige manualmente lo que no cuadre.",
+    "statusVisible": true
+  },
+  "cleared": {
+    "red": 0,
+    "black": 0,
+    "text": ""
+  },
+  "checkedAfterReimport": {
+    "red": [
+      "Datxu",
+      "Guillem",
+      "Jota",
+      "Nacho",
+      "Nelo",
+      "Rafa",
+      "Xavi"
+    ],
+    "black": [
+      "César",
+      "Julio",
+      "Manel",
+      "Rafeta",
+      "Rico",
+      "Rosana",
+      "Santi"
+    ]
+  }
+}

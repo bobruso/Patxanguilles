@@ -1,9 +1,9 @@
 {
-  "version": 232,
-  "label": "v232",
+  "version": 233,
+  "label": "v233",
   "title": "Nueva versión disponible",
   "summary": [
-    "La presentación GPS vuelve correctamente al análisis al cerrarla.",
-    "El botón Partido y Atrás ya regresan a la ficha del partido sin reabrir la presentación."
+    "Al pegar una convocatoria separada por Rojos y Negros, los jugadores se asignan automáticamente a su equipo.",
+    "El importador avisa de nombres desconocidos o repetidos y permite corregir la selección."
   ]
 }

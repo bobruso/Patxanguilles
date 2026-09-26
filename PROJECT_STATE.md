@@ -1,11 +1,11 @@
 # PROJECT STATE — PATXANGUILLES ANTIFEIXISTES
 
-Actualizado: 2026-09-23
+Actualizado: 2026-09-26
 Fuente principal: GitHub `bobruso/Patxanguilles` · rama `main`
 
 ## ESTADO GENERAL
-- Versión publicada actual: **v232**.
-- `version.json` marca 232.
+- Versión publicada actual: **v233**.
+- `version.json` marca 233.
 - Publicación mediante GitHub Pages.
 - Stack: HTML + CSS + JavaScript + Supabase/PostgreSQL.
 - `index.html` raíz es muy grande; preferir módulos externos cuando sea razonable.
@@ -24,9 +24,9 @@ Distinguir siempre:
 - PREPARADO PERO NO PUBLICADO
 
 ## VERSIONADO
-- Actual: **v232**.
-- `version.json` marca v232.
-- Historial visual: `patx-v214.js` incluye v232; **v230 no añade entrada visible por petición expresa del usuario**.
+- Actual: **v233**.
+- `version.json` marca v233.
+- Historial visual: `patx-v214.js` incluye v233; **v230 no añade entrada visible por petición expresa del usuario**.
 - Cada publicación real debe actualizar versión, historial y cache busting `?v=XXX` cuando corresponda.
 - No incrementar versión por pruebas.
 
@@ -167,7 +167,12 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 - No convertir el retorno GPS v232 de nuevo en `history.back()` ciego.
 - No renombrar módulos `v227-*` solo porque contengan lógica posterior.
 
-## ÚLTIMA PUBLICACIÓN — v232
+## ÚLTIMA PUBLICACIÓN — v233
+- Convocatorias por equipos: detección automática de Rojos/Negros al pegar texto.
+- Probado con el ejemplo de 14 jugadores, pruebas automatizadas y navegador; validado por el usuario.
+- Commit y push a main autorizados por el usuario el 2026-09-26.
+
+## PUBLICACIÓN ANTERIOR — v232
 - IMPLEMENTADO: ✅ navegación explícita presentación → análisis → ficha de partido.
 - ARCHIVOS DE PRODUCTO: `gps/gps-presentation.js`, `gps/gps-presentation-launcher.js`, `gps-report.html`, `gps-presentation.html`.
 - VERSIONADO/HISTORIAL: `version.json`, `patx-v214.js`, `PROJECT_STATE.md`.
