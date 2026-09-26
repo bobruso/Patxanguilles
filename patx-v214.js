@@ -51,10 +51,11 @@
   function injectLatestHistory(){
     const history=document.querySelector('#changeHistory .history-wrap');
     const header=history?.querySelector('.history-header');
-    if(!history||!header||history.querySelector('[data-history-version="233"]'))return;
+    if(!history||!header||history.querySelector('[data-history-version="234"]'))return;
     const versionLabel=header.querySelector('.history-version');
-    if(versionLabel)versionLabel.textContent='VERSIÓN v233';
+    if(versionLabel)versionLabel.textContent='VERSIÓN v234';
     const html=`
+<section class="history-change-section" data-history-version="234"><div class="history-section-number">234</div><div class="history-section-content"><h2>Balance visual de temporada</h2><ul><li>Nueva barra de victorias de Roj@s, empates y victorias de Negr@s encima de Últimos partidos y en Calendario.</li><li>Porcentaje de victorias y goles de cada equipo, contando solo los partidos finalizados de la modalidad seleccionada.</li><li>Diseño compacto visible al entrar en temporada desde móvil y escritorio.</li></ul></div></section>
 <section class="history-change-section" data-history-version="233"><div class="history-section-number">233</div><div class="history-section-content"><h2>Convocatorias separadas por equipos</h2><ul><li>Al pegar una lista con los encabezados Rojos y Negros, los jugadores se seleccionan automáticamente en su equipo, en cualquier orden.</li><li>Se mantienen las listas sin equipos y la corrección manual, con avisos de nombres desconocidos o repetidos.</li></ul></div></section>
 <section class="history-change-section" data-history-version="232"><div class="history-section-number">232</div><div class="history-section-content"><h2>Navegación GPS sin rebotes</h2><ul><li>La X de la presentación GPS vuelve al análisis correspondiente en lugar de depender de un atrás genérico.</li><li>El cierre «VER ANÁLISIS COMPLETO» usa el mismo retorno seguro al informe.</li><li>Desde el análisis, «← PARTIDO» y el botón Atrás de Android regresan a la ficha del partido sin reabrir la presentación.</li></ul></div></section>
 <section class="history-change-section" data-history-version="231"><div class="history-section-number">231</div><div class="history-section-content"><h2>Tu partido en una presentación GPS</h2><ul><li>Nueva presentación audiovisual con recorrido satélite, frecuencia cardíaca, velocidad y comparativa histórica.</li><li>Composiciones adaptadas a escritorio y móvil, con cierre protagonizado por la carta oficial del jugador.</li><li>Abre la presentación desde el informe GPS y vuelve al análisis completo desde el cierre.</li></ul></div></section>

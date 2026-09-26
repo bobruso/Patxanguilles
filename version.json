@@ -1,9 +1,9 @@
 {
-  "version": 233,
-  "label": "v233",
+  "version": 234,
+  "label": "v234",
   "title": "Nueva versión disponible",
   "summary": [
-    "Al pegar una convocatoria separada por Rojos y Negros, los jugadores se asignan automáticamente a su equipo.",
-    "El importador avisa de nombres desconocidos o repetidos y permite corregir la selección."
+    "Nueva barra visual con victorias de Roj@s, empates y victorias de Negr@s en la temporada.",
+    "Consulta el porcentaje de victorias y los goles de cada equipo, también desde el móvil."
   ]
 }
