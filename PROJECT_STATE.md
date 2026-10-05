@@ -1,11 +1,11 @@
 # PROJECT STATE — PATXANGUILLES ANTIFEIXISTES
 
-Actualizado: 2026-09-26
+Actualizado: 2026-10-05
 Fuente principal: GitHub `bobruso/Patxanguilles` · rama `main`
 
 ## ESTADO GENERAL
-- Versión publicada actual: **v234**.
-- `version.json` marca 234.
+- Versión publicada actual: **v235**.
+- `version.json` marca 235.
 - Publicación mediante GitHub Pages.
 - Stack: HTML + CSS + JavaScript + Supabase/PostgreSQL.
 - `index.html` raíz es muy grande; preferir módulos externos cuando sea razonable.
@@ -24,10 +24,10 @@ Distinguir siempre:
 - PREPARADO PERO NO PUBLICADO
 
 ## VERSIONADO
-- Actual: **v234**.
-- `version.json` marca v234.
-- Historial visual: `patx-v214.js` incluye v234; **v230 no añade entrada visible por petición expresa del usuario**.
-- Cada publicación real debe actualizar versión, historial y cache busting `?v=XXX` cuando corresponda.
+- Actual: **v235**.
+- `version.json` marca v235.
+- Historial visual: la última entrada visible sigue siendo v234; **v235 no añade entrada visible por petición expresa del usuario**. v230 tampoco añadió entrada visible.
+- Cada publicación real debe actualizar versión y revisar historial/cache busting `?v=XXX` cuando corresponda.
 - No incrementar versión por pruebas.
 
 ## JUEGOS
@@ -43,6 +43,15 @@ Decisión vigente:
 - No volver a usar “Patxanguilles Heads” salvo referencia histórica.
 - `juegos/index.html` lo muestra habilitado.
 - Enlace: `./cabezones/`.
+
+## FÚTBOL 7 — ALINEACIONES
+- La generación automática F7 se resuelve en Supabase mediante `generate_teams`.
+- El frontend solicita la primera alineación y también las alternativas de «Probar otra alineación» al backend; F7 no debe caer silenciosamente al algoritmo local si falla la RPC.
+- Criterios visibles y mantenidos: posiciones y rendimiento histórico de victorias con corrección por tamaño de muestra.
+- Las alternativas deben evitar repetir la misma partición cuando exista otra opción suficientemente equilibrada.
+- Plantilla F7 activa excluye temporalmente a **Cordo, Erika, Jorgito y Oskar**. Sus registros se conservan en Supabase con `football7=false` y pueden reactivarse si vuelven a jugar.
+- César y Toni son porteros; cuando coinciden, deben quedar separados uno por equipo.
+- `patx-v214.js` contiene la capa de integración vigente para roster F7 y generación remota.
 
 ## GPS — ESTADO ACTUAL
 Archivos clave:
@@ -148,8 +157,9 @@ Archivo de aislamiento: `patx-v227-photo-routing.js`.
 Sistemas relevantes:
 - `gps_pitches`
 - `match_player_gps`
+- `generate_teams` · generación remota de alineaciones F7
 
-Migración:
+Migración publicada en repositorio:
 - `supabase/migrations/20260914011500_gps_pitches_runtime_permissions.sql`
 
 No crear tablas/RPC/policies sin comprobar equivalentes.
@@ -166,8 +176,18 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 - No tocar navegación Android global sin probar Atrás.
 - No convertir el retorno GPS v232 de nuevo en `history.back()` ciego.
 - No renombrar módulos `v227-*` solo porque contengan lógica posterior.
+- En F7, no reintroducir fallback local silencioso para crear equipos o probar otra alineación.
 
-## ÚLTIMA PUBLICACIÓN — v234
+## ÚLTIMA PUBLICACIÓN — v235
+- Plantilla F7 activa actualizada: Cordo, Erika, Jorgito y Oskar quedan fuera de selección, entrenador, convocatorias y clasificación; sus registros siguen conservados en Supabase.
+- Generación F7 consolidada en Supabase tanto para la primera alineación como para «Probar otra alineación».
+- Se mantienen posiciones e histórico de victorias corregido por muestra y se evita repetir la misma partición cuando existe una alternativa equilibrada.
+- César y Toni quedan separados cuando ambos actúan como porteros en la misma convocatoria.
+- PROBADO: sintaxis JS, harness de integración, generaciones inicial/alternativa en PostgreSQL y permisos de acceso al backend.
+- PUBLICADO EN MAIN: ✅ autorizado por el usuario el 2026-10-05.
+- HISTORIAL VISUAL: sin entrada v235 por petición expresa del usuario.
+
+## PUBLICACIÓN ANTERIOR — v234
 - Balance visual de temporada: victorias, empates, porcentajes y goles por modalidad, solo partidos finalizados.
 - Visible encima de Últimos partidos y en Calendario, incluida la entrada móvil.
 - Verificados cálculos y sintaxis; navegador a 1280, 390 y 320 px sin desbordamientos.
@@ -178,16 +198,8 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 - Probado con el ejemplo de 14 jugadores, pruebas automatizadas y navegador; validado por el usuario.
 - Commit y push a main autorizados por el usuario el 2026-09-26.
 
-## PUBLICACIÓN ANTERIOR — v232
-- IMPLEMENTADO: ✅ navegación explícita presentación → análisis → ficha de partido.
-- ARCHIVOS DE PRODUCTO: `gps/gps-presentation.js`, `gps/gps-presentation-launcher.js`, `gps-report.html`, `gps-presentation.html`.
-- VERSIONADO/HISTORIAL: `version.json`, `patx-v214.js`, `PROJECT_STATE.md`.
-- PROBADO ANTES DE PUBLICAR: ✅ revisión de rutas, sintaxis/lógica y harness dirigido de navegación; la presentación v231 ya tenía QA desktop y móvil emulado.
-- PUBLICADO EN MAIN: ✅ v232 el 2026-09-23.
-- PENDIENTE DE VALIDACIÓN REAL: probar en producción la X de presentación, «VER ANÁLISIS COMPLETO», «← PARTIDO» y Atrás físico en APK/WebView.
-
 ## SIGUIENTE SESIÓN
 1. Leer este archivo y consultar `main` antes de tocar código.
-2. Validar en dispositivo real el flujo GPS v232, especialmente Atrás en APK/WebView.
-3. Si aparece una regresión de navegación, revisar primero `gps/gps-presentation.js`, `gps-report.html` y `gps/report-overlay.js`; no añadir `popstate` global sin necesidad.
-4. Mantener la política de velocidad v230 y las protecciones de fotos/OCR, Santa Ana y comparador GPS.
+2. Validar en uso real una convocatoria F7 con «Hacer equipos» y varias pulsaciones de «Probar otra alineación».
+3. Confirmar que Cordo, Erika, Jorgito y Oskar no aparecen en selección, entrenador ni clasificación F7.
+4. Mantener la política de velocidad v230 y las protecciones de fotos/OCR, Santa Ana, comparador GPS y navegación v232.
