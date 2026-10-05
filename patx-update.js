@@ -177,3 +177,13 @@
     }
   };
 })();
+
+(function () {
+  'use strict';
+  if (window.__patxRuntimeV236Loader) return;
+  window.__patxRuntimeV236Loader = true;
+  const script = document.createElement('script');
+  script.src = './patx-v236-result-team-emojis.js?v=236';
+  script.dataset.patxRuntime = 'v236-result-team-emojis';
+  document.head.appendChild(script);
+})();
