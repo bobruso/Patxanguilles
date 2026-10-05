@@ -217,8 +217,6 @@
   function syncPublishedVersionV235(){
     const homeLink=document.querySelector('.home-version-link a');
     if(homeLink)homeLink.textContent='v235 - Historial cambios';
-    const versionLabel=document.querySelector('#changeHistory .history-version');
-    if(versionLabel)versionLabel.textContent='VERSIÓN v235';
   }
 
   function initV214Extras(){
