@@ -4,8 +4,8 @@ Actualizado: 2026-10-05
 Fuente principal: GitHub `bobruso/Patxanguilles` · rama `main`
 
 ## ESTADO GENERAL
-- Versión publicada actual: **v235**.
-- `version.json` marca 235.
+- Versión publicada actual: **v236**.
+- `version.json` marca 236.
 - Publicación mediante GitHub Pages.
 - Stack: HTML + CSS + JavaScript + Supabase/PostgreSQL.
 - `index.html` raíz es muy grande; preferir módulos externos cuando sea razonable.
@@ -24,11 +24,22 @@ Distinguir siempre:
 - PREPARADO PERO NO PUBLICADO
 
 ## VERSIONADO
-- Actual: **v235**.
-- `version.json` marca v235.
-- Historial visual: la última entrada visible sigue siendo v234; **v235 no añade entrada visible por petición expresa del usuario**. v230 tampoco añadió entrada visible.
+- Actual: **v236**.
+- `version.json` marca v236.
+- El historial visual incluye v236. v235 y v230 no añadieron entrada visible por petición expresa del usuario.
 - Cada publicación real debe actualizar versión y revisar historial/cache busting `?v=XXX` cuando corresponda.
 - No incrementar versión por pruebas.
+
+## AÑADIR RESULTADO — CONVOCATORIAS
+- Desde v233, el pegado de texto puede separar automáticamente Rojos y Negros cuando existen encabezados escritos (`Rojos`, `Negros`, `Equipo Rojo`, etc.).
+- Desde **v236**, también se reconocen encabezados formados únicamente por emojis/símbolos claramente rojos o negros.
+- Ejemplos válidos: `🔴🔴🔴` / `⚫️⚫️⚫️`, `❤️❤️❤️` / `🖤🖤🖤`, cuadrados, palos de cartas, banderas y otros marcadores habituales incluidos en la capa v236.
+- Las líneas de cabecera del partido, fecha/hora y nombres no se interpretan como encabezados de equipo.
+- Una mezcla rojo+negro en la misma línea no se asigna automáticamente.
+- Archivo: `patx-v236-result-team-emojis.js`.
+- `patx-update.js` carga esa capa con `?v=236`.
+- Prueba dirigida: `tests/v236-result-team-emojis.test.mjs`.
+- No mezclar esta importación de texto con el OCR de imagen `resultCallupImage`.
 
 ## JUEGOS
 Ruta: `/juegos/`.
@@ -177,8 +188,18 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 - No convertir el retorno GPS v232 de nuevo en `history.back()` ciego.
 - No renombrar módulos `v227-*` solo porque contengan lógica posterior.
 - En F7, no reintroducir fallback local silencioso para crear equipos o probar otra alineación.
+- En importación de resultado, conservar compatibilidad con encabezados escritos y no interpretar líneas mixtas rojo/negro como un equipo.
 
-## ÚLTIMA PUBLICACIÓN — v235
+## ÚLTIMA PUBLICACIÓN — v236
+- «Añadir resultado» reconoce encabezados de equipo basados solo en emojis/símbolos rojos y negros, además de los encabezados escritos existentes.
+- Ejemplo real validado: `🔴🔴🔴` con Héctor, Benja, Àlex, Nelo, Jota, Datxu y César; `⚫️⚫️⚫️` con Jorge, Xavi, Pau, Rico, Guillem, Ernest y Germán → **14/14, 7/7**.
+- Corazones `❤️/🖤` y otros marcadores habituales también cubiertos.
+- El cambio vive en `patx-v236-result-team-emojis.js`; `patx-update.js` carga la capa con cache busting `?v=236`.
+- PROBADO: sintaxis del módulo, clasificación de marcadores, compatibilidad con encabezados por texto, rechazo de mezclas rojo/negro e integración con el parser de convocatoria actual.
+- PUBLICADO EN MAIN: ✅ autorizado por el usuario el 2026-10-05.
+- HISTORIAL VISUAL: entrada v236 incluida.
+
+## PUBLICACIÓN ANTERIOR — v235
 - Plantilla F7 activa actualizada: Cordo, Erika, Jorgito y Oskar quedan fuera de selección, entrenador, convocatorias y clasificación; sus registros siguen conservados en Supabase.
 - Generación F7 consolidada en Supabase tanto para la primera alineación como para «Probar otra alineación».
 - Se mantienen posiciones e histórico de victorias corregido por muestra y se evita repetir la misma partición cuando existe una alternativa equilibrada.
@@ -193,13 +214,9 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 - Verificados cálculos y sintaxis; navegador a 1280, 390 y 320 px sin desbordamientos.
 - Commit y push a main autorizados por el usuario el 2026-09-26.
 
-## PUBLICACIÓN ANTERIOR — v233
-- Convocatorias por equipos: detección automática de Rojos/Negros al pegar texto.
-- Probado con el ejemplo de 14 jugadores, pruebas automatizadas y navegador; validado por el usuario.
-- Commit y push a main autorizados por el usuario el 2026-09-26.
-
 ## SIGUIENTE SESIÓN
 1. Leer este archivo y consultar `main` antes de tocar código.
-2. Validar en uso real una convocatoria F7 con «Hacer equipos» y varias pulsaciones de «Probar otra alineación».
-3. Confirmar que Cordo, Erika, Jorgito y Oskar no aparecen en selección, entrenador ni clasificación F7.
-4. Mantener la política de velocidad v230 y las protecciones de fotos/OCR, Santa Ana, comparador GPS y navegación v232.
+2. Validar en uso real el pegado de una convocatoria con encabezados solo de emojis rojos/negros en «Añadir resultado».
+3. Validar en uso real una convocatoria F7 con «Hacer equipos» y varias pulsaciones de «Probar otra alineación».
+4. Confirmar que Cordo, Erika, Jorgito y Oskar no aparecen en selección, entrenador ni clasificación F7.
+5. Mantener la política de velocidad v230 y las protecciones de fotos/OCR, Santa Ana, comparador GPS y navegación v232.
