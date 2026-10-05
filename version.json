@@ -1,9 +1,9 @@
 {
-  "version": 234,
-  "label": "v234",
+  "version": 235,
+  "label": "v235",
   "title": "Nueva versión disponible",
   "summary": [
-    "Nueva barra visual con victorias de Roj@s, empates y victorias de Negr@s en la temporada.",
-    "Consulta el porcentaje de victorias y los goles de cada equipo, también desde el móvil."
+    "Plantilla de Fútbol 7 actualizada.",
+    "Ajustes en la generación de alineaciones y en «Probar otra alineación»."
   ]
 }
