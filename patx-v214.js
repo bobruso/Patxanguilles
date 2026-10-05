@@ -108,10 +108,126 @@
     setTimeout(()=>{tip.classList.remove('show');setTimeout(()=>tip.remove(),180);},2400);
   }
 
+  const inactiveF7V235=new Set(['Cordo','Erika','Jorgito','Oskar']);
+
+  function applyActiveRosterV235(){
+    if(typeof F7!=='undefined'&&Array.isArray(F7)){
+      inactiveF7V235.forEach(name=>{
+        let idx=F7.indexOf(name);
+        while(idx>=0){F7.splice(idx,1);idx=F7.indexOf(name);}
+      });
+    }
+    const originalAll=window.allPlayers;
+    if(typeof originalAll==='function'&&!window.__patxAllPlayersV235){
+      window.__patxAllPlayersV235=true;
+      window.allPlayers=function(){return originalAll().filter(name=>!inactiveF7V235.has(name));};
+    }
+  }
+
+  function remoteContextV235(){
+    if(typeof reserves==='undefined'||!Array.isArray(reserves))return[];
+    return reserves
+      .filter(r=>r&&String(r.name||'').trim())
+      .map(r=>({
+        n:String(r.name).trim(),
+        k:r.level==='alto'?'h':r.level==='bajo'?'l':'m'
+      }));
+  }
+
+  async function requestTeamsV235(previousRed){
+    if(typeof sbPublic==='undefined'||!sbPublic?.rpc)throw new Error('Servicio no disponible');
+    const args={
+      p_players:[...selected],
+      p_previous_red:Array.isArray(previousRed)?[...previousRed]:null,
+      p_context:remoteContextV235()
+    };
+    const {data,error}=await sbPublic.rpc('generate_teams',args);
+    if(error)throw error;
+    const red=Array.isArray(data?.red)?data.red:[];
+    const black=Array.isArray(data?.black)?data.black:[];
+    const merged=[...red,...black];
+    const selectedSet=new Set(selected);
+    if(red.length!==selected.length/2||black.length!==selected.length/2||new Set(merged).size!==selected.length||merged.some(n=>!selectedSet.has(n))){
+      throw new Error('Respuesta de alineación no válida');
+    }
+    return{red:[...red],black:[...black]};
+  }
+
+  function installRemoteLineupsV235(){
+    if(window.__patxRemoteLineupsV235)return;
+    const originalMake=window.makeTeams;
+    const originalNew=window.newLineup;
+    if(typeof originalMake!=='function'||typeof originalNew!=='function')return;
+    window.__patxRemoteLineupsV235=true;
+
+    window.makeTeams=async function(){
+      if(typeof game==='undefined'||game!=='f7')return originalMake.apply(this,arguments);
+      show('loading');
+      const msgs=randomLoadingPhrases(4);
+      const title=document.getElementById('loadingTitle');
+      const small=document.getElementById('loadingMessage');
+      if(small)small.textContent='';
+      if(title)title.textContent=msgs[0];
+      let i=0;
+      const timer=setInterval(()=>{
+        i++;
+        if(title&&i<msgs.length)title.textContent=msgs[i];
+      },1800);
+      const generated=requestTeamsV235(null).then(data=>({data}),error=>({error}));
+      await wait(7200);
+      clearInterval(timer);
+      const outcome=await generated;
+      if(outcome.error){
+        console.error('Generación remota no disponible',outcome.error);
+        show('selection');
+        if(typeof toast==='function')toast('No se pudieron generar los equipos');
+        return;
+      }
+      teams=outcome.data;
+      pendingSwap=null;
+      renderResults();
+      show('results');
+    };
+
+    window.newLineup=async function(){
+      if(typeof game==='undefined'||game!=='f7')return originalNew.apply(this,arguments);
+      if(window.__patxNewLineupBusyV235)return;
+      window.__patxNewLineupBusyV235=true;
+      const buttons=[...document.querySelectorAll('#results .lineup-top-actions button')];
+      const btn=buttons.find(b=>/otra alineación/i.test(b.textContent||''));
+      if(btn)btn.disabled=true;
+      try{
+        const previous=Array.isArray(teams?.red)?[...teams.red]:[];
+        teams=await requestTeamsV235(previous);
+        pendingSwap=null;
+        renderResults();
+        document.getElementById('adjustPanel')?.classList.remove('open');
+        document.getElementById('results')?.classList.remove('adjusting-lineups');
+        if(typeof toast==='function')toast('Nueva alineación generada');
+      }catch(err){
+        console.error('No se pudo generar otra alineación',err);
+        if(typeof toast==='function')toast('No se pudo generar otra alineación');
+      }finally{
+        if(btn)btn.disabled=false;
+        window.__patxNewLineupBusyV235=false;
+      }
+    };
+  }
+
+  function syncPublishedVersionV235(){
+    const homeLink=document.querySelector('.home-version-link a');
+    if(homeLink)homeLink.textContent='v235 - Historial cambios';
+    const versionLabel=document.querySelector('#changeHistory .history-version');
+    if(versionLabel)versionLabel.textContent='VERSIÓN v235';
+  }
+
   function initV214Extras(){
     injectGamesHomeButton();
     injectLatestHistory();
     setupCoachLobbyV224();
+    applyActiveRosterV235();
+    installRemoteLineupsV235();
+    syncPublishedVersionV235();
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV214Extras,{once:true});
