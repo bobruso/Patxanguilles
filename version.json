@@ -1,9 +1,9 @@
 {
-  "version": 235,
-  "label": "v235",
+  "version": 236,
+  "label": "v236",
   "title": "Nueva versión disponible",
   "summary": [
-    "Plantilla de Fútbol 7 actualizada.",
-    "Ajustes en la generación de alineaciones y en «Probar otra alineación»."
+    "Añadir resultado reconoce equipos separados por emojis rojos y negros.",
+    "Círculos, corazones y otros marcadores de color pueden usarse como encabezados de Rojos y Negros."
   ]
 }
