@@ -1,6 +1,6 @@
 # PROJECT STATE — PATXANGUILLES ANTIFEIXISTES
 
-Actualizado: 2026-10-05
+Actualizado: 2026-10-16
 Fuente principal: GitHub `bobruso/Patxanguilles` · rama `main`
 
 ## ESTADO GENERAL
@@ -60,7 +60,7 @@ Decisión vigente:
 - El frontend solicita la primera alineación y también las alternativas de «Probar otra alineación» al backend; F7 no debe caer silenciosamente al algoritmo local si falla la RPC.
 - Criterios visibles y mantenidos: posiciones y rendimiento histórico de victorias con corrección por tamaño de muestra.
 - Las alternativas deben evitar repetir la misma partición cuando exista otra opción suficientemente equilibrada.
-- Plantilla F7 activa excluye temporalmente a **Cordo, Erika, Jorgito y Oskar**. Sus registros se conservan en Supabase con `football7=false` y pueden reactivarse si vuelven a jugar.
+- Plantilla F7 activa excluye temporalmente a **Erika, Jorgito y Oskar**. **Cordo está reactivado** y vuelve a formar parte de selección, entrenador, convocatorias y clasificación.
 - César y Toni son porteros; cuando coinciden, deben quedar separados uno por equipo.
 - `patx-v214.js` contiene la capa de integración vigente para roster F7 y generación remota.
 
