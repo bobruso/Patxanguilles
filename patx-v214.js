@@ -108,7 +108,51 @@
     setTimeout(()=>{tip.classList.remove('show');setTimeout(()=>tip.remove(),180);},2400);
   }
 
-  const inactiveF7V235=new Set(['Cordo','Erika','Jorgito','Oskar']);
+  const inactiveF7V235=new Set(['Erika','Jorgito','Oskar']);
+
+  async function reactivateCordoF7V236(){
+    if(window.__patxCordoF7ReactivateV236)return;
+    window.__patxCordoF7ReactivateV236=true;
+
+    for(let attempt=0;attempt<20;attempt++){
+      const player=(typeof db!=='undefined'&&db?.players)?db.players.Cordo:null;
+      const id=(typeof playerIdByName!=='undefined')?playerIdByName?.Cordo:null;
+
+      if(player&&id){
+        if(player.football7)return;
+        try{
+          const fd=new FormData();
+          fd.append('player_id',String(id));
+          fd.append('nickname',player.name||'Cordo');
+          fd.append('full_name',player.fullName||player.name||'Cordo');
+          fd.append('birth_date',player.birthDate||'');
+          fd.append('leg',player.leg||'');
+          fd.append('position',player.position||'');
+          fd.append('football7','true');
+          fd.append('football5',String(!!player.football5));
+
+          const r=await fetch(`${SUPABASE_URL_V214}/functions/v1/update-player-profile`,{
+            method:'POST',
+            headers:{
+              apikey:SUPABASE_KEY_V214,
+              Authorization:`Bearer ${SUPABASE_KEY_V214}`
+            },
+            body:fd
+          });
+          const data=await r.json().catch(()=>({}));
+          if(!r.ok||data?.ok!==true)throw new Error(data?.error||`No se pudo reactivar a Cordo (${r.status})`);
+          player.football7=true;
+        }catch(err){
+          console.warn('[Cordo F7] No se pudo persistir la reactivación',err);
+        }
+        return;
+      }
+
+      await new Promise(resolve=>setTimeout(resolve,500));
+    }
+
+    console.warn('[Cordo F7] No se encontró el jugador cargado para reactivarlo');
+  }
 
   function applyActiveRosterV235(){
     if(typeof F7!=='undefined'&&Array.isArray(F7)){
@@ -224,6 +268,7 @@
     injectLatestHistory();
     setupCoachLobbyV224();
     applyActiveRosterV235();
+    void reactivateCordoF7V236();
     installRemoteLineupsV235();
     syncPublishedVersionV235();
   }
