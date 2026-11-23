@@ -184,6 +184,18 @@
   window.__patxRuntimeV236Loader = true;
   const script = document.createElement('script');
   script.src = './patx-v236-result-team-emojis.js?v=236';
+  script.async = false;
   script.dataset.patxRuntime = 'v236-result-team-emojis';
+  document.head.appendChild(script);
+})();
+
+(function () {
+  'use strict';
+  if (window.__patxRuntimeV237Loader) return;
+  window.__patxRuntimeV237Loader = true;
+  const script = document.createElement('script');
+  script.src = './patx-v237-release.js?v=237';
+  script.async = false;
+  script.dataset.patxRuntime = 'v237-release';
   document.head.appendChild(script);
 })();

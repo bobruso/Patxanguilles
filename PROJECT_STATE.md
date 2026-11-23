@@ -1,11 +1,11 @@
 # PROJECT STATE — PATXANGUILLES ANTIFEIXISTES
 
-Actualizado: 2026-10-16
+Actualizado: 2026-11-24
 Fuente principal: GitHub `bobruso/Patxanguilles` · rama `main`
 
 ## ESTADO GENERAL
-- Versión publicada actual: **v236**.
-- `version.json` marca 236.
+- Versión publicada actual: **v237**.
+- `version.json` marca 237.
 - Publicación mediante GitHub Pages.
 - Stack: HTML + CSS + JavaScript + Supabase/PostgreSQL.
 - `index.html` raíz es muy grande; preferir módulos externos cuando sea razonable.
@@ -24,11 +24,28 @@ Distinguir siempre:
 - PREPARADO PERO NO PUBLICADO
 
 ## VERSIONADO
-- Actual: **v236**.
-- `version.json` marca v236.
-- El historial visual incluye v236. v235 y v230 no añadieron entrada visible por petición expresa del usuario.
+- Actual: **v237**.
+- `version.json` marca v237.
+- El historial visual incluye v237 (capa `patx-v237-release.js`). v235 y v230 no añadieron entrada visible por petición expresa del usuario.
 - Cada publicación real debe actualizar versión y revisar historial/cache busting `?v=XXX` cuando corresponda.
 - No incrementar versión por pruebas.
+
+## BIENVENIDA MUSICAL — v237
+- Al entrar en la Home (tras el fondo, la contraseña si toca y los avisos especiales), aparece una sola vez por sesión el aviso «¿Quieres escuchar un playlist futbolero mientras navegas?» con **Sí / No**.
+- **Sí**: arranca el reproductor y se muestran los cuatro accesos de la Home. **No** (o `Escape`): el reproductor queda en pausa y también aparecen los accesos.
+- La respuesta se guarda en `sessionStorage` (`patxMusicIntroV237`): al volver a la Home o recargar dentro de la misma sesión no se repite; al cerrar y abrir de nuevo, sí.
+- El viejo balón «ENTRAR» de móvil y su silbato se han eliminado por completo (markup, CSS, script y audio), junto con el autostart de música por el primer clic/tecla.
+- Si en la sesión se eligió «Sí», tras recargar el primer gesto reanuda el reproductor (el navegador bloquea el audio automático sin gesto).
+- `Escape` equivale a «No» y el foco de teclado queda contenido en el diálogo.
+- No reactivar el autostart de música ni el balón sin petición expresa.
+
+## ACCESO RÁPIDO A CONVOCATORIA WHATSAPP — v237
+- Nueva tarjeta en la Home (sustituye a «Álbum de cartas»): abre una pantalla para pegar la convocatoria completa de WhatsApp.
+- Analiza el texto con la detección compartida de `index.html` (`scanCallupParticipantLines` / `parseCallupEntries`): numeración, reservas, tildes, erratas cercanas, invitados y avisos de nombres desconocidos o repetidos.
+- Detecta la modalidad (Fútbol 7 / Fútbol Sala) y ofrece dos caminos: **algoritmo automático** (F7 usa la RPC `generate_teams` vigente; FS usa el algoritmo local) o **sala draft** del Modo Entrenador.
+- Archivos: `patx-quick-callup.js`, `patx-quick-callup.css`, prueba `tests/quick-callup.test.mjs`.
+- No crea registros de jugadores en Supabase desde el módulo rápido ni modifica el roster; los invitados van como contexto de la convocatoria.
+- No mezclar esta importación con el OCR de imagen `resultCallupImage`.
 
 ## AÑADIR RESULTADO — CONVOCATORIAS
 - Desde v233, el pegado de texto puede separar automáticamente Rojos y Negros cuando existen encabezados escritos (`Rojos`, `Negros`, `Equipo Rojo`, etc.).
@@ -189,8 +206,18 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 - No renombrar módulos `v227-*` solo porque contengan lógica posterior.
 - En F7, no reintroducir fallback local silencioso para crear equipos o probar otra alineación.
 - En importación de resultado, conservar compatibilidad con encabezados escritos y no interpretar líneas mixtas rojo/negro como un equipo.
+- No reintroducir el balón «ENTRAR» ni el autostart de música por el primer clic: la música solo arranca con «Sí» en el aviso de sesión o pulsando play.
+- No duplicar la detección de convocatorias: el acceso rápido de WhatsApp debe seguir usando `scanCallupParticipantLines` / `parseCallupEntries`.
 
-## ÚLTIMA PUBLICACIÓN — v236
+## ÚLTIMA PUBLICACIÓN — v237 (2026-11-24)
+- Bienvenida musical: aviso Sí/No una vez por sesión, sin balón de entrada y sin autostart de música.
+- Acceso rápido a convocatoria de WhatsApp desde la Home, con algoritmo o sala draft.
+- Se publican `patx-quick-callup.js`, `patx-quick-callup.css` y `patx-v237-release.js`; `patx-update.js` carga la capa v237.
+- PROBADO: `tests/quick-callup.test.mjs`, suite de navegador de la bienvenida musical (30/30, escritorio y móvil), flujo de análisis de convocatoria en navegador y visualización de versión/historial.
+- PUBLICADO EN MAIN: ✅ autorizado por el usuario el 2026-11-24.
+- HISTORIAL VISUAL: entrada v237 incluida.
+
+## PUBLICACIÓN ANTERIOR — v236
 - «Añadir resultado» reconoce encabezados de equipo basados solo en emojis/símbolos rojos y negros, además de los encabezados escritos existentes.
 - Ejemplo real validado: `🔴🔴🔴` con Héctor, Benja, Àlex, Nelo, Jota, Datxu y César; `⚫️⚫️⚫️` con Jorge, Xavi, Pau, Rico, Guillem, Ernest y Germán → **14/14, 7/7**.
 - Corazones `❤️/🖤` y otros marcadores habituales también cubiertos.
@@ -216,7 +243,7 @@ No crear tablas/RPC/policies sin comprobar equivalentes.
 
 ## SIGUIENTE SESIÓN
 1. Leer este archivo y consultar `main` antes de tocar código.
-2. Validar en uso real el pegado de una convocatoria con encabezados solo de emojis rojos/negros en «Añadir resultado».
-3. Validar en uso real una convocatoria F7 con «Hacer equipos» y varias pulsaciones de «Probar otra alineación».
+2. Validar en uso real el acceso rápido de WhatsApp con una convocatoria completa (algoritmo F7 y sala draft, incluidas reservas e invitados).
+3. Validar en uso real el aviso musical en un móvil físico (Sí, No, recarga y vuelta a la Home).
 4. Confirmar que Cordo, Erika, Jorgito y Oskar no aparecen en selección, entrenador ni clasificación F7.
 5. Mantener la política de velocidad v230 y las protecciones de fotos/OCR, Santa Ana, comparador GPS y navegación v232.

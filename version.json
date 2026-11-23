@@ -1,9 +1,11 @@
 {
-  "version": 236,
-  "label": "v236",
+  "version": 237,
+  "label": "v237",
   "title": "Nueva versión disponible",
   "summary": [
-    "Añadir resultado reconoce equipos separados por emojis rojos y negros.",
-    "Círculos, corazones y otros marcadores de color pueden usarse como encabezados de Rojos y Negros."
+    "La Home pregunta una sola vez por sesión si quieres escuchar el playlist futbolero.",
+    "El balón de ENTRAR desaparece: los cuatro accesos aparecen al responder al aviso.",
+    "La música ya no arranca sola con el primer clic.",
+    "Nueva tarjeta PEGAR CONVOCATORIA WHATSAPP para preparar los equipos en segundos."
   ]
 }

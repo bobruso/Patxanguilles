@@ -1140,7 +1140,8 @@ body.bg-coach-room{
 .coach-whatsapp-head span{display:block;font-size:12px;color:#aeb7be;line-height:1.4}
 #coachCallupText,
 #automaticCallupText,
-#resultCallupText{
+#resultCallupText,
+#whatsappQuickText{
   width:100%;resize:vertical;min-height:145px;
   padding:14px;border-radius:12px;
   border:1px solid #394139;
@@ -1150,7 +1151,8 @@ body.bg-coach-room{
 }
 #coachCallupText:focus,
 #automaticCallupText:focus,
-#resultCallupText:focus{
+#resultCallupText:focus,
+#whatsappQuickText:focus{
   outline:none;border-color:#8ea48f;
   box-shadow:0 0 0 3px rgba(142,164,143,.12);
 }
@@ -3050,6 +3052,22 @@ body:has(#results.active.adjusting-lineups){
 @keyframes specialBurst{0%,28%{opacity:0;box-shadow:none}38%{opacity:1;box-shadow:0 -42px 0 #ffd75a,30px -30px 0 #ff565f,42px 0 0 #fff,30px 30px 0 #63d7ff,0 42px 0 #ffd75a,-30px 30px 0 #ff565f,-42px 0 0 #fff,-30px -30px 0 #63d7ff}80%,100%{opacity:0;transform:scale(1.55)}}
 @media(max-width:700px){.special-card-inner{padding:25px 18px}.special-football-photo{height:34vh}.special-player-card{max-height:43vh}.birthday-cake{font-size:52px}}
 
+/* v237 · Bienvenida musical del primer acceso de la sesión */
+.music-intro-card{width:min(540px,100%)}
+.music-intro-card:focus{outline:none}
+.music-intro-badge{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;margin:2px auto 16px;border-radius:50%;background:linear-gradient(145deg,#c20e16,#760b11);font-size:30px;line-height:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 12px 26px rgba(0,0,0,.45)}
+.special-card h2.music-intro-title{font-size:clamp(22px,4.4vw,30px);line-height:1.22;margin:10px 0 12px;text-transform:none;letter-spacing:-.02em;color:#fff}
+.music-intro-text{margin:0;color:#b9c2ca;font-size:14px;line-height:1.5}
+.music-intro-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:26px}
+.music-intro-actions .primary,
+.music-intro-actions .secondary{min-width:132px;padding:13px 26px;font-size:15px}
+@media(max-width:700px){
+  .music-intro-card .special-card-inner{padding:28px 20px}
+  .music-intro-actions{flex-direction:column;gap:10px}
+  .music-intro-actions .primary,
+  .music-intro-actions .secondary{width:100%;min-width:0}
+}
+
 
 /* v93 · Ajustes pantalla "Que gane el mejor" */
 .celebration .final-actions .celebration-back{
@@ -3582,60 +3600,6 @@ body.album-reader-open{
 }
 
 
-/* v135 · Entrada interactiva de la Home en móvil vertical */
-.mobile-home-enter-ball{display:none}
-@media(max-width:900px) and (orientation:portrait){
-  .mobile-home-enter-ball{
-    display:flex;
-    position:fixed;
-    left:50%;
-    top:50%;
-    width:122px;
-    height:122px;
-    transform:translate(-50%,-50%) scale(1);
-    align-items:center;
-    justify-content:center;
-    border:0;
-    padding:0;
-    border-radius:50%;
-    background:transparent;
-    cursor:pointer;
-    z-index:9998;
-    -webkit-tap-highlight-color:transparent;
-    filter:drop-shadow(0 8px 16px rgba(0,0,0,.38));
-    transition:transform .42s cubic-bezier(.55,.02,.75,.35),opacity .32s ease;
-  }
-  .mobile-home-enter-ball .football-pattern{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:122px;
-    line-height:1;
-    user-select:none;
-    pointer-events:none;
-  }
-  .mobile-home-enter-ball .football-enter-text{
-    position:relative;
-    z-index:1;
-    padding:5px 9px;
-    border-radius:999px;
-    background:rgba(255,255,255,.88);
-    color:#050505;
-    font:900 13px/1 Arial,sans-serif;
-    letter-spacing:.7px;
-    box-shadow:0 2px 7px rgba(0,0,0,.28);
-    pointer-events:none;
-  }
-  .mobile-home-enter-ball.is-leaving{
-    transform:translate(-50%,-50%) scale(0);
-    opacity:0;
-    pointer-events:none;
-  }
-  body.home-entered .mobile-home-enter-ball{display:none}
-}
-
 /* Contraseña: etiqueta/placeholder y texto introducido en negro, escritorio y móvil */
 .access-hotspot,
 .access-hotspot input{
@@ -3644,26 +3608,6 @@ body.album-reader-open{
 .access-hotspot input::placeholder{
   color:#000 !important;
   opacity:1 !important;
-}
-
-
-/* v136 · Ajuste del balón de entrada móvil */
-@media(max-width:900px) and (orientation:portrait){
-  .mobile-home-enter-ball{
-    width:106px !important;
-    height:106px !important;
-    top:56% !important;
-    z-index:20 !important;
-    filter:grayscale(1) contrast(1.65) brightness(.72) drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
-  }
-  .mobile-home-enter-ball .football-pattern{
-    font-size:106px !important;
-  }
-  .mobile-home-enter-ball .football-enter-text{
-    background:rgba(245,245,245,.94) !important;
-    color:#050505 !important;
-    font-size:12px !important;
-  }
 }
 
 
@@ -3779,18 +3723,6 @@ body.album-reader-open{
 }
 
 
-/* v142 · balón ENTRAR móvil */
-@media(max-width:900px) and (orientation:portrait){
-  .mobile-home-enter-ball{
-    left:53.5% !important;
-    filter:grayscale(1) contrast(1.42) brightness(1.30) drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
-  }
-  .mobile-home-enter-ball .football-enter-text{
-    background:rgba(255,255,255,.99) !important;
-  }
-}
-
-
 /* v143 · corrección definitiva ADMIN/historial + fondo del historial */
 .admin-corner{
   right:10px !important;
@@ -3835,11 +3767,6 @@ body:has(#changeHistory.active) #desktopHomeVideoBg,
 body:has(#changeHistory.active) #mobileFridayVideoBg{
   display:none !important;
 }
-body:has(#changeHistory.active) .mobile-home-enter-ball{
-  display:none !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-}
 @media(max-width:700px){
   .admin-corner{
     right:8px !important;
@@ -3864,8 +3791,7 @@ body.change-history-active{
   background:#07100b url('background-home-desktop.jpg') center center / cover fixed no-repeat !important;
 }
 body.change-history-active #desktopHomeVideoBg,
-body.change-history-active #mobileFridayVideoBg,
-body.change-history-active .mobile-home-enter-ball{
+body.change-history-active #mobileFridayVideoBg{
   display:none !important;
   visibility:hidden !important;
   pointer-events:none !important;
@@ -3887,33 +3813,6 @@ body.change-history-active .mobile-home-enter-ball{
 @media(max-width:900px) and (orientation:portrait){body.mobile-day-video #mobileDayVideoBg{display:block;position:fixed;inset:0;z-index:-4;overflow:hidden;pointer-events:none;background:#07100b}#mobileDayVideo{width:100%;height:100%;object-fit:cover;display:block}}
 
 
-/* v145 · balón PNG de entrada móvil */
-@media(max-width:900px) and (orientation:portrait){
-  .mobile-home-enter-ball{
-    display:none !important;
-    overflow:visible !important;
-    filter:drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
-  }
-  body.mobile-ball-ready:not(.home-entered) .mobile-home-enter-ball{display:flex !important}
-  .mobile-home-enter-ball .football-ball-image{
-    position:absolute !important;inset:0 !important;
-    width:100% !important;height:100% !important;
-    object-fit:contain !important;font-size:0 !important;
-    user-select:none !important;pointer-events:none !important;
-  }
-  .mobile-home-enter-ball .football-enter-text{
-    position:absolute !important;left:50% !important;top:50% !important;
-    transform:translate(-50%,-50%) !important;z-index:2 !important;
-    background:rgba(255,255,255,.97) !important;color:#050505 !important;
-  }
-  .mobile-home-enter-ball.is-leaving{
-    transform:translate(-50%,-50%) scale(0) !important;
-    opacity:0 !important;pointer-events:none !important;
-  }
-  body:has(.special-welcome.open) .mobile-home-enter-ball{display:none !important}
-}
-
-
 /* v146 · contraseña móvil en negro */
 @media(max-width:900px){
   #siteAccessGate .access-hotspot input{
@@ -3925,57 +3824,6 @@ body.change-history-active .mobile-home-enter-ball{
     color:#000 !important;
     -webkit-text-fill-color:#000 !important;
     opacity:1 !important;
-  }
-}
-
-
-/* v147 · balón PNG incrustado y visible */
-@media(max-width:900px) and (orientation:portrait){
-  .mobile-home-enter-ball .football-ball-image{
-    display:block !important;
-    opacity:1 !important;
-    visibility:visible !important;
-    width:100% !important;
-    height:100% !important;
-    object-fit:contain !important;
-  }
-}
-
-
-/* v148 · restauración del balón gráfico original */
-@media(max-width:900px) and (orientation:portrait){
-  .mobile-home-enter-ball .football-pattern{
-    position:absolute !important;
-    inset:0 !important;
-    display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    width:auto !important;
-    height:auto !important;
-    font-size:106px !important;
-    line-height:1 !important;
-    opacity:1 !important;
-    visibility:visible !important;
-    user-select:none !important;
-    pointer-events:none !important;
-  }
-}
-
-
-/* v149 · balón móvil blanco/negro y anclado al fondo */
-@media(max-width:900px) and (orientation:portrait){
-  .mobile-home-enter-ball{
-    position:absolute !important;
-    left:53.5% !important;
-    top:56svh !important;
-    filter:grayscale(1) contrast(2.35) brightness(1.12) drop-shadow(0 8px 16px rgba(0,0,0,.42)) !important;
-  }
-  .mobile-home-enter-ball .football-pattern{
-    filter:grayscale(1) contrast(2.6) brightness(1.08) !important;
-  }
-  .mobile-home-enter-ball .football-enter-text{
-    background:#fff !important;
-    color:#000 !important;
   }
 }
 
@@ -3994,11 +3842,6 @@ body.change-history-active .mobile-home-enter-ball{
   font-weight:1000!important;
 }
 #coachStartBtn.coach-start-ready{font-size:20px!important;min-width:min(420px,90vw)!important;min-height:64px!important}
-
-/* En enlaces de invitación no aparece el balón de ENTRAR de la Home */
-body:has(#coachLobby.active) .mobile-home-enter-ball,
-body:has(#coachIdentity.active) .mobile-home-enter-ball,
-body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 
 /* FICHAR justo debajo de la camiseta también en escritorio */
 .coach-inline-pick{
@@ -5042,13 +4885,8 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   }
 }
 </style>
-<link rel="stylesheet" href="./patx-v212.css?v=231"><link rel="stylesheet" href="./patx-v213.css?v=231"></head>
+<link rel="stylesheet" href="./patx-v212.css?v=231"><link rel="stylesheet" href="./patx-v213.css?v=231"><link rel="stylesheet" href="./patx-quick-callup.css?v=237"></head>
 <body>
-<button id="mobileHomeEnterBall" class="mobile-home-enter-ball" type="button" aria-label="Entrar">
-  <span class="football-pattern" aria-hidden="true">⚽</span>
-  <span class="football-enter-text">ENTRAR</span>
-</button>
-<audio id="homeWhistleSfx" preload="auto" src="SILBATO ok.mp3"></audio>
 
 <div id="mobileFridayVideoBg" aria-hidden="true">
   <video id="mobileFridayVideo" playsinline preload="none" poster="hoy es viernes (0-00-00-00).jpg">
@@ -5129,7 +4967,7 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
 <div class="home-options">
 <button class="mode redline home-image-card" onclick="openCreateGame()"><span class="home-card-copy"><span class="icon">⚽</span><strong>Crear alineaciones</strong><span>Nuevo partido</span></span><span class="home-card-image"><img src="crear alineacion.jpg" alt=""></span></button>
 <button class="mode purpleline home-image-card" onclick="openSeason()"><span class="home-card-copy"><span class="icon">🏆</span><strong>Temporada 26/27</strong><span>Clasificación y calendario</span></span><span class="home-card-image"><img src="temporada.jpg" alt=""></span></button>
-<button class="mode goldline home-image-card" onclick="window.open('album.html','_blank')"><span class="home-card-copy"><span class="icon">★</span><strong>Álbum de cartas</strong><span>Ver álbum</span></span><span class="home-card-image"><img src="album foto boton.png" alt="Portada del álbum de cartas"></span></button>
+<button class="mode whatsappline home-image-card" id="homeWhatsAppBtn" type="button" aria-label="Pegar convocatoria WhatsApp"><span class="home-card-copy"><span class="icon">📋</span><strong>PEGAR CONVOCATORIA WHATSAPP</strong><span>Crear equipos en segundos</span></span><span class="home-card-image whatsapp-home-art" aria-hidden="true"><span class="wa-line wa-line-1"></span><span class="wa-line wa-line-2"></span><span class="wa-line wa-line-3"></span></span></button>
 </div>
 </div>
 
@@ -5160,6 +4998,54 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
     </span>
   </button>
 </div>
+</div></section>
+
+<section id="whatsappQuick" class="screen"><div class="card whatsapp-quick-card">
+<div class="topbar"><div><button class="back" onclick="leaveWhatsAppQuick()">← Volver</button><h2>Convocatoria de WhatsApp</h2><div class="subtitle" id="whatsappQuickSubtitle">Pega el texto de la convocatoria y detectaré la modalidad automáticamente.</div></div></div>
+<div id="whatsappQuickClipboardNote" class="whatsapp-quick-note" style="display:none"></div>
+<div class="coach-whatsapp-import">
+  <div class="coach-whatsapp-head">
+    <div><strong>📋 Convocatoria</strong><span id="whatsappQuickHint">Pega aquí el mensaje completo, incluidas las reservas.</span></div>
+  </div>
+  <textarea id="whatsappQuickText" rows="10"></textarea>
+  <div class="coach-whatsapp-actions">
+    <button class="secondary" id="whatsappQuickAnalyzeBtn" onclick="analyzeWhatsAppQuick()">Analizar convocatoria</button>
+    <button class="ghost" onclick="resetWhatsAppQuick()">Limpiar</button>
+  </div>
+</div>
+<div id="whatsappQuickReview" class="coach-callup-review" style="display:none">
+  <div class="coach-callup-review-head">
+    <div><strong id="whatsappQuickReviewTitle">Revisa la convocatoria</strong><span id="whatsappQuickSummary"></span></div>
+  </div>
+  <div id="whatsappQuickWarning" class="coach-callup-warning" style="display:none"></div>
+  <div id="whatsappQuickDetected" class="coach-callup-detected"></div>
+  <div class="coach-callup-modify-row">
+    <button class="coach-modify-callup-btn" onclick="focusWhatsAppQuickText()">Corregir convocatoria</button>
+  </div>
+</div>
+</div></section>
+
+<section id="whatsappMethod" class="screen"><div class="card whatsapp-method-card">
+<div class="topbar"><div><button class="back" onclick="history.length>1?history.back():show('whatsappQuick')">← Volver</button><h2>¿CÓMO HACEMOS LOS EQUIPOS?</h2><div class="subtitle" id="whatsappMethodSubtitle">Elige el método y el resto es automático.</div></div></div>
+<div class="home-options coach-method-options">
+  <button class="mode coach-method-card coach-method-photo algorithm-photo" id="whatsappAlgorithmBtn" type="button" onclick="startWhatsAppAlgorithm()">
+    <img src="boton algoritmo.jpg" alt="" class="coach-method-bg">
+    <span class="coach-method-overlay"></span>
+    <span class="coach-method-copy">
+      <strong>ALGORITMO AUTOMÁTICO</strong>
+      <span>Genera dos equipos equilibrados inmediatamente.</span>
+    </span>
+  </button>
+  <button class="mode coach-method-card coach-method-photo coach-photo" id="whatsappDraftBtn" type="button" onclick="startWhatsAppDraft()">
+    <img src="boton entrenador.jpg" alt="" class="coach-method-bg">
+    <span class="coach-method-overlay"></span>
+    <span class="coach-method-copy">
+      <strong>SALA DRAFT</strong>
+      <span>Crea la sala del Modo Entrenador con su código de invitación.</span>
+    </span>
+  </button>
+</div>
+<div id="whatsappMethodStatus" class="whatsapp-method-status" style="display:none"></div>
 </div></section>
 
 <section id="coachLobby" class="screen"><div class="card coach-lobby-card">
@@ -7659,7 +7545,23 @@ body:has(#coachRoom.active) .mobile-home-enter-ball{display:none!important}
   <div id="specialWelcomeContent" class="special-card"></div>
 </div>
 
-<script src="./patx-update.js?v=231"></script>
+<!-- v237 · ¿Playlist futbolero? Solo en el primer acceso de la sesión -->
+<div id="musicIntroPopup" class="special-welcome music-intro" role="dialog" aria-modal="true" aria-labelledby="musicIntroTitle" aria-describedby="musicIntroText" aria-hidden="true">
+  <div class="special-card music-intro-card" tabindex="-1">
+    <div class="special-card-inner">
+      <div class="music-intro-badge" aria-hidden="true">🎧</div>
+      <div class="special-kicker">Patxanguilles en música</div>
+      <h2 id="musicIntroTitle" class="music-intro-title">¿Quieres escuchar un playlist futbolero mientras navegas?</h2>
+      <p id="musicIntroText" class="music-intro-text">Puedes pausarlo o cambiar de canción cuando quieras desde el reproductor.</p>
+      <div class="music-intro-actions">
+        <button id="musicIntroYes" class="primary" type="button">Sí</button>
+        <button id="musicIntroNo" class="secondary" type="button">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="./patx-update.js?v=237"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 function setupMobileDayBackground(){
@@ -7743,6 +7645,8 @@ const historyRoutes={
   home:'home',
   createMode:'crear-alineaciones',
   creationMethod:'metodo-alineaciones',
+  whatsappQuick:'pegar-convocatoria',
+  whatsappMethod:'metodo-rapido',
   coachLobby:'modo-entrenador',
   coachIdentity:'equipo-entrenador',
   changeHistory:'historial-cambios',
@@ -8077,21 +7981,25 @@ function closestCoachRosterName(name, roster){
   return similar?{name:best,distance:bestDistance}:null;
 }
 
-function parseCoachCallup(){
-  const text=document.getElementById('coachCallupText')?.value||'';
-  const needed=game==='f7'?14:10;
-  const roster=coachPlayersForMode(game);
-
-  const rawLines=text.split(/\r?\n/);
+/* Detección compartida de participantes de una convocatoria.
+   La usan el importador del Modo Entrenador, el del algoritmo y el acceso
+   rápido desde WhatsApp. Devuelve las líneas válidas y, opcionalmente, las
+   descartadas, sin alterar el comportamiento de los importadores antiguos. */
+function scanCallupParticipantLines(text,roster,opts={}){
+  const rawLines=String(text||'').split(/\r?\n/);
   const participantLines=[];
+  const skipped=[];
   let inReserves=false;
+  const reservePattern=opts.extendedReserveHeaders
+    ?/^[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]*reservas?\b/i
+    :/^\s*reservas?\b/i;
 
   for(const raw of rawLines){
-    const trimmed=String(raw||'').replace(/[⁠ ]/g,' ').trim();
+    const trimmed=String(raw||'').replace(/[\u2060\u2007]/g,' ').trim();
     if(!trimmed)continue;
 
     // Desde "Reserva" o "Reservas" en adelante no nos interesa nada.
-    if(/^\s*reservas?\b/i.test(trimmed)){
+    if(reservePattern.test(trimmed)){
       inReserves=true;
       continue;
     }
@@ -8100,25 +8008,39 @@ function parseCoachCallup(){
     // Priorizamos líneas que vienen numeradas: son la convocatoria real.
     if(/^\s*\d{1,2}\s*[\.\)\-:ºª]/.test(trimmed) || /^\s*\d{1,2}\s+[^\d]/.test(trimmed)){
       const cleaned=cleanCoachCallupLine(trimmed);
-      if(cleaned)participantLines.push(cleaned);
+      if(!cleaned)continue;
+      if(opts.acceptParticipantName && !opts.acceptParticipantName(cleaned)){skipped.push(cleaned);continue}
+      participantLines.push(cleaned);
     }
   }
 
-  // Si el mensaje no llevaba números, intento reconocer líneas que coincidan con jugadores.
+  // Si el mensaje no llevaba números, se intenta reconocer líneas que
+  // coincidan con jugadores (comportamiento antiguo). El acceso rápido puede
+  // aceptar además nombres desconocidos con su propio validador.
   if(!participantLines.length){
     for(const raw of rawLines){
       const trimmed=String(raw||'').trim();
-      if(/^\s*reservas?\b/i.test(trimmed))break;
+      if(reservePattern.test(trimmed))break;
       const cleaned=cleanCoachCallupLine(trimmed);
       if(!cleaned)continue;
       const norm=normalizeCoachCallupName(cleaned);
-      if(roster.some(r=>normalizeCoachCallupName(r)===norm))participantLines.push(cleaned);
+      if(roster.some(r=>normalizeCoachCallupName(r)===norm)){
+        participantLines.push(cleaned);
+      }else if(opts.acceptUnnumberedName){
+        if(opts.acceptUnnumberedName(cleaned))participantLines.push(cleaned);
+        else skipped.push(cleaned);
+      }
     }
   }
 
+  return {participantLines,skipped};
+}
+
+function parseCallupEntries(text,roster,opts={}){
+  roster=Array.isArray(roster)?roster:[];
+  const {participantLines,skipped}=scanCallupParticipantLines(text,roster,opts);
   const seen=new Set();
-  const parsed=[];
-  const possibleTypos=[];
+  const entries=[];
 
   participantLines.forEach(rawName=>{
     const norm=normalizeCoachCallupName(rawName);
@@ -8127,22 +8049,36 @@ function parseCoachCallup(){
 
     const exact=roster.find(r=>normalizeCoachCallupName(r)===norm);
     if(exact){
-      parsed.push({name:exact,type:'known'});
+      entries.push({name:exact,type:'known'});
       return;
     }
 
+    // No se corrige a escondidas: se avisa y se conserva el texto original.
     const close=closestCoachRosterName(rawName,roster);
     if(close){
-      // No lo corregimos a escondidas: avisamos y dejamos el texto original como invitado
-      // hasta que el usuario confirme/corrija manualmente.
-      parsed.push({name:rawName,type:'uncertain',suggestion:close.name});
-      possibleTypos.push({name:rawName,suggestion:close.name});
+      entries.push({name:rawName,type:'uncertain',suggestion:close.name});
       return;
     }
 
-    // Nombre desconocido: puede ser un invitado/reserva externo que sí juega hoy.
-    parsed.push({name:rawName,type:'guest'});
+    // Nombre desconocido: invitado provisional de esta convocatoria.
+    entries.push({name:rawName,type:'guest'});
   });
+
+  return {entries,skipped,participantLines};
+}
+
+function parseCoachCallup(){
+  const text=document.getElementById('coachCallupText')?.value||'';
+  const needed=game==='f7'?14:10;
+  const roster=coachPlayersForMode(game);
+
+  const {entries}=parseCallupEntries(text,roster);
+  const parsed=entries.map(entry=>entry.type==='uncertain'
+    ?{name:entry.name,type:'uncertain',suggestion:entry.suggestion}
+    :{name:entry.name,type:entry.type});
+  const possibleTypos=parsed
+    .filter(entry=>entry.type==='uncertain')
+    .map(entry=>({name:entry.name,suggestion:entry.suggestion}));
 
   coachParsedCallup=parsed;
   coachCallupConfirmed=false;
@@ -8753,7 +8689,7 @@ function coachInviteCodeFromHash(){
 
 async function prepareCoachInvite(code){
   lineupCreationMethod='coach';
-  document.body.classList.remove('mobile-ball-ready','home-mobile-intro-pending','home-mobile-intro-visible');
+  document.body.classList.remove('home-mobile-intro-pending','home-mobile-intro-visible');
   coachRoomCode=String(code||'').toUpperCase();
   const saved=localStorage.getItem(coachStorageKey(coachRoomCode));
   if(saved){
@@ -9065,54 +9001,17 @@ function parseAutomaticCallup(){
   const text=document.getElementById('automaticCallupText')?.value||'';
   const needed=game==='f7'?14:10;
   const roster=game==='f7'?F7:FS;
-  const rawLines=text.split(/\r?\n/);
-  const participantLines=[];
-  let inReserves=false;
 
-  for(const raw of rawLines){
-    const trimmed=String(raw||'').replace(/[⁠ ]/g,' ').trim();
-    if(!trimmed)continue;
-    if(/^\s*reservas?\b/i.test(trimmed)){inReserves=true;continue}
-    if(inReserves)continue;
-
-    if(/^\s*\d{1,2}\s*[\.\)\-:ºª]/.test(trimmed) || /^\s*\d{1,2}\s+[^\d]/.test(trimmed)){
-      const cleaned=cleanCoachCallupLine(trimmed);
-      if(cleaned)participantLines.push(cleaned);
-    }
-  }
-
-  if(!participantLines.length){
-    for(const raw of rawLines){
-      const trimmed=String(raw||'').trim();
-      if(/^\s*reservas?\b/i.test(trimmed))break;
-      const cleaned=cleanCoachCallupLine(trimmed);
-      if(!cleaned)continue;
-      const norm=normalizeCoachCallupName(cleaned);
-      if(roster.some(r=>normalizeCoachCallupName(r)===norm))participantLines.push(cleaned);
-    }
-  }
-
+  const {entries}=parseCallupEntries(text,roster);
   const detected=[];
   const unknown=[];
-  const seen=new Set();
 
-  participantLines.forEach(rawName=>{
-    const norm=normalizeCoachCallupName(rawName);
-    if(!norm||seen.has(norm))return;
-    seen.add(norm);
-
-    const exact=roster.find(r=>normalizeCoachCallupName(r)===norm);
-    if(exact){
-      detected.push(exact);
+  entries.forEach(entry=>{
+    if(entry.type==='known'){
+      detected.push(entry.name);
       return;
     }
-
-    const close=closestCoachRosterName(rawName,roster);
-    if(close){
-      unknown.push(`${rawName} → ¿${close.name}?`);
-    }else{
-      unknown.push(rawName);
-    }
+    unknown.push(entry.suggestion?`${entry.name} → ¿${entry.suggestion}?`:entry.name);
   });
 
   selected=detected.slice(0,needed);
@@ -11114,10 +11013,9 @@ function keepMusicControlsOpen(){
 }
 
 /* Elegimos una canción distinta al azar en cada carga de la web.
-   El navegador empezará a reproducirla tras la primera interacción del usuario,
-   para respetar las restricciones de autoplay de móvil/Chrome. */
+   El reproductor solo arranca si el usuario lo pide en el popup de bienvenida
+   (o si ya lo pidió en esta sesión y vuelve a interactuar tras recargar). */
 loadTrack(chooseRandomTrack(false),true);
-document.addEventListener('click',startMusic,{once:true});
 updateMusicButton();
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -11223,15 +11121,6 @@ document.addEventListener('keydown',e=>{
   }
 
   if(!isCoachRoomLink()&&!hasRememberedAccess())openGate();
-
-  // La música puede empezar ya en esta pantalla tras la primera interacción,
-  // que es el momento en que los navegadores permiten reproducir audio con sonido.
-  gate.addEventListener('pointerdown',()=>{
-    if(typeof startMusic==='function'&&!musicStarted)startMusic();
-  },{once:true});
-  input.addEventListener('keydown',()=>{
-    if(typeof startMusic==='function'&&!musicStarted)startMusic();
-  },{once:true});
 
   eye.addEventListener('click',()=>{
     const show=input.type==='password';
@@ -11341,14 +11230,18 @@ document.addEventListener('keydown',e=>{
     if(started)return;
     started=true;
     prepareHiddenHome();
-    document.body.classList.add('mobile-ball-ready');
 
-    // Si estamos en escritorio, el vídeo empieza AHORA, nunca detrás del popup.
+    // El fondo arranca antes que nada, también en escritorio.
     startDesktopVideo();
     startMobileFridayVideo();
 
-    // Tanto en escritorio como en móvil, los accesos aparecen 2 s después.
-    revealTimer=setTimeout(revealHome,2000);
+    if(window.PatxMusicIntro&&window.PatxMusicIntro.pending()){
+      // Primer acceso de la sesión: los cuatro accesos aparecen al responder.
+      window.PatxMusicIntro.show(revealHome);
+    }else{
+      // Ya se respondió en esta sesión: la Home entra sin volver a preguntar.
+      revealTimer=setTimeout(revealHome,600);
+    }
   };
 
   // Desde el primer instante los botones permanecen ocultos.
@@ -11371,54 +11264,142 @@ document.addEventListener('keydown',e=>{
 </script>
 
 <script>
-/* v135 · Control de entrada móvil vertical con balón */
+/* v237 · Bienvenida musical: se pregunta una sola vez por sesión.
+   - «Sí» arranca el reproductor (el clic es el gesto que permite el audio).
+   - «No» deja el reproductor en pausa.
+   - Al responder, desaparece el popup y entran los cuatro accesos de la Home. */
 (()=>{
-  const isMobilePortrait=()=>window.matchMedia('(max-width:900px) and (orientation:portrait)').matches;
-  const ball=document.getElementById('mobileHomeEnterBall');
-  const whistle=document.getElementById('homeWhistleSfx');
-  let entered=false;
+  const STORAGE_KEY='patxMusicIntroV237';
+  const popup=document.getElementById('musicIntroPopup');
+  const card=popup?.querySelector('.music-intro-card');
+  const yesBtn=document.getElementById('musicIntroYes');
+  const noBtn=document.getElementById('musicIntroNo');
+  if(!popup||!card||!yesBtn||!noBtn)return;
 
-  function keepHomeButtonsHidden(){
-    if(!isMobilePortrait() || entered)return;
-    document.body.classList.remove('home-mobile-intro-visible');
-    document.body.classList.add('home-mobile-intro-pending');
+  let answered=false;
+  let running=false;
+
+  function readChoice(){
+    try{return sessionStorage.getItem(STORAGE_KEY)}catch(_){return null}
+  }
+  function saveChoice(value){
+    try{sessionStorage.setItem(STORAGE_KEY,value)}catch(_){}
+  }
+  function gateOpen(){
+    return document.getElementById('siteAccessGate')?.classList.contains('active')===true;
+  }
+  function homeIsActive(){
+    const home=document.getElementById('home');
+    if(home&&!home.classList.contains('active'))return false;
+    return decodeURIComponent(location.hash||'').toLowerCase()!=='#historial-cambios';
+  }
+  function updateMusicButtonSafely(){
+    if(typeof updateMusicButton==='function')setTimeout(updateMusicButton,0);
   }
 
-  // La lógica previa puede intentar mostrarlos a los 2 s: en vertical los mantenemos ocultos
-  // hasta el gesto explícito de ENTRAR.
-  const observer=new MutationObserver(()=>{
-    if(isMobilePortrait() && !entered &&
-       document.body.classList.contains('home-mobile-intro-visible')){
-      keepHomeButtonsHidden();
+  /* Si en esta sesión ya dijeron «Sí», el primer gesto tras recargar vuelve a
+     arrancar el reproductor (el navegador bloquea el audio automático). */
+  function attachGestureResume(){
+    if(readChoice()!=='yes')return;
+    if(window.__patxMusicResumeV237)return;
+    window.__patxMusicResumeV237=true;
+
+    const detach=()=>{
+      window.__patxMusicResumeV237=false;
+      document.removeEventListener('pointerdown',handler);
+      document.removeEventListener('keydown',handler);
+    };
+    const handler=(event)=>{
+      if(event?.target?.closest?.('.music-controls'))return;
+      if(!music.paused){detach();return;}
+      try{
+        musicStarted=true;
+        const p=music.play();
+        if(p&&typeof p.catch==='function')p.catch(()=>{});
+      }catch(_){}
+      setTimeout(()=>{
+        updateMusicButtonSafely();
+        if(!music.paused)detach();
+      },160);
+    };
+    document.addEventListener('pointerdown',handler);
+    document.addEventListener('keydown',handler);
+  }
+
+  function closePopup(){
+    popup.classList.remove('open');
+    popup.setAttribute('aria-hidden','true');
+  }
+
+  function choose(value,onDone){
+    if(answered)return;
+    answered=true;
+    saveChoice(value);
+
+    if(value==='yes'){
+      try{
+        if(typeof startMusic==='function')startMusic();
+        else if(music.paused){musicStarted=true;music.play().catch(()=>{});}
+      }catch(_){}
+      updateMusicButtonSafely();
+      // Si el navegador aún no deja sonar, el siguiente gesto lo reintenta.
+      setTimeout(()=>{if(music.paused)attachGestureResume()},250);
+    }else{
+      try{if(!music.paused)music.pause()}catch(_){}
+      updateMusicButtonSafely();
     }
+
+    closePopup();
+    setTimeout(()=>{if(typeof onDone==='function')onDone()},200);
+  }
+
+  function openPopup(onDone){
+    popup.classList.add('open');
+    popup.setAttribute('aria-hidden','false');
+    setTimeout(()=>card.focus(),60);
+    yesBtn.addEventListener('click',()=>choose('yes',onDone),{once:true});
+    noBtn.addEventListener('click',()=>choose('no',onDone),{once:true});
+  }
+
+  function whenGateClosed(callback){
+    if(!gateOpen()){callback();return;}
+    let elapsed=0;
+    const timer=setInterval(()=>{
+      elapsed+=150;
+      if(!gateOpen()){clearInterval(timer);callback();}
+      else if(elapsed>=180000)clearInterval(timer);
+    },150);
+  }
+
+  document.addEventListener('keydown',event=>{
+    if(!popup.classList.contains('open'))return;
+    if(event.key==='Escape'){
+      event.preventDefault();
+      choose('no',window.__patxMusicIntroDone);
+      return;
+    }
+    if(event.key!=='Tab')return;
+    const first=yesBtn,last=noBtn;
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
   });
-  observer.observe(document.body,{attributes:true,attributeFilter:['class']});
-  keepHomeButtonsHidden();
 
-  ball?.addEventListener('click',()=>{
-    if(entered)return;
-    entered=true;
+  window.PatxMusicIntro={
+    pending(){
+      return readChoice()===null&&homeIsActive();
+    },
+    show(onDone){
+      if(answered||running)return;
+      running=true;
+      window.__patxMusicIntroDone=onDone;
+      whenGateClosed(()=>{
+        // Un respiro para que el fondo de la Home esté ya en pantalla.
+        setTimeout(()=>openPopup(onDone),250);
+      });
+    }
+  };
 
-    try{
-      whistle.currentTime=0;
-      whistle.volume=1;
-      whistle.play().catch(()=>{});
-    }catch(_){}
-
-    ball.classList.add('is-leaving');
-
-    // Tras iniciar la reducción del balón, reutilizamos la animación actual de entrada.
-    setTimeout(()=>{
-      document.body.classList.remove('home-mobile-intro-pending');
-      document.body.classList.add('home-mobile-intro-visible','home-entered');
-    },260);
-  });
-
-  window.addEventListener('orientationchange',()=>{
-    setTimeout(()=>{
-      if(!entered)keepHomeButtonsHidden();
-    },100);
-  });
+  if(readChoice()!==null)attachGestureResume();
 })();
 </script>
 <script type="module" src="./gps/index-integration.js"></script>
@@ -11482,4 +11463,4 @@ document.addEventListener('keydown',e=>{
   window.addEventListener('scroll',closeTip,true);
 })();
 </script>
-<script src="./patx-v212.js?v=231"></script><script src="./patx-v213.js?v=231"></script><script src="./patx-v214.js?v=234"></script><script src="./patx-v227-photo-routing.js?v=227"></script></body></html>
+<script src="./patx-v212.js?v=231"></script><script src="./patx-v213.js?v=231"></script><script src="./patx-v214.js?v=234"></script><script src="./patx-quick-callup.js?v=237"></script><script src="./patx-v227-photo-routing.js?v=227"></script></body></html>
